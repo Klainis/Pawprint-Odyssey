@@ -25,18 +25,17 @@ public class PlayerMovement : MonoBehaviour {
 		animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
 		var gamepad = Gamepad.current;
-		if (gamepad != null)
-		{
-			if (Input.GetKeyDown(KeyCode.Z) || gamepad.aButton.wasPressedThisFrame)
-			{
-				jump = true;
-			}
 
-			if (Input.GetKeyDown(KeyCode.C) || gamepad.rightTrigger.wasPressedThisFrame)
-			{
-				dash = true;
-			}
+		if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
+		{
+			jump = true;
 		}
+
+		if (Input.GetKeyDown(KeyCode.C) || (gamepad != null && gamepad.rightTrigger.wasPressedThisFrame))
+		{
+			dash = true;
+		}
+
 		/*if (Input.GetAxisRaw("Dash") == 1 || Input.GetAxisRaw("Dash") == -1) //RT in Unity 2017 = -1, RT in Unity 2019 = 1
 		{
 			if (dashAxis == false)

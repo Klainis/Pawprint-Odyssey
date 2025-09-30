@@ -297,9 +297,9 @@ public class CharacterController2D : MonoBehaviour
 		animator.SetBool("IsDashing", true);
 		isDashing = true;
 		canDash = false;
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.1f); //0.1
 		isDashing = false;
-		yield return new WaitForSeconds(0.25f);
+		yield return new WaitForSeconds(0.3f); //0.25
 		canDash = true;
 	}
 
