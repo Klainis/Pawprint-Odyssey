@@ -2,10 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using System;
 
 public class CharacterController2D : MonoBehaviour
 {
-	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
+    [SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
 	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 	[SerializeField] private bool m_AirControl = false;							// Whether or not a player can steer while jumping;
 	[SerializeField] private LayerMask m_WhatIsGround;							// A mask determining what is ground to the character
@@ -128,7 +130,15 @@ public class CharacterController2D : MonoBehaviour
 				m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
 			}
 		}
-	}
+
+        if (m_Rigidbody2D.linearVelocity.y > 0)
+        {
+            if (!Input.GetKey(KeyCode.Z) && (Gamepad.current == null || !Gamepad.current.aButton.isPressed))
+            {
+				m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
+			}
+        }
+    }
 
 
 	public void Move(float move, bool jump, bool dash)
@@ -174,8 +184,8 @@ public class CharacterController2D : MonoBehaviour
 				animator.SetBool("IsJumping", true);
 				animator.SetBool("JumpUp", true);
 				m_Grounded = false;
-				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-				canDoubleJump = true;
+                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+                canDoubleJump = true;
 				particleJumpDown.Play();
 				particleJumpUp.Play();
 			}
@@ -183,7 +193,7 @@ public class CharacterController2D : MonoBehaviour
 			{
 				canDoubleJump = false;
 				m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
-				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce / 1.2f));
+				m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce * 0.9f));
 				animator.SetBool("IsDoubleJumping", true);
 			}
 
@@ -218,7 +228,7 @@ public class CharacterController2D : MonoBehaviour
 					animator.SetBool("IsJumping", true);
 					animator.SetBool("JumpUp", true); 
 					m_Rigidbody2D.linearVelocity = new Vector2(0f, 0f);
-					m_Rigidbody2D.AddForce(new Vector2(transform.localScale.x * m_JumpForce *1.2f, m_JumpForce));
+					m_Rigidbody2D.AddForce(new Vector2(transform.localScale.x * m_JumpForce * 1.2f, m_JumpForce));
 					jumpWallStartX = transform.position.x;
 					limitVelOnWallJump = true;
 					canDoubleJump = true;
@@ -289,7 +299,7 @@ public class CharacterController2D : MonoBehaviour
 		canDash = false;
 		yield return new WaitForSeconds(0.1f);
 		isDashing = false;
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.25f);
 		canDash = true;
 	}
 

@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour {
 		var gamepad = Gamepad.current;
 		if (gamepad != null)
 		{
-			if (Input.GetKeyDown(KeyCode.X) || gamepad.aButton.wasPressedThisFrame)
+			if (Input.GetKeyDown(KeyCode.Z) || gamepad.aButton.wasPressedThisFrame)
 			{
 				jump = true;
 			}
