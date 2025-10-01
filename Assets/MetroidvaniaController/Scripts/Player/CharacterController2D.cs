@@ -141,7 +141,7 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-	public void Move(float move, bool jump, bool dash)
+	public void Move(float move, float wallUpMove, bool jump, bool dash)
 	{
 		if (canMove) {
 			if (dash && canDash && !isWallSliding)
@@ -212,6 +212,10 @@ public class CharacterController2D : MonoBehaviour
 
 				if (isWallSliding)
 				{
+					if(wallUpMove > 0)
+					{
+                        m_Rigidbody2D.linearVelocity = new Vector2(0, wallUpMove);
+                    }
 					if (move * transform.localScale.x > 0.1f)
 					{
 						StartCoroutine(WaitToEndSliding());
@@ -297,7 +301,7 @@ public class CharacterController2D : MonoBehaviour
 		animator.SetBool("IsDashing", true);
 		isDashing = true;
 		canDash = false;
-		yield return new WaitForSeconds(0.1f); //0.1
+		yield return new WaitForSeconds(0.1f); //0.1 
 		isDashing = false;
 		yield return new WaitForSeconds(0.3f); //0.25
 		canDash = true;

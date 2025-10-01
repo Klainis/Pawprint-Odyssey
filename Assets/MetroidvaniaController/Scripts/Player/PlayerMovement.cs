@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,7 @@ public class PlayerMovement : MonoBehaviour {
 	public float runSpeed = 40f;
 
 	float horizontalMove = 0f;
+	float wallUpMove = 0f;
 	bool jump = false;
 	bool dash = false;
 
@@ -20,13 +22,32 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+		if (Input.GetAxisRaw("Horizontal") > 0)
+		{
+			horizontalMove = runSpeed;
+		}
+        else if (Input.GetAxisRaw("Horizontal") < 0)
+        {
+            horizontalMove = -runSpeed;
+        }
+        else
+		{
+			horizontalMove = 0f;
+		}
 
 		animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
 		var gamepad = Gamepad.current;
 
-		if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
+        if (Input.GetKey(KeyCode.W) || (gamepad != null && gamepad.leftStick.up.isPressed))
+        {
+			wallUpMove = Input.GetAxisRaw("Vertical") * runSpeed;
+			Debug.Log(wallUpMove);
+            //m_Rigidbody2D.linearVelocity = new Vector2(0, 5f); // скорость взбирани€
+            //animator.SetBool("IsWallClimbing", true); // ƒобавить анимацию взбирани€
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
 		{
 			jump = true;
 		}
@@ -65,7 +86,7 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate ()
 	{
 		// Move our character
-		controller.Move(horizontalMove * Time.fixedDeltaTime, jump, dash);
+		controller.Move(horizontalMove * Time.fixedDeltaTime, wallUpMove, jump, dash);
 		jump = false;
 		dash = false;
 	}
