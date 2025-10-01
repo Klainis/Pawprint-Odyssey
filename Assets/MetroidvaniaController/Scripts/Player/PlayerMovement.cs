@@ -39,12 +39,16 @@ public class PlayerMovement : MonoBehaviour {
 
 		var gamepad = Gamepad.current;
 
-        if (Input.GetKey(KeyCode.W) || (gamepad != null && gamepad.leftStick.up.isPressed))
-        {
-			wallUpMove = Input.GetAxisRaw("Vertical") * runSpeed;
-			Debug.Log(wallUpMove);
-            //m_Rigidbody2D.linearVelocity = new Vector2(0, 5f); // скорость взбирани€
-            //animator.SetBool("IsWallClimbing", true); // ƒобавить анимацию взбирани€
+		if (Input.GetKey(KeyCode.W) || (gamepad != null && gamepad.leftStick.up.isPressed))
+		{
+			wallUpMove = runSpeed;
+			//Debug.Log(wallUpMove);
+			//m_Rigidbody2D.linearVelocity = new Vector2(0, 5f); // скорость взбирани€
+			//animator.SetBool("IsWallClimbing", true); // ƒобавить анимацию взбирани€
+		}
+		else
+		{
+			wallUpMove = 0f;
         }
 
         if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
@@ -86,7 +90,7 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate ()
 	{
 		// Move our character
-		controller.Move(horizontalMove * Time.fixedDeltaTime, wallUpMove, jump, dash);
+		controller.Move(horizontalMove * Time.fixedDeltaTime, wallUpMove * Time.fixedDeltaTime, jump, dash);
 		jump = false;
 		dash = false;
 	}

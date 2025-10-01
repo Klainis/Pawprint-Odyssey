@@ -206,17 +206,14 @@ public class CharacterController2D : MonoBehaviour
 					Flip();
 					StartCoroutine(WaitToCheck(0.1f));
 					canDoubleJump = true;
+					animator.SetBool("IsJumping", false); //?
 					animator.SetBool("IsWallSliding", true);
 				}
 				isDashing = false;
 
 				if (isWallSliding)
 				{
-					if(wallUpMove > 0)
-					{
-                        m_Rigidbody2D.linearVelocity = new Vector2(0, wallUpMove);
-                    }
-					if (move * transform.localScale.x > 0.1f)
+                    if (move * transform.localScale.x > 0.1f)
 					{
 						StartCoroutine(WaitToEndSliding());
 					}
@@ -227,7 +224,17 @@ public class CharacterController2D : MonoBehaviour
 					}
 				}
 
-				if (jump && isWallSliding)
+                //if (wallUpMove > 0 && m_IsWall)
+                //{
+                //    m_Rigidbody2D.linearVelocity = new Vector2(0, wallUpMove);
+                //    Debug.Log(m_Rigidbody2D.linearVelocity);
+                //    //animator.SetBool("IsWallClimbing", true); // Добавить анимацию взбирания
+                //    isWallSliding = false;
+                //    animator.SetBool("IsWallSliding", false);
+                //    oldWallSlidding = false;
+                //}
+
+                if (jump && isWallSliding)
 				{
 					animator.SetBool("IsJumping", true);
 					animator.SetBool("JumpUp", true); 
