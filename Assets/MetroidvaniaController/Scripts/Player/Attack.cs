@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Attack : MonoBehaviour
 {
-	public float dmgValue = 4;
+	public float dmgValue = 1;
 	public GameObject throwableObject;
 	public Transform attackCheck;
 	private Rigidbody2D m_Rigidbody2D;
@@ -15,7 +15,11 @@ public class Attack : MonoBehaviour
 
 	public GameObject cam;
 
-	private void Awake()
+	private int attackSeriesCount = 0;
+    public float attackSeriesTimeout = 0.6f;
+    private float lastAttackTime = 0f;
+
+    private void Awake()
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
 	}
@@ -30,30 +34,57 @@ public class Attack : MonoBehaviour
     void Update()
     {
 		var gamepad = Gamepad.current;
-		if (gamepad != null)
-		{
-			if ((Input.GetKeyDown(KeyCode.X) || gamepad.xButton.wasPressedThisFrame) && canAttack)
-			{
-				canAttack = false;
-				animator.SetBool("IsAttacking", true);
-				StartCoroutine(AttackCooldown());
-			}
-			// Может использоваться для оружий, но пока не надо
+        bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
+                             (gamepad != null && gamepad.xButton.wasPressedThisFrame);
 
-			//if (Input.GetKeyDown(KeyCode.V))
-			//{
-			//	GameObject throwableWeapon = Instantiate(throwableObject, transform.position + new Vector3(transform.localScale.x * 0.5f, -0.2f), Quaternion.identity) as GameObject;
-			//	Vector2 direction = new Vector2(transform.localScale.x, 0);
-			//	throwableWeapon.GetComponent<ThrowableWeapon>().direction = direction;
-			//	throwableWeapon.name = "ThrowableWeapon";
-			//}
+        if (attackPressed && canAttack)
+		{
+            float timeSinceLastAttack = Time.time - lastAttackTime;
+            if (timeSinceLastAttack > attackSeriesTimeout)
+            {
+                attackSeriesCount = 0;
+                dmgValue = 1;
+            }
+
+            attackSeriesCount++;
+            lastAttackTime = Time.time;
+
+            if (attackSeriesCount >= 4)
+            {
+                dmgValue = 3;
+                attackSeriesCount = 0;
+            }
+
+			Debug.Log(dmgValue);
+
+            canAttack = false;
+			animator.SetBool("IsAttacking", true);
+			StartCoroutine(AttackCooldown());
 		}
+
+		// Может использоваться для оружий, но пока не надо
+
+		//if (Input.GetKeyDown(KeyCode.V))
+		//{
+		//	GameObject throwableWeapon = Instantiate(throwableObject, transform.position + new Vector3(transform.localScale.x * 0.5f, -0.2f), Quaternion.identity) as GameObject;
+		//	Vector2 direction = new Vector2(transform.localScale.x, 0);
+		//	throwableWeapon.GetComponent<ThrowableWeapon>().direction = direction;
+		//	throwableWeapon.name = "ThrowableWeapon";
+		//}
 	}
 
 	IEnumerator AttackCooldown()
 	{
-		yield return new WaitForSeconds(0.25f);
-		canAttack = true;
+        if (dmgValue == 1)
+		{
+            yield return new WaitForSeconds(0.25f);
+        }
+		else
+		{
+			yield return new WaitForSeconds(1f);
+            dmgValue = 1;
+        }
+        canAttack = true;
 	}
 
 	public void DoDashDamage()
@@ -64,11 +95,12 @@ public class Attack : MonoBehaviour
 		{
 			if (collidersEnemies[i].gameObject.tag == "Enemy")
 			{
-				if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
+                float damageToApply = dmgValue;
+                if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
 				{
-					dmgValue = -dmgValue;
-				}
-				collidersEnemies[i].gameObject.SendMessage("ApplyDamage", dmgValue);
+                    damageToApply = -damageToApply;
+                }
+				collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 				cam.GetComponent<CameraFollow>().ShakeCamera();
 			}
 		}
