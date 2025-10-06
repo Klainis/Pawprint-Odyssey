@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 
 public class Attack : MonoBehaviour
 {
@@ -16,13 +18,15 @@ public class Attack : MonoBehaviour
 	public GameObject cam;
 
 	private int attackSeriesCount = 0;
-    public float attackSeriesTimeout = 0.6f;
+    public float attackSeriesTimeout = 0.75f;
     private float lastAttackTime = 0f;
+	private CharacterController2D characterController2D;
 
     private void Awake()
 	{
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
-	}
+        characterController2D = GetComponent<CharacterController2D>();
+    }
 
 	// Start is called before the first frame update
 	void Start()
@@ -46,6 +50,13 @@ public class Attack : MonoBehaviour
                 dmgValue = 1;
             }
 
+            characterController2D.canMove = false;
+            if (!characterController2D.canMove)
+            {
+                m_Rigidbody2D.linearVelocity = Vector2.zero;
+                StartCoroutine(FreezeInAir(0.25f));
+            }
+
             attackSeriesCount++;
             lastAttackTime = Time.time;
 
@@ -55,11 +66,9 @@ public class Attack : MonoBehaviour
                 attackSeriesCount = 0;
             }
 
-			Debug.Log(dmgValue);
-
             canAttack = false;
 			animator.SetBool("IsAttacking", true);
-			StartCoroutine(AttackCooldown());
+			StartCoroutine(AttackCooldown(0.25f, 1f));
 		}
 
 		// Может использоваться для оружий, но пока не надо
@@ -73,21 +82,33 @@ public class Attack : MonoBehaviour
 		//}
 	}
 
-	IEnumerator AttackCooldown()
+	IEnumerator AttackCooldown(float duration, float durationAfterSeries)
 	{
         if (dmgValue == 1)
 		{
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(duration);
+            characterController2D.canMove = true;
         }
-		else
+        else
 		{
-			yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(duration);
+            characterController2D.canMove = true;
+            yield return new WaitForSeconds(durationAfterSeries - duration);
             dmgValue = 1;
         }
-        canAttack = true;
-	}
 
-	public void DoDashDamage()
+        canAttack = true;
+    }
+
+    IEnumerator FreezeInAir(float duration)
+    {
+        float originalGravity = m_Rigidbody2D.gravityScale;
+        m_Rigidbody2D.gravityScale = 0f;
+        yield return new WaitForSeconds(duration);
+        m_Rigidbody2D.gravityScale = originalGravity;
+    }
+
+    public void DoDashDamage()
 	{
 		dmgValue = Mathf.Abs(dmgValue);
 		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, 0.9f);
