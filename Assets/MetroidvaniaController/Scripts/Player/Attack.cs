@@ -17,10 +17,15 @@ public class Attack : MonoBehaviour
 
 	public GameObject cam;
 
+    private int maxAttackSeriesCount = 4;
 	private int attackSeriesCount = 0;
     public float attackSeriesTimeout = 0.75f;
+    private bool isAttackSeriesActive = false;
+    private bool isFrozenInSeries = false;
     private float lastAttackTime = 0f;
+
 	private CharacterController2D characterController2D;
+    private RigidbodyConstraints2D originalConstraints;
 
     private void Awake()
 	{
@@ -41,29 +46,34 @@ public class Attack : MonoBehaviour
         bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
                              (gamepad != null && gamepad.xButton.wasPressedThisFrame);
 
+        if (isAttackSeriesActive && (Time.time - lastAttackTime > attackSeriesTimeout))
+        {
+            dmgValue = 1;
+            attackSeriesCount = 0;
+            isAttackSeriesActive = false;
+            UnfreezePlayer();
+            Debug.Log("Серия прервалась");
+        }
+
         if (attackPressed && canAttack)
 		{
-            float timeSinceLastAttack = Time.time - lastAttackTime;
-            if (timeSinceLastAttack > attackSeriesTimeout)
+            if (!isAttackSeriesActive)
             {
+                isAttackSeriesActive = true;
                 attackSeriesCount = 0;
-                dmgValue = 1;
+                StartCoroutine(FreezeWhileInSeriesAttack());
+                Debug.Log("Серия началась");
             }
 
-            characterController2D.canMove = false;
-            if (!characterController2D.canMove)
-            {
-                m_Rigidbody2D.linearVelocity = Vector2.zero;
-                StartCoroutine(FreezeInAir(0.25f));
-            }
-
-            attackSeriesCount++;
             lastAttackTime = Time.time;
 
-            if (attackSeriesCount >= 4)
+            attackSeriesCount++;
+            if (attackSeriesCount >= maxAttackSeriesCount)
             {
                 dmgValue = 3;
                 attackSeriesCount = 0;
+                isAttackSeriesActive = false;
+                Debug.Log("Серия законилась");
             }
 
             canAttack = false;
@@ -71,25 +81,27 @@ public class Attack : MonoBehaviour
 			StartCoroutine(AttackCooldown(0.25f, 1f));
 		}
 
-		// Может использоваться для оружий, но пока не надо
+        #region DISTANCE ATTACK
+        // Может использоваться для оружий, но пока не надо
 
-		//if (Input.GetKeyDown(KeyCode.V))
-		//{
-		//	GameObject throwableWeapon = Instantiate(throwableObject, transform.position + new Vector3(transform.localScale.x * 0.5f, -0.2f), Quaternion.identity) as GameObject;
-		//	Vector2 direction = new Vector2(transform.localScale.x, 0);
-		//	throwableWeapon.GetComponent<ThrowableWeapon>().direction = direction;
-		//	throwableWeapon.name = "ThrowableWeapon";
-		//}
-	}
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //	GameObject throwableWeapon = Instantiate(throwableObject, transform.position + new Vector3(transform.localScale.x * 0.5f, -0.2f), Quaternion.identity) as GameObject;
+        //	Vector2 direction = new Vector2(transform.localScale.x, 0);
+        //	throwableWeapon.GetComponent<ThrowableWeapon>().direction = direction;
+        //	throwableWeapon.name = "ThrowableWeapon";
+        //}
+        #endregion
+    }
 
-	IEnumerator AttackCooldown(float duration, float durationAfterSeries)
+    IEnumerator AttackCooldown(float duration, float durationAfterSeries)
 	{
         if (dmgValue == 1)
-		{
+        {
             yield return new WaitForSeconds(duration);
             characterController2D.canMove = true;
         }
-        else
+        else                                                                                                                  
 		{
             yield return new WaitForSeconds(duration);
             characterController2D.canMove = true;
@@ -97,15 +109,39 @@ public class Attack : MonoBehaviour
             dmgValue = 1;
         }
 
+        if (!isAttackSeriesActive)
+            characterController2D.canMove = true;
+
         canAttack = true;
     }
 
-    IEnumerator FreezeInAir(float duration)
+    IEnumerator FreezeWhileInSeriesAttack()
     {
-        float originalGravity = m_Rigidbody2D.gravityScale;
-        m_Rigidbody2D.gravityScale = 0f;
-        yield return new WaitForSeconds(duration);
-        m_Rigidbody2D.gravityScale = originalGravity;
+        if (isFrozenInSeries)
+            yield break;
+
+        isFrozenInSeries = true;
+        originalConstraints = m_Rigidbody2D.constraints;
+        m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePosition;
+        characterController2D.canMove = false;
+
+        yield return new WaitWhile(() => isAttackSeriesActive);
+
+        m_Rigidbody2D.rotation = 0;
+        m_Rigidbody2D.constraints = originalConstraints;
+        characterController2D.canMove = true;
+        isFrozenInSeries = false;
+    }
+
+    private void UnfreezePlayer()
+    {
+        if (!isFrozenInSeries)
+            return;
+
+        m_Rigidbody2D.rotation = 0f;
+        m_Rigidbody2D.constraints = originalConstraints;
+        characterController2D.canMove = true;
+        isFrozenInSeries = false;
     }
 
     public void DoDashDamage()
