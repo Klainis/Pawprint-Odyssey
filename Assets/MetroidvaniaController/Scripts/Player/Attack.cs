@@ -1,148 +1,108 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 
 public class Attack : MonoBehaviour
 {
-	public float dmgValue = 1;
-	public GameObject throwableObject;
-	public Transform attackCheck;
-	private Rigidbody2D m_Rigidbody2D;
-	public Animator animator;
-	public bool canAttack = true;
-	public bool isTimeToCheck = false;
+    [Header("Основные параметры атаки")]
+    [SerializeReference] private int dmgValue = 1;
+    [SerializeReference] private Transform attackCheck;
+    [SerializeReference] private Animator animator;
+    [SerializeReference] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар
+    [SerializeReference] private int maxAttackSeriesCount = 3;
+    [SerializeReference] Camera cam;
 
-	public GameObject cam;
+    private float lastAttackTime;
+    private int attackSeriesCount = 0;
+    private bool isAttacking = false;
+    private bool canAttack = true;
 
-    private int maxAttackSeriesCount = 4;
-	private int attackSeriesCount = 0;
-    public float attackSeriesTimeout = 0.75f;
-    private bool isAttackSeriesActive = false;
-    private bool isFrozenInSeries = false;
-    private float lastAttackTime = 0f;
-
-	private CharacterController2D characterController2D;
-    private RigidbodyConstraints2D originalConstraints;
-
-    private void Awake()
-	{
-		m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        characterController2D = GetComponent<CharacterController2D>();
-    }
-
-	// Start is called before the first frame update
-	void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
-		var gamepad = Gamepad.current;
+        animator.applyRootMotion = false;
+
+        var gamepad = Gamepad.current;
         bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
                              (gamepad != null && gamepad.xButton.wasPressedThisFrame);
 
-        if (isAttackSeriesActive && (Time.time - lastAttackTime > attackSeriesTimeout))
+        // Сброс, если игрок замешкался
+        if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
-            dmgValue = 1;
-            attackSeriesCount = 0;
-            isAttackSeriesActive = false;
-            UnfreezePlayer();
             Debug.Log("Серия прервалась");
+            ResetCombo();
         }
 
-        if (attackPressed && canAttack)
-		{
-            if (!isAttackSeriesActive)
-            {
-                isAttackSeriesActive = true;
-                attackSeriesCount = 0;
-                StartCoroutine(FreezeWhileInSeriesAttack());
-                Debug.Log("Серия началась");
-            }
-
+        // Обработка нажатия
+        if (attackPressed && !isAttacking && canAttack)
+        {
             lastAttackTime = Time.time;
-
             attackSeriesCount++;
-            if (attackSeriesCount >= maxAttackSeriesCount)
+
+            if (attackSeriesCount == 1)
+            {
+                dmgValue = 1;
+                animator.SetTrigger("Attack1");
+                Debug.Log("Первый удар");
+            }
+            else if (attackSeriesCount == 2)
+            {
+                dmgValue = 1;
+                animator.SetTrigger("Attack2");
+                Debug.Log("Второй удар");
+            }
+            else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
-                attackSeriesCount = 0;
-                isAttackSeriesActive = false;
-                Debug.Log("Серия законилась");
+                animator.SetTrigger("Attack3");
+                canAttack = false;
+                Debug.Log("Третий удар");
             }
 
-            canAttack = false;
-			animator.SetBool("IsAttacking", true);
-			StartCoroutine(AttackCooldown(0.25f, 1f));
-		}
-
-        #region DISTANCE ATTACK
-        // Может использоваться для оружий, но пока не надо
-
-        //if (Input.GetKeyDown(KeyCode.V))
-        //{
-        //	GameObject throwableWeapon = Instantiate(throwableObject, transform.position + new Vector3(transform.localScale.x * 0.5f, -0.2f), Quaternion.identity) as GameObject;
-        //	Vector2 direction = new Vector2(transform.localScale.x, 0);
-        //	throwableWeapon.GetComponent<ThrowableWeapon>().direction = direction;
-        //	throwableWeapon.name = "ThrowableWeapon";
-        //}
-        #endregion
+            isAttacking = true;
+        }
     }
 
-    IEnumerator AttackCooldown(float duration, float durationAfterSeries)
-	{
-        if (dmgValue == 1)
+    public void OnAttackAnimationEnd()
+    {
+        isAttacking = false;
+
+        if (attackSeriesCount >= maxAttackSeriesCount)
         {
-            yield return new WaitForSeconds(duration);
-            characterController2D.canMove = true;
+            StartCoroutine(AttackCooldown(1f));
+            Debug.Log("Серия завершена");
+            ResetCombo();
         }
-        else                                                                                                                  
-		{
-            yield return new WaitForSeconds(duration);
-            characterController2D.canMove = true;
-            yield return new WaitForSeconds(durationAfterSeries - duration);
-            dmgValue = 1;
-        }
+    }
 
-        if (!isAttackSeriesActive)
-            characterController2D.canMove = true;
+    private void ResetCombo()
+    {
+        attackSeriesCount = 0;
+        isAttacking = false;
+        animator.ResetTrigger("Attack1");
+        animator.ResetTrigger("Attack2");
+        animator.ResetTrigger("Attack3");
+    }
 
+
+
+    IEnumerator AttackCooldown(float durationAfterSeries)
+    {
+
+        yield return new WaitForSeconds(durationAfterSeries);
+        //characterController2D.canMove = true;
+        //yield return new WaitForSeconds(durationAfterSeries - duration);
         canAttack = true;
     }
 
-    IEnumerator FreezeWhileInSeriesAttack()
-    {
-        if (isFrozenInSeries)
-            yield break;
+    //  public void EndOfSeries()
+    //  {
+    //      canAttack = false;
+    //      lastAttack = true;
+    //      StartCoroutine(AttackCooldown(0.15f, 0.7f));     
+    //      Debug.Log("Серия законилась");
 
-        isFrozenInSeries = true;
-        originalConstraints = m_Rigidbody2D.constraints;
-        m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePosition;
-        characterController2D.canMove = false;
-
-        yield return new WaitWhile(() => isAttackSeriesActive);
-
-        m_Rigidbody2D.rotation = 0;
-        m_Rigidbody2D.constraints = originalConstraints;
-        characterController2D.canMove = true;
-        isFrozenInSeries = false;
-    }
-
-    private void UnfreezePlayer()
-    {
-        if (!isFrozenInSeries)
-            return;
-
-        m_Rigidbody2D.rotation = 0f;
-        m_Rigidbody2D.constraints = originalConstraints;
-        characterController2D.canMove = true;
-        isFrozenInSeries = false;
-    }
+    //}
 
     public void DoDashDamage()
 	{
