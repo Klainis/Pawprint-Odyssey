@@ -8,17 +8,19 @@ public class ThrowableWeapon : MonoBehaviour
 	public bool hasHit = false;
 	public float speed = 10f;
 
+	Rigidbody2D rb;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
 		if ( !hasHit)
-		GetComponent<Rigidbody2D>().linearVelocity = direction * speed;
+		rb.linearVelocity = direction * speed;
 	}
 
 	void OnCollisionEnter2D(Collision2D collision)

@@ -26,7 +26,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool canDash = true;
 	private bool isDashing = false; //If player is dashing
 	private bool m_IsWall = false; //If there is a wall in front of the player
-	private bool isWallSliding = false; //If player is sliding in a wall
+	[SerializeField] private bool isWallSliding = false; //If player is sliding in a wall
 	private bool oldWallSlidding = false; //If player is sliding in a wall in the previous frame
     private float prevVelocityX = 0f;
 	private bool canCheck = false; //For check if player is wallsliding
@@ -141,7 +141,7 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-	public void Move(float move, float wallUpMove, bool jump, bool dash)
+	public void Move(float move, bool jump, bool dash)
 	{
         if (canMove) {
 			if (dash && canDash && !isWallSliding)

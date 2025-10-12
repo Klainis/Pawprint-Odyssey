@@ -68,6 +68,7 @@ public class WanderingSpirit : MonoBehaviour {
 	public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
+			Debug.Log("Enemy получил урон");
 			float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			//transform.GetComponent<Animator>().SetBool("Hit", true);

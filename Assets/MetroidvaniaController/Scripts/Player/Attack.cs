@@ -6,12 +6,12 @@ using UnityEngine.InputSystem;
 public class Attack : MonoBehaviour
 {
     [Header("Основные параметры атаки")]
-    [SerializeReference] private int dmgValue = 1;
-    [SerializeReference] private Transform attackCheck;
-    [SerializeReference] private Animator animator;
-    [SerializeReference] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар
-    [SerializeReference] private int maxAttackSeriesCount = 3;
-    [SerializeReference] Camera cam;
+    [SerializeField] private int dmgValue = 1;
+    [SerializeField] private Transform attackCheck;
+    [SerializeField] private Animator animator;
+    [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар
+    [SerializeField] private int maxAttackSeriesCount = 3;
+    [SerializeField] Camera cam;
 
     private float lastAttackTime;
     private int attackSeriesCount = 0;
@@ -43,20 +43,20 @@ public class Attack : MonoBehaviour
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
-                Debug.Log("Первый удар");
+                //Debug.Log("Первый удар");
             }
             else if (attackSeriesCount == 2)
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
-                Debug.Log("Второй удар");
+                //Debug.Log("Второй удар");
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
                 canAttack = false;
-                Debug.Log("Третий удар");
+                //Debug.Log("Третий удар");
             }
 
             isAttacking = true;
@@ -118,7 +118,8 @@ public class Attack : MonoBehaviour
                     damageToApply = -damageToApply;
                 }
 				collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
-				cam.GetComponent<CameraFollow>().ShakeCamera();
+                Debug.Log("Отправили урон");
+                cam.GetComponent<CameraFollow>().ShakeCamera();
 			}
 		}
 	}

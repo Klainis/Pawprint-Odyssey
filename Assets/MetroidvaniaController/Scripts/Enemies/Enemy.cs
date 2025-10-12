@@ -68,7 +68,8 @@ public class Enemy : MonoBehaviour {
 	public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
-			float direction = damage / Mathf.Abs(damage);
+            Debug.Log("Enemy получил урон");
+            float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			transform.GetComponent<Animator>().SetBool("Hit", true);
 			life -= damage;

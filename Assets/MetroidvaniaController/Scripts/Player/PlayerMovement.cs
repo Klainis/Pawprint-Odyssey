@@ -13,16 +13,29 @@ public class PlayerMovement : MonoBehaviour {
 	public float runSpeed = 40f;
 
 	float horizontalMove = 0f;
-	float wallUpMove = 0f;
+	//float wallUpMove = 0f;
 	bool jump = false;
 	bool dash = false;
 
-	//bool dashAxis = false;
-	
-	// Update is called once per frame
-	void Update () {
+	Gamepad gamepad;
 
-		if (Input.GetAxisRaw("Horizontal") > 0)
+	Rigidbody2D rb;
+    public float velY;
+
+	//bool dashAxis = false;
+
+	// Update is called once per frame
+	void Start()
+	{
+        gamepad = Gamepad.current;
+		rb = GetComponent<Rigidbody2D>();
+    }
+	void Update () 
+	{
+		velY = rb.linearVelocity.y;
+
+
+        if (Input.GetAxisRaw("Horizontal") > 0)
 		{
 			horizontalMove = runSpeed;
 		}
@@ -37,19 +50,17 @@ public class PlayerMovement : MonoBehaviour {
 
 		animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
-		var gamepad = Gamepad.current;
-
-		if (Input.GetKey(KeyCode.W) || (gamepad != null && gamepad.leftStick.up.isPressed))
-		{
-			wallUpMove = runSpeed;
-			//Debug.Log(wallUpMove);
-			//m_Rigidbody2D.linearVelocity = new Vector2(0, 5f); // скорость взбирани€
-			//animator.SetBool("IsWallClimbing", true); // ƒобавить анимацию взбирани€
-		}
-		else
-		{
-			wallUpMove = 0f;
-        }
+		//if (Input.GetKey(KeyCode.W) || (gamepad != null && gamepad.leftStick.up.isPressed))
+		//{
+		//	wallUpMove = runSpeed;
+		//	//Debug.Log(wallUpMove);
+		//	//m_Rigidbody2D.linearVelocity = new Vector2(0, 5f); // скорость взбирани€
+		//	//animator.SetBool("IsWallClimbing", true); // ƒобавить анимацию взбирани€
+		//}
+		//else
+		//{
+		//	wallUpMove = 0f;
+  //      }
 
         if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
 		{
@@ -60,21 +71,6 @@ public class PlayerMovement : MonoBehaviour {
 		{
 			dash = true;
 		}
-
-		/*if (Input.GetAxisRaw("Dash") == 1 || Input.GetAxisRaw("Dash") == -1) //RT in Unity 2017 = -1, RT in Unity 2019 = 1
-		{
-			if (dashAxis == false)
-			{
-				dashAxis = true;
-				dash = true;
-			}
-		}
-		else
-		{
-			dashAxis = false;
-		}
-		*/
-
 	}
 
 	public void OnFall()
@@ -90,7 +86,7 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate ()
 	{
 		// Move our character
-		controller.Move(horizontalMove * Time.fixedDeltaTime, wallUpMove * Time.fixedDeltaTime, jump, dash);
+		controller.Move(horizontalMove * Time.fixedDeltaTime, jump, dash);
 		jump = false;
 		dash = false;
 	}
