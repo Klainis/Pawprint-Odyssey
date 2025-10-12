@@ -19,8 +19,8 @@ public class PlayerMovement : MonoBehaviour {
 
 	Gamepad gamepad;
 
-	Rigidbody2D rb;
-    public float velY;
+	//Rigidbody2D rb;
+ //   public float velY;
 
 	//bool dashAxis = false;
 
@@ -28,11 +28,11 @@ public class PlayerMovement : MonoBehaviour {
 	void Start()
 	{
         gamepad = Gamepad.current;
-		rb = GetComponent<Rigidbody2D>();
+		//rb = GetComponent<Rigidbody2D>();
     }
 	void Update () 
 	{
-		velY = rb.linearVelocity.y;
+		//velY = rb.linearVelocity.y;
 
 
         if (Input.GetAxisRaw("Horizontal") > 0)
