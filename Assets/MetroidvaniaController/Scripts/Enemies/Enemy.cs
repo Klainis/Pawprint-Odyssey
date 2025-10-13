@@ -3,19 +3,18 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
-	public float life = 10;
+    [Header("ќсновные параметры")]
+    [SerializeField] private float life = 10;
+	[SerializeField] private float speed = 5f;
+	[SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private bool isInvincible = false;
+
+	private Rigidbody2D rb;
 	private bool isPlat;
 	private bool isObstacle;
 	private Transform fallCheck;
 	private Transform wallCheck;
-	public LayerMask turnLayerMask;
-	private Rigidbody2D rb;
-
 	private bool facingRight = true;
-	
-	public float speed = 5f;
-
-	public bool isInvincible = false;
 	private bool isHitted = false;
 
 	void Awake () {
@@ -68,7 +67,7 @@ public class Enemy : MonoBehaviour {
 	public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
-            Debug.Log("Enemy получил урон");
+            //Debug.Log("Enemy получил урон");
             float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			transform.GetComponent<Animator>().SetBool("Hit", true);

@@ -9,7 +9,7 @@ public class Attack : MonoBehaviour
     [SerializeField] private int dmgValue = 1;
     [SerializeField] private Transform attackCheck;
     [SerializeField] private Animator animator;
-    [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар
+    [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар в серии
     [SerializeField] private int maxAttackSeriesCount = 3;
     [SerializeField] Camera cam;
 
@@ -118,7 +118,7 @@ public class Attack : MonoBehaviour
                     damageToApply = -damageToApply;
                 }
 				collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
-                Debug.Log("Отправили урон");
+                //Debug.Log("Отправили урон");
                 cam.GetComponent<CameraFollow>().ShakeCamera();
 			}
 		}

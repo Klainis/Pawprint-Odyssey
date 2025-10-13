@@ -3,20 +3,26 @@ using System.Collections;
 
 public class WanderingSpirit : MonoBehaviour {
 
-	public float life = 10;
+    [Header("Основные параметры")]
+    [SerializeField] private float life = 10;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float damage = 2f;
+    [SerializeField] private LayerMask turnLayerMask;
+	[SerializeField] private bool isInvincible = false;
+
+	[Header("Ускорение")]
+    [SerializeField] private float acceleratedSpeed = 10f;
+    [SerializeField] private float playerDetectDistance = 5f;
+    [SerializeField] private LayerMask playerLayer;
+
+    private Rigidbody2D rb;
 	private bool isPlat;
 	private bool isObstacle;
 	private Transform fallCheck;
 	private Transform wallCheck;
-	public LayerMask turnLayerMask;
-	private Rigidbody2D rb;
-
 	private bool facingRight = true;
-	
-	public float speed = 5f;
-
-	public bool isInvincible = false;
 	private bool isHitted = false;
+    private bool isAccelerated = false;
 
     void Awake () {
 		fallCheck = transform.Find("FallCheck");
@@ -30,29 +36,30 @@ public class WanderingSpirit : MonoBehaviour {
 		if (life <= 0) {
 			//transform.GetComponent<Animator>().SetBool("IsDead", true);
 			StartCoroutine(DestroyEnemy());
-		}
+            return;
+        }
 
         isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, 1 << LayerMask.NameToLayer("Default"));
 		isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
 
-        if (!isHitted && life > 0 && Mathf.Abs(rb.linearVelocity.y) < 0.5f)
+        if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
+            return;
+
+        Vector2 direction = facingRight ? Vector2.left : Vector2.right;
+        RaycastHit2D playerHit = Physics2D.Raycast(transform.position, direction, playerDetectDistance, playerLayer);
+		if (playerHit.collider != null)
 		{
-            if (isPlat && !isObstacle && !isHitted)
-			{
-				if (facingRight)
-				{
-					rb.linearVelocity = new Vector2(-speed, rb.linearVelocity.y);
-				}
-				else
-				{
-					rb.linearVelocity = new Vector2(speed, rb.linearVelocity.y);
-				}
-			}
-			else
-			{
-				Flip();
-			}
+			isAccelerated = true;
 		}
+		if (!isPlat || isObstacle)
+        {
+            isAccelerated = false;
+            Flip();
+        }
+
+        var moveSpeed = isAccelerated ? acceleratedSpeed : speed;
+        var moveDir = facingRight ? -1 : 1;
+        rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
 	}
 
 	void Flip (){
@@ -68,7 +75,7 @@ public class WanderingSpirit : MonoBehaviour {
 	public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
-			Debug.Log("Enemy получил урон");
+			//Debug.Log("Enemy получил урон");
 			float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			//transform.GetComponent<Animator>().SetBool("Hit", true);
@@ -79,15 +86,20 @@ public class WanderingSpirit : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionStay2D(Collision2D collision)
-	{
-		if (collision.gameObject.tag == "Player" && life > 0)
-		{
-			collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(2f, transform.position);
-		}
-	}
+	void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isAccelerated = false;
 
-	IEnumerator HitTime()
+			if (life > 0)
+			{
+                collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
+            }
+        }
+    }
+
+    IEnumerator HitTime()
 	{
 		isHitted = true;
 		isInvincible = true;
