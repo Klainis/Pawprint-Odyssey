@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4291727345091452}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1139487818724482}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.09, z: 0}
+  m_LocalPosition: {x: -0.166, y: -1.036, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,9 +46,9 @@ GameObject:
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
   - component: {fileID: 82701611152381692}
-  - component: {fileID: 8977364586652276136}
+  - component: {fileID: 4018540594280129563}
   - component: {fileID: 3133950676847035280}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: DrawCharacter
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783f8b7882d2d2a42a5b76de9179978f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 850
+  m_JumpForce: 700
   m_MovementSmoothing: 0.05
   m_AirControl: 1
   m_WhatIsGround:
@@ -242,7 +242,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 4
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -351,8 +351,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!61 &8977364586652276136
-BoxCollider2D:
+--- !u!70 &4018540594280129563
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -385,18 +385,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.01629734, y: -0.22563314}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 2.25}
-    newSize: {x: 2.9985716, y: 2.249375}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.67041016, y: 1.6483107}
-  m_EdgeRadius: 0
+  m_Offset: {x: -0.0049111843, y: -0.20882362}
+  m_Size: {x: 0.70753527, y: 1.8862742}
+  m_Direction: 0
 --- !u!114 &3133950676847035280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,7 +415,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4986330650710208}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +431,7 @@ Transform:
   m_GameObject: {fileID: 1393053470196254}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.35, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0.3, y: -0.265, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -457,7 +448,7 @@ GameObject:
   - component: {fileID: 4202976304329374}
   - component: {fileID: 198584872278178884}
   - component: {fileID: 199702487371442802}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: SmokeTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5303,7 +5294,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4370582630649528}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: AttackCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5319,7 +5310,7 @@ Transform:
   m_GameObject: {fileID: 1568700092027370}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0.608, y: -0.462, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5336,7 +5327,7 @@ GameObject:
   - component: {fileID: 4559817074117408}
   - component: {fileID: 198967111524372206}
   - component: {fileID: 199720515671813628}
-  m_Layer: 1
+  m_Layer: 3
   m_Name: SmokeGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
