@@ -34,8 +34,8 @@ public class WanderingSpirit : MonoBehaviour {
 	void FixedUpdate () {
 
 		if (life <= 0) {
-			//transform.GetComponent<Animator>().SetBool("IsDead", true);
-			StartCoroutine(DestroyEnemy());
+            //transform.GetComponent<Animator>().SetBool("IsDead", true);
+            StartCoroutine(DestroyEnemy());
             return;
         }
 

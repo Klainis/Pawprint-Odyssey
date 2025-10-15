@@ -14,11 +14,12 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the player is grounded.
 	[SerializeField] private Transform m_WallCheck;								//Posicion que controla si el personaje toca una pared
 
-	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
+	const float k_GroundedRadius = 0.2f; // Radius of the overlap circle to determine if grounded
     public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-	private Vector3 velocity = Vector3.zero;
+    private int turnCoefficient;
+    private Vector3 velocity = Vector3.zero;
 	private float limitFallSpeed = 25f; // Limit fall speed
 
 	public bool canDoubleJump = true; //If player can double jump
@@ -26,7 +27,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool canDash = true;
 	private bool isDashing = false; //If player is dashing
 	private bool m_IsWall = false; //If there is a wall in front of the player
-	private bool isWallSliding = false; //If player is sliding in a wall
+	public bool isWallSliding = false; //If player is sliding in a wall
 	private bool oldWallSlidding = false; //If player is sliding in a wall in the previous frame
     private float prevVelocityX = 0f;
 	private bool canCheck = false; //For check if player is wallsliding
@@ -63,9 +64,23 @@ public class CharacterController2D : MonoBehaviour
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
 	}
+    private void OnDrawGizmos()
+    {
+        if (m_GroundCheck != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundedRadius);
+        }
+        if (m_WallCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(m_WallCheck.position, k_GroundedRadius);
+        }
+    }
 
 
-	private void FixedUpdate()
+
+    private void FixedUpdate()
 	{
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
@@ -109,7 +124,7 @@ public class CharacterController2D : MonoBehaviour
 		{
 			if (m_Rigidbody2D.linearVelocity.y < -0.5f)
 				limitVelOnWallJump = false;
-			jumpWallDistX = (jumpWallStartX - transform.position.x) * transform.localScale.x;
+			jumpWallDistX = (jumpWallStartX - transform.position.x) * turnCoefficient;
 			if (jumpWallDistX < -0.5f && jumpWallDistX > -1f) 
 			{
 				canMove = true;
@@ -117,7 +132,7 @@ public class CharacterController2D : MonoBehaviour
 			else if (jumpWallDistX < -1f && jumpWallDistX >= -2f) 
 			{
 				canMove = true;
-				m_Rigidbody2D.linearVelocity = new Vector2(10f * transform.localScale.x, m_Rigidbody2D.linearVelocity.y);
+				m_Rigidbody2D.linearVelocity = new Vector2(10f * turnCoefficient, m_Rigidbody2D.linearVelocity.y);
 			}
 			else if (jumpWallDistX < -2f) 
 			{
@@ -147,14 +162,13 @@ public class CharacterController2D : MonoBehaviour
 
 		if (dash && canDash && !isWallSliding)
 		{
-			//m_Rigidbody2D.AddForce(new Vector2(transform.localScale.x * m_DashForce, 0f));
 			StartCoroutine(DashCooldown());
 		}
 		// If crouching, check to see if the character can stand up
 		if (isDashing)
 		{
-			m_Rigidbody2D.linearVelocity = new Vector2(transform.localScale.x * m_DashForce, 0);
-		}
+			m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * m_DashForce, 0);
+        }
 		//only control the player if grounded or airControl is turned on
 		else if (m_Grounded || m_AirControl)
 		{
@@ -169,13 +183,13 @@ public class CharacterController2D : MonoBehaviour
 			if (move > 0 && !m_FacingRight && !isWallSliding)
 			{
 				// ... flip the player.
-				Flip();
+				Turn();
 			}
 			// Otherwise if the input is moving the player left and the player is facing right...
 			else if (move < 0 && m_FacingRight && !isWallSliding)
 			{
 				// ... flip the player.
-				Flip();
+				Turn();
 			}
 		}
 		// If the player should jump...
@@ -204,7 +218,7 @@ public class CharacterController2D : MonoBehaviour
 			{
 				isWallSliding = true;
 				m_WallCheck.localPosition = new Vector3(-m_WallCheck.localPosition.x, m_WallCheck.localPosition.y, 0);
-				Flip();
+				Turn();
 				StartCoroutine(WaitToCheck(0.1f));
 				canDoubleJump = true;
 				animator.SetBool("IsJumping", false);
@@ -214,14 +228,14 @@ public class CharacterController2D : MonoBehaviour
 
 			if (isWallSliding)
 			{
-                if (move * transform.localScale.x > 0.1f)
+                if (move * turnCoefficient > 0.1f && oldWallSlidding)
 				{
 					StartCoroutine(WaitToEndSliding());
 				}
 				else 
 				{
 					oldWallSlidding = true;
-					m_Rigidbody2D.linearVelocity = new Vector2(-transform.localScale.x * 2, -5);
+					m_Rigidbody2D.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
 				}
 			}
 
@@ -240,7 +254,7 @@ public class CharacterController2D : MonoBehaviour
 				animator.SetBool("IsJumping", true);
 				animator.SetBool("JumpUp", true);
 				m_Rigidbody2D.linearVelocity = new Vector2(0f, 0f);
-				m_Rigidbody2D.AddForce(new Vector2(transform.localScale.x * m_JumpForce * 1.2f, m_JumpForce));
+				m_Rigidbody2D.AddForce(new Vector2(turnCoefficient * m_JumpForce * 1.2f, m_JumpForce));
 				jumpWallStartX = transform.position.x;
 				limitVelOnWallJump = true;
 				canDoubleJump = true;
@@ -271,16 +285,22 @@ public class CharacterController2D : MonoBehaviour
 		}
 	}
 
-
-	private void Flip()
+	private void Turn()
 	{
-		// Switch the way the player is labelled as facing.
-		m_FacingRight = !m_FacingRight;
-
-		// Multiply the player's x local scale by -1.
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
+		if (m_FacingRight)
+		{
+			Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+			transform.rotation = Quaternion.Euler(rotator);
+			m_FacingRight = !m_FacingRight;
+			turnCoefficient = -1;
+		}
+		else
+		{
+            Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+            m_FacingRight = !m_FacingRight;
+			turnCoefficient = 1;
+        }
 	}
 
 	public void ApplyDamage(float damage, Vector3 position) 
