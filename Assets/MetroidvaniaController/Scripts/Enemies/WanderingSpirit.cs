@@ -16,7 +16,10 @@ public class WanderingSpirit : MonoBehaviour {
     [SerializeField] private LayerMask playerLayer;
 
     private Rigidbody2D rb;
-	private bool isPlat;
+    Animator animator;
+
+
+    private bool isPlat;
 	private bool isObstacle;
 	private Transform fallCheck;
 	private Transform wallCheck;
@@ -29,6 +32,8 @@ public class WanderingSpirit : MonoBehaviour {
 		fallCheck = transform.Find("FallCheck");
 		wallCheck = transform.Find("WallCheck");
 		rb = GetComponent<Rigidbody2D>();
+
+        animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -122,6 +127,8 @@ public class WanderingSpirit : MonoBehaviour {
         //capsule.size = new Vector2(1f, 0.25f);
         //capsule.offset = new Vector2(0f, -0.8f);
         //capsule.direction = CapsuleDirection2D.Horizontal;
+        animator.SetTrigger("Dead");
+        gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
