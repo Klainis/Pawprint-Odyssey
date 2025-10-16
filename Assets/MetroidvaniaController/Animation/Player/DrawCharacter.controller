@@ -69,8 +69,8 @@ AnimatorStateTransition:
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0
-  m_TransitionOffset: 0
-  m_ExitTime: 0
+  m_TransitionOffset: 0.0052219825
+  m_ExitTime: 0.73486847
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -407,7 +407,7 @@ AnimatorStateMachine:
     m_Position: {x: 150, y: 650, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8289446579690460811}
-    m_Position: {x: 120, y: 230, z: 0}
+    m_Position: {x: 140, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2508532495062516819}
     m_Position: {x: 130, y: 30, z: 0}
@@ -428,10 +428,10 @@ AnimatorStateMachine:
     m_Position: {x: -490, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5642019824903799374}
-    m_Position: {x: 120, y: 340, z: 0}
+    m_Position: {x: 140, y: 310, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -974751915961041376}
-    m_Position: {x: 120, y: 460, z: 0}
+    m_Position: {x: 140, y: 420, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -1484175144144617687}
@@ -485,9 +485,6 @@ AnimatorStateTransition:
     m_ConditionEvent: IsJumping
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: IsAttacking
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
     m_ConditionEvent: IsDashing
     m_EventTreshold: 0
   - m_ConditionMode: 2
@@ -501,6 +498,9 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsDead
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsAttacking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5480482791452383530}

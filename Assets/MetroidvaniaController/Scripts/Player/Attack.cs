@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Attack : MonoBehaviour
 {
+    CharacterController2D controller;
+
     [Header("Основные параметры атаки")]
     [SerializeField] private int dmgValue = 1;
     [SerializeField] private Transform attackCheck;
@@ -15,8 +17,23 @@ public class Attack : MonoBehaviour
 
     private float lastAttackTime;
     private int attackSeriesCount = 0;
-    private bool isAttacking = false;
+    public bool isAttacking = false;
     private bool canAttack = true;
+
+    const float attackCheckRadius = 0.9f;
+
+    private void OnDrawGizmos()
+    {
+        if (attackCheck != null)
+        {
+            Gizmos.color = Color.brown;
+            Gizmos.DrawWireSphere(attackCheck.position, attackCheckRadius);
+        }
+    }
+    private void Start()
+    {
+        controller = GetComponent<CharacterController2D>();
+    }
 
     void Update()
     {
@@ -26,7 +43,6 @@ public class Attack : MonoBehaviour
         bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
                              (gamepad != null && gamepad.xButton.wasPressedThisFrame);
 
-        // Сброс, если игрок замешкался
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
             Debug.Log("Серия прервалась");
@@ -36,8 +52,11 @@ public class Attack : MonoBehaviour
         // Обработка нажатия
         if (attackPressed && !isAttacking && canAttack)
         {
+
             lastAttackTime = Time.time;
             attackSeriesCount++;
+
+            animator.SetBool("IsAttacking", true);
 
             if (attackSeriesCount == 1)
             {
@@ -61,6 +80,13 @@ public class Attack : MonoBehaviour
 
             isAttacking = true;
         }
+
+    //    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
+    //animator.GetCurrentAnimatorStateInfo(0).IsName("AirAttack1"))
+    //    {
+    //        Debug.Log("Анимация атаки реально проигрывается");
+    //    }
+
     }
 
     public void OnAttackAnimationEnd()
@@ -95,19 +121,10 @@ public class Attack : MonoBehaviour
         canAttack = true;
     }
 
-    //  public void EndOfSeries()
-    //  {
-    //      canAttack = false;
-    //      lastAttack = true;
-    //      StartCoroutine(AttackCooldown(0.15f, 0.7f));     
-    //      Debug.Log("Серия законилась");
-
-    //}
-
     public void DoDashDamage()
 	{
 		dmgValue = Mathf.Abs(dmgValue);
-		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, 0.9f);
+		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
 		for (int i = 0; i < collidersEnemies.Length; i++)
 		{
 			if (collidersEnemies[i].gameObject.tag == "Enemy")
