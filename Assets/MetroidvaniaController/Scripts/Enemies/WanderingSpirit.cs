@@ -24,6 +24,7 @@ public class WanderingSpirit : MonoBehaviour {
 	private bool isHitted = false;
     private bool isAccelerated = false;
 
+
     void Awake () {
 		fallCheck = transform.Find("FallCheck");
 		wallCheck = transform.Find("WallCheck");
@@ -54,7 +55,7 @@ public class WanderingSpirit : MonoBehaviour {
 		if (!isPlat || isObstacle)
         {
             isAccelerated = false;
-            Flip();
+            Turn();
         }
 
         var moveSpeed = isAccelerated ? acceleratedSpeed : speed;
@@ -62,17 +63,24 @@ public class WanderingSpirit : MonoBehaviour {
         rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
 	}
 
-	void Flip (){
-		// Switch the way the player is labelled as facing.
-		facingRight = !facingRight;
-		
-		// Multiply the player's x local scale by -1.
-		Vector3 theScale = transform.localScale;
-		theScale.x *= -1;
-		transform.localScale = theScale;
-	}
+    private void Turn()
+    {
+        if (facingRight)
+        {
+            Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+            facingRight = !facingRight;
+        }
+        else
+        {
+            Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+            facingRight = !facingRight;
+            //turnCoefficient = 1; используется в Charecter Contriller как коэффициент == tranform.localscale.x
+        }
+    }
 
-	public void ApplyDamage(float damage) {
+    public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
 			//Debug.Log("Enemy получил урон");
@@ -111,10 +119,12 @@ public class WanderingSpirit : MonoBehaviour {
 	IEnumerator DestroyEnemy()
 	{
 		CapsuleCollider2D capsule = GetComponent<CapsuleCollider2D>();
-		capsule.size = new Vector2(1f, 0.25f);
-		capsule.offset = new Vector2(0f, -0.8f);
-		capsule.direction = CapsuleDirection2D.Horizontal;
-		yield return new WaitForSeconds(0.25f);
+        //capsule.size = new Vector2(1f, 0.25f);
+        //capsule.offset = new Vector2(0f, -0.8f);
+        //capsule.direction = CapsuleDirection2D.Horizontal;
+        Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
+        transform.rotation = Quaternion.Euler(rotator);
+        yield return new WaitForSeconds(0.25f);
 		rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
 		yield return new WaitForSeconds(3f);
 		Destroy(gameObject);
