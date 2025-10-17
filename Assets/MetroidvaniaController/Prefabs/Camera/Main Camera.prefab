@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4550523820536806}
   - component: {fileID: 20290961051787748}
   - component: {fileID: 81780910946213854}
-  - component: {fileID: 114743086845943066}
   - component: {fileID: 6714377402978370488}
   - component: {fileID: 3352241511063945702}
   m_Layer: 0
@@ -71,7 +70,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.8224907
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -95,23 +94,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025145325119744}
   m_Enabled: 1
---- !u!114 &114743086845943066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025145325119744}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59d11666ee1aeff4dbb0ae6b9f495a22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FollowSpeed: 5
-  Target: {fileID: 0}
-  shakeDuration: 0
-  shakeAmount: 0.1
-  decreaseFactor: 1
 --- !u!114 &6714377402978370488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +158,7 @@ MonoBehaviour:
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 2
+    m_Time: 0.5
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
