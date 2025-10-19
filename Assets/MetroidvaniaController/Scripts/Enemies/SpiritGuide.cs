@@ -1,26 +1,31 @@
-using UnityEngine;
 using System.Collections;
+using System.Drawing;
+using Unity.VisualScripting;
+using UnityEngine;
+using static UnityEngine.UI.Image;
 
-public class WanderingSpirit : MonoBehaviour {
+public class SpiritGuide : MonoBehaviour {
 
     [Header("Основные параметры")]
     [SerializeField] private float life = 10;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float damage = 2f;
-    [SerializeField] private LayerMask turnLayerMask;
 	[SerializeField] private bool isInvincible = false;
-
-	[Header("Ускорение")]
-    [SerializeField] private float acceleratedSpeed = 10f;
-    [SerializeField] private float playerDetectDistance = 5f;
+    [SerializeField] private LayerMask turnLayerMask;
     [SerializeField] private LayerMask playerLayer;
+
+	[Header("Механика 'Таран'")]
+    [SerializeField] private float acceleratedSpeed = 10f;
+    [SerializeField] private float ramTelegraphTime = 0.25f;
+
+    [Header("Механика 'Зона света'")]
+    [SerializeField] private float zoneRadius = 1.5f;
+    [SerializeField] private float zoneTelegraphTime = 0.25f;
 
     private Rigidbody2D rb;
     private Animator animator;
 
-    private bool isPlat;
 	private bool isObstacle;
-	private Transform fallCheck;
 	private Transform wallCheck;
 	private bool facingRight = true;
 	private bool isHitted = false;
@@ -28,10 +33,8 @@ public class WanderingSpirit : MonoBehaviour {
 
 
     void Awake () {
-		fallCheck = transform.Find("FallCheck");
 		wallCheck = transform.Find("WallCheck");
 		rb = GetComponent<Rigidbody2D>();
-
         animator = GetComponent<Animator>();
 	}
 	
@@ -39,24 +42,23 @@ public class WanderingSpirit : MonoBehaviour {
 	void FixedUpdate () {
 
 		if (life <= 0) {
-            //transform.GetComponent<Animator>().SetBool("IsDead", true);
             StartCoroutine(DestroyEnemy());
             return;
         }
 
-        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, 1 << LayerMask.NameToLayer("Default"));
 		isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
 
         if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
             return;
 
         Vector2 direction = facingRight ? Vector2.left : Vector2.right;
-        RaycastHit2D playerHit = Physics2D.Raycast(transform.position, direction, playerDetectDistance, playerLayer);
-		if (playerHit.collider != null)
-		{
-			isAccelerated = true;
-		}
-		if (!isPlat || isObstacle)
+        RaycastHit2D playerHit = Physics2D.Raycast(transform.position, direction, 100f, playerLayer);
+        if (playerHit.collider != null && isAccelerated == false)
+        {
+            StartCoroutine(RamTelegraph(ramTelegraphTime));
+            isAccelerated = true;
+        }
+        if (isObstacle)
         {
             isAccelerated = false;
             Turn();
@@ -80,35 +82,37 @@ public class WanderingSpirit : MonoBehaviour {
             Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             transform.rotation = Quaternion.Euler(rotator);
             facingRight = !facingRight;
-            //turnCoefficient = 1; используется в Charecter Contriller как коэффициент == tranform.localscale.x
+            //turnCoefficient = 1; используется в Charecter Controller как коэффициент == tranform.localscale.x
         }
     }
 
     public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
-			//Debug.Log("Enemy получил урон");
-			float direction = damage / Mathf.Abs(damage);
-			damage = Mathf.Abs(damage);
-			//transform.GetComponent<Animator>().SetBool("Hit", true);
-			life -= damage;
-			rb.linearVelocity = Vector2.zero;
-			rb.AddForce(new Vector2(direction * 500f, 100f));
-			StartCoroutine(HitTime(0.1f));
-		}
+			//animator.SetBool("Hit", true);
+			life -= Mathf.Abs(damage);
+            StartCoroutine(HitTime(0.1f));
+        }
 	}
 
 	void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            isAccelerated = false;
-
 			if (life > 0)
 			{
                 collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
             }
         }
+    }
+
+    IEnumerator RamTelegraph(float time)
+    {
+        //animator.SetBool("RamTelegraph", true);
+        var normalConstraints = rb.constraints;
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        yield return new WaitForSeconds(time);
+        rb.constraints = normalConstraints;
     }
 
     IEnumerator HitTime(float time)
@@ -122,7 +126,7 @@ public class WanderingSpirit : MonoBehaviour {
 
 	IEnumerator DestroyEnemy()
 	{
-        animator.SetTrigger("Dead");
+        //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
