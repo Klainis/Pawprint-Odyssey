@@ -7,20 +7,21 @@ using System;
 
 public class CharacterController2D : MonoBehaviour
 {
-    [SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
-	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
-	[SerializeField] private bool m_AirControl = false;							// Whether or not a player can steer while jumping;
-	[SerializeField] private LayerMask m_WhatIsGround;							// A mask determining what is ground to the character
-	[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the player is grounded.
-	[SerializeField] private Transform m_WallCheck;								//Posicion que controla si el personaje toca una pared
+	[SerializeField] private float m_JumpForce = 400f;
+    [SerializeField] private float life = 10f;
+    [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
+	[SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
+	[SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
+	[SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
+	[SerializeField] private Transform m_WallCheck;                             //Posicion que controla si el personaje toca una pared
 
 	const float k_GroundedRadius = 0.2f; // Radius of the overlap circle to determine if grounded
-    public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
+	public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-    private int turnCoefficient;
-    private Vector3 velocity = Vector3.zero;
-	private float limitFallSpeed = 25f; // Limit fall speed
+	private int turnCoefficient;
+	private Vector3 velocity = Vector3.zero;
+	private float limitFallSpeed = 25f; // Limit fall moveX
 
 	public bool canDoubleJump = true; //If player can double jump
 	[SerializeField] private float m_DashForce = 25f;
@@ -29,12 +30,11 @@ public class CharacterController2D : MonoBehaviour
 	private bool m_IsWall = false; //If there is a wall in front of the player
 	private bool isWallSliding = false; //If player is sliding in a wall
 	private bool oldWallSlidding = false; //If player is sliding in a wall in the previous frame
-    private float prevVelocityX = 0f;
+	private float prevVelocityX = 0f;
 	private bool canCheck = false; //For check if player is wallsliding
 
-    public float life = 10f; //Life of the player
-	public bool invincible = false; //If player can die
-    public bool canMove = true; //If player can move
+	private bool invincible = false; //If player can die
+	private bool canMove = true; //If player can moveX
 
 	private Animator animator;
 	public ParticleSystem particleJumpUp; //Trail particles
@@ -47,10 +47,11 @@ public class CharacterController2D : MonoBehaviour
 	[Header("Events")]
 	[Space]
 
-	public UnityEvent OnFallEvent;
-	public UnityEvent OnLandEvent;
+	[SerializeField] private UnityEvent OnFallEvent;
+	[SerializeField] private UnityEvent OnLandEvent;
+    
 
-	[System.Serializable]
+    [System.Serializable]
 	public class BoolEvent : UnityEvent<bool> { }
 
 	private void Awake()
@@ -64,46 +65,47 @@ public class CharacterController2D : MonoBehaviour
 		if (OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
 	}
-    private void OnDrawGizmos()
-    {
-        if (m_GroundCheck != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundedRadius);
-        }
-        if (m_WallCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(m_WallCheck.position, k_GroundedRadius);
-        }
-    }
-
-
-
-    private void FixedUpdate()
+	private void OnDrawGizmos()
 	{
-		bool wasGrounded = m_Grounded;
+		if (m_GroundCheck != null)
+		{
+			Gizmos.color = Color.green;
+			Gizmos.DrawWireSphere(m_GroundCheck.position, k_GroundedRadius);
+		}
+		if (m_WallCheck != null)
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(m_WallCheck.position, k_GroundedRadius);
+		}
+	}
+
+
+
+	private void FixedUpdate()
+	{
+        bool wasGrounded = m_Grounded;
 		m_Grounded = false;
 
-		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+		Debug.Log(m_Grounded);
+
+
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
 			if (colliders[i].gameObject != gameObject)
 				m_Grounded = true;
-				if (!wasGrounded)
-				{
-					OnLandEvent.Invoke();
-					if (!m_IsWall && !isDashing) 
-						particleJumpDown.Play();
-					canDoubleJump = true;
-					if (m_Rigidbody2D.linearVelocity.y < 0f)
-						limitVelOnWallJump = false;
-				}
-		}
+			if (!wasGrounded)
+			{
+				OnLandEvent.Invoke();
+				if (!m_IsWall && !isDashing)
+					particleJumpDown.Play();
+				canDoubleJump = true;
+				if (m_Rigidbody2D.linearVelocity.y < 0f)
+					limitVelOnWallJump = false;
+			}
+        }
 
-		m_IsWall = false;
+        m_IsWall = false;
 
 		if (!m_Grounded)
 		{
@@ -125,63 +127,64 @@ public class CharacterController2D : MonoBehaviour
 			if (m_Rigidbody2D.linearVelocity.y < -0.5f)
 				limitVelOnWallJump = false;
 			jumpWallDistX = (jumpWallStartX - transform.position.x) * turnCoefficient;
-			if (jumpWallDistX < -0.5f && jumpWallDistX > -1f) 
+			if (jumpWallDistX < -0.5f && jumpWallDistX > -1f)
 			{
 				canMove = true;
 			}
-			else if (jumpWallDistX < -1f && jumpWallDistX >= -2f) 
+			else if (jumpWallDistX < -1f && jumpWallDistX >= -2f)
 			{
 				canMove = true;
 				m_Rigidbody2D.linearVelocity = new Vector2(10f * turnCoefficient, m_Rigidbody2D.linearVelocity.y);
 			}
-			else if (jumpWallDistX < -2f) 
+			else if (jumpWallDistX < -2f)
 			{
 				limitVelOnWallJump = false;
 				m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
 			}
-			else if (jumpWallDistX > 0) 
+			else if (jumpWallDistX > 0)
 			{
 				limitVelOnWallJump = false;
 				m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
 			}
 		}
 
-        if (m_Rigidbody2D.linearVelocity.y > 0)
-        {
-            if (!Input.GetKey(KeyCode.Z) && (Gamepad.current == null || !Gamepad.current.aButton.isPressed))
-            {
+		if (m_Rigidbody2D.linearVelocity.y > 0)
+		{
+			if (!Input.GetKey(KeyCode.Z) && (Gamepad.current == null || !Gamepad.current.aButton.isPressed))
+			{
 				m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
 			}
-        }
-    }
+		}
+	}
 
 
-    public void Move(float move, bool jump, bool dash)
-    {
-        if (!canMove) return;
+	public void Move(float moveY, float moveX, bool jump, bool dash, bool grab)
+	{
+		if (!canMove) return;
 
 		//Дэш
-        if (dash && canDash && !isWallSliding)
-        {
-            StartCoroutine(DashCooldown());
-        }
+		if (dash && canDash && !isWallSliding)
+		{
+			StartCoroutine(DashCooldown());
+		}
 
-		Dash(move);
+		Dash(moveX);
 
-        // Прыжок
-        if (m_Grounded && jump)
-        {
-            Jump();
-        }
-        else if (!m_Grounded && jump)
-        {
-            DoubleJump(jump);
-        }
+		// Прыжок
+		if (m_Grounded && jump)
+		{
+			Jump();
+		}
+		else if (!m_Grounded && jump)
+		{
+			DoubleJump(jump);
+		}
 
         // Скольжение по стене и дэш от нее
+        // Скольжение по стене и взбирание
         if (m_IsWall && !m_Grounded)
         {
-            HandleWallSliding(move, jump, dash);
+            HandleWallSliding(moveY, moveX, jump, dash, grab);
         }
         else if (isWallSliding && !m_IsWall && canCheck)
         {
@@ -193,7 +196,62 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    private void MoveHorizontal(float move)
+    private void HandleWallSliding(float moveY, float moveX, bool jump, bool dash, bool grab)
+	{
+        // Начало скольжения
+        if (!oldWallSlidding && m_Rigidbody2D.linearVelocity.y < 0 || isDashing)
+		{
+			isWallSliding = true;
+			m_WallCheck.localPosition = new Vector3(-m_WallCheck.localPosition.x, m_WallCheck.localPosition.y, 0);
+			Turn();
+			StartCoroutine(WaitToCheck(0.1f));
+			canDoubleJump = true;
+			animator.SetBool("IsJumping", false);
+			animator.SetBool("IsWallSliding", true);
+		}
+
+		isDashing = false;
+
+		if (isWallSliding)
+		{
+			if (moveX * turnCoefficient > 0.1f && oldWallSlidding)
+			{
+				StartCoroutine(WaitToEndSliding());
+			}
+			else
+			{
+				oldWallSlidding = true;
+				m_Rigidbody2D.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
+			}
+		}
+
+		// Прыжок от стены
+		if (jump && isWallSliding)
+		{
+			WallJump();
+		}
+		// Дэш от стены
+		else if (dash && canDash)
+		{
+			//isWallSliding = false;
+			//animator.SetBool("IsWallSliding", false);
+			//oldWallSlidding = false;
+			//m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
+			//canDoubleJump = true;
+			//StartCoroutine(DashCooldown());
+		}
+		else if (grab)
+		{
+			Debug.Log("GRAB");
+			//isWallSliding = false;
+			////animator.SetBool("IsWallSliding", false);
+			//oldWallSlidding = false;
+			//m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
+			//canDoubleJump = true;
+		}
+    }
+
+	private void MoveHorizontal(float move)
     {
         if (!(m_Grounded || m_AirControl)) return;
 
@@ -230,52 +288,6 @@ public class CharacterController2D : MonoBehaviour
         animator.SetBool("IsDoubleJumping", true);
     }
 
-    private void HandleWallSliding(float move, bool jump, bool dash)
-    {
-        // Начало скольжения
-        if (!oldWallSlidding && m_Rigidbody2D.linearVelocity.y < 0 || isDashing)
-        {
-            isWallSliding = true;
-            m_WallCheck.localPosition = new Vector3(-m_WallCheck.localPosition.x, m_WallCheck.localPosition.y, 0);
-            Turn();
-            StartCoroutine(WaitToCheck(0.1f));
-            canDoubleJump = true;
-            animator.SetBool("IsJumping", false);
-            animator.SetBool("IsWallSliding", true);
-        }
-
-        isDashing = false;
-
-        if (isWallSliding)
-        {
-            if (move * turnCoefficient > 0.1f && oldWallSlidding)
-            {
-                StartCoroutine(WaitToEndSliding());
-            }
-            else
-            {
-                oldWallSlidding = true;
-                m_Rigidbody2D.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
-            }
-        }
-
-        // Прыжок от стены
-        if (jump && isWallSliding)
-        {
-            WallJump();
-        }
-        // Дэш от стены
-        else if (dash && canDash)
-        {
-            isWallSliding = false;
-            animator.SetBool("IsWallSliding", false);
-            oldWallSlidding = false;
-            m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
-            canDoubleJump = true;
-			StartCoroutine(DashCooldown());
-		}
-    }
-
     private void WallJump()
     {
         animator.SetBool("IsJumping", true);
@@ -307,7 +319,6 @@ public class CharacterController2D : MonoBehaviour
             MoveHorizontal(move);
         }
     }
-
 
     private void Turn()
 	{

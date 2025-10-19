@@ -39,12 +39,11 @@ public class WanderingSpirit : MonoBehaviour {
 	void FixedUpdate () {
 
 		if (life <= 0) {
-            //transform.GetComponent<Animator>().SetBool("IsDead", true);
             StartCoroutine(DestroyEnemy());
             return;
         }
 
-        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, 1 << LayerMask.NameToLayer("Default"));
+        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f,turnLayerMask);
 		isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
 
         if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)

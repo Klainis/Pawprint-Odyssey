@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class CameraVerticalLook : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class CameraVerticalLook : MonoBehaviour
     private CinemachineFramingTransposer transposer;
     private Vector3 velocity = Vector3.zero;
     private Vector3 targetOffset = Vector3.zero;
+    private float targetCameraY;
 
     private void Awake()
     {
@@ -53,7 +55,8 @@ public class CameraVerticalLook : MonoBehaviour
         //Debug.Log(look);
 
         float desiredY = look.y * verticalRange;
-        targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, desiredY, 0f);
+        targetCameraY = desiredY > 0f ? verticalRange : desiredY < 0f ? -verticalRange : 0;
+        targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, targetCameraY, 0f);
 
         float distance = Mathf.Abs(transposer.m_TrackedObjectOffset.y - targetOffset.y);
         float dynamicSmooth = Mathf.Lerp(0.05f, 0.2f, distance / verticalRange);

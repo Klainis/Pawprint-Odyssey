@@ -7,48 +7,43 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public CharacterController2D controller;
-	public Animator animator;
+	[SerializeField] private CharacterController2D controller;
+	[SerializeField] private Animator animator;
+	[SerializeField] private InputActionReference moveAction;
 
-	public float runSpeed = 40f;
+	[SerializeField] private float runSpeed = 40f;
 
-	float horizontalMove = 0f;
+	private float horizontalMove = 0f;
 	//float wallUpMove = 0f;
-	bool jump = false;
-	bool dash = false;
+	public bool jump = false;
+	private bool dash = false;
 
 	Gamepad gamepad;
+    private bool grab = false;
+    private float verticalMove = 0f;
 
-	//Rigidbody2D rb;
- //   public float velY;
+    //Rigidbody2D rb;
+    //   public float velY;
 
-	//bool dashAxis = false;
+    //bool dashAxis = false;
 
-	// Update is called once per frame
-	void Start()
+    // Update is called once per frame
+    void Start()
 	{
         gamepad = Gamepad.current;
-		//rb = GetComponent<Rigidbody2D>();
     }
 	void Update () 
 	{
-		//velY = rb.linearVelocity.y;
 
-
-        if (Input.GetAxisRaw("Horizontal") > 0)
-		{
-			horizontalMove = runSpeed;
-		}
-        else if (Input.GetAxisRaw("Horizontal") < 0)
+		if (moveAction != null && moveAction.action != null)
         {
-            horizontalMove = -runSpeed;
-        }
-        else
-		{
-			horizontalMove = 0f;
-		}
+            Vector2 move = moveAction.action.ReadValue<Vector2>();
 
-		animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+            Run(move);
+            WallGrab(move);
+        }
+
+        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
 		{
@@ -61,7 +56,37 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	public void OnFall()
+    private void WallGrab(Vector2 move)
+    {
+        if (move.y > 0 && (gamepad != null && gamepad.rightTrigger.isPressed))
+        {
+            grab = true;
+            verticalMove = runSpeed;
+        }
+        else
+        {
+            grab = false;
+            verticalMove = 0f;
+        }
+    }
+
+    private void Run(Vector2 move)
+    {
+        if (move.x > 0)
+        {
+            horizontalMove = runSpeed;
+        }
+        else if (move.x < 0)
+        {
+            horizontalMove = -runSpeed;
+        }
+        else
+        {
+            horizontalMove = 0f;
+        }
+    }
+
+    public void OnFall()
 	{
 		animator.SetBool("IsJumping", true);
 	}
@@ -74,7 +99,7 @@ public class PlayerMovement : MonoBehaviour {
 	void FixedUpdate ()
 	{
 		// Move our character
-		controller.Move(horizontalMove * Time.fixedDeltaTime, jump, dash);
+		controller.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
 		jump = false;
 		dash = false;
 	}

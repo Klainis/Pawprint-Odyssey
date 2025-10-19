@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-	public float FollowSpeed = 2f;
-	public Transform Target;
+	[SerializeField] private float FollowSpeed = 2f;
+	[SerializeField] private Transform Target;
 
 	// Transform of the camera to shake. Grabs the gameObject's transform
 	// if null.
 	private Transform camTransform;
 
 	// How long the object should shake for.
-	public float shakeDuration = 0f;
+	[SerializeField] private float shakeDuration = 0f;
 
 	// Amplitude of the shake. A larger value shakes the camera harder.
-	public float shakeAmount = 0.1f;
-	public float decreaseFactor = 1.0f;
+	[SerializeField] private float shakeAmount = 0.1f;
+	[SerializeField] private float decreaseFactor = 1.0f;
+	private Vector3 newPosition;
 
-	Vector3 originalPos;
+
+    Vector3 originalPos;
 
 	void Awake()
 	{
@@ -36,7 +38,9 @@ public class CameraFollow : MonoBehaviour
 
 	private void Update()
 	{
-		Vector3 newPosition = Target.position;
+		if (Target != null)
+			newPosition = Target.position;
+
 		newPosition.z = -10;
 		transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
 
