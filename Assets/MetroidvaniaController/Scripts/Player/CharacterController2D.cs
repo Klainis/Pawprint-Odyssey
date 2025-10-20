@@ -86,9 +86,6 @@ public class CharacterController2D : MonoBehaviour
         bool wasGrounded = m_Grounded;
 		m_Grounded = false;
 
-		Debug.Log(m_Grounded);
-
-
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
@@ -180,9 +177,16 @@ public class CharacterController2D : MonoBehaviour
 			DoubleJump(jump);
 		}
 
+        if (grab)
+        {
+            Grab(moveY);
+        }
+        else
+            m_Rigidbody2D.gravityScale = 3f;
+
         // Скольжение по стене и дэш от нее
         // Скольжение по стене и взбирание
-        if (m_IsWall && !m_Grounded)
+        if (m_IsWall && !m_Grounded && !grab)
         {
             HandleWallSliding(moveY, moveX, jump, dash, grab);
         }
@@ -239,19 +243,24 @@ public class CharacterController2D : MonoBehaviour
 			//m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 			//canDoubleJump = true;
 			//StartCoroutine(DashCooldown());
-		}
-		else if (grab)
-		{
-			Debug.Log("GRAB");
-			//isWallSliding = false;
-			////animator.SetBool("IsWallSliding", false);
-			//oldWallSlidding = false;
-			//m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
-			//canDoubleJump = true;
+		
 		}
     }
 
-	private void MoveHorizontal(float move)
+    private void Grab(float moveY)
+    {
+		m_Rigidbody2D.gravityScale = 0f;
+
+		Debug.Log("GRAB");
+		isWallSliding = false;
+		animator.SetBool("IsWallSliding", false);
+		oldWallSlidding = false;
+
+		Vector3 targetVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, moveY * 10f);
+		m_Rigidbody2D.linearVelocity = Vector3.SmoothDamp(m_Rigidbody2D.linearVelocity, targetVelocity, ref velocity, m_MovementSmoothing);
+    }
+
+    private void MoveHorizontal(float move)
     {
         if (!(m_Grounded || m_AirControl)) return;
 
