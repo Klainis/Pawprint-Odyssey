@@ -2,6 +2,8 @@ using System.Collections;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UIElements;
 using static UnityEngine.UI.Image;
 
 public class SpiritGuide : MonoBehaviour {
@@ -9,34 +11,49 @@ public class SpiritGuide : MonoBehaviour {
     [Header("Основные параметры")]
     [SerializeField] private float life = 10;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float damage = 2f;
+    [SerializeField] private float damage = 1f;
+    [SerializeField] private float secondStageLifeCoef = 0.6f;
 	[SerializeField] private bool isInvincible = false;
     [SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask playerLayer;
 
-	[Header("Механика 'Таран'")]
+    [Header("Механика 'Таран'")]
     [SerializeField] private float acceleratedSpeed = 10f;
     [SerializeField] private float ramTelegraphTime = 0.25f;
 
     [Header("Механика 'Зона света'")]
-    [SerializeField] private float zoneRadius = 1.5f;
-    [SerializeField] private float zoneTelegraphTime = 0.25f;
+    [SerializeField] private GameObject lightZone;
+    [SerializeField] private float lightZoneCooldown = 5f;
+    [SerializeField] private float lightZoneChance = 0.3f;
+    [SerializeField] private float lightZoneTime = 1f;
+    [SerializeField] private float lightZoneTelegraphTime = 0.5f;
 
-    private Rigidbody2D rb;
+    const float groundedRadius = 0.2f;
+
     private Animator animator;
-
-	private bool isObstacle;
+    private Rigidbody2D rb;
 	private Transform wallCheck;
-	private bool facingRight = true;
+    private Transform groundCheck;
+    private Transform pivot;
+
+    private float nextLightZoneTime = 0f;
+    private float secondStageLifeAmount;
+	private bool isObstacle;
+    private bool facingRight = true;
 	private bool isHitted = false;
     private bool isAccelerated = false;
 
-
     void Awake () {
-		wallCheck = transform.Find("WallCheck");
-		rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-	}
+        rb = GetComponent<Rigidbody2D>();
+		
+        wallCheck = transform.Find("WallCheck");
+        groundCheck = transform.Find("GroundCheck");
+        pivot = transform.Find("Pivot");
+
+        secondStageLifeAmount = life * secondStageLifeCoef;
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -46,18 +63,36 @@ public class SpiritGuide : MonoBehaviour {
             return;
         }
 
-		isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
+		isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.2f, turnLayerMask);
 
         if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
             return;
 
-        Vector2 direction = facingRight ? Vector2.left : Vector2.right;
-        RaycastHit2D playerHit = Physics2D.Raycast(transform.position, direction, 100f, playerLayer);
-        if (playerHit.collider != null && isAccelerated == false)
+        var direction = facingRight ? Vector2.left : Vector2.right;
+        var playerHit = Physics2D.Raycast(pivot.position, direction, 35, playerLayer);
+        var groundHit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundedRadius, groundLayer);
+
+        if (playerHit.collider != null && groundHit.collider != null && !isAccelerated)
         {
-            StartCoroutine(RamTelegraph(ramTelegraphTime));
+            StartCoroutine(RamTelegraph());
             isAccelerated = true;
         }
+
+        if (Time.time >= nextLightZoneTime && life <= secondStageLifeAmount && !isAccelerated)
+        {
+            if (Random.value < lightZoneChance)
+            {
+                var wallHitLeft = Physics2D.Raycast(pivot.position, Vector2.left, 8, groundLayer);
+                var wallHitRight = Physics2D.Raycast(pivot.position, Vector2.right, 8, groundLayer);
+
+                if (wallHitLeft.collider == null && wallHitRight.collider == null)
+                {
+                    StartCoroutine(LightZoneTelegraph());
+                    nextLightZoneTime = Time.time + lightZoneCooldown;
+                }
+            }
+        }
+
         if (isObstacle)
         {
             isAccelerated = false;
@@ -73,13 +108,13 @@ public class SpiritGuide : MonoBehaviour {
     {
         if (facingRight)
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            var rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             transform.rotation = Quaternion.Euler(rotator);
             facingRight = !facingRight;
         }
         else
         {
-            Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            var rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             transform.rotation = Quaternion.Euler(rotator);
             facingRight = !facingRight;
             //turnCoefficient = 1; используется в Charecter Controller как коэффициент == tranform.localscale.x
@@ -95,7 +130,7 @@ public class SpiritGuide : MonoBehaviour {
         }
 	}
 
-	void OnCollisionEnter2D(Collision2D collision)
+	void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -106,12 +141,25 @@ public class SpiritGuide : MonoBehaviour {
         }
     }
 
-    IEnumerator RamTelegraph(float time)
+    IEnumerator RamTelegraph()
     {
         //animator.SetBool("RamTelegraph", true);
         var normalConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezePosition;
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(ramTelegraphTime);
+        rb.constraints = normalConstraints;
+    }
+
+    IEnumerator LightZoneTelegraph()
+    {
+        //animator.SetBool("LightZoneTelegraph", true);
+        var normalConstraints = rb.constraints;
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        yield return new WaitForSeconds(lightZoneTelegraphTime);
+
+        lightZone.SetActive(true);
+        yield return new WaitForSeconds(lightZoneTime);
+        lightZone.SetActive(false);
         rb.constraints = normalConstraints;
     }
 
@@ -128,7 +176,7 @@ public class SpiritGuide : MonoBehaviour {
 	{
         //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
-        Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
+        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
 		rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);

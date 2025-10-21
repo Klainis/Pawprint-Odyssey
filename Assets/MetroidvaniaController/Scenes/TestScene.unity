@@ -1068,10 +1068,11 @@ Transform:
   m_GameObject: {fileID: 278316447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.679, y: -3.01, z: 0}
+  m_LocalPosition: {x: 36.94, y: -1.607, z: 0}
   m_LocalScale: {x: 3.2467, y: 1.986, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 526972663}
   - {fileID: 973999547}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1091,12 +1092,16 @@ MonoBehaviour:
   speed: 1
   damage: 2
   isInvincible: 0
-  turnLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  turnLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 512
+  groundCheck: {fileID: 526972663}
   acceleratedSpeed: 5
   ramTelegraphTime: 1
   zoneRadius: 1.5
@@ -2151,6 +2156,37 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 20290961051787748, guid: d975e66254b08984ab50d4c39dcb947f, type: 3}
   m_PrefabInstance: {fileID: 296927483}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &526972662
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 526972663}
+  m_Layer: 6
+  m_Name: GroungCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &526972663
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526972662}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.604, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 278316452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &573815214
 GameObject:
   m_ObjectHideFlags: 0
@@ -5000,7 +5036,7 @@ GameObject:
   - component: {fileID: 1430048591}
   - component: {fileID: 1430048590}
   - component: {fileID: 1430048589}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tower (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

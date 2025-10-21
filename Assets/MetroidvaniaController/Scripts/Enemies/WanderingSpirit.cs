@@ -6,32 +6,31 @@ public class WanderingSpirit : MonoBehaviour {
     [Header("Основные параметры")]
     [SerializeField] private float life = 10;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float damage = 2f;
-    [SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private float damage = 1f;
 	[SerializeField] private bool isInvincible = false;
+    [SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private LayerMask playerLayer;
 
 	[Header("Ускорение")]
     [SerializeField] private float acceleratedSpeed = 10f;
     [SerializeField] private float playerDetectDistance = 5f;
-    [SerializeField] private LayerMask playerLayer;
 
-    private Rigidbody2D rb;
     private Animator animator;
+    private Rigidbody2D rb;
+	private Transform fallCheck;
+	private Transform wallCheck;
 
     private bool isPlat;
 	private bool isObstacle;
-	private Transform fallCheck;
-	private Transform wallCheck;
 	private bool facingRight = true;
 	private bool isHitted = false;
     private bool isAccelerated = false;
 
-
     void Awake () {
 		fallCheck = transform.Find("FallCheck");
 		wallCheck = transform.Find("WallCheck");
-		rb = GetComponent<Rigidbody2D>();
 
+		rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 	}
 	
@@ -97,7 +96,7 @@ public class WanderingSpirit : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D collision)
+	void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {

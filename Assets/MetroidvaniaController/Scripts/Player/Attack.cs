@@ -1,26 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Attack : MonoBehaviour
 {
-    CharacterController2D controller;
-
     [Header("Основные параметры атаки")]
     [SerializeField] private int dmgValue = 1;
-    [SerializeField] private Transform attackCheck;
-    [SerializeField] private Animator animator;
     [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар в серии
     [SerializeField] private int maxAttackSeriesCount = 3;
     [SerializeField] Camera cam;
 
+    const float attackCheckRadius = 0.9f;
+
+    private Animator animator;
+    private CharacterController2D controller;
+    private Transform attackCheck;
+
     private float lastAttackTime;
     private int attackSeriesCount = 0;
-    public bool isAttacking = false;
+    private bool isAttacking = false;
     private bool canAttack = true;
-
-    const float attackCheckRadius = 0.9f;
 
     private void OnDrawGizmos()
     {
@@ -30,8 +31,12 @@ public class Attack : MonoBehaviour
             Gizmos.DrawWireSphere(attackCheck.position, attackCheckRadius);
         }
     }
-    private void Start()
+
+    void Awake()
     {
+        attackCheck = transform.Find("AttackCheck");
+
+        animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController2D>();
     }
 
