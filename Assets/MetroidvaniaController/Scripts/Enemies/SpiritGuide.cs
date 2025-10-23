@@ -63,7 +63,7 @@ public class SpiritGuide : MonoBehaviour {
             return;
         }
 
-		isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.2f, turnLayerMask);
+		isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.1f, turnLayerMask);
 
         if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
             return;
@@ -141,26 +141,50 @@ public class SpiritGuide : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (life > 0)
+            {
+                collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
+            }
+        }
+    }
+
     IEnumerator RamTelegraph()
     {
         //animator.SetBool("RamTelegraph", true);
+
+        var renderer = GetComponent<SpriteRenderer>();
+        var normalColor = renderer.color;
+        renderer.color = UnityEngine.Color.red;
+
         var normalConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezePosition;
         yield return new WaitForSeconds(ramTelegraphTime);
         rb.constraints = normalConstraints;
+
+        renderer.color = normalColor;
     }
 
     IEnumerator LightZoneTelegraph()
     {
         //animator.SetBool("LightZoneTelegraph", true);
+
+        var renderer = GetComponent<SpriteRenderer>();
+        var normalColor = renderer.color;
+        renderer.color = UnityEngine.Color.lightYellow;
+
         var normalConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezePosition;
         yield return new WaitForSeconds(lightZoneTelegraphTime);
-
         lightZone.SetActive(true);
         yield return new WaitForSeconds(lightZoneTime);
         lightZone.SetActive(false);
         rb.constraints = normalConstraints;
+
+        renderer.color = normalColor;
     }
 
     IEnumerator HitTime(float time)
