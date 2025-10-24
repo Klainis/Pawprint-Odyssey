@@ -391,6 +391,24 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    public void ApplyObjectDamage(float damage)
+    {
+        if (!invincible)
+        {
+            animator.SetBool("Hit", true);
+            life -= damage;
+            if (life <= 0)
+            {
+                StartCoroutine(WaitToDead());
+            }
+            else
+            {
+                StartCoroutine(Stun(0.25f));
+                StartCoroutine(MakeInvincible(1f));
+            }
+        }
+    }
+
     IEnumerator DashCooldown()
     {
         animator.SetBool("IsDashing", true);
