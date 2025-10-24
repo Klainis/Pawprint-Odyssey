@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5460791480348182383}
   m_Layer: 6
-  m_Name: Pivot
+  m_Name: PivotBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,6 +194,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.315, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4800074149752140149}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5396883303140703516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4526595284561893762}
+  m_Layer: 6
+  m_Name: PivotTop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4526595284561893762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5396883303140703516}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.331, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -224,7 +255,7 @@ Transform:
   m_GameObject: {fileID: 6230272601662882094}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.59, y: -0.331, z: 0}
+  m_LocalPosition: {x: -0.59, y: -0.163, z: 0}
   m_LocalScale: {x: 0.30800503, y: 0.50352466, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,6 +294,7 @@ Transform:
   m_LocalScale: {x: 5.053541, y: 3.8880343, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4526595284561893762}
   - {fileID: 5460791480348182383}
   - {fileID: 1069420054396769046}
   - {fileID: 5740638309850842592}
@@ -297,9 +329,10 @@ MonoBehaviour:
     m_Bits: 8
   acceleratedSpeed: 5
   ramTelegraphTime: 0.25
+  ramPauseBetweenSeries: 3
   lightZone: {fileID: 1793547079032514525}
-  lightZoneCooldown: 5
-  lightZoneChance: 0.3
+  lightZoneCooldown: 3
+  lightZoneChance: 0.6
   lightZoneTime: 1
   lightZoneTelegraphTime: 0.5
 --- !u!212 &4000825928145215271

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,11 +22,12 @@ public class SpiritGuide : MonoBehaviour {
     [Header("Механика 'Таран'")]
     [SerializeField] private float acceleratedSpeed = 10f;
     [SerializeField] private float ramTelegraphTime = 0.25f;
+    [SerializeField] private float ramPauseBetweenSeries = 3f;
 
     [Header("Механика 'Зона света'")]
     [SerializeField] private GameObject lightZone;
-    [SerializeField] private float lightZoneCooldown = 5f;
-    [SerializeField] private float lightZoneChance = 0.3f;
+    [SerializeField] private float lightZoneCooldown = 3f;
+    [SerializeField] private float lightZoneChance = 0.6f;
     [SerializeField] private float lightZoneTime = 1f;
     [SerializeField] private float lightZoneTelegraphTime = 0.5f;
 
@@ -35,14 +37,20 @@ public class SpiritGuide : MonoBehaviour {
     private Rigidbody2D rb;
 	private Transform wallCheck;
     private Transform groundCheck;
-    private Transform pivot;
+    private Transform pivotTop;
+    private Transform pivotBottom;
 
+    private int maxRamSeriesCount = 3;
+    private int ramSeriesCount = 0;
     private float nextLightZoneTime = 0f;
     private float secondStageLifeAmount;
 	private bool isObstacle;
     private bool facingRight = true;
 	private bool isHitted = false;
     private bool isAccelerated = false;
+    private bool moveDisabled = false;
+    private bool isSecondStage = false;
+    private bool inLightZone = false;
 
     void Awake () {
         animator = GetComponent<Animator>();
@@ -50,7 +58,8 @@ public class SpiritGuide : MonoBehaviour {
 		
         wallCheck = transform.Find("WallCheck");
         groundCheck = transform.Find("GroundCheck");
-        pivot = transform.Find("Pivot");
+        pivotTop = transform.Find("PivotTop");
+        pivotBottom = transform.Find("PivotBottom");
 
         secondStageLifeAmount = life * secondStageLifeCoef;
     }
@@ -62,41 +71,58 @@ public class SpiritGuide : MonoBehaviour {
             StartCoroutine(DestroyEnemy());
             return;
         }
-
-		isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.1f, turnLayerMask);
-
-        if (isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
+        if (moveDisabled || isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
             return;
 
         var direction = facingRight ? Vector2.left : Vector2.right;
-        var playerHit = Physics2D.Raycast(pivot.position, direction, 35, playerLayer);
+        var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, 35, playerLayer);
+        var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, 35, playerLayer);
+        var playerHits = new List<RaycastHit2D> { playerHitTop, playerHitBottom };
         var groundHit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundedRadius, groundLayer);
-
-        if (playerHit.collider != null && groundHit.collider != null && !isAccelerated)
+        
+        if (!isSecondStage && !isAccelerated && groundHit.collider != null)
         {
-            StartCoroutine(RamTelegraph());
-            isAccelerated = true;
-        }
-
-        if (Time.time >= nextLightZoneTime && life <= secondStageLifeAmount && !isAccelerated)
-        {
-            if (Random.value < lightZoneChance)
+            for (var i = 0; i < playerHits.Count; i++)
             {
-                var wallHitLeft = Physics2D.Raycast(pivot.position, Vector2.left, 8, groundLayer);
-                var wallHitRight = Physics2D.Raycast(pivot.position, Vector2.right, 8, groundLayer);
-
-                if (wallHitLeft.collider == null && wallHitRight.collider == null)
+                if (playerHits[i].collider != null)
                 {
-                    StartCoroutine(LightZoneTelegraph());
-                    nextLightZoneTime = Time.time + lightZoneCooldown;
+                    StartCoroutine(RamTelegraph());
+                    isAccelerated = true;
+                    ramSeriesCount += 1;
+                    break;
                 }
             }
         }
 
+        if (isSecondStage && !isAccelerated)
+        {
+            var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, 6, groundLayer);
+            var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, 6, groundLayer);
+            if (wallHitLeft.collider == null && wallHitRight.collider == null && Time.time >= nextLightZoneTime)
+            {
+                if (Random.value <= lightZoneChance)
+                {
+                    StartCoroutine(LightZoneRoutine());
+                    nextLightZoneTime = Time.time + lightZoneCooldown;
+                }
+                else if (!inLightZone)
+                {
+                    StartCoroutine(RamTelegraph());
+                    isAccelerated = true;
+                }
+            }
+        }
+
+		isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.1f, turnLayerMask);
         if (isObstacle)
         {
             isAccelerated = false;
             Turn();
+            if (ramSeriesCount == maxRamSeriesCount)
+            {
+                ramSeriesCount = 0;
+                StartCoroutine(RamPause());
+            }
         }
 
         var moveSpeed = isAccelerated ? acceleratedSpeed : speed;
@@ -126,7 +152,9 @@ public class SpiritGuide : MonoBehaviour {
 		{
 			//animator.SetBool("Hit", true);
 			life -= Mathf.Abs(damage);
-            StartCoroutine(HitTime(0.1f));
+            if (life <= secondStageLifeAmount)
+                isSecondStage = true;
+            StartCoroutine(HitTime());
         }
 	}
 
@@ -168,7 +196,17 @@ public class SpiritGuide : MonoBehaviour {
         renderer.color = normalColor;
     }
 
-    IEnumerator LightZoneTelegraph()
+    IEnumerator RamPause()
+    {
+        moveDisabled = true;
+        var normalConstraints = rb.constraints;
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        yield return new WaitForSeconds(ramPauseBetweenSeries);
+        rb.constraints = normalConstraints;
+        moveDisabled = false;
+    }
+
+    IEnumerator LightZoneRoutine()
     {
         //animator.SetBool("LightZoneTelegraph", true);
 
@@ -176,6 +214,7 @@ public class SpiritGuide : MonoBehaviour {
         var normalColor = renderer.color;
         renderer.color = UnityEngine.Color.lightYellow;
 
+        inLightZone = true;
         var normalConstraints = rb.constraints;
         rb.constraints = RigidbodyConstraints2D.FreezePosition;
         yield return new WaitForSeconds(lightZoneTelegraphTime);
@@ -183,15 +222,16 @@ public class SpiritGuide : MonoBehaviour {
         yield return new WaitForSeconds(lightZoneTime);
         lightZone.SetActive(false);
         rb.constraints = normalConstraints;
+        inLightZone = false;
 
         renderer.color = normalColor;
     }
 
-    IEnumerator HitTime(float time)
+    IEnumerator HitTime()
 	{
 		isHitted = true;
 		isInvincible = true;
-		yield return new WaitForSeconds(time);
+		yield return new WaitForSeconds(0.1f);
 		isHitted = false;
 		isInvincible = false;
 	}
