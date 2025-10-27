@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,13 +16,15 @@ public class Attack : MonoBehaviour
     const float attackCheckRadius = 0.9f;
 
     private Animator animator;
-    private CharacterController2D controller;
+    private CharacterController2D playerController;
     private Transform attackCheck;
+    private Rigidbody2D rb;
 
     private float lastAttackTime;
     private int attackSeriesCount = 0;
     private bool isAttacking = false;
     private bool canAttack = true;
+    private float attackForce = 500f;
 
     private void OnDrawGizmos()
     {
@@ -37,7 +40,8 @@ public class Attack : MonoBehaviour
         attackCheck = transform.Find("AttackCheck");
 
         animator = GetComponent<Animator>();
-        controller = GetComponent<CharacterController2D>();
+        playerController = GetComponent<CharacterController2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -54,6 +58,8 @@ public class Attack : MonoBehaviour
             ResetCombo();
         }
 
+        CheckTurn();
+
         // Обработка нажатия
         if (attackPressed && !isAttacking && canAttack)
         {
@@ -67,18 +73,23 @@ public class Attack : MonoBehaviour
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
+
+                rb.AddForce(new Vector2(attackForce, 0));
                 //Debug.Log("Первый удар");
             }
             else if (attackSeriesCount == 2)
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
+
+                rb.AddForce(new Vector2(attackForce, 0));
                 //Debug.Log("Второй удар");
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
+                rb.AddForce(new Vector2(attackForce, 0));
                 canAttack = false;
                 //Debug.Log("Третий удар");
             }
@@ -86,12 +97,17 @@ public class Attack : MonoBehaviour
             isAttacking = true;
         }
 
-    //    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
-    //animator.GetCurrentAnimatorStateInfo(0).IsName("AirAttack1"))
-    //    {
-    //        Debug.Log("Анимация атаки реально проигрывается");
-    //    }
+    }
 
+    private void CheckTurn()
+    {
+        if (playerController.turnCoefficient == 1 && attackForce < 0)
+            attackForce = -1 * attackForce;
+        else if (playerController.turnCoefficient == -1 && attackForce > 0)
+            attackForce = -1 * attackForce;
+  
+        Debug.Log(playerController.turnCoefficient);
+        Debug.Log(attackForce);
     }
 
     public void OnAttackAnimationEnd()

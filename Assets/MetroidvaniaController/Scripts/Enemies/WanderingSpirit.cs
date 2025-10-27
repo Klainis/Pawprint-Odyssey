@@ -12,7 +12,7 @@ public class WanderingSpirit : MonoBehaviour {
     [SerializeField] private LayerMask playerLayer;
 
 	[Header("Ускорение")]
-    [SerializeField] private float acceleratedSpeed = 10f;
+    [SerializeField] private float acceleratedSpeed = 15f;
     [SerializeField] private float playerDetectDistance = 5f;
 
     private Animator animator;
@@ -62,7 +62,9 @@ public class WanderingSpirit : MonoBehaviour {
 
         var moveSpeed = isAccelerated ? acceleratedSpeed : speed;
         var moveDir = facingRight ? -1 : 1;
-        rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
+
+        //if(!isHitted)
+            //rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
 	}
 
     private void Turn()
@@ -85,14 +87,15 @@ public class WanderingSpirit : MonoBehaviour {
     public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
+            animator.SetBool("Hit", true);
 			//Debug.Log("Enemy получил урон");
 			float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			//transform.GetComponent<Animator>().SetBool("Hit", true);
 			life -= damage;
 			rb.linearVelocity = Vector2.zero;
-			rb.AddForce(new Vector2(direction * 500f, 100f));
-			StartCoroutine(HitTime(0.1f));
+			//rb.AddForce(new Vector2(direction * 500f, 0));
+			StartCoroutine(HitTime(1f));
 		}
 	}
 
@@ -112,10 +115,10 @@ public class WanderingSpirit : MonoBehaviour {
     IEnumerator HitTime(float time)
 	{
 		isHitted = true;
-		isInvincible = true;
+		//isInvincible = true;
 		yield return new WaitForSeconds(time);
 		isHitted = false;
-		isInvincible = false;
+		//isInvincible = false;
 	}
 
 	IEnumerator DestroyEnemy()
