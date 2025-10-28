@@ -11,9 +11,11 @@ public class Attack : MonoBehaviour
     [SerializeField] private int dmgValue = 1;
     [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар в серии
     [SerializeField] private int maxAttackSeriesCount = 3;
+    [SerializeField] private float forceFromAttack = 600f;
+
     [SerializeField] Camera cam;
 
-    const float attackCheckRadius = 0.9f;
+    const float attackCheckRadius = 1.1f;
 
     private Animator animator;
     private CharacterController2D playerController;
@@ -22,10 +24,9 @@ public class Attack : MonoBehaviour
     private GameObject enemy;
 
     private float lastAttackTime;
-    private int attackSeriesCount = 0;
+    public int attackSeriesCount { get; private set; } = 0;
     private bool isAttacking = false;
     private bool canAttack = true;
-    private float attackForce = 500f;
     private bool isForceAttack = true;
 
     private void OnDrawGizmos()
@@ -69,7 +70,6 @@ public class Attack : MonoBehaviour
         //Debug.Log(isAttacking);
         if (attackPressed && !isAttacking && canAttack)
         {
-
             lastAttackTime = Time.time;
             attackSeriesCount++;
 
@@ -104,7 +104,8 @@ public class Attack : MonoBehaviour
         if (isForceAttack)
         {
             Debug.Log("++ Force");
-            rb.AddForce(new Vector2(attackForce, 0));
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(new Vector2(forceFromAttack, 0));
         }
     }
 
@@ -117,10 +118,9 @@ public class Attack : MonoBehaviour
             {
                 if (collidersEnemies[i].gameObject.tag == "Enemy")
                 {
-                    if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.5f)
+                    if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.8f && attackSeriesCount !=3)
                     {
                         isForceAttack = false;
-                        Debug.Log(isForceAttack);
                     }
                     else
                     {
@@ -135,10 +135,10 @@ public class Attack : MonoBehaviour
 
     private void CheckTurn()
     {
-        if (playerController.turnCoefficient == 1 && attackForce < 0)
-            attackForce = -1 * attackForce;
-        else if (playerController.turnCoefficient == -1 && attackForce > 0)
-            attackForce = -1 * attackForce;
+        if (playerController.turnCoefficient == 1 && forceFromAttack < 0)
+            forceFromAttack = -1 * forceFromAttack;
+        else if (playerController.turnCoefficient == -1 && forceFromAttack > 0)
+            forceFromAttack = -1 * forceFromAttack;
     }
 
     public void OnAttackAnimationEnd()
@@ -148,12 +148,12 @@ public class Attack : MonoBehaviour
 
         if (attackSeriesCount >= maxAttackSeriesCount)
         {
-            StartCoroutine(AttackCooldown(0.7f));
+            StartCoroutine(AttackCooldown(0.3f));
             Debug.Log("Серия завершена");
             ResetCombo();
         }
         else
-            StartCoroutine(AttackCooldown(0.2f));
+            StartCoroutine(AttackCooldown(0.03f));
     }
 
     private void ResetCombo()
@@ -164,8 +164,6 @@ public class Attack : MonoBehaviour
         animator.ResetTrigger("Attack2");
         animator.ResetTrigger("Attack3");
     }
-
-
 
     IEnumerator AttackCooldown(float durationAfterSeries)
     {

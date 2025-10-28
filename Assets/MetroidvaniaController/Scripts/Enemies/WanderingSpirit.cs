@@ -11,7 +11,10 @@ public class WanderingSpirit : MonoBehaviour {
     [SerializeField] private LayerMask turnLayerMask;
     [SerializeField] private LayerMask playerLayer;
 
-	[Header("Ускорение")]
+    [SerializeField] private float lastPlayerAttackForce = 400f;
+    [SerializeField] private float playerAttackForce = 300f;
+
+    [Header("Ускорение")]
     [SerializeField] private float acceleratedSpeed = 15f;
     [SerializeField] private float playerDetectDistance = 5f;
 
@@ -19,6 +22,7 @@ public class WanderingSpirit : MonoBehaviour {
     private Rigidbody2D rb;
 	private Transform fallCheck;
 	private Transform wallCheck;
+    [SerializeField] private Attack playerAttack;
 
     private bool isPlat;
 	private bool isObstacle;
@@ -87,14 +91,20 @@ public class WanderingSpirit : MonoBehaviour {
     public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
+            StartCoroutine(HitTime(1.5f));
             animator.SetBool("Hit", true);
 			//Debug.Log("Enemy получил урон");
 			float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			life -= damage;
             rb.linearVelocity = Vector2.zero;
-            rb.AddForce(new Vector2(direction * 500f, 0));
-            StartCoroutine(HitTime(1.5f));
+
+            if (playerAttack.attackSeriesCount == 3)
+                rb.AddForce(new Vector2(direction * lastPlayerAttackForce, 0));
+            else if (playerAttack.attackSeriesCount < 3)
+                rb.AddForce(new Vector2(direction * playerAttackForce, 0));
+
+            //StartCoroutine(HitTime(1.5f));
 		}
 	}
 
@@ -116,7 +126,7 @@ public class WanderingSpirit : MonoBehaviour {
 		isHitted = true;
         //isInvincible = true;
         yield return new WaitForSeconds(time);
-		isHitted = false;
+        isHitted = false;
         //isInvincible = false;
     }
 

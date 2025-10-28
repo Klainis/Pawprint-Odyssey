@@ -47,7 +47,6 @@ public class Spikes : MonoBehaviour
 
     IEnumerator StopFrame()
     {
-        Debug.Log("Stop");
         //yield return new WaitForSecondsRealtime(0.1f);
         Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(0.3f);

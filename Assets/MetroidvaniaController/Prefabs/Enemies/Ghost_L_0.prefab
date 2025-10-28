@@ -63,6 +63,7 @@ MonoBehaviour:
     m_Bits: 8
   acceleratedSpeed: 4.5
   playerDetectDistance: 5
+  playerAttack: {fileID: 0}
 --- !u!212 &3690118322597669630
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -137,7 +138,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -173,7 +174,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

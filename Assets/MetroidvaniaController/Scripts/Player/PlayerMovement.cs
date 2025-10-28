@@ -72,11 +72,11 @@ public class PlayerMovement : MonoBehaviour {
 
     private void Run(Vector2 move)
     {
-        if (move.x > 0)
+        if (move.x > 0.7f)
         {
             horizontalMove = runSpeed;
         }
-        else if (move.x < 0)
+        else if (move.x < -0.7f)
         {
             horizontalMove = -runSpeed;
         }
