@@ -376,9 +376,9 @@ public class CharacterController2D : MonoBehaviour
         {
             animator.SetBool("Hit", true);
             life -= damage;
-            Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
-            m_Rigidbody2D.linearVelocity = Vector2.zero;
-            m_Rigidbody2D.AddForce(damageDir * 15);
+            //Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
+            //m_Rigidbody2D.linearVelocity = Vector2.zero;
+            //m_Rigidbody2D.AddForce(damageDir * 15);
             if (life <= 0)
             {
                 StartCoroutine(WaitToDead());

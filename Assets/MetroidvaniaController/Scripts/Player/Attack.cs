@@ -19,12 +19,14 @@ public class Attack : MonoBehaviour
     private CharacterController2D playerController;
     private Transform attackCheck;
     private Rigidbody2D rb;
+    private GameObject enemy;
 
     private float lastAttackTime;
     private int attackSeriesCount = 0;
     private bool isAttacking = false;
     private bool canAttack = true;
     private float attackForce = 500f;
+    private bool isForceAttack;
 
     private void OnDrawGizmos()
     {
@@ -42,6 +44,8 @@ public class Attack : MonoBehaviour
         animator = GetComponent<Animator>();
         playerController = GetComponent<CharacterController2D>();
         rb = GetComponent<Rigidbody2D>();
+
+        //enemy = FindAnyObjectByType<GameObject>();
     }
 
     void Update()
@@ -59,6 +63,8 @@ public class Attack : MonoBehaviour
         }
 
         CheckTurn();
+        CheckAddForceForAttack();
+        Debug.Log(isForceAttack);
 
         // Обработка нажатия
         if (attackPressed && !isAttacking && canAttack)
@@ -73,8 +79,7 @@ public class Attack : MonoBehaviour
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
-
-                rb.AddForce(new Vector2(attackForce, 0));
+                AddForceForAttack();
                 //Debug.Log("Первый удар");
             }
             else if (attackSeriesCount == 2)
@@ -82,14 +87,14 @@ public class Attack : MonoBehaviour
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
 
-                rb.AddForce(new Vector2(attackForce, 0));
+                AddForceForAttack();
                 //Debug.Log("Второй удар");
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
-                rb.AddForce(new Vector2(attackForce, 0));
+                AddForceForAttack();
                 canAttack = false;
                 //Debug.Log("Третий удар");
             }
@@ -99,15 +104,46 @@ public class Attack : MonoBehaviour
 
     }
 
+    private void AddForceForAttack()
+    {
+        if (isForceAttack)
+        {
+            Debug.Log("++ Force");
+            rb.AddForce(new Vector2(attackForce, 0));
+        }
+    }
+
+    private void CheckAddForceForAttack()
+    {
+        Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
+        if (collidersEnemies != null)
+        {
+            for (int i = 0; i < collidersEnemies.Length; i++)
+            {
+                if (collidersEnemies[i].gameObject.tag == "Enemy")
+                {
+                    if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.5f)
+                    {
+                        isForceAttack = false;
+                        Debug.Log(isForceAttack);
+                    }
+                    else
+                    {
+                        isForceAttack = true;
+                    }
+                }
+            }
+        }
+        else
+            isForceAttack = true;
+    }
+
     private void CheckTurn()
     {
         if (playerController.turnCoefficient == 1 && attackForce < 0)
             attackForce = -1 * attackForce;
         else if (playerController.turnCoefficient == -1 && attackForce > 0)
             attackForce = -1 * attackForce;
-  
-        Debug.Log(playerController.turnCoefficient);
-        Debug.Log(attackForce);
     }
 
     public void OnAttackAnimationEnd()
@@ -137,8 +173,6 @@ public class Attack : MonoBehaviour
     {
 
         yield return new WaitForSeconds(durationAfterSeries);
-        //characterController2D.canMove = true;
-        //yield return new WaitForSeconds(durationAfterSeries - duration);
         canAttack = true;
     }
 
@@ -155,9 +189,13 @@ public class Attack : MonoBehaviour
 				{
                     damageToApply = -damageToApply;
                 }
-				collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
-                //Debug.Log("Отправили урон");
-                cam.GetComponent<CameraFollow>().ShakeCamera();
+                if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 0.2f)
+                {
+                    isForceAttack = false;
+                    Debug.Log(isForceAttack);
+                }
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                //cam.GetComponent<CameraFollow>().ShakeCamera();
 			}
 		}
 	}
