@@ -36,7 +36,6 @@ public class WanderingSpirit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        Debug.Log(rb.totalForce);
 
 		if (life <= 0) {
             StartCoroutine(DestroyEnemy());
@@ -64,8 +63,8 @@ public class WanderingSpirit : MonoBehaviour {
         var moveSpeed = isAccelerated ? acceleratedSpeed : speed;
         var moveDir = facingRight ? -1 : 1;
 
-        //if (!isHitted)
-        //    rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
+        if (!isHitted)
+            rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
     }
 
     private void Turn()
@@ -93,9 +92,9 @@ public class WanderingSpirit : MonoBehaviour {
 			float direction = damage / Mathf.Abs(damage);
 			damage = Mathf.Abs(damage);
 			life -= damage;
-			//rb.linearVelocity = Vector2.zero;
-			//rb.AddForce(new Vector2(direction * 500f, 0));
-			StartCoroutine(HitTime(1f));
+            rb.linearVelocity = Vector2.zero;
+            rb.AddForce(new Vector2(direction * 500f, 0));
+            StartCoroutine(HitTime(1.5f));
 		}
 	}
 

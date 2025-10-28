@@ -26,7 +26,7 @@ public class Attack : MonoBehaviour
     private bool isAttacking = false;
     private bool canAttack = true;
     private float attackForce = 500f;
-    private bool isForceAttack;
+    private bool isForceAttack = true;
 
     private void OnDrawGizmos()
     {
@@ -58,15 +58,15 @@ public class Attack : MonoBehaviour
 
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
-            Debug.Log("Серия прервалась");
             ResetCombo();
         }
 
         CheckTurn();
         CheckAddForceForAttack();
-        Debug.Log(isForceAttack);
+        //Debug.Log(isForceAttack);
 
-        // Обработка нажатия
+        //Debug.Log(canAttack);
+        //Debug.Log(isAttacking);
         if (attackPressed && !isAttacking && canAttack)
         {
 
@@ -80,23 +80,18 @@ public class Attack : MonoBehaviour
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
                 AddForceForAttack();
-                //Debug.Log("Первый удар");
             }
             else if (attackSeriesCount == 2)
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
-
                 AddForceForAttack();
-                //Debug.Log("Второй удар");
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
                 AddForceForAttack();
-                canAttack = false;
-                //Debug.Log("Третий удар");
             }
 
             isAttacking = true;
@@ -149,13 +144,16 @@ public class Attack : MonoBehaviour
     public void OnAttackAnimationEnd()
     {
         isAttacking = false;
+        canAttack = false;
 
         if (attackSeriesCount >= maxAttackSeriesCount)
         {
-            StartCoroutine(AttackCooldown(1f));
+            StartCoroutine(AttackCooldown(0.7f));
             Debug.Log("Серия завершена");
             ResetCombo();
         }
+        else
+            StartCoroutine(AttackCooldown(0.2f));
     }
 
     private void ResetCombo()
