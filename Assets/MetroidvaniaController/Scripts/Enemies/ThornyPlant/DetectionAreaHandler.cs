@@ -17,6 +17,13 @@ public class DetectionAreaHandler : MonoBehaviour
             thornyPlant.ChangeForm(false);
     }
 
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        var player = collision.gameObject.CompareTag("Player");
+        if (player && thornyPlant.IsHidden)
+            thornyPlant.ChangeForm(false);
+    }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         var player = collision.gameObject.CompareTag("Player");

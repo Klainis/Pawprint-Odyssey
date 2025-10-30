@@ -4,23 +4,23 @@ public class BulletHandler : MonoBehaviour
 {
 	private Rigidbody2D rb;
 
-	private Vector2 direction;
+	private float damage;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+		damage = transform.parent.GetComponent<ThornyPlant>().Damage;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
 	{
-		var player = collision.gameObject.CompareTag("Player");
-        if (player)
+        if (collision.gameObject.CompareTag("Player"))
 		{
-			direction = rb.linearVelocity.normalized;
-			collision.gameObject.SendMessage("ApplyDamage", Mathf.Sign(direction.x) * 2f);
+            collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
 			Destroy(gameObject);
 		}
-		else if (!player)
+		else if (!collision.gameObject.CompareTag("Player"))
 		{
 			Destroy(gameObject);
 		}

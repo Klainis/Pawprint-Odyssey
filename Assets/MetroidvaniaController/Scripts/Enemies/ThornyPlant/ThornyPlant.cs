@@ -29,6 +29,7 @@ public class ThornyPlant : MonoBehaviour {
     private bool isHitted = false;
     private bool isHidden = true;
 
+    public float Damage { get { return damage; } }
     public bool IsShooting { get { return isShooting; } }
     public bool IsHidden { get { return isHidden; } }
 
@@ -80,17 +81,6 @@ public class ThornyPlant : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (life > 0)
-            {
-                collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
-            }
-        }
-    }
-
     private void Shoot()
     {
         for (var i = 0; i < shootPoints.childCount; i++)
@@ -133,7 +123,7 @@ public class ThornyPlant : MonoBehaviour {
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
 		rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(1.5f);
 		Destroy(gameObject);
 	}
 }

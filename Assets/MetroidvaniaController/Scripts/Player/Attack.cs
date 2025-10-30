@@ -180,10 +180,10 @@ public class Attack : MonoBehaviour
     public void AttackDamage()
 	{
 		dmgValue = Mathf.Abs(dmgValue);
-		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
+		var collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
 		for (int i = 0; i < collidersEnemies.Length; i++)
 		{
-			if (collidersEnemies[i].gameObject.tag == "Enemy")
+			if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
 			{
                 float damageToApply = dmgValue;
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
