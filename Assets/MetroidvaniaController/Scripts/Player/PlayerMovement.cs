@@ -36,13 +36,13 @@ public class PlayerMovement : MonoBehaviour {
     }
 	void Update () 
 	{
-
         if (moveAction != null && moveAction.action != null)
         {
             Vector2 move = moveAction.action.ReadValue<Vector2>();
 
             Run(move);
             WallRun(move);
+            //Debug.Log(move);
         }
 
         if (jumpAction != null && jumpAction.action != null)
@@ -62,7 +62,6 @@ public class PlayerMovement : MonoBehaviour {
 
     private void WallRun(Vector2 move)
     {
-        Debug.Log(move.y);
         if (move.y > 0 && dashAction.action.IsPressed())
         {
             grab = true;

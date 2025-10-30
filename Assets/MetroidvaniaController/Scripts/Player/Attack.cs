@@ -70,10 +70,7 @@ public class Attack : MonoBehaviour
 
         CheckTurn();
         CheckAddForceForAttack();
-        //Debug.Log(isForceAttack);
 
-        //Debug.Log(canAttack);
-        //Debug.Log(isAttacking);
         if (attackPressed && !isAttacking && canAttack)
         {
             lastAttackTime = Time.time;
@@ -178,7 +175,7 @@ public class Attack : MonoBehaviour
         canAttack = true;
     }
 
-    public void DoDashDamage()
+    public void AttackDamage()
 	{
 		dmgValue = Mathf.Abs(dmgValue);
 		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
@@ -190,11 +187,6 @@ public class Attack : MonoBehaviour
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
 				{
                     damageToApply = -damageToApply;
-                }
-                if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 0.2f)
-                {
-                    isForceAttack = false;
-                    Debug.Log(isForceAttack);
                 }
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
                 //cam.GetComponent<CameraFollow>().ShakeCamera();
