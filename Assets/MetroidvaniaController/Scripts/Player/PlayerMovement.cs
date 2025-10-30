@@ -10,8 +10,10 @@ public class PlayerMovement : MonoBehaviour {
 	[SerializeField] private CharacterController2D controller;
 	[SerializeField] private Animator animator;
 	[SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference dashAction;
 
-	[SerializeField] private float runSpeed = 40f;
+    [SerializeField] private float runSpeed = 40f;
 
 	private float horizontalMove = 0f;
 	//float wallUpMove = 0f;
@@ -35,30 +37,33 @@ public class PlayerMovement : MonoBehaviour {
 	void Update () 
 	{
 
-		if (moveAction != null && moveAction.action != null)
+        if (moveAction != null && moveAction.action != null)
         {
             Vector2 move = moveAction.action.ReadValue<Vector2>();
 
             Run(move);
-            WallGrab(move);
+            WallRun(move);
+        }
+
+        if (jumpAction != null && jumpAction.action != null)
+        {
+            if (jumpAction.action.WasPressedThisFrame())
+                jump = true;
+        }
+
+        if (dashAction != null && dashAction.action != null)
+        {
+            if (dashAction.action.WasPressedThisFrame())
+                dash = true;
         }
 
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+    }
 
-        if (Input.GetKeyDown(KeyCode.Z) || (gamepad != null && gamepad.aButton.wasPressedThisFrame))
-		{
-			jump = true;
-		}
-
-		if (Input.GetKeyDown(KeyCode.C) || (gamepad != null && gamepad.rightTrigger.wasPressedThisFrame))
-		{
-			dash = true;
-		}
-	}
-
-    private void WallGrab(Vector2 move)
+    private void WallRun(Vector2 move)
     {
-        if (move.y > 0 && (gamepad != null && gamepad.rightTrigger.isPressed))
+        Debug.Log(move.y);
+        if (move.y > 0 && dashAction.action.IsPressed())
         {
             grab = true;
             verticalMove = runSpeed;

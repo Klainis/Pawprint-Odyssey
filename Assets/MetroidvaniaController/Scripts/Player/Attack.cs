@@ -14,15 +14,18 @@ public class Attack : MonoBehaviour
     [SerializeField] private float forceFromAttack = 600f;
 
     [SerializeField] Camera cam;
+    [SerializeField] private InputActionReference attackAction;
 
     const float attackCheckRadius = 1.1f;
 
+    Gamepad gamepad;
     private Animator animator;
     private CharacterController2D playerController;
     private Transform attackCheck;
     private Rigidbody2D rb;
     private GameObject enemy;
 
+    private bool attackPressed;
     private float lastAttackTime;
     public int attackSeriesCount { get; private set; } = 0;
     private bool isAttacking = false;
@@ -40,6 +43,8 @@ public class Attack : MonoBehaviour
 
     void Awake()
     {
+        gamepad = Gamepad.current;
+
         attackCheck = transform.Find("AttackCheck");
 
         animator = GetComponent<Animator>();
@@ -53,9 +58,10 @@ public class Attack : MonoBehaviour
     {
         animator.applyRootMotion = false;
 
-        var gamepad = Gamepad.current;
-        bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
-                             (gamepad != null && gamepad.xButton.wasPressedThisFrame);
+        if (attackAction != null && attackAction.action != null)
+        {
+            attackPressed = attackAction.action.WasPressedThisFrame();
+        }
 
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
