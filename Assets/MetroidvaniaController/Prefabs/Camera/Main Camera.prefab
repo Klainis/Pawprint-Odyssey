@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 81780910946213854}
   - component: {fileID: 6714377402978370488}
   - component: {fileID: 3352241511063945702}
-  - component: {fileID: 4843754005240530639}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -173,20 +172,3 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4843754005240530639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1025145325119744}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59d11666ee1aeff4dbb0ae6b9f495a22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  FollowSpeed: 2
-  Target: {fileID: 0}
-  shakeDuration: 0
-  shakeAmount: 0.1
-  decreaseFactor: 1

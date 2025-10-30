@@ -62,7 +62,7 @@ public class PiercingClaw : MonoBehaviour
 
         }
 
-        if (clawPressed && canAttack && mana.manaForReading > 0)
+        if (clawPressed && canAttack && mana.manaForReading >= 25)
         {
             if (spendMana != null)
                 spendMana.Invoke();
