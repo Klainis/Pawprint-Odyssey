@@ -62,7 +62,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private void WallRun(Vector2 move)
     {
-        Debug.Log(move.y);
+        //Debug.Log(move.y);
         if (move.y > 0 && dashAction.action.IsPressed())
         {
             grab = true;
