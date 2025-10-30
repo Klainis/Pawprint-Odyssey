@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PiercingClaw : MonoBehaviour
@@ -16,6 +17,7 @@ public class PiercingClaw : MonoBehaviour
 
     private Animator animator;
     private CharacterController2D playerController;
+    private Mana mana;
     private Transform attackCheck;
     private Rigidbody2D rb;
     private GameObject enemy;
@@ -25,6 +27,7 @@ public class PiercingClaw : MonoBehaviour
     private bool canAttack = true;
     private bool clawPressed;
 
+    public UnityEvent spendMana;
     private void OnDrawGizmos()
     {
         if (attackCheck != null)
@@ -42,6 +45,7 @@ public class PiercingClaw : MonoBehaviour
         gamepad = Gamepad.current;
 
         animator = GetComponent<Animator>();
+        mana = GetComponent<Mana>();
         //playerController = GetComponent<CharacterController2D>();
         //rb = GetComponent<Rigidbody2D>();
 
@@ -58,9 +62,10 @@ public class PiercingClaw : MonoBehaviour
 
         }
 
-        if (clawPressed && canAttack)
+        if (clawPressed && canAttack && mana.manaForReading > 0)
         {
-            Debug.Log("Умение");
+            if (spendMana != null)
+                spendMana.Invoke();
 
             dmgValue = 7;
             animator.SetTrigger("Claw");

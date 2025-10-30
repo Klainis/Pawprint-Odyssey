@@ -249,6 +249,34 @@ PrefabInstance:
       propertyPath: attackAction
       value: 
       objectReference: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1496970652}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GetMana
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Mana, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3133950676847035280, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      propertyPath: getMana.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4018540594280129563, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -268,10 +296,13 @@ PrefabInstance:
       addedObject: {fileID: 1046079810}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1377240496476148, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
-      insertIndex: 4
+      insertIndex: 1
+      addedObject: {fileID: 1496970652}
+    - targetCorrespondingSourceObject: {fileID: 1377240496476148, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+      insertIndex: 5
       addedObject: {fileID: 1496970635}
     - targetCorrespondingSourceObject: {fileID: 1377240496476148, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
-      insertIndex: -1
+      insertIndex: 6
       addedObject: {fileID: 1496970651}
   m_SourcePrefab: {fileID: 100100000, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
 --- !u!1 &68362602
@@ -28110,6 +28141,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PiercingClaw
   dmgValue: 1
   clawAction: {fileID: 2030105166474525711, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  spendMana:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1496970652}
+        m_TargetAssemblyTypeName: Mana, Assembly-CSharp
+        m_MethodName: SpendMana
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1496970652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097400864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48fcde3da857a114ca22ae89b1042d05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Mana
+  maxMana: 50
+  mana: 50
 --- !u!1 &1505340609
 GameObject:
   m_ObjectHideFlags: 0

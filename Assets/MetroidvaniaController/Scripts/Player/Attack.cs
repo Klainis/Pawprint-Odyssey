@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+
 
 public class Attack : MonoBehaviour
 {
@@ -32,6 +34,8 @@ public class Attack : MonoBehaviour
     private bool canAttack = true;
     private bool isForceAttack = true;
 
+    public UnityEvent getMana; 
+
     private void OnDrawGizmos()
     {
         if (attackCheck != null)
@@ -50,8 +54,6 @@ public class Attack : MonoBehaviour
         animator = GetComponent<Animator>();
         playerController = GetComponent<CharacterController2D>();
         rb = GetComponent<Rigidbody2D>();
-
-        //enemy = FindAnyObjectByType<GameObject>();
     }
 
     void Update()
@@ -188,6 +190,9 @@ public class Attack : MonoBehaviour
 				{
                     damageToApply = -damageToApply;
                 }
+
+                if (getMana != null)
+                    getMana.Invoke();
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
                 //cam.GetComponent<CameraFollow>().ShakeCamera();
 			}
