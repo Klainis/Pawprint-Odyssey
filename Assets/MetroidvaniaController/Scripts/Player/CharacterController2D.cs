@@ -172,8 +172,10 @@ public class CharacterController2D : MonoBehaviour
         {
             StartCoroutine(DashCooldown());
         }
+        if (!isDashing)
+            MoveHorizontal(moveX);
 
-        Dash(moveX);
+        Dash();
 
         // Прыжок
         if (m_Grounded && jump)
@@ -345,15 +347,11 @@ public class CharacterController2D : MonoBehaviour
         StartCoroutine(WaitToMove(0.15f));
     }
 
-    private void Dash(float move)
+    private void Dash()
     {
         if (isDashing)
         {
             m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * m_DashForce, 0);
-        }
-        else
-        {
-            MoveHorizontal(move);
         }
     }
 

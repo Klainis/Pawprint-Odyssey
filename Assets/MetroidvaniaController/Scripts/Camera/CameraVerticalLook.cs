@@ -9,7 +9,7 @@ public class CameraVerticalLook : MonoBehaviour
     [SerializeField] private InputActionReference lookAction;
 
     [SerializeField] private float verticalRange = 2f;    
-    [SerializeField] private float smoothTime = 0.12f;    
+    //[SerializeField] private float smoothTime = 0.12f;    
 
     private CinemachineFramingTransposer transposer;
     private Vector3 velocity = Vector3.zero;

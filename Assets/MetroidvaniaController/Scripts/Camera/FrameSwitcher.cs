@@ -8,7 +8,8 @@ public class FrameSwitcher : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            activeFrame.SetActive(true);
+            if (activeFrame != null)
+                activeFrame.SetActive(true);
         }
     }
 
@@ -16,7 +17,8 @@ public class FrameSwitcher : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            activeFrame.SetActive(false);
+            if (activeFrame != null)
+                activeFrame.SetActive(false);
         }
     }
 }
