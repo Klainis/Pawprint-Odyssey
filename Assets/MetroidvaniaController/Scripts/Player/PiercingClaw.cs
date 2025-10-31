@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PiercingClaw : MonoBehaviour
 {
     [Header("Основные параметры атаки")]
-    [SerializeField] private int dmgValue = 1;
+    [SerializeField] private int dmgValue = 7;
 
     [SerializeField] private InputActionReference clawAction;
 
@@ -46,10 +46,6 @@ public class PiercingClaw : MonoBehaviour
 
         animator = GetComponent<Animator>();
         mana = GetComponent<Mana>();
-        //playerController = GetComponent<CharacterController2D>();
-        //rb = GetComponent<Rigidbody2D>();
-
-        //enemy = FindAnyObjectByType<GameObject>();
     }
 
     void Update()
@@ -64,10 +60,10 @@ public class PiercingClaw : MonoBehaviour
 
         if (clawPressed && canAttack && mana.manaForReading >= 25)
         {
+            Debug.Log("claw");
             if (spendMana != null)
                 spendMana.Invoke();
 
-            dmgValue = 7;
             animator.SetTrigger("Claw");
             canAttack = false;
             StartCoroutine(AttackCooldown(1f));

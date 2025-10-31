@@ -19,7 +19,7 @@ public class Spikes : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D col)
     {
-        playerController.ApplyObjectDamage(1f);
+        playerController.ApplyObjectDamage(1);
         StartCoroutine(StopFrame());
     }
 

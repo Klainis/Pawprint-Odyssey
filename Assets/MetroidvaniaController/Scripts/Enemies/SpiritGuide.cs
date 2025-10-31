@@ -5,9 +5,9 @@ using UnityEngine;
 public class SpiritGuide : MonoBehaviour {
 
     [Header("Основные параметры")]
-    [SerializeField] private float life = 10;
+    [SerializeField] private int life = 10;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float damage = 1f;
+    [SerializeField] private int damage = 1;
     [SerializeField] private float secondStageLifeCoef = 0.6f;
 	[SerializeField] private bool isInvincible = false;
     [SerializeField] private LayerMask turnLayerMask;
@@ -155,7 +155,7 @@ public class SpiritGuide : MonoBehaviour {
         }
     }
 
-    public void ApplyDamage(float damage) {
+    public void ApplyDamage(int damage) {
 		if (!isInvincible) 
 		{
 			//animator.SetBool("Hit", true);
