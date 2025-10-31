@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+
 
 public class Attack : MonoBehaviour
 {
@@ -14,20 +16,25 @@ public class Attack : MonoBehaviour
     [SerializeField] private float forceFromAttack = 600f;
 
     [SerializeField] Camera cam;
+    [SerializeField] private InputActionReference attackAction;
 
     const float attackCheckRadius = 1.1f;
 
+    Gamepad gamepad;
     private Animator animator;
     private CharacterController2D playerController;
     private Transform attackCheck;
     private Rigidbody2D rb;
     private GameObject enemy;
 
+    private bool attackPressed;
     private float lastAttackTime;
     public int attackSeriesCount { get; private set; } = 0;
     private bool isAttacking = false;
     private bool canAttack = true;
     private bool isForceAttack = true;
+
+    public UnityEvent getMana; 
 
     private void OnDrawGizmos()
     {
@@ -40,22 +47,23 @@ public class Attack : MonoBehaviour
 
     void Awake()
     {
+        gamepad = Gamepad.current;
+
         attackCheck = transform.Find("AttackCheck");
 
         animator = GetComponent<Animator>();
         playerController = GetComponent<CharacterController2D>();
         rb = GetComponent<Rigidbody2D>();
-
-        //enemy = FindAnyObjectByType<GameObject>();
     }
 
     void Update()
     {
         animator.applyRootMotion = false;
 
-        var gamepad = Gamepad.current;
-        bool attackPressed = Input.GetKeyDown(KeyCode.X) ||
-                             (gamepad != null && gamepad.xButton.wasPressedThisFrame);
+        if (attackAction != null && attackAction.action != null)
+        {
+            attackPressed = attackAction.action.WasPressedThisFrame();
+        }
 
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
@@ -64,10 +72,7 @@ public class Attack : MonoBehaviour
 
         CheckTurn();
         CheckAddForceForAttack();
-        //Debug.Log(isForceAttack);
 
-        //Debug.Log(canAttack);
-        //Debug.Log(isAttacking);
         if (attackPressed && !isAttacking && canAttack)
         {
             lastAttackTime = Time.time;
@@ -172,24 +177,22 @@ public class Attack : MonoBehaviour
         canAttack = true;
     }
 
-    public void DoDashDamage()
+    public void AttackDamage()
 	{
 		dmgValue = Mathf.Abs(dmgValue);
-		Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
+		var collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
 		for (int i = 0; i < collidersEnemies.Length; i++)
 		{
-			if (collidersEnemies[i].gameObject.tag == "Enemy")
+			if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
 			{
                 float damageToApply = dmgValue;
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
 				{
                     damageToApply = -damageToApply;
                 }
-                if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 0.2f)
-                {
-                    isForceAttack = false;
-                    Debug.Log(isForceAttack);
-                }
+
+                if (getMana != null)
+                    getMana.Invoke();
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
                 //cam.GetComponent<CameraFollow>().ShakeCamera();
 			}

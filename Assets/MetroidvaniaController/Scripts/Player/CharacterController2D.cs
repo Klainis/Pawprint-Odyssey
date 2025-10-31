@@ -8,6 +8,8 @@ using System;
 public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private float m_JumpForce = 400f;
+    [SerializeField] private float m_DashForce = 25f;
+    [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private float life = 10f;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
@@ -24,7 +26,6 @@ public class CharacterController2D : MonoBehaviour
     private float limitFallSpeed = 25f; // Limit fall moveX
 
     public bool canDoubleJump = true; //If player can double jump
-    [SerializeField] private float m_DashForce = 25f;
     private bool canDash = true;
     private bool isDashing = false; //If player is dashing
     private bool m_IsWall = false; //If there is a wall in front of the player
@@ -34,6 +35,8 @@ public class CharacterController2D : MonoBehaviour
     private bool oldWallRunning;
     private float prevVelocityX = 0f;
     private bool canCheck = false; //For check if player is wallsliding
+
+    Gamepad gamepad;
 
     private bool invincible = false; //If player can die
     private bool canMove = true; //If player can moveX
@@ -58,6 +61,8 @@ public class CharacterController2D : MonoBehaviour
 
     private void Awake()
     {
+        gamepad = Gamepad.current;
+
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -151,7 +156,7 @@ public class CharacterController2D : MonoBehaviour
     {
         if (m_Rigidbody2D.linearVelocity.y > 0)
         {
-            if (!Input.GetKey(KeyCode.Z) && (Gamepad.current == null || !Gamepad.current.aButton.isPressed) && !isWallRunning)
+            if (!jumpAction.action.IsPressed() && !isWallRunning)
             {
                 m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
             }
@@ -167,8 +172,10 @@ public class CharacterController2D : MonoBehaviour
         {
             StartCoroutine(DashCooldown());
         }
+        if (!isDashing)
+            MoveHorizontal(moveX);
 
-        Dash(moveX);
+        Dash();
 
         // Ïðûæîê
         if (m_Grounded && jump)
@@ -340,15 +347,11 @@ public class CharacterController2D : MonoBehaviour
         StartCoroutine(WaitToMove(0.15f));
     }
 
-    private void Dash(float move)
+    private void Dash()
     {
         if (isDashing)
         {
             m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * m_DashForce, 0);
-        }
-        else
-        {
-            MoveHorizontal(move);
         }
     }
 
