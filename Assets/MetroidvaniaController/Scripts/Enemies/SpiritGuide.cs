@@ -22,7 +22,7 @@ public class SpiritGuide : MonoBehaviour {
     [Header("Механика 'Зона света'")]
     [SerializeField] private GameObject lightZone;
     [SerializeField] private float lightZoneCooldown = 3f;
-    [SerializeField] private float lightZoneChance = 0.6f;
+    [SerializeField] private float lightZoneChance = 0.8f;
     [SerializeField] private float lightZoneTime = 1f;
     [SerializeField] private float lightZoneTelegraphTime = 0.5f;
 
@@ -69,10 +69,7 @@ public class SpiritGuide : MonoBehaviour {
         if (moveDisabled || isHitted || Mathf.Abs(rb.linearVelocity.y) > 0.5f)
             return;
 
-        var direction = facingRight ? Vector2.left : Vector2.right;
-        var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, 35, playerLayer);
-        var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, 35, playerLayer);
-        var playerHits = new List<RaycastHit2D> { playerHitTop, playerHitBottom };
+        var playerHits = GetPlayerHits(35);
         var groundHit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundedRadius, groundLayer);
         
         if (!isSecondStage && !isAccelerated && groundHit.collider != null)
@@ -91,11 +88,12 @@ public class SpiritGuide : MonoBehaviour {
 
         if (isSecondStage && !isAccelerated)
         {
-            var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, 6, groundLayer);
-            var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, 6, groundLayer);
-            if (wallHitLeft.collider == null && wallHitRight.collider == null && Time.time >= nextLightZoneTime)
+            var wallHits = GetWallHits(6);
+            var playerHitsSecondStage = GetPlayerHits(5);
+            if (wallHits[0].collider == null && wallHits[1].collider == null && Time.time >= nextLightZoneTime)
             {
-                if (Random.value <= lightZoneChance)
+                if (Random.value <= lightZoneChance
+                    && (playerHitsSecondStage[0].collider != null || playerHitsSecondStage[1].collider != null))
                 {
                     StartCoroutine(LightZoneRoutine());
                     nextLightZoneTime = Time.time + lightZoneCooldown;
@@ -124,6 +122,21 @@ public class SpiritGuide : MonoBehaviour {
         var moveDir = facingRight ? -1 : 1;
         rb.linearVelocity = new Vector2(moveDir * moveSpeed, rb.linearVelocity.y);
 	}
+
+    private List<RaycastHit2D> GetPlayerHits(float distance)
+    {
+        var direction = facingRight ? Vector2.left : Vector2.right;
+        var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, distance, playerLayer);
+        var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, distance, playerLayer);
+        return new List<RaycastHit2D> { playerHitTop, playerHitBottom };
+    }
+
+    private List<RaycastHit2D> GetWallHits(float distance)
+    {
+        var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, distance, groundLayer);
+        var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, distance, groundLayer);
+        return new List<RaycastHit2D> { wallHitLeft, wallHitRight };
+    }
 
     private void Turn()
     {
