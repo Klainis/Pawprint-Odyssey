@@ -462,47 +462,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1 &251617061 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7322076705737858885, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
-  m_PrefabInstance: {fileID: 6535194299079744923}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &251617064
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 251617061}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.73}
-  m_Radius: 3.1110506
 --- !u!1001 &296927483
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1001,22 +960,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5064882855902842272, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
-      propertyPath: bulletSpeed
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 6898921375461313706, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_Name
       value: ThornyPlant
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4515046667353398114, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7322076705737858885, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 251617064}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

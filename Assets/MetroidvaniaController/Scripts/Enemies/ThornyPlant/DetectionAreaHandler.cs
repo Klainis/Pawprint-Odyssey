@@ -14,7 +14,10 @@ public class DetectionAreaHandler : MonoBehaviour
     {
         var player = collision.gameObject.CompareTag("Player");
         if (player && thornyPlant.IsHidden)
+        {
             thornyPlant.ChangeForm(false);
+            StartCoroutine(WaitAfterShowUp());
+        }
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -36,5 +39,10 @@ public class DetectionAreaHandler : MonoBehaviour
         while (thornyPlant.IsShooting)
             yield return null;
         thornyPlant.ChangeForm(true);
+    }
+
+    IEnumerator WaitAfterShowUp()
+    {
+        yield return new WaitForSeconds(0.7f);
     }
 }

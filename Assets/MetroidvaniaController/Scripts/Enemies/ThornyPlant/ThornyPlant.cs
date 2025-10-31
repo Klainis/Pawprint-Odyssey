@@ -23,6 +23,8 @@ public class ThornyPlant : MonoBehaviour {
     private float timeBetweenShots = 0.35f;
     private float timeBetweenSeries = 2.5f;
     private float lastSeriesTime = 0;
+    private float delayAfterOpen = 1.2f;
+    private float lastOpenTime = 0;
     private bool canShoot = false;
     private bool isShooting = false;
     private bool isInvincible = false;
@@ -49,7 +51,8 @@ public class ThornyPlant : MonoBehaviour {
         if (isHitted)
             return;
 
-        canShoot = Time.time >= lastSeriesTime + timeBetweenSeries;
+        canShoot = (Time.time >= lastSeriesTime + timeBetweenSeries)
+                && (Time.time >= lastOpenTime + delayAfterOpen);
         if (!isHidden && canShoot && !isShooting)
             StartCoroutine(ShootRoutine());
 	}
@@ -59,6 +62,9 @@ public class ThornyPlant : MonoBehaviour {
         isHidden = hide;
         openForm.SetActive(!hide);
         closeForm.SetActive(hide);
+
+        if (!hide)
+            lastOpenTime = Time.time;
     }
 
     public void ApplyDamage(float damage) {
