@@ -22,16 +22,13 @@ public class Heart : MonoBehaviour
 
     public void RemoveHearts(int damage)
     {
-        if (life > 0)
-        {
-            life -= damage;
+        life -= damage;
 
-            for (int i = 0; i < hearts.Count; i++)
+        for (int i = 0; i < hearts.Count; i++)
+        {
+            if (i > life)
             {
-                if (i < lifeCounter && i > life)
-                {
-                    Destroy(hearts[i]);
-                }
+                Destroy(hearts[i]);
             }
         }
     }
