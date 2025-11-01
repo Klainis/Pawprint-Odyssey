@@ -70,8 +70,8 @@ public class ThornyPlant : MonoBehaviour {
     public void ApplyDamage(float damage) {
 		if (!isInvincible) 
 		{
-			//animator.SetBool("Hit", true);
-			life -= Mathf.Abs(damage);
+            //animator.SetBool("Hit", true);
+            life -= Mathf.Abs(damage);
             StartCoroutine(HitTime());
         }
 	}
@@ -125,11 +125,11 @@ public class ThornyPlant : MonoBehaviour {
 	{
         //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
+        Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
-		rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-		yield return new WaitForSeconds(1.5f);
-		Destroy(gameObject);
-	}
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
+    }
 }
