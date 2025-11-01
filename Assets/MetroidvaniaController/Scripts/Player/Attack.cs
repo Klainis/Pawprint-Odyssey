@@ -34,7 +34,7 @@ public class Attack : MonoBehaviour
     private bool canAttack = true;
     private bool isForceAttack = true;
 
-    public UnityEvent getMana; 
+    [SerializeField] private UnityEvent getMana; 
 
     private void OnDrawGizmos()
     {

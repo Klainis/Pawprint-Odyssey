@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5080a31bd1363334a8d279bf7e9ed46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WanderingSpirit
-  life: 50
-  speed: 1.5
-  damage: 2
+  life: 6
+  speed: 1.7
+  damage: 1
   isInvincible: 0
   turnLayerMask:
     serializedVersion: 2
@@ -61,7 +61,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
-  acceleratedSpeed: 4.5
+  lastPlayerAttackForce: 400
+  playerAttackForce: 300
+  acceleratedSpeed: 4.7
   playerDetectDistance: 5
   playerAttack: {fileID: 0}
 --- !u!212 &3690118322597669630
