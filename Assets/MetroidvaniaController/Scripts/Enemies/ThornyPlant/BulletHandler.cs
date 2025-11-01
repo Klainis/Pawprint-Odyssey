@@ -4,7 +4,7 @@ public class BulletHandler : MonoBehaviour
 {
 	private Rigidbody2D rb;
 
-	private float damage;
+	private int damage;
 
     void Start()
     {

@@ -6,7 +6,7 @@ public class WanderingSpirit : MonoBehaviour {
     [Header("Основные параметры")]
     [SerializeField] private float life = 10;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float damage = 1f;
+    [SerializeField] private int damage = 1;
 	[SerializeField] private bool isInvincible = false;
     [SerializeField] private LayerMask turnLayerMask;
     [SerializeField] private LayerMask playerLayer;

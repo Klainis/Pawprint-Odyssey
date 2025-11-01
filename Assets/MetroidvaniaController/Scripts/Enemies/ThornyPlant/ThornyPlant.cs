@@ -6,7 +6,7 @@ public class ThornyPlant : MonoBehaviour {
 
     [Header("Основные параметры")]
     [SerializeField] private float life = 10;
-    [SerializeField] private float damage = 1f;
+    [SerializeField] private int damage = 1;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private GameObject openForm;
     [SerializeField] private GameObject closeForm;
@@ -31,7 +31,7 @@ public class ThornyPlant : MonoBehaviour {
     private bool isHitted = false;
     private bool isHidden = true;
 
-    public float Damage { get { return damage; } }
+    public int Damage { get { return damage; } }
     public bool IsShooting { get { return isShooting; } }
     public bool IsHidden { get { return isHidden; } }
 

@@ -10,7 +10,6 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private float m_JumpForce = 400f;
     [SerializeField] private float m_DashForce = 25f;
     [SerializeField] private InputActionReference jumpAction;
-    [SerializeField] private float life = 10f;
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
@@ -36,7 +35,8 @@ public class CharacterController2D : MonoBehaviour
     private float prevVelocityX = 0f;
     private bool canCheck = false; //For check if player is wallsliding
 
-    Gamepad gamepad;
+    private Gamepad gamepad;
+    private Heart heart;
 
     private bool invincible = false; //If player can die
     private bool canMove = true; //If player can moveX
@@ -65,6 +65,7 @@ public class CharacterController2D : MonoBehaviour
 
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        heart = GetComponent<Heart>();
 
         if (OnFallEvent == null)
             OnFallEvent = new UnityEvent();
@@ -373,16 +374,16 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(float damage, Vector3 position)
+    public void ApplyDamage(int damage, Vector3 position)
     {
         if (!invincible)
         {
             animator.SetBool("Hit", true);
-            life -= damage;
+            heart.RemoveHearts(damage);
             Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
             m_Rigidbody2D.linearVelocity = Vector2.zero;
             m_Rigidbody2D.AddForce(damageDir * 15);
-            if (life <= 0)
+            if (heart.lifeForReading <= 0)
             {
                 StartCoroutine(WaitToDead());
             }
@@ -394,13 +395,13 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public void ApplyObjectDamage(float damage)
+    public void ApplyObjectDamage(int damage)
     {
         if (!invincible)
         {
             animator.SetBool("Hit", true);
-            life -= damage;
-            if (life <= 0)
+            heart.RemoveHearts(damage);
+            if (heart.lifeForReading <= 0)
             {
                 StartCoroutine(WaitToDead());
             }

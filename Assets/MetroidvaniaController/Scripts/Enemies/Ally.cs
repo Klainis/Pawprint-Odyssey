@@ -7,7 +7,7 @@ public class Ally : MonoBehaviour
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 
-	public float life = 10;
+	public int life = 10;
 
 	private bool facingRight = true;
 
@@ -146,7 +146,7 @@ public class Ally : MonoBehaviour
 		transform.localScale = theScale;
 	}
 
-	public void ApplyDamage(float damage)
+	public void ApplyDamage(int damage)
 	{
 		if (!isInvincible)
 		{
@@ -176,7 +176,7 @@ public class Ally : MonoBehaviour
 			}
 			else if (collidersEnemies[i].gameObject.tag == "Player")
 			{
-				collidersEnemies[i].gameObject.GetComponent<CharacterController2D>().ApplyDamage(2f, transform.position);
+				collidersEnemies[i].gameObject.GetComponent<CharacterController2D>().ApplyDamage(2, transform.position);
 			}
 		}
 		StartCoroutine(WaitToAttack(0.5f));
