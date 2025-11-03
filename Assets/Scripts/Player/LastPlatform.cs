@@ -3,7 +3,7 @@ using UnityEngine;
 public class LastPlatform : MonoBehaviour
 {
     private static LastPlatform instance;
-    public Vector3 lastPosition {  get; private set; }
+    public Vector3 lastPosition { get; private set; }
     private CharacterController2D playerController;
     private Transform player;
 

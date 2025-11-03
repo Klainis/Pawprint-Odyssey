@@ -5,12 +5,12 @@ public class DetectionAreaHandler : MonoBehaviour
 {
     private ThornyPlant thornyPlant;
 
-    void Awake()
+    private void Awake()
     {
         thornyPlant = transform.parent.GetComponent<ThornyPlant>();
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         var player = collision.gameObject.CompareTag("Player");
         if (player && thornyPlant.IsHidden)
@@ -20,14 +20,14 @@ public class DetectionAreaHandler : MonoBehaviour
         }
     }
 
-    void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         var player = collision.gameObject.CompareTag("Player");
         if (player && thornyPlant.IsHidden)
             thornyPlant.ChangeForm(false);
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         var player = collision.gameObject.CompareTag("Player");
         if (player && !thornyPlant.IsHidden)

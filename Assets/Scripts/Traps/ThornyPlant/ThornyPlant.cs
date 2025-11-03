@@ -57,13 +57,13 @@ public class ThornyPlant : MonoBehaviour {
             StartCoroutine(ShootRoutine());
 	}
 
-    public void ChangeForm(bool hide)
+    public void ChangeForm(bool toHidden)
     {
-        isHidden = hide;
-        openForm.SetActive(!hide);
-        closeForm.SetActive(hide);
+        isHidden = toHidden;
+        openForm.SetActive(!toHidden);
+        closeForm.SetActive(toHidden);
 
-        if (!hide)
+        if (!toHidden)
             lastOpenTime = Time.time;
     }
 
