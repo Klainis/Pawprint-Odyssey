@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class CollapsingPlatform : MonoBehaviour
 {
+    [SerializeField] private float timeBeforeHide = 1.5f;
+    [SerializeField] private float timeToReveal = 1.5f;
+
     private SpriteRenderer spriteRenderer;
     private Collider2D platformCollider;
     private Collider2D collapseTriggerCollider;
 
-    private float timeBeforeHide = 1.5f;
-    private float timeToReveal = 1.5f;
     private bool isHidden = false;
 
     public bool IsHidden { get { return isHidden; } }
