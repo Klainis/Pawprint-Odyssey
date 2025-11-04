@@ -40,7 +40,6 @@ public class BossHealth : MonoBehaviour
 
     public void DestroyBossHealthSlider()
     {
-        Debug.Log("Destroy Health Slider");
         Destroy(bossHealth);
     }
 }
