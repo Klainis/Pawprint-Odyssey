@@ -4,18 +4,13 @@ using UnityEngine.UI;
 public class BossHealth : MonoBehaviour
 {
     private SpiritGuide spiritGuide;
-    private Slider bossHealthSlider;
+    private Image bossHealthBar;
     private GameObject bossHealth;
     [SerializeField] private GameObject health;
     [SerializeField] private Transform canvas;
     void Start()
     {
         spiritGuide = GetComponent<SpiritGuide>();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void InstantiateBossHealth()
@@ -26,16 +21,12 @@ public class BossHealth : MonoBehaviour
         }
 
         bossHealth = Instantiate(health, canvas);
-        bossHealthSlider = bossHealth.GetComponent<Slider>();
-        bossHealthSlider.maxValue = spiritGuide.maxLifeForReading;
-        bossHealthSlider.value = spiritGuide.lifeForReading;
-        Debug.Log(bossHealthSlider.maxValue);
+        bossHealthBar = bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
     }
 
     public void HitBoss()
     {
-        bossHealthSlider.value = spiritGuide.lifeForReading;
-        Debug.Log(spiritGuide.lifeForReading);
+        bossHealthBar.fillAmount = (float)spiritGuide.lifeForReading / (float)spiritGuide.maxLifeForReading;
     }
 
     public void DestroyBossHealthSlider()
