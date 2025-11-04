@@ -10,14 +10,14 @@ public class Mana : MonoBehaviour
 
     private PiercingClaw piercingClaw;
     private Attack attack;
-    [SerializeField] private Slider slider;
+    [SerializeField] private Image manaBar;
 
     private void Awake()
     {
         piercingClaw = GetComponent<PiercingClaw>();
         attack = GetComponent<Attack>();
 
-        slider.maxValue = maxMana;
+        //slider.maxValue = maxMana;
     }
 
     private void Update()
@@ -28,23 +28,17 @@ public class Mana : MonoBehaviour
             mana = 0;
 
         manaForReading = mana;
-
-        ManaBar();
     }
 
     public void SpendMana()
     {
         mana -= 25;
+        manaBar.fillAmount = (float)mana / (float)maxMana;
     }
 
     public void GetMana()
     {
         mana += 4;
-    }
-
-    public void ManaBar()
-    {
-        var manaValue = mana;
-        slider.value = manaValue;
+        manaBar.fillAmount = (float)mana / (float)maxMana;
     }
 }

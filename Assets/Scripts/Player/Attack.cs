@@ -186,16 +186,18 @@ public class Attack : MonoBehaviour
 			if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
 			{
                 float damageToApply = dmgValue;
+
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
 				{
                     damageToApply = -damageToApply;
                 }
 
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+
                 if (getMana != null)
                     getMana.Invoke();
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
                 //cam.GetComponent<CameraFollow>().ShakeCamera();
-			}
+            }
 		}
 	}
 }

@@ -2,24 +2,19 @@ using UnityEngine;
 
 public class ReceivingClaw : MonoBehaviour
 {
-    private Mana mana;
+    private Mana manaScript;
     private PiercingClaw piercingClaw;
     [SerializeField] private GameObject manaBar;
     private bool isHaveClaw;
     void Start()
     {
-        mana = GetComponent<Mana>();
+        manaScript = GetComponent<Mana>();
         piercingClaw = GetComponent<PiercingClaw>();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void EnableClaw()
     {
-        mana.enabled = true;
+        manaScript.enabled = true;
         piercingClaw.enabled = true;
         manaBar.SetActive(true);
     }
