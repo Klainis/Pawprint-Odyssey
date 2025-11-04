@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using Unity.Profiling;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
@@ -17,14 +18,18 @@ public class PlayerMovement : MonoBehaviour {
 	private float horizontalMove = 0f;
 	private bool jump = false;
 	private bool dash = false;
+    private float lastJumpTime;
 
 	Gamepad gamepad;
+    CharacterController2D characterController;
+    [SerializeField] private UnityEvent jumpPressed;
     private bool grab = false;
     private float verticalMove = 0f;
 
     void Start()
 	{
         gamepad = Gamepad.current;
+        characterController = GetComponent<CharacterController2D>();
     }
 	void Update () 
 	{
@@ -39,7 +44,10 @@ public class PlayerMovement : MonoBehaviour {
         if (jumpAction != null && jumpAction.action != null)
         {
             if (jumpAction.action.WasPressedThisFrame())
+            {
                 jump = true;
+                jumpPressed.Invoke();
+            }
         }
 
         if (dashAction != null && dashAction.action != null)

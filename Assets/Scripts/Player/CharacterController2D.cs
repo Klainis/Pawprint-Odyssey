@@ -13,13 +13,13 @@ public class CharacterController2D : MonoBehaviour
 
     [Header("Assists")]
     [SerializeField] [Range(0.01f, 0.5f)] private float coyoteTime;
-    [SerializeField] [Range(0.01f, 0.5f)] public float jumpInputBufferTime;
+    [SerializeField] [Range(0.01f, 0.5f)] private float jumpInputBufferTime;
 
     [Header("Actions")]
     [SerializeField] private InputActionReference jumpAction;
 
     [Header("")]
-    [SerializeField] [Range(0, 0.3f)] private float m_MovementSmoothing = .05f;
+    [SerializeField] [Range(0, 0.3f)] private float m_MovementSmoothing = 0.05f;
     [SerializeField] private bool m_AirControl = false;
     [SerializeField] private bool doubleJump = false;
     [SerializeField] private LayerMask m_WhatIsGround;
@@ -28,7 +28,8 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private Transform m_GroundCheck;                           
     [SerializeField] private Transform m_WallCheck;
 
-    private float LastOnGroundTime;
+    private float lastOnGroundTime;
+    private float lastPressedJumpTime;
 
     const float k_GroundeDistance = 0.2f; // Radius of the overlap circle to determine if grounded
     public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
@@ -105,9 +106,23 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    //private void Update()
+    //{
+    //    if (!m_Grounded)
+    //        lastOnGroundTime -= Time.deltaTime;
+
+    //    lastPressedJumpTime -= Time.deltaTime;
+
+    //    Debug.Log(lastPressedJumpTime);
+    //}
+
+    private void Update()
     {
-        //Debug.Log(LastOnGroundTime);
+
+        lastOnGroundTime -= Time.deltaTime;
+        lastPressedJumpTime -= Time.deltaTime;
+
+        Debug.Log(lastPressedJumpTime);
 
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
@@ -117,7 +132,7 @@ public class CharacterController2D : MonoBehaviour
         {
             m_Grounded = true;
             isJumping = false;
-            LastOnGroundTime = coyoteTime;
+            lastOnGroundTime = coyoteTime;
 
             if (!wasGrounded)
             {
@@ -136,8 +151,6 @@ public class CharacterController2D : MonoBehaviour
 
         if (!m_Grounded)
         {
-            StartCoroutine(CountdownCoyoteTime());
-
             OnFallEvent.Invoke();
 
             bool leftHit = Physics2D.Raycast(m_WallCheck.position, Vector2.left, k_GroundeDistance, m_WhatIsGround);
@@ -199,7 +212,7 @@ public class CharacterController2D : MonoBehaviour
         Dash();
 
         // Ïðûæîê
-        if (jump && (LastOnGroundTime > 0 && !isJumping))
+        if (lastPressedJumpTime > 0 && (lastOnGroundTime > 0 /*&& !isJumping*/))
         {
             Jump();
         }
@@ -338,9 +351,16 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    public void OnJumpInput()
+    {
+        lastPressedJumpTime = jumpInputBufferTime;
+    }
+
+
     private void Jump()
     {
-        LastOnGroundTime = 0;
+        lastOnGroundTime = 0;
+        lastPressedJumpTime = 0;
 
         isJumping = true;
         animator.SetBool("IsJumping", true);
@@ -374,8 +394,11 @@ public class CharacterController2D : MonoBehaviour
         canDoubleJump = true;
 
         isWallSliding = false;
+        //isWallRunning = false;
         animator.SetBool("IsWallSliding", false);
+        //animator.SetBool("IsWallRunning", false);
         oldWallSlidding = false;
+        //oldWallRunning = false;
         m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 
         canMove = false;
@@ -445,12 +468,6 @@ public class CharacterController2D : MonoBehaviour
                 StartCoroutine(MakeInvincible(1f));
             }
         }
-    }
-
-    IEnumerator CountdownCoyoteTime()
-    {
-        LastOnGroundTime = -Time.deltaTime;
-        yield return LastOnGroundTime;
     }
 
     IEnumerator DashCooldown()
