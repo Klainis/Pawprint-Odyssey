@@ -12,31 +12,22 @@ public class PlayerMovement : MonoBehaviour {
 	[SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
-
     [SerializeField] private float runSpeed = 40f;
 
 	private float horizontalMove = 0f;
-	//float wallUpMove = 0f;
-	public bool jump = false;
+	private bool jump = false;
 	private bool dash = false;
 
 	Gamepad gamepad;
     private bool grab = false;
     private float verticalMove = 0f;
 
-    //Rigidbody2D rb;
-    //   public float velY;
-
-    //bool dashAxis = false;
-
-    // Update is called once per frame
     void Start()
 	{
         gamepad = Gamepad.current;
     }
 	void Update () 
 	{
-
         if (moveAction != null && moveAction.action != null)
         {
             Vector2 move = moveAction.action.ReadValue<Vector2>();
@@ -62,7 +53,6 @@ public class PlayerMovement : MonoBehaviour {
 
     private void WallRun(Vector2 move)
     {
-        //Debug.Log(move.y);
         if (move.y > 0 && dashAction.action.IsPressed())
         {
             grab = true;

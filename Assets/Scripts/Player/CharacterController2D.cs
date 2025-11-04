@@ -7,16 +7,30 @@ using System;
 
 public class CharacterController2D : MonoBehaviour
 {
+    [Header("Forces")]
     [SerializeField] private float m_JumpForce = 400f;
     [SerializeField] private float m_DashForce = 25f;
-    [SerializeField] private InputActionReference jumpAction;
-    [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
-    [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
-    [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
-    [SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
-    [SerializeField] private Transform m_WallCheck;                             // Posicion que controla si el personaje toca una pared
 
-    const float k_GroundedRadius = 0.2f; // Radius of the overlap circle to determine if grounded
+    [Header("Assists")]
+    [SerializeField] [Range(0.01f, 0.5f)] private float coyoteTime;
+    [SerializeField] [Range(0.01f, 0.5f)] public float jumpInputBufferTime;
+
+    [Header("Actions")]
+    [SerializeField] private InputActionReference jumpAction;
+
+    [Header("")]
+    [SerializeField] [Range(0, 0.3f)] private float m_MovementSmoothing = .05f;
+    [SerializeField] private bool m_AirControl = false;
+    [SerializeField] private bool doubleJump = false;
+    [SerializeField] private LayerMask m_WhatIsGround;
+
+    [Header("Checks")]
+    [SerializeField] private Transform m_GroundCheck;                           
+    [SerializeField] private Transform m_WallCheck;
+
+    private float LastOnGroundTime;
+
+    const float k_GroundeDistance = 0.2f; // Radius of the overlap circle to determine if grounded
     public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -24,7 +38,7 @@ public class CharacterController2D : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private float limitFallSpeed = 25f; // Limit fall moveX
 
-    public bool canDoubleJump = true; //If player can double jump
+    private bool canDoubleJump = false; //If player can double jump
     private bool canDash = true;
     private bool isDashing = false; //If player is dashing
     private bool m_IsWall = false; //If there is a wall in front of the player
@@ -34,14 +48,17 @@ public class CharacterController2D : MonoBehaviour
     private bool oldWallRunning;
     private float prevVelocityX = 0f;
     private bool canCheck = false; //For check if player is wallsliding
+    private bool invincible = false;
+    private bool canMove = true;
+    private bool isJumping;
+
 
     private Gamepad gamepad;
     private Heart heart;
 
-    private bool invincible = false; //If player can die
-    private bool canMove = true; //If player can moveX
-
     private Animator animator;
+
+    [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp; //Trail particles
     [SerializeField] private ParticleSystem particleJumpDown; //Explosion particles
 
@@ -78,31 +95,38 @@ public class CharacterController2D : MonoBehaviour
         if (m_GroundCheck != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(m_GroundCheck.position, m_GroundCheck.position + Vector3.down * k_GroundedRadius);
+            Gizmos.DrawLine(m_GroundCheck.position, m_GroundCheck.position + Vector3.down * k_GroundeDistance);
         }
         if (m_WallCheck != null)
         {
             Gizmos.color = Color.red;
             Vector3 dir = m_FacingRight ? Vector3.right : Vector3.left;
-            Gizmos.DrawLine(m_WallCheck.position, m_WallCheck.position + dir * k_GroundedRadius);
+            Gizmos.DrawLine(m_WallCheck.position, m_WallCheck.position + dir * k_GroundeDistance);
         }
     }
 
     private void FixedUpdate()
     {
+        //Debug.Log(LastOnGroundTime);
+
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
+        isJumping = true;
 
-        RaycastHit2D groundHit = Physics2D.Raycast(m_GroundCheck.position, Vector2.down, k_GroundedRadius, m_WhatIsGround);
-        if (groundHit.collider != null)
+        if (Physics2D.Raycast(m_GroundCheck.position, Vector2.down, k_GroundeDistance, m_WhatIsGround))
         {
             m_Grounded = true;
+            isJumping = false;
+            LastOnGroundTime = coyoteTime;
+
             if (!wasGrounded)
             {
                 OnLandEvent.Invoke();
                 if (!m_IsWall && !isDashing)
                     particleJumpDown.Play();
+
                 canDoubleJump = true;
+
                 if (m_Rigidbody2D.linearVelocity.y < 0f)
                     limitVelOnWallJump = false;
             }
@@ -112,14 +136,19 @@ public class CharacterController2D : MonoBehaviour
 
         if (!m_Grounded)
         {
+            StartCoroutine(CountdownCoyoteTime());
+
             OnFallEvent.Invoke();
 
-            bool leftHit = Physics2D.Raycast(m_WallCheck.position, Vector2.left, k_GroundedRadius, m_WhatIsGround);
-            bool rightHit = Physics2D.Raycast(m_WallCheck.position, Vector2.right, k_GroundedRadius, m_WhatIsGround);
+            bool leftHit = Physics2D.Raycast(m_WallCheck.position, Vector2.left, k_GroundeDistance, m_WhatIsGround);
+            bool rightHit = Physics2D.Raycast(m_WallCheck.position, Vector2.right, k_GroundeDistance, m_WhatIsGround);
             m_IsWall = leftHit || rightHit;
 
             if (m_IsWall)
+            {
                 isDashing = false;
+                isJumping = false;
+            }
 
             prevVelocityX = m_Rigidbody2D.linearVelocity.x;
         }
@@ -153,16 +182,7 @@ public class CharacterController2D : MonoBehaviour
         ScaleJump();
     }
 
-    private void ScaleJump()
-    {
-        if (m_Rigidbody2D.linearVelocity.y > 0)
-        {
-            if (!jumpAction.action.IsPressed() && !isWallRunning)
-            {
-                m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
-            }
-        }
-    }
+    
 
     public void Move(float moveY, float moveX, bool jump, bool dash, bool grab)
     {
@@ -179,11 +199,11 @@ public class CharacterController2D : MonoBehaviour
         Dash();
 
         // Ïðûæîê
-        if (m_Grounded && jump)
+        if (jump && (LastOnGroundTime > 0 && !isJumping))
         {
             Jump();
         }
-        else if (!m_Grounded && jump)
+        else if (jump && isJumping && doubleJump)
         {
             DoubleJump(jump);
         }
@@ -307,8 +327,22 @@ public class CharacterController2D : MonoBehaviour
             Turn();
     }
 
+    private void ScaleJump()
+    {
+        if (m_Rigidbody2D.linearVelocity.y > 0)
+        {
+            if (!jumpAction.action.IsPressed() && !isWallRunning)
+            {
+                m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
+            }
+        }
+    }
+
     private void Jump()
     {
+        LastOnGroundTime = 0;
+
+        isJumping = true;
         animator.SetBool("IsJumping", true);
         animator.SetBool("JumpUp", true);
         m_Grounded = false;
@@ -411,6 +445,12 @@ public class CharacterController2D : MonoBehaviour
                 StartCoroutine(MakeInvincible(1f));
             }
         }
+    }
+
+    IEnumerator CountdownCoyoteTime()
+    {
+        LastOnGroundTime = -Time.deltaTime;
+        yield return LastOnGroundTime;
     }
 
     IEnumerator DashCooldown()
