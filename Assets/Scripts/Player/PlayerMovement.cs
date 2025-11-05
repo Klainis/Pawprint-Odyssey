@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
             if (jumpAction.action.WasPressedThisFrame())
             {
                 jump = true;
-                jumpPressed.Invoke();
+                //jumpPressed.Invoke();
             }
         }
 
@@ -103,7 +103,11 @@ public class PlayerMovement : MonoBehaviour {
 	{
 		// Move our character
 		controller.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
-		jump = false;
+		
+        if (jump)
+            jumpPressed.Invoke();
+
+        jump = false;
 		dash = false;
 	}
 }

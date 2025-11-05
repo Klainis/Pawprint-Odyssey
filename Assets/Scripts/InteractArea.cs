@@ -9,6 +9,7 @@ public class InteractArea : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             interact.enabled = true;
+
             if (gameObject.tag == "Heal")
             {
                 interact.heal = true;

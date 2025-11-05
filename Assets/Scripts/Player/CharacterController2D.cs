@@ -8,12 +8,14 @@ using System;
 public class CharacterController2D : MonoBehaviour
 {
     [Header("Forces")]
-    [SerializeField] private float m_JumpForce = 400f;
-    [SerializeField] private float m_DashForce = 25f;
+    [SerializeField] private float jumpForce = 15f;
+    [SerializeField] private float doubleJumpForce = 13f;
+    [SerializeField] private Vector2 wallJumpForce = new Vector2(800f, 700f);
+    [SerializeField] private float dashForce = 25f;
 
     [Header("Assists")]
     [SerializeField] [Range(0.01f, 0.5f)] private float coyoteTime;
-    [SerializeField] [Range(0.01f, 0.5f)] private float jumpInputBufferTime;
+    [SerializeField] [Range(0.01f, 10f)] private float jumpInputBufferTime;
 
     [Header("Actions")]
     [SerializeField] private InputActionReference jumpAction;
@@ -126,7 +128,6 @@ public class CharacterController2D : MonoBehaviour
 
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
-        isJumping = true;
 
         if (Physics2D.Raycast(m_GroundCheck.position, Vector2.down, k_GroundeDistance, m_WhatIsGround))
         {
@@ -195,8 +196,6 @@ public class CharacterController2D : MonoBehaviour
         ScaleJump();
     }
 
-    
-
     public void Move(float moveY, float moveX, bool jump, bool dash, bool grab)
     {
         if (!canMove) return;
@@ -212,13 +211,13 @@ public class CharacterController2D : MonoBehaviour
         Dash();
 
         // Прыжок
-        if (lastPressedJumpTime > 0 && (lastOnGroundTime > 0 /*&& !isJumping*/))
+        if (lastPressedJumpTime > 0 && CanJump())
         {
             Jump();
         }
-        else if (jump && isJumping && doubleJump)
+        else if (lastPressedJumpTime > 0 && canDoubleJump && doubleJump)
         {
-            DoubleJump(jump);
+            DoubleJump();
         }
 
         //Взбирание по стене
@@ -351,11 +350,14 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    private bool CanJump()
+    {
+        return (lastOnGroundTime > 0 && !isJumping);
+    }
     public void OnJumpInput()
     {
         lastPressedJumpTime = jumpInputBufferTime;
     }
-
 
     private void Jump()
     {
@@ -366,39 +368,64 @@ public class CharacterController2D : MonoBehaviour
         animator.SetBool("IsJumping", true);
         animator.SetBool("JumpUp", true);
         m_Grounded = false;
-        m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+
+        float force = jumpForce;
+        if (m_Rigidbody2D.linearVelocity.y < 0)
+            force -= m_Rigidbody2D.linearVelocity.y;
+
+        m_Rigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+
         canDoubleJump = true;
         particleJumpDown.Play();
         particleJumpUp.Play();
     }
 
-    private void DoubleJump(bool jumpPressed)
+    private void DoubleJump()
     {
         if (!canDoubleJump || isWallSliding) return;
 
         canDoubleJump = false;
-        m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
-        m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce * 0.9f));
+
+        float force = doubleJumpForce;
+        if (m_Rigidbody2D.linearVelocity.y < 0)
+            force -= m_Rigidbody2D.linearVelocity.y;
+
+        m_Rigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+
+        //m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
+        //m_Rigidbody2D.AddForce(new Vector2(0f, doubleJumpForce));
         animator.SetBool("IsDoubleJumping", true);
     }
 
     private void WallJump()
     {
+        lastOnGroundTime = 0;
+        lastPressedJumpTime = 0;
+
         animator.SetBool("IsJumping", true);
         animator.SetBool("JumpUp", true);
         m_Rigidbody2D.linearVelocity = new Vector2(0f, 0f);
 
-        m_Rigidbody2D.AddForce(new Vector2(turnCoefficient * m_JumpForce * 1.2f, m_JumpForce));
+        Vector2 force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
+
+        //if (Mathf.Sign(m_Rigidbody2D.linearVelocity.x) != Mathf.Sign(force.x))
+        //    force.x -= m_Rigidbody2D.linearVelocity.x;
+
+        //if (m_Rigidbody2D.linearVelocity.y < 0)
+        //    force.y -= m_Rigidbody2D.linearVelocity.y;
+
+        //m_Rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+        //Debug.Log(m_Rigidbody2D.linearVelocity * m_Rigidbody2D.mass);
+
+        m_Rigidbody2D.AddForce(force, ForceMode2D.Force);
+
         jumpWallStartX = transform.position.x;
         limitVelOnWallJump = true;
         canDoubleJump = true;
 
         isWallSliding = false;
-        //isWallRunning = false;
         animator.SetBool("IsWallSliding", false);
-        //animator.SetBool("IsWallRunning", false);
         oldWallSlidding = false;
-        //oldWallRunning = false;
         m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 
         canMove = false;
@@ -409,7 +436,7 @@ public class CharacterController2D : MonoBehaviour
     {
         if (isDashing)
         {
-            m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * m_DashForce, 0);
+            m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
         }
     }
 
