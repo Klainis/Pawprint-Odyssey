@@ -122,7 +122,7 @@ public class CharacterController2D : MonoBehaviour
         lastOnGroundTime -= Time.deltaTime;
         lastPressedJumpTime -= Time.deltaTime;
 
-        Debug.Log(lastPressedJumpTime);
+        //Debug.Log(lastPressedJumpTime);
 
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
