@@ -127,8 +127,8 @@ public class ThornyPlant : MonoBehaviour {
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
-        yield return new WaitForSeconds(0.25f);
-        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        //yield return new WaitForSeconds(0.25f);
+        //rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         yield return new WaitForSeconds(3f);
         Destroy(gameObject);
     }

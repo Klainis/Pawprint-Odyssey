@@ -1,7 +1,7 @@
-using UnityEngine;
+//using UnityEngine;
 
-[CreateAssetMenu(menuName = "Player Data")]
-public class PlayerMoveData : ScriptableObject
-{
+//[CreateAssetMenu(menuName = "Player Data")]
+//public class PlayerMoveData : ScriptableObject
+//{
 
-}
+//}

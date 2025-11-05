@@ -37,6 +37,7 @@ public class WanderingSpirit : MonoBehaviour {
 
 		rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        playerAttack = GameObject.FindWithTag("Player").GetComponent<Attack>();
 	}
 	
 	// Update is called once per frame

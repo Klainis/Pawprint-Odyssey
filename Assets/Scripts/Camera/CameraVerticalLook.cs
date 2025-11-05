@@ -18,6 +18,8 @@ public class CameraVerticalLook : MonoBehaviour
 
     private void Awake()
     {
+        vcam = GetComponent<CinemachineVirtualCamera>();
+
         if (vcam == null)
         {
             enabled = false;

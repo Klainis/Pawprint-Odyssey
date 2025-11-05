@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 3191561310697657152}
   - component: {fileID: 5307630976532480232}
   - component: {fileID: 8252740716077878135}
+  - component: {fileID: 7074529048883925340}
   m_Layer: 0
   m_Name: PlayerFollowCamera (OpenRooms)
   m_TagString: Untagged
@@ -176,7 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachineConfiner2D
   m_BoundingShape2D: {fileID: 0}
   m_Damping: 1
-  m_MaxWindowSize: -1
+  m_MaxWindowSize: 8
   m_Padding: 1
 --- !u!114 &8252740716077878135
 MonoBehaviour:
@@ -193,3 +194,15 @@ MonoBehaviour:
   vcam: {fileID: 3191561310697657152}
   lookAction: {fileID: -5630151704836100654, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   verticalRange: 10
+--- !u!114 &7074529048883925340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432379303684670639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be04280535d35f64eae0ba91127bc2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CinemachineSetFollow

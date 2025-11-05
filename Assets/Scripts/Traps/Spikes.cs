@@ -14,6 +14,8 @@ public class Spikes : MonoBehaviour
 
     private void Start()
     {
+        player = GameObject.FindWithTag("Player");
+        lastPlatform = player.GetComponent<LastPlatform>();
         if (player != null )
             playerController = player.GetComponent<CharacterController2D>();
     }
