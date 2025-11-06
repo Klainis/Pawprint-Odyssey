@@ -13,6 +13,7 @@ public class Spikes : MonoBehaviour
     private int damage = 1;
 
     private Rigidbody2D rb;
+    private GameObject enemy;
 
     private void Start()
     {
@@ -30,6 +31,11 @@ public class Spikes : MonoBehaviour
         {
             playerController.ApplyObjectDamage(damage);
             StartCoroutine(StopFrame());
+        }
+        else if (collider.gameObject.CompareTag("Enemy"))
+        {
+            enemy = collider.gameObject;
+            Destroy(enemy);
         }
     }
 
