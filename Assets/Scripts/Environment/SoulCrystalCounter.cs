@@ -15,7 +15,6 @@ public class SoulCrystalCounter : MonoBehaviour
 
     public void CrystalCounter()
     {
-        Debug.Log(counterText.text);
         crystalCount++;
         Data.soulCrystalCount = crystalCount;
         counterText.text = crystalCount.ToString();
