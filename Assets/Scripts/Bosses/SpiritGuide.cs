@@ -257,6 +257,7 @@ public class SpiritGuide : MonoBehaviour {
 	{
         //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
+        gameObject.tag = "isDead";
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);

@@ -31,7 +31,7 @@ public class Attack : MonoBehaviour
     private bool isAttacking = false;
     private bool canAttack = true;
 
-    [SerializeField] private UnityEvent getMana; 
+    [SerializeField] private UnityEvent<GameObject> getMana; 
 
     private void OnDrawGizmos()
     {
@@ -135,7 +135,10 @@ public class Attack : MonoBehaviour
 		var collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
 		for (int i = 0; i < collidersEnemies.Length; i++)
 		{
-			if (collidersEnemies[i].gameObject.CompareTag("Enemy") || collidersEnemies[i].gameObject.CompareTag("SoulCrystal"))
+            GameObject enemy = collidersEnemies[i].gameObject;
+            GameObject objectEnvironment = collidersEnemies[i].gameObject;
+
+            if (enemy.CompareTag("Enemy") || objectEnvironment.CompareTag("SoulCrystal"))
 			{
                 float damageToApply = dmgValue;
 
@@ -146,8 +149,8 @@ public class Attack : MonoBehaviour
 
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 
-                if (getMana != null)
-                    getMana.Invoke();
+                if (getMana != null && enemy.tag != "isDead")
+                    getMana.Invoke(enemy);
                 //cam.GetComponent<CameraFollow>().ShakeCamera();
             }
 		}
