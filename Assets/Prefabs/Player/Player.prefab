@@ -135,7 +135,7 @@ MonoBehaviour:
   doubleJumpForce: 12
   wallJumpForce: {x: 850, y: 700}
   dashForce: 25
-  coyoteTime: 0.2
+  coyoteTime: 0.15
   jumpInputBufferTime: 0.2
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_MovementSmoothing: 0.05
@@ -242,7 +242,6 @@ MonoBehaviour:
   attackSeriesTimeout: 0.9
   maxAttackSeriesCount: 3
   forceFromAttack: 600
-  cam: {fileID: 0}
   attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   getMana:
     m_PersistentCalls:
@@ -271,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf8b84cffaeb1084eac3bb277ca3921c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SafeGroundSaver
-  saveFreauency: 3
+  saveFreauency: 2
 --- !u!114 &1738746197435764065
 MonoBehaviour:
   m_ObjectHideFlags: 0

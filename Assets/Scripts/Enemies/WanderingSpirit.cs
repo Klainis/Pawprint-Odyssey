@@ -134,6 +134,7 @@ public class WanderingSpirit : MonoBehaviour {
 
 	IEnumerator DestroyEnemy()
 	{
+        isInvincible = true;
         animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);

@@ -15,7 +15,6 @@ public class Attack : MonoBehaviour
     [SerializeField] private int maxAttackSeriesCount = 3;
     [SerializeField] private float forceFromAttack = 600f;
 
-    [SerializeField] Camera cam;
     [SerializeField] private InputActionReference attackAction;
 
     const float attackCheckRadius = 1.1f;
@@ -71,7 +70,7 @@ public class Attack : MonoBehaviour
         }
 
         CheckTurn();
-        CheckAddForceForAttack();
+        //CheckAddForceForAttack();
 
         if (attackPressed && !isAttacking && canAttack)
         {
@@ -84,19 +83,19 @@ public class Attack : MonoBehaviour
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
-                AddForceForAttack();
+                //AddForceForAttack();
             }
             else if (attackSeriesCount == 2)
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
-                AddForceForAttack();
+                //AddForceForAttack();
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
-                AddForceForAttack();
+                //AddForceForAttack();
             }
 
             isAttacking = true;
@@ -104,39 +103,39 @@ public class Attack : MonoBehaviour
 
     }
 
-    private void AddForceForAttack()
-    {
-        if (isForceAttack)
-        {
-            Debug.Log("++ Force");
-            rb.linearVelocity = Vector2.zero;
-            rb.AddForce(new Vector2(forceFromAttack, 0));
-        }
-    }
+    //private void AddForceForAttack()
+    //{
+    //    if (isForceAttack)
+    //    {
+    //        Debug.Log("++ Force");
+    //        rb.linearVelocity = Vector2.zero;
+    //        rb.AddForce(new Vector2(forceFromAttack, 0));
+    //    }
+    //}
 
-    private void CheckAddForceForAttack()
-    {
-        Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
-        if (collidersEnemies != null)
-        {
-            for (int i = 0; i < collidersEnemies.Length; i++)
-            {
-                if (collidersEnemies[i].gameObject.tag == "Enemy")
-                {
-                    if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.8f && attackSeriesCount !=3)
-                    {
-                        isForceAttack = false;
-                    }
-                    else
-                    {
-                        isForceAttack = true;
-                    }
-                }
-            }
-        }
-        else
-            isForceAttack = true;
-    }
+    //private void CheckAddForceForAttack()
+    //{
+    //    Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
+    //    if (collidersEnemies != null)
+    //    {
+    //        for (int i = 0; i < collidersEnemies.Length; i++)
+    //        {
+    //            if (collidersEnemies[i].gameObject.tag == "Enemy")
+    //            {
+    //                if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.8f && attackSeriesCount !=3)
+    //                {
+    //                    isForceAttack = false;
+    //                }
+    //                else
+    //                {
+    //                    isForceAttack = true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    else
+    //        isForceAttack = true;
+    //}
 
     private void CheckTurn()
     {

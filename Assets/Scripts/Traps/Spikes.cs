@@ -12,42 +12,35 @@ public class Spikes : MonoBehaviour
 
     private int damage = 1;
 
-    private Vector3 lastPlayerPosition = Vector3.zero;
+    private Rigidbody2D rb;
 
     private void Start()
     {
         player = GameObject.FindWithTag("Player");
         safeGroundSaver = player.GetComponent<SafeGroundSaver>();
-        if (player != null )
+        if (player != null)
+        {
             playerController = player.GetComponent<CharacterController2D>();
+            rb = player.GetComponent <Rigidbody2D>();
+        }
     }
-    void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        playerController.ApplyObjectDamage(damage);
-        StartCoroutine(StopFrame());
+        if (collider.gameObject.CompareTag("Player"))
+        {
+            playerController.ApplyObjectDamage(damage);
+            StartCoroutine(StopFrame());
+        }
     }
 
     public void TeleportPlayer(GameObject player)
     {
         if (safeGroundSaver != null)
         {
-            //CalculateLastPosition();
+            rb.linearVelocity = Vector2.zero;
             player.transform.position = safeGroundSaver.SafeGroundLocation;
         }
     }
-
-    //public void CalculateLastPosition()
-    //{
-    //    if(lastPlatform.lastPosition.x < spikesPostion.position.x)
-    //    {
-    //        lastPlayerPosition = lastPlatform.lastPosition - new Vector3(0.5f, 0, 0);
-    //    }
-    //    else if (lastPlatform.lastPosition.x > spikesPostion.position.x)
-    //    {
-    //        lastPlayerPosition = lastPlatform.lastPosition + new Vector3(0.5f, 0, 0);
-    //    }
-
-    //}
 
     IEnumerator StopFrame()
     {

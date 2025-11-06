@@ -115,14 +115,15 @@ public class ThornyPlant : MonoBehaviour {
     IEnumerator HitTime()
 	{
 		isHitted = true;
-		isInvincible = true;
+		//isInvincible = true;
 		yield return new WaitForSeconds(0.1f);
 		isHitted = false;
-		isInvincible = false;
+		//isInvincible = false;
 	}
 
 	IEnumerator DestroyEnemy()
 	{
+        isInvincible = true;
         //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
