@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DestructibleObject : MonoBehaviour
 {
-	public float life = 3;
+	[SerializeField] private float life = 3;
 
 	// Desired duration of the shake effect
 	private float shakeDuration = 0f;
@@ -19,9 +20,10 @@ public class DestructibleObject : MonoBehaviour
 	Vector3 initialPosition;
 	// Start is called before the first frame update
 
+	[SerializeField] UnityEvent crystalCountEvent;
 	void Awake()
 	{
-		initialPosition = transform.position;
+		initialPosition = transform.localPosition;
 	}
 
 	void Start()
@@ -34,7 +36,15 @@ public class DestructibleObject : MonoBehaviour
     {
 		if (life <= 0)
 		{
-			Destroy(gameObject);
+   //         Debug.Log($"SoulCrystal {gameObject.CompareTag("SoulCrystal")}");
+   //         if (gameObject.CompareTag("SoulCrystal"))
+			//{
+   //             Debug.Log($"SoulCrystal {gameObject.CompareTag("SoulCrystal")}");
+   //             crystalCountEvent.Invoke();
+   //         }
+			//Сделать проверку на Кристалл души 
+            crystalCountEvent.Invoke();
+            Destroy(gameObject);
 		}
 		else if (shakeDuration > 0)
 		{

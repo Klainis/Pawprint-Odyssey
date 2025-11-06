@@ -103,40 +103,6 @@ public class Attack : MonoBehaviour
 
     }
 
-    //private void AddForceForAttack()
-    //{
-    //    if (isForceAttack)
-    //    {
-    //        Debug.Log("++ Force");
-    //        rb.linearVelocity = Vector2.zero;
-    //        rb.AddForce(new Vector2(forceFromAttack, 0));
-    //    }
-    //}
-
-    //private void CheckAddForceForAttack()
-    //{
-    //    Collider2D[] collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
-    //    if (collidersEnemies != null)
-    //    {
-    //        for (int i = 0; i < collidersEnemies.Length; i++)
-    //        {
-    //            if (collidersEnemies[i].gameObject.tag == "Enemy")
-    //            {
-    //                if (Math.Abs(collidersEnemies[i].transform.position.x - transform.position.x) < 1.8f && attackSeriesCount !=3)
-    //                {
-    //                    isForceAttack = false;
-    //                }
-    //                else
-    //                {
-    //                    isForceAttack = true;
-    //                }
-    //            }
-    //        }
-    //    }
-    //    else
-    //        isForceAttack = true;
-    //}
-
     private void CheckTurn()
     {
         if (playerController.turnCoefficient == 1 && forceFromAttack < 0)
@@ -182,7 +148,7 @@ public class Attack : MonoBehaviour
 		var collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
 		for (int i = 0; i < collidersEnemies.Length; i++)
 		{
-			if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
+			if (collidersEnemies[i].gameObject.CompareTag("Enemy") || collidersEnemies[i].gameObject.CompareTag("SoulCrystal"))
 			{
                 float damageToApply = dmgValue;
 

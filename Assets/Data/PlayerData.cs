@@ -13,4 +13,7 @@ public class PlayerData : ScriptableObject
 
     [Header("Received Abilities")]
     public bool clawIsReceived;
+
+    [Header("Soul Crystal")]
+    public int soulCrystalCount;
 }
