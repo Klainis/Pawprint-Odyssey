@@ -43,6 +43,7 @@ public class CharacterController2D : MonoBehaviour
     public int turnCoefficient { get; private set; } = 1;
     private Vector3 velocity = Vector3.zero;
     private float limitFallSpeed = 25f; // Limit fall moveX
+    private int dashCounter = 0;
 
     private bool canDoubleJump = false; //If player can double jump
     private bool canDash = true;
@@ -117,7 +118,7 @@ public class CharacterController2D : MonoBehaviour
         lastOnGroundTime -= Time.deltaTime;
         lastPressedJumpTime -= Time.deltaTime;
 
-        //Debug.Log(lastPressedJumpTime);
+        Debug.Log(dashCounter);
 
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
@@ -125,6 +126,7 @@ public class CharacterController2D : MonoBehaviour
         if (Physics2D.Raycast(m_GroundCheck.position, Vector2.down, k_GroundeDistance, m_WhatIsGround))
         {
             m_Grounded = true;
+            dashCounter = 0;
             isJumping = false;
             lastOnGroundTime = coyoteTime;
 
@@ -153,6 +155,7 @@ public class CharacterController2D : MonoBehaviour
 
             if (m_IsWall)
             {
+                dashCounter = 0;
                 isDashing = false;
                 isJumping = false;
             }
@@ -194,14 +197,18 @@ public class CharacterController2D : MonoBehaviour
         if (!canMove) return;
 
         //Äýø
-        if (dash && canDash && !isWallSliding)
+        if (dash && canDash && !isWallSliding && m_Grounded)
+        {
+            StartCoroutine(DashCooldown());
+        }
+        else if (dash && canDash && !isWallSliding && !m_Grounded && CanAirDash())
         {
             StartCoroutine(DashCooldown());
         }
         if (!isDashing)
             MoveHorizontal(moveX);
 
-        Dash();
+        //Dash();
 
         // Ïðûæîê
         if (lastPressedJumpTime > 0 && CanJump())
@@ -425,13 +432,17 @@ public class CharacterController2D : MonoBehaviour
         StartCoroutine(WaitToMove(0.15f));
     }
 
-    private void Dash()
+    private bool CanAirDash()
     {
-        //if (isDashing)
-        //{
-        //    m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
-        //}
+        return dashCounter < 1;
     }
+    //private void Dash()
+    //{
+    //    //if (isDashing)
+    //    //{
+    //    //    m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+    //    //}
+    //}
 
     private void Turn()
     {
@@ -492,6 +503,11 @@ public class CharacterController2D : MonoBehaviour
 
     IEnumerator DashCooldown()
     {
+        if (!m_Grounded)
+        {
+            dashCounter++;
+        }
+
         animator.SetBool("IsDashing", true);
         isDashing = true;
         canDash = false;
