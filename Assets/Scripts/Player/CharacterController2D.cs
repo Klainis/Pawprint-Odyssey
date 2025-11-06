@@ -74,6 +74,7 @@ public class CharacterController2D : MonoBehaviour
 
     [SerializeField] private UnityEvent OnFallEvent;
     [SerializeField] private UnityEvent OnLandEvent;
+    [SerializeField] private UnityEvent DeadEvent;
 
 
     [System.Serializable]
@@ -467,7 +468,7 @@ public class CharacterController2D : MonoBehaviour
             Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
             m_Rigidbody2D.linearVelocity = Vector2.zero;
             m_Rigidbody2D.AddForce(damageDir * 15);
-            if (heart.lifeForReading <= 0)
+            if (heart.lifeForReading < 1)
             {
                 StartCoroutine(WaitToDead());
             }
@@ -553,6 +554,7 @@ public class CharacterController2D : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
         yield return new WaitForSeconds(1.1f);
+        DeadEvent.Invoke();
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 }

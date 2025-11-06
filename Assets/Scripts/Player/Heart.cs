@@ -3,23 +3,27 @@ using UnityEngine;
 
 public class Heart : MonoBehaviour
 {
-    [SerializeField] private int life = 5;
-    [SerializeField] private int maxLife = 5;
+    [SerializeField] private PlayerData Data;
+
+    private int life;
+    private int maxLife;
     public int lifeForReading {  get; private set; }
-    private int lifeCounter;
 
     [SerializeField] private GameObject heartPrefab;
     [SerializeField] private Transform canvas;
     [SerializeField] private List<GameObject> hearts;
 
-    void Start()
+    private void Start()
     {
-        lifeCounter = life;
+        life = Data.currentLife;
+        maxLife = Data.maxLife;
     }
 
     void FixedUpdate()
     {
-        lifeForReading = life; 
+        lifeForReading = life;
+
+        Data.currentLife = life;
     }
 
     public void RemoveHearts(int damage)
@@ -42,12 +46,16 @@ public class Heart : MonoBehaviour
         {
             if (i > life-1)
             {
-                Debug.Log("HEAL");
                 GameObject heart = Instantiate(heartPrefab, canvas);
                 hearts.Add(heart);
             }
         }
 
+        life = maxLife;
+    }
+
+    public void Dead()
+    {
         life = maxLife;
     }
 }

@@ -4,23 +4,21 @@ using UnityEngine.UI;
 
 public class Mana : MonoBehaviour
 {
-    [SerializeField] private int maxMana = 50;
-    [SerializeField] private int mana = 50;
+    [SerializeField] private PlayerData Data;
+
+    private int maxMana;
+    private int mana;
     public int manaForReading { get; private set; }
 
-    private PiercingClaw piercingClaw;
-    private Attack attack;
     [SerializeField] private Image manaBar;
 
-    private void Awake()
+    private void Start()
     {
-        piercingClaw = GetComponent<PiercingClaw>();
-        attack = GetComponent<Attack>();
-
-        //slider.maxValue = maxMana;
+        mana = Data.currentMana;
+        maxMana = Data.maxMana;
     }
-
-    private void Update()
+    
+    private void FixedUpdate()
     {
         if (mana > maxMana)
             mana = maxMana;
@@ -28,6 +26,7 @@ public class Mana : MonoBehaviour
             mana = 0;
 
         manaForReading = mana;
+        Data.currentMana = mana;
     }
 
     public void SpendMana()
