@@ -13,7 +13,6 @@ public class Attack : MonoBehaviour
     [SerializeField] private int dmgValue = 1;
     [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар в серии
     [SerializeField] private int maxAttackSeriesCount = 3;
-    [SerializeField] private float forceFromAttack = 600f;
 
     [SerializeField] private InputActionReference attackAction;
 
@@ -31,7 +30,6 @@ public class Attack : MonoBehaviour
     public int attackSeriesCount { get; private set; } = 0;
     private bool isAttacking = false;
     private bool canAttack = true;
-    private bool isForceAttack = true;
 
     [SerializeField] private UnityEvent getMana; 
 
@@ -69,9 +67,6 @@ public class Attack : MonoBehaviour
             ResetCombo();
         }
 
-        CheckTurn();
-        //CheckAddForceForAttack();
-
         if (attackPressed && !isAttacking && canAttack)
         {
             lastAttackTime = Time.time;
@@ -101,14 +96,6 @@ public class Attack : MonoBehaviour
             isAttacking = true;
         }
 
-    }
-
-    private void CheckTurn()
-    {
-        if (playerController.turnCoefficient == 1 && forceFromAttack < 0)
-            forceFromAttack = -1 * forceFromAttack;
-        else if (playerController.turnCoefficient == -1 && forceFromAttack > 0)
-            forceFromAttack = -1 * forceFromAttack;
     }
 
     public void OnAttackAnimationEnd()

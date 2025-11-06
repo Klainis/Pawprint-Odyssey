@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class SafeGroundSaver : MonoBehaviour
 {
-    [SerializeField] private float saveFreauency = 2f;
+    [SerializeField] private float saveFreauency = 1f;
 
     public Vector2 SafeGroundLocation { get; private set; } = Vector2.zero;
 
     private Coroutine safeGroundCoroutine;
-    private CharacterController2D playerController;
+    private GroundCheckForSaveGround groundCheck;
 
     private void Awake()
     {
-        playerController = GetComponent<CharacterController2D>();
+        groundCheck = GetComponent<GroundCheckForSaveGround>();
     }
 
     private void Start()
@@ -31,7 +31,7 @@ public class SafeGroundSaver : MonoBehaviour
             yield return null;
         }
 
-        if (playerController.m_Grounded)
+        if (groundCheck.IsSaveGround())
         {
             SafeGroundLocation = transform.position;
         }

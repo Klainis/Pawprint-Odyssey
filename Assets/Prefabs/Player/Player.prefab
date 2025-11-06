@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 114145887554720856}
   - component: {fileID: 3133950676847035280}
   - component: {fileID: 2163805515310522865}
+  - component: {fileID: 8176099545049012028}
   - component: {fileID: 1738746197435764065}
   - component: {fileID: 1383110301925236467}
   - component: {fileID: 2135096380476152226}
@@ -131,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783f8b7882d2d2a42a5b76de9179978f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   jumpForce: 14
   doubleJumpForce: 12
   wallJumpForce: {x: 850, y: 700}
@@ -169,21 +171,6 @@ MonoBehaviour:
       - m_Target: {fileID: 114145887554720856}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: OnLanding
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  DeadEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2596477941260737167}
-        m_TargetAssemblyTypeName: Heart, Assembly-CSharp
-        m_MethodName: Dead
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -241,7 +228,6 @@ MonoBehaviour:
   dmgValue: 1
   attackSeriesTimeout: 0.9
   maxAttackSeriesCount: 3
-  forceFromAttack: 600
   attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   getMana:
     m_PersistentCalls:
@@ -271,6 +257,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SafeGroundSaver
   saveFreauency: 2
+--- !u!114 &8176099545049012028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4676f7b137f45ae41a4e45ab63fd9a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundCheckForSaveGround
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 512
+  m_GroundCheck: {fileID: 4291727345091452}
 --- !u!114 &1738746197435764065
 MonoBehaviour:
   m_ObjectHideFlags: 0
