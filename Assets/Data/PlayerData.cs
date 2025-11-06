@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Player Data")]
 public class PlayerData : ScriptableObject
 {
+    [Header("Player State")]
+    public bool isDead;
+
     [Header("Player Health")]
     public int currentLife;
     public int maxLife;

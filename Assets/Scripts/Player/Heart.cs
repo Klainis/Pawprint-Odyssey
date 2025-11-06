@@ -5,24 +5,26 @@ public class Heart : MonoBehaviour
 {
     [SerializeField] private PlayerData Data;
 
-    private int life;
+    public int life { get; private set; }
     private int maxLife;
-    public int lifeForReading {  get; private set; }
 
     [SerializeField] private GameObject heartPrefab;
     [SerializeField] private Transform canvas;
     [SerializeField] private List<GameObject> hearts;
 
-    private void Start()
+    private void Awake()
     {
+        if (Data.isDead)
+        {
+            Dead();
+        }
+
         life = Data.currentLife;
         maxLife = Data.maxLife;
     }
 
     void FixedUpdate()
     {
-        lifeForReading = life;
-
         Data.currentLife = life;
     }
 
@@ -54,8 +56,9 @@ public class Heart : MonoBehaviour
         life = maxLife;
     }
 
-    public void Dead()
+    private void Dead()
     {
-        life = maxLife;
+        Data.currentLife = Data.maxLife;
+        Data.isDead = false;
     }
 }

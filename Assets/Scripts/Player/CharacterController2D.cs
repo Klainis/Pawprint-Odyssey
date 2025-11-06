@@ -7,6 +7,9 @@ using System;
 
 public class CharacterController2D : MonoBehaviour
 {
+    [Header("Data")]
+    [SerializeField] private PlayerData Data;
+
     [Header("Forces")]
     [SerializeField] private float jumpForce = 15f;
     [SerializeField] private float doubleJumpForce = 13f;
@@ -74,7 +77,6 @@ public class CharacterController2D : MonoBehaviour
 
     [SerializeField] private UnityEvent OnFallEvent;
     [SerializeField] private UnityEvent OnLandEvent;
-    [SerializeField] private UnityEvent DeadEvent;
 
 
     [System.Serializable]
@@ -425,10 +427,10 @@ public class CharacterController2D : MonoBehaviour
 
     private void Dash()
     {
-        if (isDashing)
-        {
-            m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
-        }
+        //if (isDashing)
+        //{
+        //    m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+        //}
     }
 
     private void Turn()
@@ -458,7 +460,7 @@ public class CharacterController2D : MonoBehaviour
             Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
             m_Rigidbody2D.linearVelocity = Vector2.zero;
             m_Rigidbody2D.AddForce(damageDir * 15);
-            if (heart.lifeForReading < 1)
+            if (heart.life < 1)
             {
                 StartCoroutine(WaitToDead());
             }
@@ -476,7 +478,7 @@ public class CharacterController2D : MonoBehaviour
         {
             animator.SetBool("Hit", true);
             heart.RemoveHearts(damage);
-            if (heart.lifeForReading <= 0)
+            if (heart.life < 1)
             {
                 StartCoroutine(WaitToDead());
             }
@@ -493,6 +495,11 @@ public class CharacterController2D : MonoBehaviour
         animator.SetBool("IsDashing", true);
         isDashing = true;
         canDash = false;
+
+        if (isDashing)
+        {
+            m_Rigidbody2D.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+        }
         yield return new WaitForSeconds(0.1f); //0.1 
         isDashing = false;
         yield return new WaitForSeconds(0.3f); //0.25
@@ -544,7 +551,7 @@ public class CharacterController2D : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
         yield return new WaitForSeconds(1.1f);
-        DeadEvent.Invoke();
+        Data.isDead = true;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 }
