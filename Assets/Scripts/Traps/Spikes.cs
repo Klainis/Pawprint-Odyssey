@@ -35,7 +35,7 @@ public class Spikes : MonoBehaviour
         else if (collider.gameObject.CompareTag("Enemy"))
         {
             enemy = collider.gameObject;
-            Destroy(enemy);
+            enemy.SendMessage("ApplyDamage", 9999);
         }
     }
 
