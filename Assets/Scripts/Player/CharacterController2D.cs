@@ -109,16 +109,6 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    //private void Update()
-    //{
-    //    if (!m_Grounded)
-    //        lastOnGroundTime -= Time.deltaTime;
-
-    //    lastPressedJumpTime -= Time.deltaTime;
-
-    //    Debug.Log(lastPressedJumpTime);
-    //}
-
     private void Update()
     {
 

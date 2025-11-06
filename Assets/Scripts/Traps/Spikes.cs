@@ -7,45 +7,47 @@ public class Spikes : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     private CharacterController2D playerController;
-    [SerializeField] private LastPlatform lastPlatform;
+    [SerializeField] private SafeGroundSaver safeGroundSaver;
     [SerializeField] private Transform spikesPostion;
+
+    private int damage = 1;
 
     private Vector3 lastPlayerPosition = Vector3.zero;
 
     private void Start()
     {
         player = GameObject.FindWithTag("Player");
-        lastPlatform = player.GetComponent<LastPlatform>();
+        safeGroundSaver = player.GetComponent<SafeGroundSaver>();
         if (player != null )
             playerController = player.GetComponent<CharacterController2D>();
     }
     void OnTriggerEnter2D(Collider2D col)
     {
-        playerController.ApplyObjectDamage(1);
+        playerController.ApplyObjectDamage(damage);
         StartCoroutine(StopFrame());
     }
 
     public void TeleportPlayer(GameObject player)
     {
-        if (lastPlatform != null)
+        if (safeGroundSaver != null)
         {
-            CalculateLastPosition();
-            player.transform.position = lastPlayerPosition;
+            //CalculateLastPosition();
+            player.transform.position = safeGroundSaver.SafeGroundLocation;
         }
     }
 
-    public void CalculateLastPosition()
-    {
-        if(lastPlatform.lastPosition.x < spikesPostion.position.x)
-        {
-            lastPlayerPosition = lastPlatform.lastPosition - new Vector3(0.5f, 0, 0);
-        }
-        else if (lastPlatform.lastPosition.x > spikesPostion.position.x)
-        {
-            lastPlayerPosition = lastPlatform.lastPosition + new Vector3(0.5f, 0, 0);
-        }
+    //public void CalculateLastPosition()
+    //{
+    //    if(lastPlatform.lastPosition.x < spikesPostion.position.x)
+    //    {
+    //        lastPlayerPosition = lastPlatform.lastPosition - new Vector3(0.5f, 0, 0);
+    //    }
+    //    else if (lastPlatform.lastPosition.x > spikesPostion.position.x)
+    //    {
+    //        lastPlayerPosition = lastPlatform.lastPosition + new Vector3(0.5f, 0, 0);
+    //    }
 
-    }
+    //}
 
     IEnumerator StopFrame()
     {

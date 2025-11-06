@@ -45,9 +45,10 @@ GameObject:
   - component: {fileID: 114231493902538710}
   - component: {fileID: 114145887554720856}
   - component: {fileID: 3133950676847035280}
-  - component: {fileID: 4955099861656797883}
+  - component: {fileID: 2163805515310522865}
   - component: {fileID: 1738746197435764065}
   - component: {fileID: 1383110301925236467}
+  - component: {fileID: 2135096380476152226}
   - component: {fileID: 212971026275759962}
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
@@ -95,7 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a96b464a0c4c44fa1c966f54fc5efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heart
-  life: 5
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
+  heartPrefab: {fileID: 7567480160736325036, guid: b4ab62ff55c40f1469a29d0496405eef, type: 3}
+  canvas: {fileID: 0}
   hearts:
   - {fileID: 0}
   - {fileID: 0}
@@ -114,8 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fcde3da857a114ca22ae89b1042d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mana
-  maxMana: 50
-  mana: 50
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   manaBar: {fileID: 0}
 --- !u!114 &114231493902538710
 MonoBehaviour:
@@ -129,8 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783f8b7882d2d2a42a5b76de9179978f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 700
-  m_DashForce: 25
+  jumpForce: 14
+  doubleJumpForce: 12
+  wallJumpForce: {x: 850, y: 700}
+  dashForce: 25
   coyoteTime: 0.2
   jumpInputBufferTime: 0.2
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
@@ -165,6 +169,21 @@ MonoBehaviour:
       - m_Target: {fileID: 114145887554720856}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: OnLanding
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DeadEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2596477941260737167}
+        m_TargetAssemblyTypeName: Heart, Assembly-CSharp
+        m_MethodName: Dead
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -240,7 +259,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4955099861656797883
+--- !u!114 &2163805515310522865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,9 +268,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1377240496476148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1abc90e962ccb4843859d6b63bdc7724, type: 3}
+  m_Script: {fileID: 11500000, guid: bf8b84cffaeb1084eac3bb277ca3921c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LastPlatform
+  m_EditorClassIdentifier: Assembly-CSharp::SafeGroundSaver
+  saveFreauency: 3
 --- !u!114 &1738746197435764065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +313,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7e5f6130d5d2c4389171c8775fd333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceivingClaw
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
+  manaScript: {fileID: 3512841439597258566}
+  piercingClaw: {fileID: 1738746197435764065}
   manaBar: {fileID: 0}
+--- !u!114 &2135096380476152226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f69735ea097b2c4e86040336cdd0829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interact
+  interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  interactHealEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2596477941260737167}
+        m_TargetAssemblyTypeName: Heart, Assembly-CSharp
+        m_MethodName: Heal
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  heal: 0
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -397,9 +449,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!82 &82701611152381692
 AudioSource:

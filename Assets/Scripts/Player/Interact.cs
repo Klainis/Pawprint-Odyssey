@@ -10,7 +10,7 @@ public class Interact : MonoBehaviour
     private Gamepad gamepad;
     private InteractArea interactArea;
 
-    public bool heal;
+    [HideInInspector] public bool heal;
 
     void Start()
     {
