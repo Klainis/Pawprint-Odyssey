@@ -8,50 +8,35 @@ public class Mana : MonoBehaviour
 
     private int maxMana;
     private int mana;
-    private int manaAfterDead;
 
     [SerializeField] private Image manaBar;
 
-    private void Awake()
+    private void Start()
     {
-        Debug.Log($"[Mana Awake] isDead={Data.isDead}");
-        //if (Data.isDead)
-        //{
-        //    Dead();
-        //}
-
         mana = Data.currentMana;
         maxMana = Data.maxMana;
         manaBar.fillAmount = (float)mana / (float)maxMana;
-    }
-    
-    private void FixedUpdate()
-    {
-        if (mana > maxMana)
-            mana = maxMana;
-        if (mana <= 0)
-            mana = 0;
-
-        Data.currentMana = mana;
     }
 
     public void SpendMana()
     {
         mana -= 25;
+        if (mana <= 0)
+            mana = 0;
+
+        Data.currentMana = mana;
+
         manaBar.fillAmount = (float)mana / (float)maxMana;
     }
 
     public void GetMana()
     {
         mana += 4;
+        if (mana > maxMana)
+            mana = maxMana;
+
+        Data.currentMana = mana;
+
         manaBar.fillAmount = (float)mana / (float)maxMana;
     }
-
-    //private void Dead()
-    //{
-    //    Debug.Log("Вызван метод Dead");
-    //    Data.currentMana = Data.manaAfterDead;
-    //    //mana = manaAfterDead;
-    //    Data.isDead = false;
-    //}
 }

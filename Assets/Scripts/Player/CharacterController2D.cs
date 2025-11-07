@@ -469,13 +469,13 @@ public class CharacterController2D : MonoBehaviour
             Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
             m_Rigidbody2D.linearVelocity = Vector2.zero;
             m_Rigidbody2D.AddForce(damageDir * 15);
-            if (heart.life < 1)
+            if (Data.currentLife < 1)
             {
                 StartCoroutine(WaitToDead());
             }
             else
             {
-                StartCoroutine(Stun(0.25f));
+                //StartCoroutine(Stun(0.25f));
                 StartCoroutine(MakeInvincible(1f));
             }
         }
@@ -487,7 +487,7 @@ public class CharacterController2D : MonoBehaviour
         {
             animator.SetBool("Hit", true);
             heart.RemoveHearts(damage);
-            if (heart.life < 1)
+            if (Data.currentLife < 1)
             {
                 StartCoroutine(WaitToDead());
             }
@@ -565,7 +565,6 @@ public class CharacterController2D : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
         yield return new WaitForSeconds(1.1f);
-        Data.isDead = true;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 }
