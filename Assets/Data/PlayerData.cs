@@ -13,6 +13,7 @@ public class PlayerData : ScriptableObject
     [Header("Player Mana")]
     public int currentMana;
     public int maxMana;
+    public int manaAfterDead;
 
     [Header("Received Abilities")]
     public bool clawIsReceived;

@@ -13,7 +13,6 @@ public class GroundCheckForSaveGround : MonoBehaviour
         hit = Physics2D.Raycast(m_GroundCheck.position, Vector2.down, k_GroundeDistance, whatIsGround);
         if (hit && hit.collider.tag != "NotSaveGround")
         {
-            Debug.Log(hit.collider.tag);
             return true;
         }
         else

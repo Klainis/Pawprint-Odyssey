@@ -8,6 +8,9 @@ using UnityEngine.InputSystem;
 
 public class PiercingClaw : MonoBehaviour
 {
+    [Header("Data")]
+    [SerializeField] private PlayerData Data;
+
     [Header("Основные параметры атаки")]
     [SerializeField] private int dmgValue = 7;
 
@@ -58,7 +61,7 @@ public class PiercingClaw : MonoBehaviour
 
         }
 
-        if (clawPressed && canAttack && mana.manaForReading >= 25)
+        if (clawPressed && canAttack && Data.currentMana >= 25)
         {
             Debug.Log("claw");
             if (spendMana != null)

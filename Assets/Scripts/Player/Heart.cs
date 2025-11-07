@@ -21,6 +21,15 @@ public class Heart : MonoBehaviour
 
         life = Data.currentLife;
         maxLife = Data.maxLife;
+
+        for (int i = hearts.Count - 1; i >= 0; i--)
+        {
+            if (i > (life - 1))
+            {
+                Destroy(hearts[i]);
+                hearts.RemoveAt(i);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -32,25 +41,24 @@ public class Heart : MonoBehaviour
     {
         life -= damage;
 
-        for (int i = 0; i < hearts.Count; i++)
+        for (int i = hearts.Count - 1; i >= 0; i--)
         {
-            if (i > life-1)
+            if (i > (life - 1))
             {
                 Destroy(hearts[i]);
-                hearts.Remove(hearts[i]);
+                hearts.RemoveAt(i);
             }
         }
     }
 
     public void Heal()
     {
-        for (int i = 0; i < (maxLife); i++)
+        int missingHearts = maxLife - hearts.Count;
+
+        for (int i = 0; i < missingHearts; i++)
         {
-            if (i > life-1)
-            {
-                GameObject heart = Instantiate(heartPrefab, canvas);
-                hearts.Add(heart);
-            }
+            GameObject heart = Instantiate(heartPrefab, canvas);
+            hearts.Add(heart);
         }
 
         life = maxLife;
