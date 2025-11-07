@@ -14,10 +14,11 @@ public class Heart : MonoBehaviour
 
     private void Awake()
     {
-        if (Data.isDead)
-        {
-            Dead();
-        }
+        Debug.Log($"[Heart Awake] isDead={Data.isDead}");
+        //if (Data.isDead)
+        //{
+        //    Dead();
+        //}
 
         life = Data.currentLife;
         maxLife = Data.maxLife;
@@ -64,9 +65,9 @@ public class Heart : MonoBehaviour
         life = maxLife;
     }
 
-    private void Dead()
-    {
-        Data.currentLife = Data.maxLife;
-        Data.isDead = false;
-    }
+    //private void Dead()
+    //{
+    //    Data.currentLife = Data.maxLife;
+    //    Data.isDead = false;
+    //}
 }

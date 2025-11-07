@@ -20,4 +20,11 @@ public class PlayerData : ScriptableObject
 
     [Header("Soul Crystal")]
     public int soulCrystalCount;
+
+    public void Reset()
+    {
+        currentLife = maxLife;
+        currentMana = manaAfterDead;
+        isDead =false;
+    }
 }

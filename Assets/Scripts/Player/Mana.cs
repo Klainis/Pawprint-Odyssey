@@ -14,12 +14,11 @@ public class Mana : MonoBehaviour
 
     private void Awake()
     {
-        //manaAfterDead = Data.manaAfterDead;
-
-        if (Data.isDead)
-        {
-            Dead();
-        }
+        Debug.Log($"[Mana Awake] isDead={Data.isDead}");
+        //if (Data.isDead)
+        //{
+        //    Dead();
+        //}
 
         mana = Data.currentMana;
         maxMana = Data.maxMana;
@@ -28,12 +27,12 @@ public class Mana : MonoBehaviour
     
     private void FixedUpdate()
     {
-        //if (mana > maxMana)
-        //    mana = maxMana;
-        //if (mana <= 0)
-        //    mana = 0;
+        if (mana > maxMana)
+            mana = maxMana;
+        if (mana <= 0)
+            mana = 0;
 
-        //Data.currentMana = mana;
+        Data.currentMana = mana;
     }
 
     public void SpendMana()
@@ -48,10 +47,11 @@ public class Mana : MonoBehaviour
         manaBar.fillAmount = (float)mana / (float)maxMana;
     }
 
-    private void Dead()
-    {
-        Data.currentMana = Data.manaAfterDead;
-        //mana = manaAfterDead;
-        Data.isDead = false;
-    }
+    //private void Dead()
+    //{
+    //    Debug.Log("Вызван метод Dead");
+    //    Data.currentMana = Data.manaAfterDead;
+    //    //mana = manaAfterDead;
+    //    Data.isDead = false;
+    //}
 }
