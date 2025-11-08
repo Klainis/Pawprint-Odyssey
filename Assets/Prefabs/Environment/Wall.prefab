@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2732582846674887396
+--- !u!1 &4521961047121131143
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5397628634742546850}
-  - component: {fileID: 9136620268619653190}
-  - component: {fileID: 9044161707681283140}
-  - component: {fileID: 8288162087379757067}
-  - component: {fileID: 6619944964867631596}
-  - component: {fileID: 437522381738558091}
-  m_Layer: 0
-  m_Name: SoulCrystal
-  m_TagString: Enemy
+  - component: {fileID: 3962018192614908}
+  - component: {fileID: 674462890114976014}
+  - component: {fileID: 2565201744041190895}
+  - component: {fileID: 4800506895995311666}
+  - component: {fileID: 2091833660017121075}
+  m_Layer: 9
+  m_Name: Wall
+  m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5397628634742546850
+--- !u!4 &3962018192614908
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
+  m_GameObject: {fileID: 4521961047121131143}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15, y: -0.88, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -32.86, y: 14.2966, z: 0}
+  m_LocalScale: {x: 1, y: 3.9678707, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9136620268619653190
+--- !u!212 &674462890114976014
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
+  m_GameObject: {fileID: 4521961047121131143}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -83,84 +82,55 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 657193517335828509, guid: 2d62f62da1d96564fb9bf96027752aed, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 0.24512577, g: 0.44654083, b: 0.11093303, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.41, y: 3.03}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9044161707681283140
+--- !u!114 &2565201744041190895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
+  m_GameObject: {fileID: 4521961047121131143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb06806b40b1bb24eaff03b81ae289c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestructibleWall
+  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
+--- !u!114 &4800506895995311666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4521961047121131143}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 011ed35a806124d4d9b783dea554b56d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DestructibleObject
+  m_EditorClassIdentifier: Assembly-CSharp::ShakeObjectAfterDamage
   environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
   shakeDuration: 0
---- !u!114 &8288162087379757067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed023d56d5517c548ac775e47161c98e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoulCrystalCounter
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
-  counterText: {fileID: 0}
---- !u!114 &6619944964867631596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ba484df5f9b09b489956287ac5417a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CrystalApplyDamage
-  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
-  crystalCountEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8288162087379757067}
-        m_TargetAssemblyTypeName: SoulCrystalCounter, Assembly-CSharp
-        m_MethodName: CrystalCounter
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!61 &437522381738558091
+--- !u!61 &2091833660017121075
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
+  m_GameObject: {fileID: 4521961047121131143}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 73035f974857c94489896440d1e2b9e8, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -180,19 +150,19 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0050849915, y: -0.15765}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.41, y: 3.03}
-    newSize: {x: 2.41, y: 3.03}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.1353989, y: 1.8399963}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
