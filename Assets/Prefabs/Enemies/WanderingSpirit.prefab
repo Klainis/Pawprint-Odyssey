@@ -9,7 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5630280109184809072}
-  - component: {fileID: 5680958849161380396}
+  - component: {fileID: 6839984951020508693}
+  - component: {fileID: 1279657043565391871}
+  - component: {fileID: 2759653784330993756}
+  - component: {fileID: 6762008586473915369}
   - component: {fileID: 3690118322597669630}
   - component: {fileID: 5564598307640157700}
   - component: {fileID: 4102938617994515157}
@@ -39,7 +42,7 @@ Transform:
   - {fileID: 9002440487236707857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5680958849161380396
+--- !u!114 &6839984951020508693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48,24 +51,58 @@ MonoBehaviour:
   m_GameObject: {fileID: 3428510561667627398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5080a31bd1363334a8d279bf7e9ed46b, type: 3}
+  m_Script: {fileID: 11500000, guid: 40d065e04a2070f41bd25b81df67d86e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WanderingSpirit
-  life: 6
-  speed: 1.7
-  damage: 1
-  isInvincible: 0
-  turnLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
+  m_EditorClassIdentifier: Assembly-CSharp::WanderingSpiritManager
+  data: {fileID: 11400000, guid: 419ec0db281e3ee478c34d4581c19ddf, type: 2}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  playerAttack: {fileID: 0}
   lastPlayerAttackForce: 400
   playerAttackForce: 300
+  isInvincible: 0
   acceleratedSpeed: 4.7
-  playerDetectDistance: 5
-  playerAttack: {fileID: 0}
+  playerDetectDist: 5
+--- !u!114 &1279657043565391871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b37bbd593f3ce54193d1647cbfac62a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WSMove
+  turnLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &2759653784330993756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0f034ffe6052c40a8f828a7b4a5f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WSAttack
+--- !u!114 &6762008586473915369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94943e06258ca3c458c694162e0feee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WSAnimation
 --- !u!212 &3690118322597669630
 SpriteRenderer:
   m_ObjectHideFlags: 0

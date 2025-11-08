@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.Events;
 
 public class WanderingSpirit : MonoBehaviour {
 
@@ -40,7 +39,6 @@ public class WanderingSpirit : MonoBehaviour {
         playerAttack = GameObject.FindWithTag("Player").GetComponent<Attack>();
 	}
 	
-	// Update is called once per frame
 	void FixedUpdate () {
 
 		if (life <= 0) {
