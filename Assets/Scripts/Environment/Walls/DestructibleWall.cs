@@ -23,6 +23,7 @@ public class DestructibleWall : MonoBehaviour
     {
         if (life <= 0)
         {
+            shakeObjectAfterDamage.Shake();
             Destroy(gameObject);
         }
         else if (shakeObjectAfterDamage.shakeDuration > 0)
@@ -31,9 +32,17 @@ public class DestructibleWall : MonoBehaviour
         }
     }
 
-    public void ApplyDamage()
+    public void ApplyDamage(bool isClaw)
     {
-        life -= 1;
-        shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
+        if (isClaw)
+        {
+            life -= 9999;
+            shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
+        }
+        else
+        {
+            life -= 1;
+            shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
+        };
     }
 }

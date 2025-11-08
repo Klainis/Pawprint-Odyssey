@@ -30,7 +30,8 @@ public class PiercingClaw : MonoBehaviour
     private bool canAttack = true;
     private bool clawPressed;
 
-    public UnityEvent spendMana;
+    [SerializeField] private UnityEvent spendMana;
+
     private void OnDrawGizmos()
     {
         if (attackCheck != null)
@@ -86,7 +87,7 @@ public class PiercingClaw : MonoBehaviour
         Collider2D[] collidersEnemies = Physics2D.OverlapBoxAll(attackCheck.position, clawSize, 0f);
         for (int i = 0; i < collidersEnemies.Length; i++)
         {
-            if (collidersEnemies[i].gameObject.tag == "Enemy")
+            if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
             {
                 float damageToApply = dmgValue;
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
@@ -94,7 +95,10 @@ public class PiercingClaw : MonoBehaviour
                     damageToApply = -damageToApply;
                 }
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
-                //cam.GetComponent<CameraFollow>().ShakeCamera();
+            }
+            if (collidersEnemies[i].gameObject.CompareTag("ClawObject"))
+            {
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", true);
             }
         }
     }

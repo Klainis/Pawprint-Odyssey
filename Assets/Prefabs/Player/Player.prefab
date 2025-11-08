@@ -92,7 +92,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48fcde3da857a114ca22ae89b1042d05, type: 3}
   m_Name: 
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb362a1dc6f61a49a5222af748ed728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PiercingClaw
-  Data: {fileID: 0}
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   dmgValue: 7
   clawAction: {fileID: 2030105166474525711, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   spendMana:
@@ -295,6 +295,21 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: Mana, Assembly-CSharp
         m_MethodName: SpendMana
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  isClawObjectEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2565201744041190895, guid: 5d56abb6c35a4ad4892a514b738cd76f, type: 3}
+        m_TargetAssemblyTypeName: DestructibleWall, Assembly-CSharp
+        m_MethodName: ApplyDamage
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

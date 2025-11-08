@@ -154,9 +154,7 @@ public class Attack : MonoBehaviour
             }
             if (objectEnvironment.CompareTag("Object"))
             {
-                float damageToApply = dmgValue;
-
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage");
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", false);
             }
         }
 	}

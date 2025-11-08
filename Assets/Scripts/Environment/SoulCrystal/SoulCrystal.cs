@@ -25,6 +25,7 @@ public class SoulCrystal : MonoBehaviour
     {
         if (life <= 0)
         {
+            shakeObjectAfterDamage.Shake();
             crystalCountEvent.Invoke();
             Destroy(gameObject);
         }
