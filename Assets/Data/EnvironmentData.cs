@@ -14,8 +14,7 @@ public class EnvironmentData : ScriptableObject
     [Header("Destructible Wall")]
     public int wallLife = 3;
 
-
-    //[Header("Claw Destructible Wall")]
-    //public int clawWallLife = 1;
+    [Header("Another Objects")]
+    public int objectsLife = 1;
 }
 

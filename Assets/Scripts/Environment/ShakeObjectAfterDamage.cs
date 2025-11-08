@@ -36,7 +36,6 @@ public class ShakeObjectAfterDamage : MonoBehaviour
 
     public void Shake()
     {
-        Debug.Log("Shake");
         transform.localPosition = initialPosition + Random.insideUnitSphere * shakeMagnitude;
 
         shakeDuration -= Time.deltaTime * dampingSpeed;
