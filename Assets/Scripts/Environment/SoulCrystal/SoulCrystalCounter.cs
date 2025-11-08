@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class SoulCrystalCounter : MonoBehaviour
 {
+    [Header("Data")]
     [SerializeField] private PlayerData Data;
+    [Space(5)]
     [SerializeField] private TMP_Text counterText;
     private int crystalCount;
 

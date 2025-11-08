@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 9136620268619653190}
   - component: {fileID: 9044161707681283140}
   - component: {fileID: 8288162087379757067}
+  - component: {fileID: 6619944964867631596}
   - component: {fileID: 437522381738558091}
-  m_Layer: 1
+  m_Layer: 0
   m_Name: SoulCrystal
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -105,7 +106,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011ed35a806124d4d9b783dea554b56d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestructibleObject
-  life: 2
+  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
+  shakeDuration: 0
+--- !u!114 &8288162087379757067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed023d56d5517c548ac775e47161c98e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoulCrystalCounter
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
+  counterText: {fileID: 0}
+--- !u!114 &6619944964867631596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ba484df5f9b09b489956287ac5417a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CrystalApplyDamage
+  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
   crystalCountEvent:
     m_PersistentCalls:
       m_Calls:
@@ -121,19 +150,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8288162087379757067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed023d56d5517c548ac775e47161c98e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoulCrystalCounter
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
 --- !u!61 &437522381738558091
 BoxCollider2D:
   m_ObjectHideFlags: 0

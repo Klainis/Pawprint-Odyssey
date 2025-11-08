@@ -138,7 +138,7 @@ public class Attack : MonoBehaviour
             GameObject enemy = collidersEnemies[i].gameObject;
             GameObject objectEnvironment = collidersEnemies[i].gameObject;
 
-            if (enemy.CompareTag("Enemy") || objectEnvironment.CompareTag("SoulCrystal"))
+            if (enemy.CompareTag("Enemy"))
 			{
                 float damageToApply = dmgValue;
 
@@ -149,10 +149,13 @@ public class Attack : MonoBehaviour
 
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 
-                if (getMana != null && enemy.tag != "isDead")
+                if (getMana != null && enemy.tag != "isDead" && objectEnvironment.tag != "Object")
                     getMana.Invoke(enemy);
-                //cam.GetComponent<CameraFollow>().ShakeCamera();
             }
-		}
+            if (objectEnvironment.CompareTag("Object"))
+            {
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", false);
+            }
+        }
 	}
 }

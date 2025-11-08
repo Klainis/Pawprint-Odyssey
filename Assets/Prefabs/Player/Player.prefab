@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1139487818724482}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.009, y: -1.05, z: 0}
+  m_LocalPosition: {x: -0.141, y: -1.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54,7 +54,6 @@ GameObject:
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
   - component: {fileID: 82701611152381692}
-  - component: {fileID: 4018540594280129563}
   - component: {fileID: 7627346660564273673}
   m_Layer: 3
   m_Name: Player
@@ -92,7 +91,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48fcde3da857a114ca22ae89b1042d05, type: 3}
   m_Name: 
@@ -285,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb362a1dc6f61a49a5222af748ed728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PiercingClaw
-  Data: {fileID: 0}
+  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   dmgValue: 7
   clawAction: {fileID: 2030105166474525711, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   spendMana:
@@ -552,8 +551,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!70 &4018540594280129563
-CapsuleCollider2D:
+--- !u!61 &7627346660564273673
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -568,43 +567,6 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 256
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.00028300285, y: -0.17549992}
-  m_Size: {x: 0.65755033, y: 1.7381692}
-  m_Direction: 0
---- !u!61 &7627346660564273673
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
@@ -623,7 +585,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00000023841858, y: -0.2067784}
+  m_Offset: {x: -0.008087158, y: -0.2148639}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -633,7 +595,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6297631, y: 1.6636136}
+  m_Size: {x: 0.27929688, y: 1.6797845}
   m_EdgeRadius: 0
 --- !u!1 &1393053470196254
 GameObject:
