@@ -59,7 +59,7 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
-        SceneManager.LoadScene(startSceneName);
+       await SceneManager.LoadSceneAsync(startSceneName);
 
         //InstallDependencySpiritGuide();
     }
