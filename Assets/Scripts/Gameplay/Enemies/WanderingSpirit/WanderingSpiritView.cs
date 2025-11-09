@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WanderingSpiritManager : MonoBehaviour
+public class WanderingSpiritView : MonoBehaviour
 {
+    public WanderingSpiritModel Model { get; private set; }
+
     [Header("Main params")]
     [SerializeField] private EnemyData data;
     [SerializeField] private LayerMask playerLayer;
@@ -21,31 +23,23 @@ public class WanderingSpiritManager : MonoBehaviour
     private WSMove wsMove;
     private WSAttack wsAttack;
 
-    private float currentLife;
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool facingRight = true;
-    private bool isDead = false;
 
-    public EnemyData Data { get { return data; } }
     public LayerMask PlayerLayer { get { return playerLayer; } }
-    
     public float PlayerDetectDist { get { return playerDetectDist; } }
-
     public Rigidbody2D RigidBody { get { return rigidBody; } }
-    public float CurrentLife { get { return currentLife; } }
     public bool IsHitted { get { return isHitted; } }
     public bool IsAccelerated { get { return isAccelerated; } set { isAccelerated = value; } }
     public bool FacingRight { get { return facingRight; } set { facingRight = value; } }
 
     private void Awake()
     {
+        Model = new WanderingSpiritModel(data.Life, data.Speed, data.Damage);
+
         playerAttack = GameObject.Find("Player").GetComponent<Attack>();
-
-        currentLife = data.MaxLife;
-
         rigidBody = GetComponent<Rigidbody2D>();
-        
         wsAnimation = GetComponent<WSAnimation>();
         wsMove = GetComponent<WSMove>();
         wsAttack = GetComponent<WSAttack>();
@@ -53,11 +47,8 @@ public class WanderingSpiritManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead)
-            return;
-        if (currentLife <= 0)
+        if (Model.IsDead)
         {
-            isDead = true;
             StartCoroutine(DestroySelf());
             return;
         }
@@ -65,16 +56,16 @@ public class WanderingSpiritManager : MonoBehaviour
             wsMove.Move(isAccelerated, acceleratedSpeed);
     }
 
-    public void ApplyDamage(float damage)
+    public void ApplyDamage(int damage)
     {
         if (!isInvincible)
         {
             StartCoroutine(HitTime(1.5f));
             wsAnimation.SetBoolHit(true);
-            float direction = damage / Mathf.Abs(damage);
-            currentLife -= Mathf.Abs(damage);
+            Model.TakeDamage(Mathf.Abs(damage));
             rigidBody.linearVelocity = Vector2.zero;
 
+            var direction = damage / Mathf.Abs(damage);
             if (playerAttack.attackSeriesCount == 3)
                 rigidBody.AddForce(new Vector2(direction * lastPlayerAttackForce, 0));
             else if (playerAttack.attackSeriesCount < 3)

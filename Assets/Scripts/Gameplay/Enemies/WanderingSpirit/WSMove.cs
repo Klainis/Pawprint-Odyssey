@@ -7,7 +7,7 @@ public class WSMove : MonoBehaviour
 
     [SerializeField] private LayerMask turnLayerMask;
 
-    private WanderingSpiritManager manager;
+    private WanderingSpiritView wsView;
 
     private Transform fallCheck;
     private Transform wallCheck;
@@ -17,7 +17,7 @@ public class WSMove : MonoBehaviour
 
     private void Awake()
     {
-        manager = GetComponent<WanderingSpiritManager>();
+        wsView = GetComponent<WanderingSpiritView>();
 
         fallCheck = transform.Find("FallCheck");
         wallCheck = transform.Find("WallCheck");
@@ -33,14 +33,14 @@ public class WSMove : MonoBehaviour
 
     public void Move(bool isAccelerated = false, float acceleratedSpeed = 0f)
     {
-        if (manager.IsHitted || Mathf.Abs(manager.RigidBody.linearVelocity.y) > 0.5f)
+        if (wsView.IsHitted || Mathf.Abs(wsView.RigidBody.linearVelocity.y) > 0.5f)
             return;
 
-        var moveSpeed = isAccelerated ? acceleratedSpeed : manager.Data.Speed;
-        var moveDirection = manager.FacingRight ? -1 : 1;
+        var moveSpeed = isAccelerated ? acceleratedSpeed : wsView.Model.Speed;
+        var moveDirection = wsView.FacingRight ? -1 : 1;
 
-        if (!manager.IsHitted)
-            manager.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, manager.RigidBody.linearVelocity.y);
+        if (!wsView.IsHitted)
+            wsView.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, wsView.RigidBody.linearVelocity.y);
     }
 
     public bool Turn(bool facingRight)

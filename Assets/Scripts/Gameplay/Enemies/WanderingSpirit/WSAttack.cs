@@ -5,17 +5,17 @@ public class WSAttack : MonoBehaviour
 {
     public event Action OnPlayerDetected;
 
-    private WanderingSpiritManager manager;
+    private WanderingSpiritView wsView;
 
     private void Awake()
     {
-        manager = GetComponent<WanderingSpiritManager>();
+        wsView = GetComponent<WanderingSpiritView>();
     }
 
     private void FixedUpdate()
     {
-        var playerHitDir = manager.FacingRight ? Vector2.left : Vector2.right;
-        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, manager.PlayerDetectDist, manager.PlayerLayer);
+        var playerHitDir = wsView.FacingRight ? Vector2.left : Vector2.right;
+        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, wsView.PlayerDetectDist, wsView.PlayerLayer);
         if (playerHit.collider != null)
             OnPlayerDetected?.Invoke();
     }
@@ -24,11 +24,11 @@ public class WSAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            manager.IsAccelerated = false;
-            if (manager.CurrentLife > 0)
+            wsView.IsAccelerated = false;
+            if (!wsView.Model.IsDead)
             {
                 var controller = collision.gameObject.GetComponent<CharacterController2D>();
-                controller.ApplyDamage(manager.Data.Damage, transform.position);
+                controller.ApplyDamage(wsView.Model.Damage, transform.position);
             }
         }
     }
