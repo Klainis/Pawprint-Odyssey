@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5630280109184809072}
   - component: {fileID: 6839984951020508693}
   - component: {fileID: 1279657043565391871}
-  - component: {fileID: 2759653784330993756}
+  - component: {fileID: 1882564371744082690}
   - component: {fileID: 6762008586473915369}
   - component: {fileID: 3690118322597669630}
   - component: {fileID: 5564598307640157700}
@@ -55,9 +55,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WanderingSpiritManager
   data: {fileID: 11400000, guid: 419ec0db281e3ee478c34d4581c19ddf, type: 2}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
   playerAttack: {fileID: 0}
   lastPlayerAttackForce: 400
   playerAttackForce: 300
@@ -79,7 +76,7 @@ MonoBehaviour:
   turnLayerMask:
     serializedVersion: 2
     m_Bits: 512
---- !u!114 &2759653784330993756
+--- !u!114 &1882564371744082690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,6 +88,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0f034ffe6052c40a8f828a7b4a5f13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WSAttack
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &6762008586473915369
 MonoBehaviour:
   m_ObjectHideFlags: 0

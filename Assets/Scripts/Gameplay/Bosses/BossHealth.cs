@@ -3,22 +3,22 @@ using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
 {
-    private SpiritGuide spiritGuide;
-    private Image bossHealthBar;
-    private GameObject bossHealth;
     [SerializeField] private GameObject health;
     [SerializeField] private Transform canvas;
+
+    private SpiritGuideView sgView;
+    private Image bossHealthBar;
+    private GameObject bossHealth;
+
     void Start()
     {
-        spiritGuide = GetComponent<SpiritGuide>();
+        sgView = GetComponent<SpiritGuideView>();
     }
 
     public void InstantiateBossHealth()
     {
-        if (GameObject.FindWithTag("BossHealth") || spiritGuide.lifeForReading <= 0)
-        {
+        if (GameObject.FindWithTag("BossHealth") || sgView.Model.IsDead)
             return;
-        }
 
         bossHealth = Instantiate(health, canvas);
         bossHealthBar = bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
@@ -26,7 +26,7 @@ public class BossHealth : MonoBehaviour
 
     public void HitBoss()
     {
-        bossHealthBar.fillAmount = (float)spiritGuide.lifeForReading / (float)spiritGuide.maxLifeForReading;
+        bossHealthBar.fillAmount = (float)sgView.Model.Life / (float)sgView.MaxLifeForReading;
     }
 
     public void DestroyBossHealthSlider()

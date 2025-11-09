@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class WSAttack : MonoBehaviour
 {
+    [SerializeField] private LayerMask playerLayer;
+
     public event Action OnPlayerDetected;
 
     private WanderingSpiritView wsView;
@@ -15,7 +17,7 @@ public class WSAttack : MonoBehaviour
     private void FixedUpdate()
     {
         var playerHitDir = wsView.FacingRight ? Vector2.left : Vector2.right;
-        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, wsView.PlayerDetectDist, wsView.PlayerLayer);
+        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, wsView.PlayerDetectDist, playerLayer);
         if (playerHit.collider != null)
             OnPlayerDetected?.Invoke();
     }

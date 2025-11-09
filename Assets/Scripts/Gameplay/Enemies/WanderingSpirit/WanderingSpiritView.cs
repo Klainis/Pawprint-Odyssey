@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class WanderingSpiritView : MonoBehaviour
 {
-    public WanderingSpiritModel Model { get; private set; }
+    public EnemyModel Model { get; private set; }
 
     [Header("Main params")]
     [SerializeField] private EnemyData data;
-    [SerializeField] private LayerMask playerLayer;
     [SerializeField] private Attack playerAttack;
     [SerializeField] private float lastPlayerAttackForce = 400f;
     [SerializeField] private float playerAttackForce = 300f;
@@ -20,14 +19,13 @@ public class WanderingSpiritView : MonoBehaviour
 
     private Rigidbody2D rigidBody;
     private WSAnimation wsAnimation;
-    private WSMove wsMove;
     private WSAttack wsAttack;
+    private WSMove wsMove;
 
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool facingRight = true;
 
-    public LayerMask PlayerLayer { get { return playerLayer; } }
     public float PlayerDetectDist { get { return playerDetectDist; } }
     public Rigidbody2D RigidBody { get { return rigidBody; } }
     public bool IsHitted { get { return isHitted; } }
@@ -36,13 +34,13 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new WanderingSpiritModel(data.Life, data.Speed, data.Damage);
+        Model = new EnemyModel(data.Life, data.Speed, data.Damage);
 
         playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         rigidBody = GetComponent<Rigidbody2D>();
         wsAnimation = GetComponent<WSAnimation>();
-        wsMove = GetComponent<WSMove>();
         wsAttack = GetComponent<WSAttack>();
+        wsMove = GetComponent<WSMove>();
     }
 
     private void FixedUpdate()
@@ -60,7 +58,7 @@ public class WanderingSpiritView : MonoBehaviour
     {
         if (!isInvincible)
         {
-            StartCoroutine(HitTime(1.5f));
+            StartCoroutine(HitTime(1f));
             wsAnimation.SetBoolHit(true);
             Model.TakeDamage(Mathf.Abs(damage));
             rigidBody.linearVelocity = Vector2.zero;
@@ -109,6 +107,8 @@ public class WanderingSpiritView : MonoBehaviour
     private IEnumerator DestroySelf()
     {
         isInvincible = true;
+        ChangeLayer("DeadEnemy");
+        ChangeTag("isDead");
 
         wsAnimation.SetTriggerDead();
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -45f);
@@ -116,9 +116,6 @@ public class WanderingSpiritView : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
         yield return new WaitForSeconds(2f);
-        
-        ChangeLayer("DeadEnemy");
-        ChangeTag("isDead");
 
         Destroy(gameObject);
     }

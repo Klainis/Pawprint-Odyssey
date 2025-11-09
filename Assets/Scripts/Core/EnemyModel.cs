@@ -1,12 +1,12 @@
 using System;
 
-public class WanderingSpiritModel
+public class EnemyModel
 {
     public int Life { get; private set; }
     public float Speed { get; }
     public int Damage { get; }
 
-    public WanderingSpiritModel(int life, float speed, int damage)
+    public EnemyModel(int life, float speed, int damage)
     {
         Life = life;
         Speed = speed;

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class SpiritGuide : MonoBehaviour {
 
-    [Header("Основные параметры")]
+    [Header("Main params")]
     [SerializeField] private int life = 10;
     [SerializeField] private int maxLife = 10;
     public int maxLifeForReading { get { return maxLife; } }
@@ -18,12 +18,12 @@ public class SpiritGuide : MonoBehaviour {
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask playerLayer;
 
-    [Header("Механика 'Таран'")]
+    [Header("Attack 'Ram'")]
     [SerializeField] private float acceleratedSpeed = 10f;
     [SerializeField] private float ramTelegraphTime = 0.25f;
     [SerializeField] private float ramPauseBetweenSeries = 3f;
 
-    [Header("Механика 'Зона света'")]
+    [Header("Attack 'Light Zone'")]
     [SerializeField] private GameObject lightZone;
     [SerializeField] private float lightZoneCooldown = 3f;
     [SerializeField] private float lightZoneChance = 0.8f;

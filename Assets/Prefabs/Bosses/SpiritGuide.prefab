@@ -270,11 +270,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4800074149752140149}
-  - component: {fileID: 418384895973283140}
+  - component: {fileID: 2196055377231819948}
+  - component: {fileID: 8003283471353930631}
+  - component: {fileID: 6539829765639290140}
+  - component: {fileID: 3015904133875483264}
+  - component: {fileID: 6370743611794945951}
   - component: {fileID: 4000825928145215271}
   - component: {fileID: 669592348901892265}
   - component: {fileID: 958749745451901689}
-  - component: {fileID: 6370743611794945951}
   m_Layer: 6
   m_Name: SpiritGuide
   m_TagString: Enemy
@@ -302,7 +305,7 @@ Transform:
   - {fileID: 6044442553340374278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &418384895973283140
+--- !u!114 &2196055377231819948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -311,32 +314,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6845650411165943602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44e46fcc5af9fbd4dbdf18b67b81844b, type: 3}
+  m_Script: {fileID: 11500000, guid: 45e58b5f11ccea24ba36e64449bcd11a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpiritGuide
-  life: 60
-  maxLife: 60
-  speed: 2
-  damage: 1
-  secondStageLifeCoef: 0.6
-  isInvincible: 0
-  turnLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
+  m_EditorClassIdentifier: Assembly-CSharp::SpiritGuideView
+  data: {fileID: 11400000, guid: edf5fe5d1abe2d34495063ee2698c150, type: 2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 512
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  acceleratedSpeed: 7
-  ramTelegraphTime: 0.25
-  ramPauseBetweenSeries: 3
-  lightZone: {fileID: 1793547079032514525}
-  lightZoneCooldown: 3
-  lightZoneChance: 0.6
-  lightZoneTime: 1
-  lightZoneTelegraphTime: 0.5
+  secondStageLifeCoef: 0.6
+  isInvincible: 0
   Hit:
     m_PersistentCalls:
       m_Calls:
@@ -367,6 +353,73 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8003283471353930631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845650411165943602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a4d47bfb0b09c4885aa7e6c956965e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGMove
+  turnLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &6539829765639290140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845650411165943602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a38046accdc324bb22f44d1d898c5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGAttack
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  acceleratedSpeed: 5
+  ramTelegraphTime: 0.25
+  ramPauseBetweenSeries: 3
+  lightZone: {fileID: 1793547079032514525}
+  lightZoneCooldown: 3
+  lightZoneChance: 0.8
+  lightZoneTime: 1
+  lightZoneTelegraphTime: 0.5
+--- !u!114 &3015904133875483264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845650411165943602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68419856cde77146a071dd150e5e610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGAnimation
+--- !u!114 &6370743611794945951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845650411165943602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
+  health: {fileID: 5667069342582091114, guid: 1574d942d03fc3e459e2546883b94892, type: 3}
+  canvas: {fileID: 0}
 --- !u!212 &4000825928145215271
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -498,17 +551,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6370743611794945951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6845650411165943602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  health: {fileID: 5667069342582091114, guid: 1574d942d03fc3e459e2546883b94892, type: 3}
-  canvas: {fileID: 0}

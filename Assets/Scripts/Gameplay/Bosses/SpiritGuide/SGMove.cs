@@ -1,46 +1,42 @@
 using System;
 using UnityEngine;
 
-public class WSMove : MonoBehaviour
+public class SGMove : MonoBehaviour
 {
     [SerializeField] private LayerMask turnLayerMask;
 
     public event Action OnWallHit;
 
-    private WanderingSpiritView wsView;
+    private SpiritGuideView sgView;
 
-    private Transform fallCheck;
     private Transform wallCheck;
 
-    private bool isPlat;
     private bool isObstacle;
 
     private void Awake()
     {
-        wsView = GetComponent<WanderingSpiritView>();
+        sgView = GetComponent<SpiritGuideView>();
 
-        fallCheck = transform.Find("FallCheck");
         wallCheck = transform.Find("WallCheck");
     }
 
     private void FixedUpdate()
     {
-        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
-        isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
-        if (!isPlat || isObstacle)
+        isObstacle = Physics2D.OverlapCircle(wallCheck.position, 0.1f, turnLayerMask);
+        if (isObstacle)
             OnWallHit?.Invoke();
     }
 
     public void Move(bool isAccelerated = false, float acceleratedSpeed = 0f)
     {
-        if (wsView.IsHitted || Mathf.Abs(wsView.RigidBody.linearVelocity.y) > 0.5f)
+        if (sgView.MoveDisabled || sgView.IsHitted || Mathf.Abs(sgView.RigidBody.linearVelocity.y) > 0.5f)
             return;
 
-        var moveSpeed = isAccelerated ? acceleratedSpeed : wsView.Model.Speed;
-        var moveDirection = wsView.FacingRight ? -1 : 1;
+        var moveSpeed = isAccelerated ? acceleratedSpeed : sgView.Model.Speed;
+        var moveDirection = sgView.FacingRight ? -1 : 1;
 
-        if (!wsView.IsHitted)
-            wsView.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, wsView.RigidBody.linearVelocity.y);
+        if (!sgView.IsHitted)
+            sgView.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, sgView.RigidBody.linearVelocity.y);
     }
 
     public bool Turn(bool facingRight)
