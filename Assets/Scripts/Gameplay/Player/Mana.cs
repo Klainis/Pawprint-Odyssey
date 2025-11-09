@@ -6,37 +6,37 @@ public class Mana : MonoBehaviour
 {
     [SerializeField] private PlayerData Data;
 
-    private int maxMana;
-    private int mana;
+    //private int maxMana;
+    //private int mana;
 
     [SerializeField] private Image manaBar;
-
+    private EntryPoint m_EntryPoint;
+    public void Awake()
+    {
+        m_EntryPoint = GameObject.Find("EntryPoint").GetComponent<EntryPoint>();
+        manaBar = m_EntryPoint.manaBarImage;
+    }
     private void Start()
     {
-        mana = Data.currentMana;
-        maxMana = Data.maxMana;
-        manaBar.fillAmount = (float)mana / (float)maxMana;
+        
+        manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 
     public void SpendMana()
     {
-        mana -= 25;
-        if (mana <= 0)
-            mana = 0;
+        Data.currentMana -= 25;
+        if (Data.currentMana <= 0)
+            Data.currentMana = 0;
 
-        Data.currentMana = mana;
-
-        manaBar.fillAmount = (float)mana / (float)maxMana;
+        manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 
     public void GetMana()
     {
-        mana += 4;
-        if (mana > maxMana)
-            mana = maxMana;
+        Data.currentMana += 4;
+        if (Data.currentMana > Data.maxMana)
+            Data.currentMana = Data.maxMana;
 
-        Data.currentMana = mana;
-
-        manaBar.fillAmount = (float)mana / (float)maxMana;
+        manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 }

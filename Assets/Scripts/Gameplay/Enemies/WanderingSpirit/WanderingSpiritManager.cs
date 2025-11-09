@@ -40,6 +40,8 @@ public class WanderingSpiritManager : MonoBehaviour
 
     private void Awake()
     {
+        playerAttack = GameObject.Find("Player").GetComponent<Attack>();
+
         currentLife = data.MaxLife;
 
         rigidBody = GetComponent<Rigidbody2D>();

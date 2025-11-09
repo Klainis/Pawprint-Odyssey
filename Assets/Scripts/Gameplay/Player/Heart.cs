@@ -10,12 +10,20 @@ public class Heart : MonoBehaviour
 
     private void Start()
     {
-        for (int i = hearts.Count - 1; i >= 0; i--)
+        StartHearts();
+    }
+
+    public void StartHearts()
+    {
+        if (hearts.Count != Data.maxLife)
         {
-            if (i > (Data.currentLife - 1))
+            for (int i = hearts.Count - 1; i >= 0; i--)
             {
-                Destroy(hearts[i]);
-                hearts.RemoveAt(i);
+                if (i > (Data.currentLife - 1))
+                {
+                    Destroy(hearts[i]);
+                    hearts.RemoveAt(i);
+                }
             }
         }
     }
