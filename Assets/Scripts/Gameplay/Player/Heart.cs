@@ -6,7 +6,8 @@ public class Heart : MonoBehaviour
     [SerializeField] private PlayerData Data;
     [SerializeField] private GameObject heartPrefab;
     [SerializeField] private Transform canvas;
-    [SerializeField] private List<GameObject> hearts;
+    public GameObject hearts;
+    private List<GameObject> heartsList = new List<GameObject>();
 
     private void Start()
     {
@@ -15,17 +16,26 @@ public class Heart : MonoBehaviour
 
     public void StartHearts()
     {
-        if (hearts.Count != Data.maxLife)
+        while (heartsList.Count < Data.maxLife)
         {
-            for (int i = hearts.Count - 1; i >= 0; i--)
+            foreach (Transform heart in hearts.transform)
             {
-                if (i > (Data.currentLife - 1))
-                {
-                    Destroy(hearts[i]);
-                    hearts.RemoveAt(i);
-                }
+                heartsList.Add(heart.gameObject);
             }
         }
+        Debug.Log(heartsList.Count);
+
+        //if (heartsList.Count != Data.maxLife)
+        //{
+        //    for (int i = heartsList.Count - 1; i >= 0; i--)
+        //    {
+        //        if (i > (Data.currentLife - 1))
+        //        {
+        //            Destroy(heartsList[i]);
+        //            heartsList.RemoveAt(i);
+        //        }
+        //    }
+        //}
     }
 
     public void RemoveHearts(int damage)
@@ -34,12 +44,12 @@ public class Heart : MonoBehaviour
         if (Data.currentLife < 1)
             Data.isDead = true;
 
-        for (int i = hearts.Count - 1; i >= 0; i--)
+        for (int i = heartsList.Count - 1; i >= 0; i--)
         {
             if (i > (Data.currentLife - 1))
             {
-                Destroy(hearts[i]);
-                hearts.RemoveAt(i);
+                Destroy(heartsList[i]);
+                heartsList.RemoveAt(i);
             }
         }
 
@@ -47,12 +57,12 @@ public class Heart : MonoBehaviour
 
     public void Heal()
     {
-        int missingHearts = Data.maxLife - hearts.Count;
+        int missingHearts = Data.maxLife - heartsList.Count;
 
         for (int i = 0; i < missingHearts; i++)
         {
             GameObject heart = Instantiate(heartPrefab, canvas);
-            hearts.Add(heart);
+            heartsList.Add(heart);
         }
 
         Data.currentLife = Data.maxLife;

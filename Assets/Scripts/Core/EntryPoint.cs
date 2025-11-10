@@ -10,35 +10,35 @@ public class EntryPoint : MonoBehaviour
 {
     [SerializeField] private InputActionAsset newInputSystem;
     [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private InitializeManager initializeManager;
     [SerializeField] private GameObject mainCamera;
-    //[SerializeField] private GameObject cinemachineCamera;
     [SerializeField] private GameObject player;
     [SerializeField] private Transform initialPosition;
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject hearts;
+    [SerializeField] private GameObject heart;
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
     [SerializeField] private GameObject deadManager;
 
-    //[SerializeField] private GameObject spiritGuide;
-    //[SerializeField] private GameObject wanderingSpirit;
-    //[SerializeField] private GameObject spikes;
-    //[SerializeField] private GameObject soulCrystal;
-    //[SerializeField] private GameObject roomBounds;
+    //private GameObject mainCamera;
+    //private GameObject player;
+    //private Transform initialPosition;
+    //private GameObject canvas;
+    //private GameObject heartsList;
+    //private GameObject manaBar;
+    //private GameObject crystalCounter;
+    //private GameObject deadManager;
 
     private ReceivingClaw receivingClaw;
-    private Heart heart;
+    private Heart heartScript;
     private Mana mana;
     public Image manaBarImage {  get; private set; }
     private Canvas componentCanvas;
     private CanvasScaler componentCanvasScaler;
 
-    private BossHealth bossHealth;
-    
-
-    private string startSceneName = "TestRoom1";
-    
-
+    [SerializeField] private string startSceneName = "F_Room_Tutorial";
 
     public static EntryPoint _instance { get; private set; }
 
@@ -64,11 +64,6 @@ public class EntryPoint : MonoBehaviour
         //InstallDependencySpiritGuide();
     }
 
-    //private void InstallDependencySpiritGuide()
-    //{
-    //    spiritGuide
-    //}
-
     private async UniTask Initialize()
     {
         newInputSystem.Enable();
@@ -82,6 +77,12 @@ public class EntryPoint : MonoBehaviour
         deadManager = Instantiate(deadManager);
         DontDestroyOnLoad(deadManager);
 
+        gameManager = Instantiate(gameManager);
+        DontDestroyOnLoad(gameManager);
+
+        initializeManager = Instantiate(initializeManager);
+        DontDestroyOnLoad(initializeManager);
+
         canvas = Instantiate(canvas);
         SetCanvasParamets();
         DontDestroyOnLoad(canvas);
@@ -89,12 +90,13 @@ public class EntryPoint : MonoBehaviour
         eventSystem = Instantiate(eventSystem);
         DontDestroyOnLoad(eventSystem);
 
-        hearts = Instantiate(hearts, canvas.transform);
-        DontDestroyOnLoad(hearts);
+        InitializePlayer();
 
-        player = Instantiate(player);
-        SetInitialPosition();
-        DontDestroyOnLoad(player);
+        manaBar = Instantiate(manaBar, canvas.transform);
+        DontDestroyOnLoad(manaBar);
+
+        crystalCounter = Instantiate(crystalCounter, canvas.transform);
+        DontDestroyOnLoad(crystalCounter);
 
         //Нужна проверка получен ли Коготь у игрока
         receivingClaw = player.GetComponent<ReceivingClaw>();
@@ -102,11 +104,19 @@ public class EntryPoint : MonoBehaviour
 
         EnableMana();
 
-        crystalCounter = Instantiate(crystalCounter, canvas.transform);
-        DontDestroyOnLoad(crystalCounter);
-
+        hearts = Instantiate(hearts, canvas.transform);
+        DontDestroyOnLoad(hearts);
 
         StartHearts();
+    }
+
+    private void InitializePlayer()
+    {
+        player = Instantiate(player);
+        SetInitialPosition();
+        DontDestroyOnLoad(player);
+
+        InitializeManager._instance.player = player;
     }
 
     private void SetInitialPosition()
@@ -116,9 +126,6 @@ public class EntryPoint : MonoBehaviour
 
     private void EnableMana()
     {
-        manaBar = Instantiate(manaBar, canvas.transform);
-        DontDestroyOnLoad(manaBar);
-
         manaBarImage = manaBar.transform.Find("Bar").GetComponent<Image>();
 
         //Нужна проверка активен ли у игрока компонент маны
@@ -142,20 +149,21 @@ public class EntryPoint : MonoBehaviour
 
     private void StartHearts()
     {
-        heart = player.GetComponent<Heart>();
+        heartScript = player.GetComponent<Heart>();
 
-        heart.StartHearts();
+        heartScript.hearts = hearts;
+        heartScript.StartHearts();
         //Логика назначения текущего HP при запуске игры. Через json
 
         //Heart.cs
-        //if (hearts.Count != Data.maxLife)
+        //if (heartsList.Count != Data.maxLife)
         //{
-        //    for (int i = hearts.Count - 1; i >= 0; i--)
+        //    for (int i = heartsList.Count - 1; i >= 0; i--)
         //    {
         //        if (i > (Data.currentLife - 1))
         //        {
-        //            Destroy(hearts[i]);
-        //            hearts.RemoveAt(i);
+        //            Destroy(heartsList[i]);
+        //            heartsList.RemoveAt(i);
         //        }
         //    }
         //}

@@ -12,6 +12,7 @@ public class BossHealth : MonoBehaviour
 
     void Start()
     {
+        canvas = gameObject.transform.Find("Canvas");
         sgView = GetComponent<SpiritGuideView>();
     }
 
