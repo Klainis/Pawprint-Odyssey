@@ -9,7 +9,7 @@ public class Mana : MonoBehaviour
     //private int maxMana;
     //private int mana;
 
-    [SerializeField] private Image manaBar;
+    public Image manaBar;
     private EntryPoint m_EntryPoint;
     public void Awake()
     {

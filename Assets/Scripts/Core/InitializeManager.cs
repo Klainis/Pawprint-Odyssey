@@ -5,7 +5,9 @@ public class InitializeManager : MonoBehaviour
 {
     public static InitializeManager _instance { get; private set; }
 
-    [HideInInspector] public GameObject player;
+    public GameObject player;
+    public Canvas canvas;
+
 
     private void Awake()
     {

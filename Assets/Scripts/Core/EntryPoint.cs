@@ -59,7 +59,7 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
-       await SceneManager.LoadSceneAsync(startSceneName);
+        await SceneManager.LoadSceneAsync(startSceneName);
 
         //InstallDependencySpiritGuide();
     }
@@ -130,9 +130,10 @@ public class EntryPoint : MonoBehaviour
 
         //Нужна проверка активен ли у игрока компонент маны
         mana = player.GetComponent<Mana>();
+        mana.manaBar = manaBarImage;
         mana.enabled = false;   
 
-        //Проверка на то есть ли сейчас манабар  у игрока
+        //Проверка на то есть ли сейчас манабар  у игрока. Если есть, то установить значение из json
         // Сейчас ScOb, сделать проверку через json
         if (mana.enabled)
             manaBar.SetActive(true);
@@ -154,19 +155,6 @@ public class EntryPoint : MonoBehaviour
         heartScript.hearts = hearts;
         heartScript.StartHearts();
         //Логика назначения текущего HP при запуске игры. Через json
-
-        //Heart.cs
-        //if (heartsList.Count != Data.maxLife)
-        //{
-        //    for (int i = heartsList.Count - 1; i >= 0; i--)
-        //    {
-        //        if (i > (Data.currentLife - 1))
-        //        {
-        //            Destroy(heartsList[i]);
-        //            heartsList.RemoveAt(i);
-        //        }
-        //    }
-        //}
     }
 
     private void StartMana()

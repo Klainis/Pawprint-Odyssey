@@ -6,15 +6,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerInput : MonoBehaviour {
 
 	[SerializeField] private CharacterController2D controller;
 	[SerializeField] private Animator animator;
 	[SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
+    [SerializeField] private InputActionReference attackAction;
     [SerializeField] private float runSpeed = 40f;
 
+    public bool attackPressed {  get; private set; }
 	private float horizontalMove = 0f;
 	private bool jump = false;
 	private bool dash = false;
@@ -33,6 +35,11 @@ public class PlayerMovement : MonoBehaviour {
     }
 	void Update () 
 	{
+        if (attackAction != null && attackAction.action != null)
+        {
+            attackPressed = attackAction.action.WasPressedThisFrame();
+        }
+
         if (moveAction != null && moveAction.action != null)
         {
             Vector2 move = moveAction.action.ReadValue<Vector2>();

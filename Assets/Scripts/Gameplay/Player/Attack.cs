@@ -14,8 +14,6 @@ public class Attack : MonoBehaviour
     [SerializeField] private float attackSeriesTimeout = 0.9f; // время, за которое можно нажать след. удар в серии
     [SerializeField] private int maxAttackSeriesCount = 3;
 
-    [SerializeField] private InputActionReference attackAction;
-
     const float attackCheckRadius = 1.1f;
 
     Gamepad gamepad;
@@ -24,8 +22,8 @@ public class Attack : MonoBehaviour
     private Transform attackCheck;
     private Rigidbody2D rb;
     private GameObject enemy;
+    private PlayerInput playerInput;
 
-    private bool attackPressed;
     private float lastAttackTime;
     public int attackSeriesCount { get; private set; } = 0;
     private bool isAttacking = false;
@@ -50,6 +48,7 @@ public class Attack : MonoBehaviour
 
         animator = GetComponent<Animator>();
         playerController = GetComponent<CharacterController2D>();
+        playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -57,17 +56,12 @@ public class Attack : MonoBehaviour
     {
         animator.applyRootMotion = false;
 
-        if (attackAction != null && attackAction.action != null)
-        {
-            attackPressed = attackAction.action.WasPressedThisFrame();
-        }
-
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
         {
             ResetCombo();
         }
 
-        if (attackPressed && !isAttacking && canAttack)
+        if (playerInput.attackPressed && !isAttacking && canAttack)
         {
             lastAttackTime = Time.time;
             attackSeriesCount++;
@@ -78,19 +72,16 @@ public class Attack : MonoBehaviour
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack1");
-                //AddForceForAttack();
             }
             else if (attackSeriesCount == 2)
             {
                 dmgValue = 1;
                 animator.SetTrigger("Attack2");
-                //AddForceForAttack();
             }
             else if (attackSeriesCount == 3)
             {
                 dmgValue = 3;
                 animator.SetTrigger("Attack3");
-                //AddForceForAttack();
             }
 
             isAttacking = true;
