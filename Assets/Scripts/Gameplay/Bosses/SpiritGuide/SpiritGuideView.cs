@@ -82,10 +82,12 @@ public class SpiritGuideView : MonoBehaviour
 
     public void ApplyDamage(int damage)
     {
-        if (!isInvincible)
+        if (isInvincible) return;
+
+        // sgAnimation.SetBoolHit(true);
+        var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+        if (damageApplied)
         {
-            // sgAnimation.SetBoolHit(true);
-            Model.TakeDamage(Mathf.Abs(damage));
             Hit.Invoke();
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;

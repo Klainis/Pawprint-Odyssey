@@ -56,11 +56,13 @@ public class WanderingSpiritView : MonoBehaviour
 
     public void ApplyDamage(int damage)
     {
-        if (!isInvincible)
+        if (isInvincible) return;
+
+        var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+        if (damageApplied)
         {
-            StartCoroutine(HitTime(1f));
             wsAnimation.SetBoolHit(true);
-            Model.TakeDamage(Mathf.Abs(damage));
+            StartCoroutine(HitTime(1f));
             rigidBody.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);

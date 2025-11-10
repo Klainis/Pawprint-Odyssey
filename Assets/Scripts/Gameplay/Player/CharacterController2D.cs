@@ -55,7 +55,7 @@ public class CharacterController2D : MonoBehaviour
     private bool oldWallRunning;
     private float prevVelocityX = 0f;
     private bool canCheck = false; //For check if player is wallsliding
-    private bool invincible = false;
+    private bool isInvincible = false;
     private bool canMove = true;
     private bool isJumping;
 
@@ -462,28 +462,27 @@ public class CharacterController2D : MonoBehaviour
 
     public void ApplyDamage(int damage, Vector3 position)
     {
-        if (!invincible)
+        if (isInvincible) return;
+
+        animator.SetBool("Hit", true);
+        heart.RemoveHearts(damage);
+        var damageDir = Vector3.Normalize(transform.position - position) * 40f;
+        m_Rigidbody2D.linearVelocity = Vector2.zero;
+        m_Rigidbody2D.AddForce(damageDir * 15);
+        if (Data.currentLife < 1)
         {
-            animator.SetBool("Hit", true);
-            heart.RemoveHearts(damage);
-            Vector2 damageDir = Vector3.Normalize(transform.position - position) * 40f;
-            m_Rigidbody2D.linearVelocity = Vector2.zero;
-            m_Rigidbody2D.AddForce(damageDir * 15);
-            if (Data.currentLife < 1)
-            {
-                StartCoroutine(WaitToDead());
-            }
-            else
-            {
-                //StartCoroutine(Stun(0.25f));
-                StartCoroutine(MakeInvincible(1f));
-            }
+            StartCoroutine(WaitToDead());
+        }
+        else
+        {
+            //StartCoroutine(Stun(0.25f));
+            StartCoroutine(MakeInvincible(1f));
         }
     }
 
     public void ApplyObjectDamage(int damage)
     {
-        if (!invincible)
+        if (!isInvincible)
         {
             animator.SetBool("Hit", true);
             heart.RemoveHearts(damage);
@@ -528,9 +527,9 @@ public class CharacterController2D : MonoBehaviour
     }
     IEnumerator MakeInvincible(float time)
     {
-        invincible = true;
+        isInvincible = true;
         yield return new WaitForSeconds(time);
-        invincible = false;
+        isInvincible = false;
     }
     IEnumerator WaitToMove(float time)
     {
@@ -560,7 +559,7 @@ public class CharacterController2D : MonoBehaviour
     {
         animator.SetBool("IsDead", true);
         canMove = false;
-        invincible = true;
+        isInvincible = true;
         GetComponent<Attack>().enabled = false;
         yield return new WaitForSeconds(0.4f);
         m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);
