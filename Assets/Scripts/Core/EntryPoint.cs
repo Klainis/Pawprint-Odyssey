@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class EntryPoint : MonoBehaviour
 {
@@ -95,8 +96,7 @@ public class EntryPoint : MonoBehaviour
         manaBar = Instantiate(manaBar, canvas.transform);
         DontDestroyOnLoad(manaBar);
 
-        crystalCounter = Instantiate(crystalCounter, canvas.transform);
-        DontDestroyOnLoad(crystalCounter);
+        InitializeSoulCrystalCounter();
 
         //Нужна проверка получен ли Коготь у игрока
         receivingClaw = player.GetComponent<ReceivingClaw>();
@@ -110,6 +110,15 @@ public class EntryPoint : MonoBehaviour
         StartHearts();
     }
 
+    private void InitializeSoulCrystalCounter()
+    {
+        crystalCounter = Instantiate(crystalCounter, canvas.transform);
+        DontDestroyOnLoad(crystalCounter);
+
+        TMP_Text text = crystalCounter.GetComponent<TMP_Text>();
+        InitializeManager._instance.soulCrystalText = text;
+    }
+
     private void InitializePlayer()
     {
         player = Instantiate(player);
@@ -121,7 +130,7 @@ public class EntryPoint : MonoBehaviour
 
     private void SetInitialPosition()
     {
-        player.transform.position = initialPosition.position;
+        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4, 0f);
     }
 
     private void EnableMana()
