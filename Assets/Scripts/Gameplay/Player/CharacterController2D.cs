@@ -321,7 +321,7 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    private void MoveHorizontal(float move)
+    public void MoveHorizontal(float move)
     {
         if (!(m_Grounded || m_AirControl)) return;
 

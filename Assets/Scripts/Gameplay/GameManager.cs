@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using GlobalEnums;
 
 public class GameManager : MonoBehaviour
 {
-    public GameManager _instance { get; private set; }
+    public static GameManager _instance { get; private set; }
+    public GameState GameState { get; private set; }
 
     //[SerializeField] private ScreenFader screenFader;
 
@@ -27,12 +29,22 @@ public class GameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
+        SetGameState(GameState.PLAYING);
+
+    }
+
+    private void Update()
+    {
+        Debug.Log(GameState);
     }
 
     public void BeginSceneTransition(string targetScene, string entryGate)
     {
         if (isTransitioning)
             return;
+
+        Debug.Log($"Переход на сцену {targetScene}");
+        SetGameState(GameState.ENTERING_LEVEL);
         StartCoroutine(DoSceneTransition(targetScene, entryGate));
     }
 
@@ -64,6 +76,7 @@ public class GameManager : MonoBehaviour
 
         //yield return screenFader.FadeIn();
         isTransitioning = false;
+        SetGameState(GameState.EXITING_LEVEL);
     }
 
     private TransitionDestination FindEntryPoint(string tag)
@@ -81,5 +94,10 @@ public class GameManager : MonoBehaviour
     public void InitializeComponent()
     {
         /*ossHealth.*/
+    }
+
+    public void SetGameState(GameState newState)
+    {
+        GameState = newState;
     }
 }
