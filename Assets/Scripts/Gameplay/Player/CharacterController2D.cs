@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using System;
+using static PlayerModel;
 
 public class CharacterController2D : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class CharacterController2D : MonoBehaviour
     const float k_GroundeDistance = 0.2f; // Radius of the overlap circle to determine if grounded
     public bool m_Grounded { get; private set; }            // Whether or not the player is grounded.
     private Rigidbody2D m_Rigidbody2D;
-    private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+    public bool m_FacingRight { get; private set; } = true;  // For determining which way the player is currently facing.
     public int turnCoefficient { get; private set; } = 1;
     private Vector3 velocity = Vector3.zero;
     private float limitFallSpeed = 25f; // Limit fall moveX
@@ -357,8 +358,9 @@ public class CharacterController2D : MonoBehaviour
         lastPressedJumpTime = jumpInputBufferTime;
     }
 
-    private void Jump()
+    public void Jump()
     {
+        Debug.Log("JUMP");
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
 

@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        Debug.Log(GameState);
-    }
+    //private void Update()
+    //{
+       
+    //}
 
     public void BeginSceneTransition(string targetScene, string entryGate)
     {

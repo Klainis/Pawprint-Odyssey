@@ -12,6 +12,7 @@ public class TransitionPoint : MonoBehaviour
     private PlayerInput playerInput;
     private CharacterController2D characterController;
     private GameManager gameManager;
+    private Transform saveGround;
 
     private Collider2D collider;
 
@@ -28,7 +29,6 @@ public class TransitionPoint : MonoBehaviour
             Debug.Log($"PlayerInput найден:{(bool)playerInput}");
 
         characterController = GameObject.FindAnyObjectByType<CharacterController2D>();
-
         collider = GetComponent<Collider2D>();
     }
 
@@ -46,14 +46,6 @@ public class TransitionPoint : MonoBehaviour
             }
         }
     }
-
-    //private void OnTriggerStay2D(Collider2D movigObj)
-    //{
-    //    if (!activated && movigObj.CompareTag("Player"))
-    //    {
-    //        TryDoTransition(movigObj);
-    //    }
-    //}
 
     private IEnumerator WalkIntoGate(Collider2D playerCollider, /*Vector2 targetPosotion,*/ float speed)
     {
@@ -73,7 +65,7 @@ public class TransitionPoint : MonoBehaviour
                 new Vector2(gateBounds.max.x, playerPosition.y) : 
                 new Vector2(gateBounds.min.x, playerPosition.y);
 
-            while (Vector2.Distance(playerPosition, targetPosition) > 0f)
+            while (Vector2.Distance(playerPosition, targetPosition) > 0.01f)
             {
                 //Отделить анимации игрока и добавить сюда анимацию бега к двери
                 playerPosition = Vector2.MoveTowards(playerPosition, targetPosition, speed * Time.deltaTime);
@@ -89,30 +81,24 @@ public class TransitionPoint : MonoBehaviour
             Bounds playerBounds = playerCollider.bounds;
 
             Vector2 playerPosition = playerCollider.transform.position;
-            //Vector2 targetPosition = (gatePosition == GatePosition.top) ?
-            //    new Vector2(playerPosition.x, gateBounds.max.y) :
-            //    new Vector2(playerPosition.x, gateBounds.max.y);
+
             if (gatePosition == GatePosition.top)
             {
-                Vector2 targetPosition = new Vector2(gateBounds.extents.x, gateBounds.max.y);
+                Vector2 targetPosition = new Vector2(playerPosition.x, gateBounds.max.y);
 
-                while (Vector2.Distance(playerPosition, targetPosition) > 0f)
+                while (Vector2.Distance(playerPosition, targetPosition) > 0.01f)
                 {
                     //Отделить анимации игрока и добавить сюда анимацию бега к двери
                     playerPosition = Vector2.MoveTowards(playerPosition, targetPosition, speed * Time.deltaTime);
                     playerCollider.transform.position = playerPosition;
                     yield return null;
                 }
+                activated = true;
             }
             else if (gatePosition == GatePosition.bottom)
             {
-                if (Vector2.Distance(playerPosition, new Vector2(playerPosition.x, gateBounds.min.y)) > 0f)
-                {
-                    yield return null;
-                }
+                activated = true;
             }
-
-            activated = true;
         }
 
         if (activated)
@@ -129,6 +115,7 @@ public class TransitionPoint : MonoBehaviour
 
         if (gatePosition == GatePosition.right || gatePosition == GatePosition.left)
         {
+            characterController.enabled = true;
             if (playerRB1)
             {
                 playerRB1.linearVelocity = Vector2.zero;
@@ -141,10 +128,10 @@ public class TransitionPoint : MonoBehaviour
 
             Vector2 playerPosition = playerCollider.transform.position;
             Vector2 targetPosition = (gatePosition == GatePosition.right) ?
-                new Vector2(gateBounds.min.x - /*playerBounds.extents.x*/2f, playerPosition.y) :
-                new Vector2(gateBounds.max.x + /*playerBounds.extents.x*/2f, playerPosition.y);
+                new Vector2(gateBounds.min.x - 2f, playerPosition.y) :
+                new Vector2(gateBounds.max.x + 2f, playerPosition.y);
 
-            while (Vector2.Distance(playerPosition, targetPosition) > /*-playerBox.size.x*/0f)
+            while (Vector2.Distance(playerPosition, targetPosition) > 0.01f)
             {
                 //Отделить анимации игрока и добавить сюда анимацию бега к двери
                 playerPosition = Vector2.MoveTowards(playerPosition, targetPosition, speed * Time.deltaTime);
@@ -155,32 +142,45 @@ public class TransitionPoint : MonoBehaviour
         }
         else if (gatePosition == GatePosition.top || gatePosition == GatePosition.bottom)
         {
+            characterController.enabled = false;
             Bounds gateBounds = collider.bounds;
             Bounds playerBounds = playerCollider.bounds;
 
             Vector2 playerPosition = playerCollider.transform.position;
-            Vector2 targetPosition = Vector2.zero;
 
             if (gatePosition == GatePosition.bottom)
             {
-                targetPosition = new Vector2(gateBounds.extents.x, gateBounds.max.y + playerBounds.extents.y);
+                //Debug.Log("ЗАХОД СНИЗУ");
+
+                //float x = (characterController.m_FacingRight) ? 40f : -40f; //вынести в чистый класс
+                //x = 50;
+
+                //float y = 250;
+                //if (playerRB1.linearVelocity.y < 0)
+                //    force -= playerRB1.linearVelocity.y;
+
+                //playerRB1.AddForce(new Vector2(x, force)/*ForceMode2D.Impulse*/);
+
+                //characterController.enabled = true;
+                //characterController.Jump();
+
+                //playerRB1.linearVelocity = new Vector2(x, /*playerRB1.linearVelocity.y*/force);///////////////////////////////////
+                //Debug.Log(playerRB1.linearVelocity);
+
+                //playerRB1.linearVelocity = new Vector2(x, 0f);
+
+                // Добавляем импульс вверх
+                //playerRB1.AddForce(new Vector2(x, y), ForceMode2D.Impulse);
+                //playerRB1.linearVelocity = new Vector2(x, y); 
+                saveGround = GameObject.FindGameObjectWithTag("SaveGround").transform;
+
+                Vector3 saveGrounsPosition= new Vector3(saveGround.position.x, saveGround.position.y, 0);
+                playerCollider.transform.SetPositionAndRotation(saveGrounsPosition, playerCollider.transform.rotation);
             }
 
-            while (Vector2.Distance(playerPosition, targetPosition) > 0f)
-            {
-                //Отделить анимации игрока и добавить сюда анимацию бега к двери
-                playerPosition = Vector2.MoveTowards(playerPosition, targetPosition, speed * Time.deltaTime);
-                playerCollider.transform.position = playerPosition;
-                yield return null;
-            }
         }
-        //Основа для перехода вверх
-        //playerRB1.AddForce(Vector2.Lerp(playerRB1.position, new Vector2(-9f, 10f), transitionSpeed * Time.deltaTime));
-        //playerRB1.AddForce(new Vector2(200f, 300f));
-        //PushOutFromGate(playerCollider);
-
-        playerInput.enabled = true;
         characterController.enabled = true;
+        playerInput.enabled = true;
         gameManager.SetGameState(GameState.PLAYING);
 
     }

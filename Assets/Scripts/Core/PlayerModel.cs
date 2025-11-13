@@ -8,9 +8,10 @@ public class PlayerModel
     public int SoulCrystalsCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public bool HasClaw { get; private set; }
+    public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
 
-    public PlayerModel(int life, int mana, int damage, int soulCrystalsCollected, string currentScene, bool hasClaw)
+    public PlayerModel(int life, int mana, int damage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
     {
         Life = Math.Max(1, life);
         Mana = Math.Max(0, mana);
@@ -18,6 +19,7 @@ public class PlayerModel
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
         CurrentScene = currentScene;
         HasClaw = hasClaw;
+        FacingRight = facingRight;
     }
 
     //public PlayerModel InitializePlayerModel(string)
@@ -36,6 +38,12 @@ public class PlayerModel
     //{
     //    return "json с данными игрока";
     //}
+
+    public bool SetFacing(bool facingRight)
+    {
+        FacingRight = facingRight;
+        return true;
+    }
 
     public bool TakeDamage(int damage)
     {
