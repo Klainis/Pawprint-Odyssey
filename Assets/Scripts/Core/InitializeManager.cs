@@ -9,6 +9,7 @@ public class InitializeManager : MonoBehaviour
     public GameObject player;
     public Canvas canvas;
     public TMP_Text soulCrystalText;
+    public GameObject bossHealth;
 
 
     private void Awake()
