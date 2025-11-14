@@ -12,6 +12,7 @@ public class TransitionPoint : MonoBehaviour
     private PlayerInput playerInput;
     private CharacterController2D characterController;
     private GameManager gameManager;
+
     private Transform saveGround;
 
     private Collider2D collider;
@@ -52,6 +53,7 @@ public class TransitionPoint : MonoBehaviour
         playerInput.enabled = false;
         // Так же разделить логику от всего остального CharacterController и отключать его
         characterController.enabled = false;
+        Rigidbody2D playerRB1 = playerCollider.gameObject.GetComponent<Rigidbody2D>();
 
         GatePosition gatePosition = GetGatePosition();
 
@@ -72,6 +74,10 @@ public class TransitionPoint : MonoBehaviour
                 playerCollider.transform.position = playerPosition;
                 yield return null;
             }
+
+            playerCollider.transform.position = playerPosition;
+            playerRB1.position = playerPosition;
+            playerRB1.linearVelocity = Vector2.zero;
 
             activated = true;
         }

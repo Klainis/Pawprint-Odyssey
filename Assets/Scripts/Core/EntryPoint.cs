@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
@@ -19,6 +20,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject hearts;
     [SerializeField] private GameObject heart;
+    [SerializeField] private GameObject transitionFade;
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
     [SerializeField] private GameObject deadManager;
@@ -35,8 +37,11 @@ public class EntryPoint : MonoBehaviour
     private ReceivingClaw receivingClaw;
     private Heart heartScript;
     private Mana mana;
+    private TransitionFade fadeScript;
     public Image manaBarImage {  get; private set; }
     private Canvas componentCanvas;
+    private Canvas componentTransitionCanvas;
+    private GameObject TransitionCanvas;
     private CanvasScaler componentCanvasScaler;
 
     [SerializeField] private string startSceneName = "F_Room_Tutorial";
@@ -61,6 +66,7 @@ public class EntryPoint : MonoBehaviour
         await Initialize();
 
         await SceneManager.LoadSceneAsync(startSceneName);
+        fadeScript.FadeIn();
 
         //InstallDependencySpiritGuide();
     }
@@ -88,8 +94,14 @@ public class EntryPoint : MonoBehaviour
         SetCanvasParamets();
         DontDestroyOnLoad(canvas);
 
+        TransitionCanvas = Instantiate(canvas);
+        SetTransitionCanvasParamets();
+        DontDestroyOnLoad(TransitionCanvas);
+
         eventSystem = Instantiate(eventSystem);
         DontDestroyOnLoad(eventSystem);
+
+        InitializeFade();
 
         InitializePlayer();
 
@@ -108,6 +120,17 @@ public class EntryPoint : MonoBehaviour
         DontDestroyOnLoad(hearts);
 
         StartHearts();
+    }
+
+    private void InitializeFade()
+    {
+        transitionFade = Instantiate(transitionFade, TransitionCanvas.transform);
+        DontDestroyOnLoad(transitionFade);
+        CanvasGroup StartFade = transitionFade.GetComponent<CanvasGroup>();
+        StartFade.alpha = 1f;
+        fadeScript = transitionFade.GetComponent<TransitionFade>();
+        fadeScript.enabled = true;
+        fadeScript.canvasGroup = StartFade;
     }
 
     private void InitializeSoulCrystalCounter()
@@ -155,6 +178,15 @@ public class EntryPoint : MonoBehaviour
         componentCanvas = canvas.GetComponent<Canvas>();
         componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         componentCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentCanvas.sortingOrder = 0;
+    }
+
+    private void SetTransitionCanvasParamets()
+    {
+        componentTransitionCanvas = TransitionCanvas.GetComponent<Canvas>();
+        componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        componentTransitionCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentTransitionCanvas.sortingOrder = 100;
     }
 
     private void StartHearts()
