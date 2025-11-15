@@ -2,14 +2,10 @@
 
 public class BulletHandler : MonoBehaviour
 {
-	private Rigidbody2D rb;
-
 	private int damage;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-
 		damage = transform.parent.GetComponent<ThornyPlant>().Damage;
     }
 
@@ -17,12 +13,10 @@ public class BulletHandler : MonoBehaviour
 	{
         if (collision.gameObject.CompareTag("Player"))
 		{
-            collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
+            collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position);
 			Destroy(gameObject);
 		}
 		else if (!collision.gameObject.CompareTag("Player"))
-		{
 			Destroy(gameObject);
-		}
 	}
 }

@@ -3,7 +3,9 @@ using System;
 public class PlayerModel
 {
     public int Life { get; private set; }
+    public int MaxLife { get; private set; }
     public int Mana { get; private set; }
+    public int MaxMana { get; private set; }
     public int Damage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
     public string CurrentScene { get; private set; }
@@ -11,10 +13,12 @@ public class PlayerModel
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
 
-    public PlayerModel(int life, int mana, int damage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
+    private PlayerModel(int life, int maxLife, int mana, int maxMana, int damage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
     {
         Life = Math.Max(1, life);
+        MaxLife = Math.Max(1, maxLife);
         Mana = Math.Max(0, mana);
+        MaxMana = Math.Max(0, maxMana);
         Damage = Math.Max(1, damage);
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
         CurrentScene = currentScene;
@@ -22,11 +26,20 @@ public class PlayerModel
         FacingRight = facingRight;
     }
 
-    //public PlayerModel InitializePlayerModel(string)
-    //{
-    //    var data = GetDataFromJsonSave("json");
-    //    return new PlayerModel(data);
-    //}
+    public static PlayerModel CreateFromPlayerData(PlayerData playerData)
+    {
+        return new PlayerModel(
+            playerData.currentLife,
+            playerData.maxLife,
+            playerData.currentMana,
+            playerData.maxMana,
+            playerData.damage,
+            playerData.soulCrystalCount,
+            playerData.currentScene,
+            playerData.clawIsReceived,
+            playerData.facingRight
+        );
+    }
 
     //public string GetJsonStringForSave()
     //{
@@ -39,9 +52,17 @@ public class PlayerModel
     //    return "json с данными игрока";
     //}
 
-    public bool SetFacing(bool facingRight)
+    public bool SetFacingRight(bool facingRight)
     {
         FacingRight = facingRight;
+        return true;
+    }
+
+    public bool ChangeLife(int life)
+    {
+        if (life <= 0)
+            return false;
+        Life = life;
         return true;
     }
 
@@ -55,15 +76,15 @@ public class PlayerModel
 
     public bool ChangeAmountOfMana(int value)
     {
-        Mana = value;
+        Mana = Math.Max(0, value);
+        if (Mana > MaxMana)
+            Mana = MaxMana;
         return true;
     }
 
-    public bool IncreaseDamage(int value)
+    public bool ChangeDamage(int value)
     {
-        if (value <= 0)
-            return false;
-        Damage += value;
+        Damage = value;
         return true;
     }
 

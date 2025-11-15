@@ -6,14 +6,14 @@ using System.Collections;
 public class Spikes : MonoBehaviour
 {
     [SerializeField] private GameObject player;
-    private CharacterController2D playerController;
     [SerializeField] private SafeGroundSaver safeGroundSaver;
     [SerializeField] private Transform spikesPostion;
 
-    private int damage = 1;
-
-    private Rigidbody2D rb;
     private GameObject enemy;
+    private Rigidbody2D rigidBody;
+    private PlayerView playerView;
+
+    private int damage = 1;
 
     private void Start()
     {
@@ -21,15 +21,16 @@ public class Spikes : MonoBehaviour
         safeGroundSaver = player.GetComponent<SafeGroundSaver>();
         if (player != null)
         {
-            playerController = player.GetComponent<CharacterController2D>();
-            rb = player.GetComponent <Rigidbody2D>();
+            playerView = player.GetComponent<PlayerView>();
+            rigidBody = player.GetComponent <Rigidbody2D>();
         }
     }
-    void OnTriggerEnter2D(Collider2D collider)
+
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player"))
         {
-            playerController.ApplyObjectDamage(damage);
+            playerView.ApplyObjectDamage(damage);
             StartCoroutine(StopFrame());
         }
         else if (collider.gameObject.CompareTag("Enemy"))
@@ -39,16 +40,16 @@ public class Spikes : MonoBehaviour
         }
     }
 
-    public void TeleportPlayer(GameObject player)
+    private void TeleportPlayer(GameObject player)
     {
         if (safeGroundSaver != null)
         {
-            rb.linearVelocity = Vector2.zero;
+            rigidBody.linearVelocity = Vector2.zero;
             player.transform.position = safeGroundSaver.SafeGroundLocation;
         }
     }
 
-    IEnumerator StopFrame()
+    private IEnumerator StopFrame()
     {
         //yield return new WaitForSecondsRealtime(0.1f);
         Time.timeScale = 0f;

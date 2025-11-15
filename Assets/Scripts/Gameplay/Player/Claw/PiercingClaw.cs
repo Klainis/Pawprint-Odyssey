@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -11,15 +8,14 @@ public class PiercingClaw : MonoBehaviour
     [Header("Data")]
     [SerializeField] private PlayerData Data;
 
-    [Header("Основные параметры атаки")]
+    [Header("Main Attack Params")]
     [SerializeField] private int dmgValue = 7;
 
     [SerializeField] private InputActionReference clawAction;
 
     private Vector2 clawSize = new Vector2(4f, 0.2f);
 
-    private Animator animator;
-    private CharacterController2D playerController;
+    private PlayerAnimation playerAnimation;
     private Mana mana;
     private Transform attackCheck;
     private Rigidbody2D rb;
@@ -43,24 +39,21 @@ public class PiercingClaw : MonoBehaviour
 
     void Awake()
     {
+        playerAnimation = GetComponent<PlayerAnimation>();
+        mana = GetComponent<Mana>();
+
         attackCheck = transform.Find("ClawAttackCheck");
         clawSprite = GameObject.Find("Claw");
 
         gamepad = Gamepad.current;
-
-        animator = GetComponent<Animator>();
-        mana = GetComponent<Mana>();
     }
 
     void Update()
     {
-        animator.applyRootMotion = false;
+        playerAnimation.ApplyRootMotion(false);
  
         if (clawAction != null && clawAction.action != null)
-        {
             clawPressed = clawAction.action.WasPressedThisFrame();
-
-        }
 
         if (clawPressed && canAttack && Data.currentMana >= 25)
         {
@@ -68,38 +61,34 @@ public class PiercingClaw : MonoBehaviour
             if (spendMana != null)
                 spendMana.Invoke();
 
-            animator.SetTrigger("Claw");
+            playerAnimation.SetTriggerClaw();
             canAttack = false;
             StartCoroutine(AttackCooldown(1f));
         }
 
     }
 
-    IEnumerator AttackCooldown(float durationAfterSeries)
-    {
-        yield return new WaitForSeconds(durationAfterSeries);
-        canAttack = true;
-    }
-
     public void ClawDamage()
     {
         dmgValue = Mathf.Abs(dmgValue);
-        Collider2D[] collidersEnemies = Physics2D.OverlapBoxAll(attackCheck.position, clawSize, 0f);
-        for (int i = 0; i < collidersEnemies.Length; i++)
+        var collidersEnemies = Physics2D.OverlapBoxAll(attackCheck.position, clawSize, 0f);
+        for (var i = 0; i < collidersEnemies.Length; i++)
         {
             if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
             {
-                float damageToApply = dmgValue;
+                var damageToApply = dmgValue;
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
-                {
                     damageToApply = -damageToApply;
-                }
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
             }
             if (collidersEnemies[i].gameObject.CompareTag("ClawObject"))
-            {
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", true);
-            }
         }
+    }
+
+    private IEnumerator AttackCooldown(float durationAfterSeries)
+    {
+        yield return new WaitForSeconds(durationAfterSeries);
+        canAttack = true;
     }
 }

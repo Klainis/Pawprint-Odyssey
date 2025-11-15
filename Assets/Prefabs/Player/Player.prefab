@@ -42,9 +42,11 @@ GameObject:
   - component: {fileID: 4660076192433278}
   - component: {fileID: 3512841439597258566}
   - component: {fileID: 2596477941260737167}
-  - component: {fileID: 114231493902538710}
+  - component: {fileID: 6772023754791648629}
+  - component: {fileID: 3721457989882947448}
+  - component: {fileID: 1729494090702783638}
+  - component: {fileID: 5509107085969195429}
   - component: {fileID: 114145887554720856}
-  - component: {fileID: 3133950676847035280}
   - component: {fileID: 2163805515310522865}
   - component: {fileID: 8176099545049012028}
   - component: {fileID: 1738746197435764065}
@@ -113,8 +115,8 @@ MonoBehaviour:
   Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   heartPrefab: {fileID: 7567480160736325036, guid: b4ab62ff55c40f1469a29d0496405eef, type: 3}
   canvas: {fileID: 8518606145567162077, guid: d93f6d876afe4b240b2affc5b25c9502, type: 3}
-  hearts: {fileID: 146539198543049472, guid: e1361ce18d6f267499a9ce993c91401f, type: 3}
---- !u!114 &114231493902538710
+  heartsPrefab: {fileID: 146539198543049472, guid: e1361ce18d6f267499a9ce993c91401f, type: 3}
+--- !u!114 &6772023754791648629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,32 +125,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1377240496476148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 783f8b7882d2d2a42a5b76de9179978f, type: 3}
+  m_Script: {fileID: 11500000, guid: e8498629d17c72645aae68f367f3b528, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
-  jumpForce: 14
-  doubleJumpForce: 12
-  wallJumpForce: {x: 850, y: 700}
-  dashForce: 25
-  coyoteTime: 0.15
-  jumpInputBufferTime: 0.2
-  jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  m_MovementSmoothing: 0.05
-  m_AirControl: 1
-  doubleJump: 0
-  m_WhatIsGround:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerView
+  whatIsGround:
     serializedVersion: 2
     m_Bits: 512
-  m_GroundCheck: {fileID: 4291727345091452}
-  m_WallCheck: {fileID: 4986330650710208}
-  particleJumpUp: {fileID: 198584872278178884}
-  particleJumpDown: {fileID: 198967111524372206}
   OnFallEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114145887554720856}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: OnFall
         m_Mode: 1
         m_Arguments:
@@ -163,7 +150,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114145887554720856}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_TargetAssemblyTypeName: PlayerInput, Assembly-CSharp
         m_MethodName: OnLanding
         m_Mode: 1
         m_Arguments:
@@ -174,6 +161,71 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3721457989882947448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d453f89e4745e44967d8a13a2ec422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+  jumpForce: 14
+  doubleJumpForce: 12
+  dashForce: 25
+  wallJumpForce: {x: 850, y: 700}
+  jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  coyoteTime: 0.15
+  jumpInputBufferTime: 0.2
+  particleJumpUp: {fileID: 198584872278178884}
+  particleJumpDown: {fileID: 198967111524372206}
+  movementSmoothing: 0.05
+  airControl: 1
+  doubleJump: 0
+--- !u!114 &1729494090702783638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f50e42d0452b4f4696c481ff7f822a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  attackSeriesTimeout: 0.9
+  maxAttackSeriesCount: 3
+  getMana:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3512841439597258566}
+        m_TargetAssemblyTypeName: Mana, Assembly-CSharp
+        m_MethodName: GetMana
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5509107085969195429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e26971352325824d9e211abac158112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
 --- !u!114 &114145887554720856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8644d33345e77614ba3ace9c18398d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  controller: {fileID: 114231493902538710}
-  animator: {fileID: 95975118031919256}
   moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   dashAction: {fileID: -657975949706170437, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
@@ -196,39 +246,9 @@ MonoBehaviour:
   jumpPressed:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114231493902538710}
-        m_TargetAssemblyTypeName: CharacterController2D, Assembly-CSharp
+      - m_Target: {fileID: 3721457989882947448}
+        m_TargetAssemblyTypeName: PlayerMove, Assembly-CSharp
         m_MethodName: OnJumpInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &3133950676847035280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9955788a5eaffa49a9297f38eaa6202, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Attack
-  dmgValue: 1
-  attackSeriesTimeout: 0.9
-  maxAttackSeriesCount: 3
-  getMana:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3512841439597258566}
-        m_TargetAssemblyTypeName: Mana, Assembly-CSharp
-        m_MethodName: GetMana
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

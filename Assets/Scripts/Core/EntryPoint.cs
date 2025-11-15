@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
@@ -24,6 +23,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
     [SerializeField] private GameObject deadManager;
+
+    [SerializeField] private PlayerData playerData;
 
     //private GameObject mainCamera;
     //private GameObject player;
@@ -126,7 +127,7 @@ public class EntryPoint : MonoBehaviour
     {
         transitionFade = Instantiate(transitionFade, TransitionCanvas.transform);
         DontDestroyOnLoad(transitionFade);
-        CanvasGroup StartFade = transitionFade.GetComponent<CanvasGroup>();
+        var StartFade = transitionFade.GetComponent<CanvasGroup>();
         StartFade.alpha = 1f;
         fadeScript = transitionFade.GetComponent<TransitionFade>();
         fadeScript.enabled = true;
@@ -138,13 +139,15 @@ public class EntryPoint : MonoBehaviour
         crystalCounter = Instantiate(crystalCounter, canvas.transform);
         DontDestroyOnLoad(crystalCounter);
 
-        TMP_Text text = crystalCounter.GetComponent<TMP_Text>();
+        var text = crystalCounter.GetComponent<TMP_Text>();
         InitializeManager._instance.soulCrystalText = text;
     }
 
     private void InitializePlayer()
     {
         player = Instantiate(player);
+        var playerModel = PlayerModel.CreateFromPlayerData(playerData);
+        player.GetComponent<PlayerView>().PlayerModel = playerModel;
         SetInitialPosition();
         DontDestroyOnLoad(player);
 
@@ -193,7 +196,7 @@ public class EntryPoint : MonoBehaviour
     {
         heartScript = player.GetComponent<Heart>();
 
-        heartScript.hearts = hearts;
+        heartScript.heartPrefab = hearts;
         heartScript.StartHearts();
         //Логика назначения текущего HP при запуске игры. Через json
     }

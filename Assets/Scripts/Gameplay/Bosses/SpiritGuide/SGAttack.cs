@@ -107,8 +107,8 @@ public class SGAttack : MonoBehaviour
         {
             if (!sgView.Model.IsDead)
             {
-                var controller = collision.gameObject.GetComponent<CharacterController2D>();
-                controller.ApplyDamage(sgView.Model.Damage, transform.position);
+                var playerView = collision.gameObject.GetComponent<PlayerView>();
+                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
             }
         }
     }
@@ -119,8 +119,8 @@ public class SGAttack : MonoBehaviour
         {
             if (!sgView.Model.IsDead)
             {
-                var controller = collision.gameObject.GetComponent<CharacterController2D>();
-                controller.ApplyDamage(sgView.Model.Damage, transform.position);
+                var playerView = collision.gameObject.GetComponent<PlayerView>();
+                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
             }
         }
     }

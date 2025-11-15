@@ -1,48 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour {
-
-	[SerializeField] private CharacterController2D controller;
-	[SerializeField] private Animator animator;
 	[SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private float runSpeed = 40f;
+    [SerializeField] private UnityEvent jumpPressed;
 
-    public bool attackPressed {  get; private set; }
+	private Gamepad gamepad;
+    private PlayerAnimation playerAnimation;
+    private PlayerMove playerMove;
+
 	private float horizontalMove = 0f;
+    private float verticalMove = 0f;
+    private float lastJumpTime;
+    private bool attackPressed;
 	private bool jump = false;
 	private bool dash = false;
-    private float lastJumpTime;
-
-	Gamepad gamepad;
-    CharacterController2D characterController;
-    [SerializeField] private UnityEvent jumpPressed;
     private bool grab = false;
-    private float verticalMove = 0f;
 
-    void Start()
-	{
+    public bool AttackPressed { get {  return attackPressed; } private set { attackPressed = value; } }
+
+    private void Awake()
+    {
         gamepad = Gamepad.current;
-        characterController = GetComponent<CharacterController2D>();
+
+        playerAnimation = GetComponent<PlayerAnimation>();
+        playerMove = GetComponent<PlayerMove>();
     }
-	void Update () 
+
+    private void Update () 
 	{
         if (attackAction != null && attackAction.action != null)
-        {
             attackPressed = attackAction.action.WasPressedThisFrame();
-        }
 
         if (moveAction != null && moveAction.action != null)
         {
-            Vector2 move = moveAction.action.ReadValue<Vector2>();
+            var move = moveAction.action.ReadValue<Vector2>();
 
             Run(move);
             WallRun(move);
@@ -63,7 +60,19 @@ public class PlayerInput : MonoBehaviour {
                 dash = true;
         }
 
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
+    }
+
+    private void FixedUpdate()
+    {
+        // Move our character
+        playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
+
+        if (jump)
+            jumpPressed.Invoke();
+
+        jump = false;
+        dash = false;
     }
 
     private void WallRun(Vector2 move)
@@ -83,38 +92,20 @@ public class PlayerInput : MonoBehaviour {
     private void Run(Vector2 move)
     {
         if (move.x > 0.7f)
-        {
             horizontalMove = runSpeed;
-        }
         else if (move.x < -0.7f)
-        {
             horizontalMove = -runSpeed;
-        }
         else
-        {
             horizontalMove = 0f;
-        }
     }
 
     public void OnFall()
 	{
-		animator.SetBool("IsJumping", true);
-	}
+        playerAnimation.SetBoolIsJumping(true);
+    }
 
-	public void OnLanding()
+    public void OnLanding()
 	{
-		animator.SetBool("IsJumping", false);
-	}
-
-	void FixedUpdate ()
-	{
-		// Move our character
-		controller.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
-		
-        if (jump)
-            jumpPressed.Invoke();
-
-        jump = false;
-		dash = false;
-	}
+        playerAnimation.SetBoolIsJumping(false);
+    }
 }

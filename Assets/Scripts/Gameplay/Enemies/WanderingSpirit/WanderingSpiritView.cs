@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WanderingSpiritView : MonoBehaviour
@@ -8,7 +7,7 @@ public class WanderingSpiritView : MonoBehaviour
 
     [Header("Main params")]
     [SerializeField] private EnemyData data;
-    [SerializeField] private Attack playerAttack;
+    [SerializeField] private PlayerAttack playerAttack;
     [SerializeField] private float lastPlayerAttackForce = 400f;
     [SerializeField] private float playerAttackForce = 300f;
     [SerializeField] private bool isInvincible = false;
@@ -37,7 +36,7 @@ public class WanderingSpiritView : MonoBehaviour
         Model = new EnemyModel(data.Life, data.Speed, data.Damage);
 
         //playerAttack = GameObject.Find("Player").GetComponent<Attack>();
-        playerAttack = InitializeManager._instance.player?.GetComponent<Attack>();
+        playerAttack = InitializeManager._instance.player?.GetComponent<PlayerAttack>();
         Debug.Log(playerAttack == null);
         rigidBody = GetComponent<Rigidbody2D>();
         wsAnimation = GetComponent<WSAnimation>();
@@ -68,9 +67,9 @@ public class WanderingSpiritView : MonoBehaviour
             rigidBody.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);
-            if (playerAttack.attackSeriesCount == 3)
+            if (playerAttack.AttackSeriesCount == 3)
                 rigidBody.AddForce(new Vector2(direction * lastPlayerAttackForce, 0));
-            else if (playerAttack.attackSeriesCount < 3)
+            else if (playerAttack.AttackSeriesCount < 3)
                 rigidBody.AddForce(new Vector2(direction * playerAttackForce, 0));
         }
     }

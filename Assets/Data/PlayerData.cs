@@ -5,10 +5,14 @@ public class PlayerData : ScriptableObject
 {
     [Header("Player State")]
     public bool isDead;
+    public bool facingRight;
 
     [Header("Player Health")]
     public int currentLife;
     public int maxLife;
+
+    [Header("Player Damage")]
+    public int damage;
 
     [Header("Player Mana")]
     public int currentMana;
@@ -20,6 +24,9 @@ public class PlayerData : ScriptableObject
 
     [Header("Soul Crystal")]
     public int soulCrystalCount;
+
+    [Header("Current Scene")]
+    public string currentScene;
 
     public void Reset()
     {

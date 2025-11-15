@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ThornyPlant : MonoBehaviour {
@@ -16,7 +15,7 @@ public class ThornyPlant : MonoBehaviour {
     [SerializeField] private float bulletSpeed = 7f;
 
     private Animator animator;
-    private Rigidbody2D rb;
+    private Rigidbody2D rigidBody;
     private Transform shootPoints;
 
     private int shotsPerSeries = 3;
@@ -37,7 +36,7 @@ public class ThornyPlant : MonoBehaviour {
 
     void Awake () {
         animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
 
         shootPoints = transform.Find("ShootPoints");
     }
@@ -79,12 +78,8 @@ public class ThornyPlant : MonoBehaviour {
 	void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-        {
 			if (life > 0)
-			{
-                collision.gameObject.GetComponent<CharacterController2D>().ApplyDamage(damage, transform.position);
-            }
-        }
+                collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position);
     }
 
     private void Shoot()
@@ -93,9 +88,9 @@ public class ThornyPlant : MonoBehaviour {
         {
             var shootPoint = shootPoints.GetChild(i);
             var bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation, transform);
-            rb = bullet.GetComponent<Rigidbody2D>();
-            if (rb != null)
-                rb.linearVelocity = shootPoint.right * bulletSpeed;
+            rigidBody = bullet.GetComponent<Rigidbody2D>();
+            if (rigidBody != null)
+                rigidBody.linearVelocity = shootPoint.right * bulletSpeed;
         }
     }
 

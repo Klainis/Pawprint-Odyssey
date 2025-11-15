@@ -8,16 +8,23 @@ public class ReceivingClaw : MonoBehaviour
     [SerializeField] private PiercingClaw piercingClaw;
     [SerializeField] private GameObject manaBar;
 
-    private void Start()
+    private PlayerView playerView;
+
+    private void Awake()
     {
+        playerView = GetComponent<PlayerView>();
         manaScript = GetComponent<Mana>();
         piercingClaw = GetComponent<PiercingClaw>();
+    }
+
+    private void Start()
+    {
         SetActiveManaBar();
     }
 
     public void SetActiveManaBar()
     {
-        if (Data.clawIsReceived)
+        if (playerView.PlayerModel.HasClaw)
         {
             manaScript.enabled = true;
             piercingClaw.enabled = true;

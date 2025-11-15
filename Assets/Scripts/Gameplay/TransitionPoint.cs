@@ -10,12 +10,12 @@ public class TransitionPoint : MonoBehaviour
     [SerializeField] private string entryGate;
 
     private PlayerInput playerInput;
-    private CharacterController2D characterController;
+    private PlayerView playerView;
     private GameManager gameManager;
 
     private Transform saveGround;
 
-    private Collider2D collider;
+    private Collider2D col;
 
     private bool activated;
     private bool endMoveToGate;
@@ -29,8 +29,8 @@ public class TransitionPoint : MonoBehaviour
         if (playerInput != null)
             Debug.Log($"PlayerInput найден:{(bool)playerInput}");
 
-        characterController = GameObject.FindAnyObjectByType<CharacterController2D>();
-        collider = GetComponent<Collider2D>();
+        playerView = GameObject.FindAnyObjectByType<PlayerView>();
+        col = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D movigObj)
@@ -38,13 +38,9 @@ public class TransitionPoint : MonoBehaviour
         if (movigObj.CompareTag("Player"))
         {
             if (gameManager.GameState == GameState.PLAYING)
-            {
                 StartCoroutine(WalkIntoGate(movigObj, transitionSpeed));
-            }
             else if (gameManager.GameState == GameState.EXITING_LEVEL)
-            {
                 StartCoroutine(WalkOutGate(movigObj, transitionSpeed));
-            }
         }
     }
 
@@ -52,14 +48,14 @@ public class TransitionPoint : MonoBehaviour
     {
         playerInput.enabled = false;
         // Так же разделить логику от всего остального CharacterController и отключать его
-        characterController.enabled = false;
+        playerView.enabled = false;
         Rigidbody2D playerRB1 = playerCollider.gameObject.GetComponent<Rigidbody2D>();
 
         GatePosition gatePosition = GetGatePosition();
 
         if (gatePosition == GatePosition.right || gatePosition == GatePosition.left)
         {
-            Bounds gateBounds = collider.bounds;
+            Bounds gateBounds = col.bounds;
             Bounds playerBounds = playerCollider.bounds;
 
             Vector2 playerPosition = playerCollider.transform.position;
@@ -83,7 +79,7 @@ public class TransitionPoint : MonoBehaviour
         }
         else if (gatePosition == GatePosition.top || gatePosition == GatePosition.bottom)
         {
-            Bounds gateBounds = collider.bounds;
+            Bounds gateBounds = col.bounds;
             Bounds playerBounds = playerCollider.bounds;
 
             Vector2 playerPosition = playerCollider.transform.position;
@@ -121,13 +117,11 @@ public class TransitionPoint : MonoBehaviour
 
         if (gatePosition == GatePosition.right || gatePosition == GatePosition.left)
         {
-            characterController.enabled = true;
+            playerView.enabled = true;
             if (playerRB1)
-            {
                 playerRB1.linearVelocity = Vector2.zero;
-            }
 
-            Bounds gateBounds = collider.bounds;
+            Bounds gateBounds = col.bounds;
             Bounds playerBounds = playerCollider.bounds;
 
             BoxCollider2D playerBox = playerCollider.GetComponent<BoxCollider2D>();
@@ -148,8 +142,8 @@ public class TransitionPoint : MonoBehaviour
         }
         else if (gatePosition == GatePosition.top || gatePosition == GatePosition.bottom)
         {
-            characterController.enabled = false;
-            Bounds gateBounds = collider.bounds;
+            playerView.enabled = false;
+            Bounds gateBounds = col.bounds;
             Bounds playerBounds = playerCollider.bounds;
 
             Vector2 playerPosition = playerCollider.transform.position;
@@ -185,7 +179,7 @@ public class TransitionPoint : MonoBehaviour
             }
 
         }
-        characterController.enabled = true;
+        playerView.enabled = true;
         playerInput.enabled = true;
         gameManager.SetGameState(GameState.PLAYING);
 

@@ -9,34 +9,33 @@ public class Mana : MonoBehaviour
     //private int maxMana;
     //private int mana;
 
+    private PlayerView playerView;
+    private EntryPoint entryPoint;
     public Image manaBar;
-    private EntryPoint m_EntryPoint;
-    public void Awake()
+
+    private void Awake()
     {
-        m_EntryPoint = GameObject.Find("EntryPoint").GetComponent<EntryPoint>();
-        manaBar = m_EntryPoint.manaBarImage;
+        playerView = GetComponent<PlayerView>();
+        entryPoint = GameObject.Find("EntryPoint").GetComponent<EntryPoint>();
+        manaBar = entryPoint.manaBarImage;
     }
+
     private void Start()
     {
-        
         manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 
     public void SpendMana()
     {
-        Data.currentMana -= 25;
-        if (Data.currentMana <= 0)
-            Data.currentMana = 0;
-
+        playerView.PlayerModel.ChangeAmountOfMana(playerView.PlayerModel.Mana - 25);
+        Data.currentMana = playerView.PlayerModel.Mana;
         manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 
     public void GetMana()
     {
-        Data.currentMana += 4;
-        if (Data.currentMana > Data.maxMana)
-            Data.currentMana = Data.maxMana;
-
+        playerView.PlayerModel.ChangeAmountOfMana(playerView.PlayerModel.Mana + 4);
+        Data.currentMana = playerView.PlayerModel.Mana;
         manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 }

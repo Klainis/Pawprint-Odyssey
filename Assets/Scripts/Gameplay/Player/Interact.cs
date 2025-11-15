@@ -17,19 +17,12 @@ public class Interact : MonoBehaviour
         gamepad = Gamepad.current;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (interactAction != null && interactAction.action != null)
-        {
             if (interactAction.action.WasPressedThisFrame())
-            {
                 if (heal)
-                {
                     interactHealEvent.Invoke();
-                }
-            }
-        }
         
     }
 
