@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks.Triggers;
+using TMPro;
 using UnityEngine;
 
 public class InitializeManager : MonoBehaviour
@@ -7,6 +8,8 @@ public class InitializeManager : MonoBehaviour
 
     public GameObject player;
     public Canvas canvas;
+    public TMP_Text soulCrystalText;
+    public GameObject bossHealth;
 
 
     private void Awake()

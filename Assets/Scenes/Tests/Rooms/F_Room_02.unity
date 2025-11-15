@@ -158,7 +158,7 @@ Transform:
   m_GameObject: {fileID: 91204561}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -30, y: 1.1, z: 0}
+  m_LocalPosition: {x: -31.78, y: 1.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -299,7 +299,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1.8879442}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -309,7 +309,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 4.7758884}
+  m_Size: {x: 1.7, y: 4.7758884}
   m_EdgeRadius: 0
 --- !u!114 &180769570
 MonoBehaviour:
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0861200d35ea9794da39b672da172d32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
-  targetScene: F_Room_Tutorial
+  targetScene: F_Room_03
   entryGate: right1
 --- !u!4 &180769571
 Transform:
@@ -334,7 +334,7 @@ Transform:
   m_GameObject: {fileID: 180769568}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 44.600006, y: 6.96, z: 0}
+  m_LocalPosition: {x: 49.64, y: 9.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -624,7 +624,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1.8879442}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -634,7 +634,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 4.7758884}
+  m_Size: {x: 1.7, y: 4.7758884}
   m_EdgeRadius: 0
 --- !u!114 &754161920
 MonoBehaviour:
@@ -648,7 +648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0861200d35ea9794da39b672da172d32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
-  targetScene: F_Room_Tutorial
+  targetScene: F_Room_01
   entryGate: left1
 --- !u!4 &754161921
 Transform:
@@ -659,7 +659,7 @@ Transform:
   m_GameObject: {fileID: 754161918}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -27.42, y: 1.06, z: 0}
+  m_LocalPosition: {x: -31.23, y: 3.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -820,6 +820,14 @@ CompositeCollider2D:
       - X: 840000000
         Y: -220000000
     - - X: 1390000000
+        Y: -170000000
+      - X: 1380000000
+        Y: -170000000
+      - X: 1380000000
+        Y: -180000000
+      - X: 1390000000
+        Y: -180000000
+    - - X: 1390000000
         Y: -200000000
       - X: 1250000000
         Y: -200000000
@@ -871,6 +879,14 @@ CompositeCollider2D:
         Y: -230000000
       - X: 930000000
         Y: -230000000
+    - - X: 560000000
+        Y: -230000000
+      - X: 550000000
+        Y: -230000000
+      - X: 550000000
+        Y: -240000000
+      - X: 560000000
+        Y: -240000000
     - - X: 1110000000
         Y: -240000000
       - X: 960000000
@@ -889,6 +905,10 @@ CompositeCollider2D:
       - {x: 138.99997, y: -12}
       - {x: 53, y: -12.00003}
       - {x: 53.00003, y: -22}
+    - - {x: 138.99997, y: -18}
+      - {x: 138.99997, y: -17}
+      - {x: 138, y: -17.000029}
+      - {x: 138.00003, y: -18}
     - - {x: 138.99997, y: -34}
       - {x: 138.99997, y: -20}
       - {x: 125, y: -20.000029}
@@ -915,6 +935,10 @@ CompositeCollider2D:
       - {x: 92.99997, y: -21}
       - {x: 90, y: -21.000029}
       - {x: 90.00003, y: -23}
+    - - {x: 55.99997, y: -24}
+      - {x: 55.99997, y: -23}
+      - {x: 55, y: -23.000029}
+      - {x: 55.000034, y: -24}
     - - {x: 110.99998, y: -26}
       - {x: 110.99998, y: -24}
       - {x: 96, y: -24.000029}
@@ -7152,6 +7176,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: 55, y: -24, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 130, y: -24, z: 0}
     second:
       serializedVersion: 2
@@ -9033,6 +9067,16 @@ Tilemap:
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
   - first: {x: 68, y: -18, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 138, y: -18, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -12644,13 +12688,13 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 1159
+  - m_RefCount: 1161
     m_Data: {fileID: 11400000, guid: 698de823bb376fb48b9eeb280c69b85b, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 1159
+  - m_RefCount: 1161
     m_Data: {fileID: 7482667652216324306, guid: 2da23e86a228e1e4eb605f18c67ac4fd, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 1159
+  - m_RefCount: 1161
     m_Data:
       e00: 1
       e01: 0
@@ -12669,7 +12713,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 1159
+  - m_RefCount: 1161
     m_Data: {r: 0, g: 0, b: 0, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -12734,7 +12778,7 @@ Transform:
   m_GameObject: {fileID: 1285820108}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 48, y: 7.99, z: 0}
+  m_LocalPosition: {x: 49.82, y: 7.99, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

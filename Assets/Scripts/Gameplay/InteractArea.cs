@@ -4,6 +4,11 @@ public class InteractArea : MonoBehaviour
 {
     [SerializeField] private Interact interact;
 
+    private void Awake()
+    {
+        interact = GameObject.FindAnyObjectByType<Interact>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))

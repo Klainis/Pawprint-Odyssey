@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class EntryPoint : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject hearts;
     [SerializeField] private GameObject heart;
+    [SerializeField] private GameObject transitionFade;
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
     [SerializeField] private GameObject deadManager;
@@ -34,8 +37,11 @@ public class EntryPoint : MonoBehaviour
     private ReceivingClaw receivingClaw;
     private Heart heartScript;
     private Mana mana;
+    private TransitionFade fadeScript;
     public Image manaBarImage {  get; private set; }
     private Canvas componentCanvas;
+    private Canvas componentTransitionCanvas;
+    private GameObject TransitionCanvas;
     private CanvasScaler componentCanvasScaler;
 
     [SerializeField] private string startSceneName = "F_Room_Tutorial";
@@ -60,6 +66,7 @@ public class EntryPoint : MonoBehaviour
         await Initialize();
 
         await SceneManager.LoadSceneAsync(startSceneName);
+        fadeScript.FadeIn();
 
         //InstallDependencySpiritGuide();
     }
@@ -87,16 +94,21 @@ public class EntryPoint : MonoBehaviour
         SetCanvasParamets();
         DontDestroyOnLoad(canvas);
 
+        TransitionCanvas = Instantiate(canvas);
+        SetTransitionCanvasParamets();
+        DontDestroyOnLoad(TransitionCanvas);
+
         eventSystem = Instantiate(eventSystem);
         DontDestroyOnLoad(eventSystem);
+
+        InitializeFade();
 
         InitializePlayer();
 
         manaBar = Instantiate(manaBar, canvas.transform);
         DontDestroyOnLoad(manaBar);
 
-        crystalCounter = Instantiate(crystalCounter, canvas.transform);
-        DontDestroyOnLoad(crystalCounter);
+        InitializeSoulCrystalCounter();
 
         //Нужна проверка получен ли Коготь у игрока
         receivingClaw = player.GetComponent<ReceivingClaw>();
@@ -110,6 +122,26 @@ public class EntryPoint : MonoBehaviour
         StartHearts();
     }
 
+    private void InitializeFade()
+    {
+        transitionFade = Instantiate(transitionFade, TransitionCanvas.transform);
+        DontDestroyOnLoad(transitionFade);
+        CanvasGroup StartFade = transitionFade.GetComponent<CanvasGroup>();
+        StartFade.alpha = 1f;
+        fadeScript = transitionFade.GetComponent<TransitionFade>();
+        fadeScript.enabled = true;
+        fadeScript.canvasGroup = StartFade;
+    }
+
+    private void InitializeSoulCrystalCounter()
+    {
+        crystalCounter = Instantiate(crystalCounter, canvas.transform);
+        DontDestroyOnLoad(crystalCounter);
+
+        TMP_Text text = crystalCounter.GetComponent<TMP_Text>();
+        InitializeManager._instance.soulCrystalText = text;
+    }
+
     private void InitializePlayer()
     {
         player = Instantiate(player);
@@ -121,7 +153,7 @@ public class EntryPoint : MonoBehaviour
 
     private void SetInitialPosition()
     {
-        player.transform.position = initialPosition.position;
+        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4, 0f);
     }
 
     private void EnableMana()
@@ -146,6 +178,15 @@ public class EntryPoint : MonoBehaviour
         componentCanvas = canvas.GetComponent<Canvas>();
         componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         componentCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentCanvas.sortingOrder = 0;
+    }
+
+    private void SetTransitionCanvasParamets()
+    {
+        componentTransitionCanvas = TransitionCanvas.GetComponent<Canvas>();
+        componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        componentTransitionCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentTransitionCanvas.sortingOrder = 100;
     }
 
     private void StartHearts()

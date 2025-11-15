@@ -10,6 +10,11 @@ public class BossHealth : MonoBehaviour
     private Image bossHealthBar;
     private GameObject bossHealth;
 
+    private void Awake()
+    {
+        canvas = InitializeManager._instance.canvas.transform;
+    }
+
     void Start()
     {
         canvas = gameObject.transform.Find("Canvas");

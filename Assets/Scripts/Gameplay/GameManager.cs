@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using GlobalEnums;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     private TransitionDestination destination;
     private TransitionDestination[] destinations;
     private GameObject player;
+    private AudioListener Sounds;
     private BossHealth bossHealth;
 
     private bool isTransitioning;
@@ -31,12 +33,13 @@ public class GameManager : MonoBehaviour
 
         SetGameState(GameState.PLAYING);
 
+        Sounds = GameManager.FindAnyObjectByType<AudioListener>();
     }
 
-    private void Update()
-    {
-        Debug.Log(GameState);
-    }
+    //private void Update()
+    //{
+       
+    //}
 
     public void BeginSceneTransition(string targetScene, string entryGate)
     {
@@ -51,13 +54,14 @@ public class GameManager : MonoBehaviour
     private IEnumerator DoSceneTransition(string targetScene, string entryGate)
     {
         isTransitioning = true;
-        //yield return screenFader.FadeOut();
+        TransitionFade._instance.FadeOut();
+        AudioListener.pause = true;
+
+        yield return new WaitForSeconds(1f);
 
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(targetScene);
         while (!loadOp.isDone)
             yield return null;
-
-
 
         destination = FindEntryPoint(entryGate);
         player = GameObject.FindGameObjectWithTag("Player");
@@ -77,6 +81,9 @@ public class GameManager : MonoBehaviour
         //yield return screenFader.FadeIn();
         isTransitioning = false;
         SetGameState(GameState.EXITING_LEVEL);
+
+        TransitionFade._instance.FadeIn();
+        AudioListener.pause = false;
     }
 
     private TransitionDestination FindEntryPoint(string tag)
