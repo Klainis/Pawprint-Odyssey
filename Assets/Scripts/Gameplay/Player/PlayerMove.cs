@@ -30,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     
     private Gamepad gamepad;
 
+    private Rigidbody2D rigidBody;
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
 
@@ -40,7 +41,6 @@ public class PlayerMove : MonoBehaviour
     private float lastOnGroundTime;
     private float lastPressedJumpTime;
     private float prevVelocityX = 0f;
-    private float jumpWallStartX = 0;
     private float jumpWallDistX = 0;
     private float limitFallSpeed = 25f;
     private int dashCounter = 0;
@@ -83,6 +83,7 @@ public class PlayerMove : MonoBehaviour
     {
         gamepad = Gamepad.current;
 
+        rigidBody = GetComponent<Rigidbody2D>();
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
@@ -101,8 +102,6 @@ public class PlayerMove : MonoBehaviour
             StartCoroutine(DashCooldown());
         if (!isDashing)
             MoveHorizontal(moveX);
-
-        //Dash();
 
         // Ïðûæîê
         if (lastPressedJumpTime > 0 && CanJump)
@@ -136,7 +135,7 @@ public class PlayerMove : MonoBehaviour
 
     private void HandleWallSliding(float moveY, float moveX, bool jump, bool dash)
     {
-        if (!oldWallSliding && playerView.RigidBody.linearVelocity.y < 0 && !isWallRunning || isDashing)
+        if (!oldWallSliding && rigidBody.linearVelocity.y < 0 && (!isWallRunning || isDashing))
         {
             isWallSliding = true;
             wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
@@ -158,7 +157,7 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 oldWallSliding = true;
-                playerView.RigidBody.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
+                rigidBody.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
             }
         }
 
@@ -195,7 +194,7 @@ public class PlayerMove : MonoBehaviour
 
         if (isWallRunning)
         {
-            playerView.RigidBody.linearVelocity = new Vector2(playerView.RigidBody.linearVelocity.x, moveY * 10f);
+            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, moveY * 10f);
             oldWallRunning = true;
 
             if (jump)
@@ -203,37 +202,26 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    public void MoveHorizontal(float move)
+    private void MoveHorizontal(float move)
     {
         if (!(isGrounded || airControl)) return;
 
-        if (playerView.RigidBody.linearVelocity.y < -limitFallSpeed)
-            playerView.RigidBody.linearVelocity = new Vector2(playerView.RigidBody.linearVelocity.x, -limitFallSpeed);
+        if (rigidBody.linearVelocity.y < -limitFallSpeed)
+            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, -limitFallSpeed);
 
-        var targetVelocity = new Vector2(move * 10f, playerView.RigidBody.linearVelocity.y);
-        playerView.RigidBody.linearVelocity = Vector3.SmoothDamp(playerView.RigidBody.linearVelocity, targetVelocity, ref velocity, movementSmoothing);
+        var targetVelocity = new Vector2(move * 10f, rigidBody.linearVelocity.y);
+        rigidBody.linearVelocity = Vector3.SmoothDamp(rigidBody.linearVelocity, targetVelocity, ref velocity, movementSmoothing);
 
-        if (move > 0 && !playerView.PlayerModel.FacingRight && !isWallSliding)
-            Turn();
-        else if (move < 0 && playerView.PlayerModel.FacingRight && !isWallSliding)
-            Turn();
-    }
-
-    public void ScaleJump()
-    {
-        if (playerView.RigidBody.linearVelocity.y > 0)
+        if (!isWallSliding)
         {
-            if (!jumpAction.action.IsPressed() && !isWallRunning)
-                playerView.RigidBody.linearVelocity = new Vector2(playerView.RigidBody.linearVelocity.x, 0);
+            if (move > 0 && !playerView.PlayerModel.FacingRight)
+                Turn();
+            else if (move < 0 && playerView.PlayerModel.FacingRight)
+                Turn();
         }
     }
 
-    public void OnJumpInput()
-    {
-        lastPressedJumpTime = jumpInputBufferTime;
-    }
-
-    public void Jump()
+    private void Jump()
     {
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
@@ -244,14 +232,28 @@ public class PlayerMove : MonoBehaviour
         isGrounded = false;
 
         var force = jumpForce;
-        if (playerView.RigidBody.linearVelocity.y < 0)
-            force -= playerView.RigidBody.linearVelocity.y;
+        if (rigidBody.linearVelocity.y < 0)
+            force -= rigidBody.linearVelocity.y;
 
-        playerView.RigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        rigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 
         canDoubleJump = true;
         PlayParticleJumpDown();
         PlayParticleJumpUp();
+    }
+
+    public void ScaleJump()
+    {
+        if (rigidBody.linearVelocity.y > 0)
+        {
+            if (!jumpAction.action.IsPressed() && !isWallRunning)
+                rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, 0);
+        }
+    }
+
+    public void OnJumpInput()
+    {
+        lastPressedJumpTime = jumpInputBufferTime;
     }
 
     private void DoubleJump()
@@ -261,10 +263,10 @@ public class PlayerMove : MonoBehaviour
         canDoubleJump = false;
 
         var force = doubleJumpForce;
-        if (playerView.RigidBody.linearVelocity.y < 0)
-            force -= playerView.RigidBody.linearVelocity.y;
+        if (rigidBody.linearVelocity.y < 0)
+            force -= rigidBody.linearVelocity.y;
 
-        playerView.RigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        rigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 
         //m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
         //m_Rigidbody2D.AddForce(new Vector2(0f, doubleJumpForce));
@@ -278,7 +280,7 @@ public class PlayerMove : MonoBehaviour
 
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
-        playerView.RigidBody.linearVelocity = new Vector2(0f, 0f);
+        rigidBody.linearVelocity = new Vector2(0f, 0f);
 
         var force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
 
@@ -291,9 +293,8 @@ public class PlayerMove : MonoBehaviour
         //m_Rigidbody2D.AddForce(force, ForceMode2D.Impulse);
         //Debug.Log(m_Rigidbody2D.linearVelocity * m_Rigidbody2D.mass);
 
-        playerView.RigidBody.AddForce(force, ForceMode2D.Force);
+        rigidBody.AddForce(force, ForceMode2D.Force);
 
-        jumpWallStartX = transform.position.x;
         limitVelOnWallJump = true;
         canDoubleJump = true;
 
@@ -333,7 +334,7 @@ public class PlayerMove : MonoBehaviour
         particleJumpDown.Play();
     }
 
-    public void RestDashCounter()
+    public void ResetDashCounter()
     {
         dashCounter = 0;
     }
@@ -348,7 +349,7 @@ public class PlayerMove : MonoBehaviour
         canDash = false;
 
         if (isDashing)
-            playerView.RigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+            rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
         yield return new WaitForSeconds(0.1f); //0.1 
         isDashing = false;

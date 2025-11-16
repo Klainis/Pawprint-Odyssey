@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Heart : MonoBehaviour
@@ -10,7 +11,7 @@ public class Heart : MonoBehaviour
 
     private PlayerView playerView;
 
-    private List<GameObject> heartsList = new List<GameObject>();
+    private List<GameObject> heartsList = new();
 
     private void Start()
     {
@@ -26,46 +27,26 @@ public class Heart : MonoBehaviour
             foreach (Transform heart in heartPrefab.transform)
                 heartsList.Add(heart.gameObject);
         }
-        Debug.Log(heartsList.Count);
-
-        //if (heartsList.Count != Data.maxLife)
-        //{
-        //    for (int i = heartsList.Count - 1; i >= 0; i--)
-        //    {
-        //        if (i > (Data.currentLife - 1))
-        //        {
-        //            Destroy(heartsList[i]);
-        //            heartsList.RemoveAt(i);
-        //        }
-        //    }
-        //}
     }
 
     public void RemoveHearts(int damage)
     {
         playerView.PlayerModel.TakeDamage(damage);
 
-        for (var i = heartsList.Count - 1; i >= 0; i--)
+        while (heartsList.Count > playerView.PlayerModel.Life)
         {
-            if (i > (Data.currentLife - 1))
-            {
-                Destroy(heartsList[i]);
-                heartsList.RemoveAt(i);
-            }
+            Destroy(heartsList.Last());
+            heartsList.Remove(heartsList.Last());
         }
-
     }
 
-    public void Heal()
+    public void AddHearts()
     {
-        var missingHearts = Data.maxLife - heartsList.Count;
-
-        for (var i = 0; i < missingHearts; i++)
+        while (heartsList.Count < playerView.PlayerModel.MaxLife)
         {
             var heart = Instantiate(heartPrefab, canvas);
             heartsList.Add(heart);
+            playerView.PlayerModel.Heal(1);
         }
-
-        playerView.PlayerModel.ChangeLife(playerView.PlayerModel.MaxLife);
     }
 }

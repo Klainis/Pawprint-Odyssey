@@ -58,11 +58,11 @@ public class PlayerModel
         return true;
     }
 
-    public bool ChangeLife(int life)
+    public bool Heal(int value)
     {
-        if (life <= 0)
+        if (value <= 0)
             return false;
-        Life = life;
+        Life = Math.Min(Life += value, MaxLife);
         return true;
     }
 

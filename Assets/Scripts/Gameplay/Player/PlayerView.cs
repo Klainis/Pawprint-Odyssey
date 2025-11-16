@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PlayerView : MonoBehaviour
@@ -15,6 +16,8 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private UnityEvent OnFallEvent;
     [SerializeField] private UnityEvent OnLandEvent;
 
+    private Gamepad gamepad;
+
     private Rigidbody2D rigidBody;
     private PlayerAnimation playerAnimation;
     private PlayerAttack playerAttack;
@@ -24,12 +27,11 @@ public class PlayerView : MonoBehaviour
 
     private bool isInvincible = false;
 
-    public Rigidbody2D RigidBody { get { return rigidBody; } private set { rigidBody = value; } }
-
     private void Awake()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
+        gamepad = Gamepad.current;
 
+        rigidBody = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
         playerAttack = GetComponent<PlayerAttack>();
         playerMove = GetComponent<PlayerMove>();
@@ -54,7 +56,7 @@ public class PlayerView : MonoBehaviour
         if (Physics2D.Raycast(playerMove.GroundCheck.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
         {
             playerMove.IsGrounded = true;
-            playerMove.RestDashCounter();
+            playerMove.ResetDashCounter();
             playerMove.IsJumping = false;
             playerMove.LastOnGroundTime = playerMove.CoyoteTime;
 
@@ -84,7 +86,7 @@ public class PlayerView : MonoBehaviour
 
             if (playerMove.IsWall)
             {
-                playerMove.RestDashCounter();
+                playerMove.ResetDashCounter();
                 playerMove.IsDashing = false;
                 playerMove.IsJumping = false;
             }
