@@ -38,9 +38,13 @@ public class TransitionPoint : MonoBehaviour
         if (movigObj.CompareTag("Player"))
         {
             if (gameManager.GameState == GameState.PLAYING)
+            {
                 StartCoroutine(WalkIntoGate(movigObj, transitionSpeed));
+            }
             else if (gameManager.GameState == GameState.EXITING_LEVEL)
+            {
                 StartCoroutine(WalkOutGate(movigObj, transitionSpeed));
+            }
         }
     }
 
