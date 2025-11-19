@@ -90,10 +90,7 @@ public class EntryPoint : MonoBehaviour
 
         initializeManager = Instantiate(initializeManager);
         DontDestroyOnLoad(initializeManager);
-
-        canvas = Instantiate(canvas);
-        SetCanvasParamets();
-        DontDestroyOnLoad(canvas);
+        InitializeCanvas();
 
         TransitionCanvas = Instantiate(canvas);
         SetTransitionCanvasParamets();
@@ -121,6 +118,15 @@ public class EntryPoint : MonoBehaviour
         DontDestroyOnLoad(hearts);
 
         StartHearts();
+    }
+
+    private void InitializeCanvas()
+    {
+        canvas = Instantiate(canvas);
+        SetCanvasParamets();
+        DontDestroyOnLoad(canvas);
+
+        InitializeManager._instance.canvas = canvas.GetComponent<Canvas>();
     }
 
     private void InitializeFade()
