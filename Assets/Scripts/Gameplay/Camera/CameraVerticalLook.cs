@@ -63,12 +63,12 @@ public class CameraVerticalLook : MonoBehaviour
         float distance = Mathf.Abs(transposer.m_TrackedObjectOffset.y - targetOffset.y);
         float dynamicSmooth = Mathf.Lerp(0.05f, 0.2f, distance / verticalRange);
 
-        transposer.m_TrackedObjectOffset = Vector3.SmoothDamp(
-            transposer.m_TrackedObjectOffset,
-            targetOffset,
-            ref velocity,
-            dynamicSmooth
-        );
+        //transposer.m_TrackedObjectOffset = Vector3.SmoothDamp(
+        //    transposer.m_TrackedObjectOffset,
+        //    targetOffset,
+        //    ref velocity,
+        //    dynamicSmooth
+        //);
 
         //Debug.Log(transposer.m_TrackedObjectOffset);
     }
