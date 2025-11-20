@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a3d9ca8381bea04c82f9976312473b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnterBossFight
-  health: {fileID: 2017668706}
+  health: {fileID: 3613913798594600682}
 --- !u!61 &594015481
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1003,7 +1003,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2017668707}
+  - {fileID: 3613913798594600681}
   - {fileID: 795033015}
   - {fileID: 1600350188}
   - {fileID: 1612996692}
@@ -17154,6 +17154,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 2.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 2.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 2.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646129809869343597, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
+      propertyPath: m_SpriteTilingProperty.adaptiveTilingThreshold
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6898921375461313706, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_Name
       value: ThornyPlant
@@ -17167,83 +17195,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 736979135433597127, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
   m_PrefabInstance: {fileID: 1978110771}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2017668705
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 785822287}
-    m_Modifications:
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -37.535
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -10.1408
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6370743611794945951, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: canvas
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6845650411165943602, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-      propertyPath: m_Name
-      value: SpiritGuide
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
---- !u!114 &2017668706 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6370743611794945951, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-  m_PrefabInstance: {fileID: 2017668705}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
---- !u!4 &2017668707 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
-  m_PrefabInstance: {fileID: 2017668705}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2080065916
 PrefabInstance:
@@ -17408,6 +17359,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_09
   entryGate: left1
+--- !u!1001 &3613913798594600680
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 785822287}
+    m_Modifications:
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -33.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -10.4006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6845650411165943602, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+      propertyPath: m_Name
+      value: SpiritGuide
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+--- !u!4 &3613913798594600681 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4800074149752140149, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+  m_PrefabInstance: {fileID: 3613913798594600680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3613913798594600682 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6370743611794945951, guid: 11806d5c8d0807849b5b719796213e2e, type: 3}
+  m_PrefabInstance: {fileID: 3613913798594600680}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

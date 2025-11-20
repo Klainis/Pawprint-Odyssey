@@ -24,6 +24,7 @@ public class SpiritGuideView : MonoBehaviour
     private SGAnimation sgAnimation;
     private SGAttack sgAttack;
     private SGMove sgMove;
+    private DamageFlash _damageFlash;
 
     private int maxLifeForReading;
     private float secondStageLifeAmount;
@@ -53,6 +54,7 @@ public class SpiritGuideView : MonoBehaviour
         sgAnimation = GetComponent<SGAnimation>();
         sgAttack = GetComponent<SGAttack>();
         sgMove = GetComponent<SGMove>();
+        _damageFlash = GetComponent<DamageFlash>();
     }
 
     private void FixedUpdate()
@@ -88,6 +90,7 @@ public class SpiritGuideView : MonoBehaviour
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         if (damageApplied)
         {
+            _damageFlash.CallDamageFlash();
             Hit.Invoke();
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;
