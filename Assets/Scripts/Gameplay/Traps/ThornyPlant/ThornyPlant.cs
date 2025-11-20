@@ -14,6 +14,11 @@ public class ThornyPlant : MonoBehaviour {
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 7f;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem damageParticale;
+
+    private ParticleSystem _damageParticleInstance;
+
     private Animator animator;
     private Rigidbody2D rigidBody;
     private Transform shootPoints;
@@ -66,16 +71,25 @@ public class ThornyPlant : MonoBehaviour {
             lastOpenTime = Time.time;
     }
 
-    public void ApplyDamage(float damage) {
+    public void ApplyDamage(int damage) {
 		if (!isInvincible) 
 		{
             //animator.SetBool("Hit", true);
+            var direction = damage / Mathf.Abs(damage);
+            SpawnDamageParticles(direction);
             life -= Mathf.Abs(damage);
             StartCoroutine(HitTime());
         }
 	}
+    private void SpawnDamageParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        _damageParticleInstance = Instantiate(damageParticale, transform.position, spawnRotation);
+    }
 
-	void OnCollisionStay2D(Collision2D collision)
+
+    void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
 			if (life > 0)

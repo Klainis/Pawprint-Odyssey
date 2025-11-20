@@ -302,6 +302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 736979135433597127}
   - component: {fileID: 5064882855902842272}
+  - component: {fileID: 4218130657944194462}
   - component: {fileID: 6161068721778089037}
   - component: {fileID: 4646129809869343597}
   - component: {fileID: 2218530661163346480}
@@ -353,6 +354,20 @@ MonoBehaviour:
   closeForm: {fileID: 6322863615828433485}
   bulletPrefab: {fileID: 5532974359214069763, guid: 8ccba51c3bf4af149a5b2a25949d6c77, type: 3}
   bulletSpeed: 5
+  damageParticale: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
+--- !u!114 &4218130657944194462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898921375461313706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0aa6862fff011043b6ef9bd43c3ae19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenShaker
+  _shakeForce: 0.5
 --- !u!50 &6161068721778089037
 Rigidbody2D:
   serializedVersion: 5

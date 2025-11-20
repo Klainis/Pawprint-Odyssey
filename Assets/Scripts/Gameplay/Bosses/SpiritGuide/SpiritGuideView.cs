@@ -16,10 +16,14 @@ public class SpiritGuideView : MonoBehaviour
     [SerializeField] private UnityEvent Hit;
     [SerializeField] private UnityEvent Die;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem damageParticale;
+
     private const float groundedRadius = 0.2f;
 
     private Rigidbody2D rigidBody;
     private Transform groundCheck;
+    private ParticleSystem _damageParticleInstance;
 
     private SGAnimation sgAnimation;
     private SGAttack sgAttack;
@@ -91,11 +95,20 @@ public class SpiritGuideView : MonoBehaviour
         if (damageApplied)
         {
             _damageFlash.CallDamageFlash();
+            var direction = damage / Mathf.Abs(damage);
+            SpawnDamageParticles(direction);
             Hit.Invoke();
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;
             StartCoroutine(HitTime());
         }
+    }
+
+    private void SpawnDamageParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        _damageParticleInstance = Instantiate(damageParticale, transform.position, spawnRotation);
     }
 
     private void ChangeTag(string tag)

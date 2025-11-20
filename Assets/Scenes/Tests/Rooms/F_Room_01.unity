@@ -181,6 +181,34 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5630280109184809072, guid: f2e7e3b6970a484488cd465ce7444e21, type: 3}
   m_PrefabInstance: {fileID: 35570771}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &79456283 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8432379303684670639, guid: 49dc75c249315d2408af018f1fa248e7, type: 3}
+  m_PrefabInstance: {fileID: 1807890103}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &79456289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79456283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachineImpulseListener
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 1
+  m_UseCameraSpace: 1
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &167126432
 GameObject:
   m_ObjectHideFlags: 0
@@ -7989,7 +8017,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8432379303684670639, guid: 49dc75c249315d2408af018f1fa248e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 79456289}
   m_SourcePrefab: {fileID: 100100000, guid: 49dc75c249315d2408af018f1fa248e7, type: 3}
 --- !u!1 &1919061382
 GameObject:

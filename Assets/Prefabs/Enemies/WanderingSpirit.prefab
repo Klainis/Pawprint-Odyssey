@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1279657043565391871}
   - component: {fileID: 1882564371744082690}
   - component: {fileID: 6762008586473915369}
+  - component: {fileID: 8462829005286061800}
+  - component: {fileID: 4884540500753878114}
   - component: {fileID: 3690118322597669630}
   - component: {fileID: 5564598307640157700}
   - component: {fileID: 4102938617994515157}
@@ -62,6 +64,7 @@ MonoBehaviour:
   isInvincible: 0
   acceleratedSpeed: 4.7
   playerDetectDist: 5
+  damageParticale: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
 --- !u!114 &1279657043565391871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +107,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94943e06258ca3c458c694162e0feee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WSAnimation
+--- !u!114 &8462829005286061800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachineImpulseSource
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 1
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.1
+    m_ImpulseType: 0
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0.7
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 100
+    m_PropagationSpeed: 343
+  m_DefaultVelocity: {x: 1, y: 0, z: 0}
+--- !u!114 &4884540500753878114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0aa6862fff011043b6ef9bd43c3ae19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenShaker
+  _shakeForce: 0.5
 --- !u!212 &3690118322597669630
 SpriteRenderer:
   m_ObjectHideFlags: 0
