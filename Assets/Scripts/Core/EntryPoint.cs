@@ -18,7 +18,6 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private Transform initialPosition;
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject hearts;
-    [SerializeField] private GameObject heart;
     [SerializeField] private GameObject transitionFade;
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
@@ -37,10 +36,10 @@ public class EntryPoint : MonoBehaviour
     //private GameObject deadManager;
 
     private PiercingClaw piercingClaw;
-    private Heart heartScript;
-    private Mana mana;
+    private PlayerHeart playerHeart;
+    private PlayerMana playerMana;
     private TransitionFade fadeScript;
-    public Image manaBarImage {  get; private set; }
+    public Image manaBarImage { get; private set; }
     private Canvas componentCanvas;
     private Canvas componentTransitionCanvas;
     private GameObject TransitionCanvas;
@@ -49,6 +48,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private string startSceneName = "F_Room_Tutorial";
 
     public static EntryPoint _instance { get; private set; }
+
+    private bool playerInitialized = false;
 
     private void Awake()
     {
@@ -122,7 +123,7 @@ public class EntryPoint : MonoBehaviour
         hearts = Instantiate(hearts, canvas.transform);
         DontDestroyOnLoad(hearts);
 
-        StartHearts();
+        if (playerInitialized) StartHearts();
     }
 
     private void InitializeCanvas()
@@ -168,12 +169,16 @@ public class EntryPoint : MonoBehaviour
         collider.enabled = true;
 
         InitializeManager._instance.player = player;
+        playerInitialized = true;
     }
 
     private void SetInitialPosition()
     {
-        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4, 0f); //ѕросто координаты начальной комнаты поставил,
-                                                                                            //можно другие передать, например где сохраниилс€
+        //  оординаты начальной комнаты
+        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4f, 0f);
+
+        //  оординаты комнаты с Claw
+        //player.transform.position = new Vector3(35.97942f, -46.43025f, 0f);
     }
 
     private void EnableMana()
@@ -181,13 +186,13 @@ public class EntryPoint : MonoBehaviour
         manaBarImage = manaBar.transform.Find("Bar").GetComponent<Image>();
 
         //Ќужна проверка активен ли у игрока компонент маны
-        mana = player.GetComponent<Mana>();
-        mana.manaBar = manaBarImage;
-        mana.enabled = false;   
+        playerMana = player.GetComponent<PlayerMana>();
+        playerMana.SetManaBarImage(manaBarImage);
+        playerMana.enabled = false;
 
         //ѕроверка на то есть ли сейчас манабар  у игрока. ≈сли есть, то установить значение из json
         // —ейчас ScOb, сделать проверку через json
-        if (mana.enabled)
+        if (playerMana.enabled)
             manaBar.SetActive(true);
         else
             manaBar.SetActive(false);
@@ -211,10 +216,10 @@ public class EntryPoint : MonoBehaviour
 
     private void StartHearts()
     {
-        heartScript = player.GetComponent<Heart>();
+        playerHeart = player.GetComponent<PlayerHeart>();
 
-        heartScript.heartPrefab = hearts;
-        heartScript.StartHearts();
+        playerHeart.SetHeartsPrefab(hearts);
+        playerHeart.StartHearts();
         //Ћогика назначени€ текущего HP при запуске игры. „ерез json
     }
 
