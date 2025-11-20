@@ -13,6 +13,7 @@ namespace GlobalEnums
         LOADING,
         ENTERING_LEVEL,
         PLAYING,
+        DEAD,
         PAUSED,
         EXITING_LEVEL,
         CUTSCENE,

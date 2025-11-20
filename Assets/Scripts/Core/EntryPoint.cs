@@ -154,7 +154,7 @@ public class EntryPoint : MonoBehaviour
         InitializeManager._instance.soulCrystalText = text;
     }
 
-    private void InitializePlayer()
+    public void InitializePlayer()
     {
         player = Instantiate(player);
         var playerModel = PlayerModel.CreateFromPlayerData(playerData);
@@ -164,13 +164,16 @@ public class EntryPoint : MonoBehaviour
 
         var receivingClawScript = player.GetComponent<ReceivingClaw>();
         receivingClawScript.enabled = true;
+        var collider = player.GetComponent<BoxCollider2D>();
+        collider.enabled = true;
 
         InitializeManager._instance.player = player;
     }
 
     private void SetInitialPosition()
     {
-        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4, 0f);
+        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4, 0f); //Просто координаты начальной комнаты поставил,
+                                                                                            //можно другие передать, например где сохраниился
     }
 
     private void EnableMana()

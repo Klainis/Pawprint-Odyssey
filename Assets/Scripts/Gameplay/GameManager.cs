@@ -107,4 +107,15 @@ public class GameManager : MonoBehaviour
     {
         GameState = newState;
     }
+
+    public void RevivalPlayer()
+    {
+        if (GameState == GameState.DEAD)
+        {
+            Destroy(player);
+            SceneManager.LoadSceneAsync("F_Room_Tutorial"); //загружать сцены из сохранения
+            EntryPoint._instance.InitializePlayer();
+            SetGameState(GameState.PLAYING);
+        }
+    }
 }

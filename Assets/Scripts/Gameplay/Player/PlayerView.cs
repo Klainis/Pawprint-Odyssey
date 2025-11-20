@@ -1,3 +1,4 @@
+using GlobalEnums;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -180,9 +181,10 @@ public class PlayerView : MonoBehaviour
         isInvincible = true;
         playerAttack.enabled = false;
         yield return new WaitForSeconds(0.4f);
-        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        rigidBody.linearVelocity = /*new Vector2(0, rigidBody.linearVelocity.y);*/ Vector2.zero;
         yield return new WaitForSeconds(1.1f);
         //SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        SceneManager.LoadSceneAsync("F_Room_Tutorial");
+        GameManager._instance.SetGameState(GameState.DEAD);
+        GameManager._instance.RevivalPlayer();
     }
 }
