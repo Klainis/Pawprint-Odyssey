@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 4102938617994515157}
   - component: {fileID: 5373291222564199733}
   - component: {fileID: 6030056406990743235}
+  - component: {fileID: 7410873932504846019}
   m_Layer: 6
   m_Name: WanderingSpirit
   m_TagString: Enemy
@@ -128,7 +129,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 28433437547fdef40983a20aa2c2cc5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -344,6 +345,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &7410873932504846019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428510561667627398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cb8c236b0807cc4c9a1ee6edf1c1c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  _flashColor: {r: 1.3041193, g: 1.3041193, b: 1.3041193, a: 0.8}
+  _flashTime: 0.25
 --- !u!1 &6909188440859812436
 GameObject:
   m_ObjectHideFlags: 0

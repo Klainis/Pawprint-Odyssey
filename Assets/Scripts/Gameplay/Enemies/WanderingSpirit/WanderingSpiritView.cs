@@ -20,6 +20,7 @@ public class WanderingSpiritView : MonoBehaviour
     private WSAnimation wsAnimation;
     private WSAttack wsAttack;
     private WSMove wsMove;
+    private DamageFlash _damageFlash;
 
     private bool isHitted = false;
     private bool isAccelerated = false;
@@ -42,6 +43,7 @@ public class WanderingSpiritView : MonoBehaviour
         wsAnimation = GetComponent<WSAnimation>();
         wsAttack = GetComponent<WSAttack>();
         wsMove = GetComponent<WSMove>();
+        _damageFlash = GetComponent<DamageFlash>();
     }
 
     private void FixedUpdate()
@@ -62,6 +64,7 @@ public class WanderingSpiritView : MonoBehaviour
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         if (damageApplied)
         {
+            _damageFlash.CallDamageFlash();
             wsAnimation.SetBoolHit(true);
             StartCoroutine(HitTime(1f));
             rigidBody.linearVelocity = Vector2.zero;

@@ -23,6 +23,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject manaBar;
     [SerializeField] private GameObject crystalCounter;
     [SerializeField] private GameObject deadManager;
+    [SerializeField] private GameObject globalValue;
 
     [SerializeField] private PlayerData playerData;
 
@@ -35,7 +36,7 @@ public class EntryPoint : MonoBehaviour
     //private GameObject crystalCounter;
     //private GameObject deadManager;
 
-    private ReceivingClaw receivingClaw;
+    private PiercingClaw piercingClaw;
     private Heart heartScript;
     private Mana mana;
     private TransitionFade fadeScript;
@@ -82,6 +83,9 @@ public class EntryPoint : MonoBehaviour
         mainCamera = Instantiate(mainCamera);
         DontDestroyOnLoad(mainCamera);
 
+        globalValue = Instantiate(globalValue);
+        DontDestroyOnLoad(globalValue);
+
         deadManager = Instantiate(deadManager);
         DontDestroyOnLoad(deadManager);
 
@@ -105,12 +109,13 @@ public class EntryPoint : MonoBehaviour
 
         manaBar = Instantiate(manaBar, canvas.transform);
         DontDestroyOnLoad(manaBar);
+        InitializeManager._instance.manaBar = manaBar;
 
         InitializeSoulCrystalCounter();
 
         //Нужна проверка получен ли Коготь у игрока
-        receivingClaw = player.GetComponent<ReceivingClaw>();
-        receivingClaw.enabled = false;
+        piercingClaw = player.GetComponent<PiercingClaw>();
+        piercingClaw.enabled = false;
 
         EnableMana();
 
@@ -156,6 +161,9 @@ public class EntryPoint : MonoBehaviour
         player.GetComponent<PlayerView>().PlayerModel = playerModel;
         SetInitialPosition();
         DontDestroyOnLoad(player);
+
+        var receivingClawScript = player.GetComponent<ReceivingClaw>();
+        receivingClawScript.enabled = true;
 
         InitializeManager._instance.player = player;
     }
@@ -205,14 +213,6 @@ public class EntryPoint : MonoBehaviour
         heartScript.heartPrefab = hearts;
         heartScript.StartHearts();
         //Логика назначения текущего HP при запуске игры. Через json
-    }
-
-    private void StartMana()
-    {
-        //Логика назначения текущей маны при запуске игры. Через json
-
-        //Mana.cs
-        //manaBar.fillAmount = (float)Data.currentMana / (float)Data.maxMana;
     }
 
     private bool isGetClaw()

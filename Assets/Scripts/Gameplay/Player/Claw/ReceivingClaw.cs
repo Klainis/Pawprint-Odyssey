@@ -6,7 +6,7 @@ public class ReceivingClaw : MonoBehaviour
 
     [SerializeField] private Mana manaScript;
     [SerializeField] private PiercingClaw piercingClaw;
-    [SerializeField] private GameObject manaBar;
+    public GameObject manaBar;
 
     private PlayerView playerView;
 
@@ -19,6 +19,8 @@ public class ReceivingClaw : MonoBehaviour
 
     private void Start()
     {
+        manaBar = InitializeManager._instance.manaBar;
+        Debug.Log(manaBar != null);
         SetActiveManaBar();
     }
 
