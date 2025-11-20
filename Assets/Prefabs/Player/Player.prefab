@@ -98,8 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fcde3da857a114ca22ae89b1042d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mana
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
-  manaBar: {fileID: 0}
 --- !u!114 &2596477941260737167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,8 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a96b464a0c4c44fa1c966f54fc5efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heart
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
-  heartPrefab: {fileID: 7567480160736325036, guid: b4ab62ff55c40f1469a29d0496405eef, type: 3}
   canvas: {fileID: 8518606145567162077, guid: d93f6d876afe4b240b2affc5b25c9502, type: 3}
   heartsPrefab: {fileID: 146539198543049472, guid: e1361ce18d6f267499a9ce993c91401f, type: 3}
 --- !u!114 &6772023754791648629
@@ -299,8 +295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddb362a1dc6f61a49a5222af748ed728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PiercingClaw
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
   dmgValue: 7
+  clawSprite: {fileID: 1690002925823045863}
   clawAction: {fileID: 2030105166474525711, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   spendMana:
     m_PersistentCalls:
@@ -329,10 +325,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7e5f6130d5d2c4389171c8775fd333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceivingClaw
-  Data: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
-  manaScript: {fileID: 3512841439597258566}
-  piercingClaw: {fileID: 1738746197435764065}
-  manaBar: {fileID: 0}
 --- !u!114 &2135096380476152226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10444,7 +10436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &208638484400904653
 Transform:
   m_ObjectHideFlags: 0

@@ -5,23 +5,21 @@ using UnityEngine.InputSystem;
 
 public class PiercingClaw : MonoBehaviour
 {
-    [Header("Data")]
-    [SerializeField] private PlayerData Data;
-
     [Header("Main Attack Params")]
     [SerializeField] private int dmgValue = 7;
+    [SerializeField] private GameObject clawSprite;
 
     [SerializeField] private InputActionReference clawAction;
 
-    private Vector2 clawSize = new Vector2(4f, 0.2f);
+    private Vector2 clawSize = new(4f, 0.2f);
 
+    private PlayerView playerView;
     private PlayerAnimation playerAnimation;
-    private Mana mana;
+    private PlayerMana playerMana;
     private Transform attackCheck;
     private Rigidbody2D rb;
     private GameObject enemy;
     private Gamepad gamepad;
-    private GameObject clawSprite;
 
     private bool canAttack = true;
     private bool clawPressed;
@@ -37,27 +35,29 @@ public class PiercingClaw : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
+        playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
-        mana = GetComponent<Mana>();
+        playerMana = GetComponent<PlayerMana>();
 
         attackCheck = transform.Find("ClawAttackCheck");
-        clawSprite = GameObject.Find("Claw");
-
+        clawSprite.SetActive(false);
         gamepad = Gamepad.current;
     }
 
-    void Update()
+    private void Update()
     {
         playerAnimation.ApplyRootMotion(false);
  
         if (clawAction != null && clawAction.action != null)
             clawPressed = clawAction.action.WasPressedThisFrame();
 
-        if (clawPressed && canAttack && Data.currentMana >= 25)
+        if (clawPressed && canAttack && playerView.PlayerModel.Mana >= 25)
         {
-            Debug.Log("claw");
+            clawSprite.SetActive(true);
+
+            Debug.Log("Claw");
             if (spendMana != null)
                 spendMana.Invoke();
 
@@ -65,7 +65,6 @@ public class PiercingClaw : MonoBehaviour
             canAttack = false;
             StartCoroutine(AttackCooldown(1f));
         }
-
     }
 
     public void ClawDamage()
@@ -89,6 +88,7 @@ public class PiercingClaw : MonoBehaviour
     private IEnumerator AttackCooldown(float durationAfterSeries)
     {
         yield return new WaitForSeconds(durationAfterSeries);
+        clawSprite.SetActive(false);
         canAttack = true;
     }
 }

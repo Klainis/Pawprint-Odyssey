@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Heart : MonoBehaviour
+public class PlayerHeart : MonoBehaviour
 {
-    [SerializeField] private PlayerData Data;
-    [SerializeField] public GameObject heartPrefab;
     [SerializeField] private Transform canvas;
     [SerializeField] private GameObject heartsPrefab;
 
@@ -13,18 +11,21 @@ public class Heart : MonoBehaviour
 
     private List<GameObject> heartsList = new();
 
-    private void Start()
+    private void Awake()
     {
         playerView = GetComponent<PlayerView>();
+    }
 
-        StartHearts();
+    public void SetHeartsPrefab(GameObject prefab)
+    {
+        heartsPrefab = prefab;
     }
 
     public void StartHearts()
     {
-        while (heartsList.Count < Data.maxLife)
+        while (heartsList.Count < playerView.PlayerModel.MaxLife)
         {
-            foreach (Transform heart in heartPrefab.transform)
+            foreach (Transform heart in heartsPrefab.transform)
                 heartsList.Add(heart.gameObject);
         }
     }
@@ -44,7 +45,7 @@ public class Heart : MonoBehaviour
     {
         while (heartsList.Count < playerView.PlayerModel.MaxLife)
         {
-            var heart = Instantiate(heartPrefab, canvas);
+            var heart = Instantiate(heartsPrefab, canvas);
             heartsList.Add(heart);
             playerView.PlayerModel.Heal(1);
         }

@@ -24,7 +24,7 @@ public class PlayerView : MonoBehaviour
     private PlayerAttack playerAttack;
     private PlayerMove playerMove;
     private PlayerInput playerInput;
-    private Heart heart;
+    private PlayerHeart heart;
 
     private bool isInvincible = false;
 
@@ -37,7 +37,7 @@ public class PlayerView : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         playerMove = GetComponent<PlayerMove>();
         playerInput = GetComponent<PlayerInput>();
-        heart = GetComponent<Heart>();
+        heart = GetComponent<PlayerHeart>();
 
         if (OnFallEvent == null) OnFallEvent = new UnityEvent();
         if (OnLandEvent == null) OnLandEvent = new UnityEvent();

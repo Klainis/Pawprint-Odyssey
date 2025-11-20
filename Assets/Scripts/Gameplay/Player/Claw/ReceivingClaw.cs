@@ -2,18 +2,16 @@ using UnityEngine;
 
 public class ReceivingClaw : MonoBehaviour
 {
-    [SerializeField] private PlayerData Data;
-
-    [SerializeField] private Mana manaScript;
-    [SerializeField] private PiercingClaw piercingClaw;
-    public GameObject manaBar;
+    private PlayerMana playerMana;
+    private PiercingClaw piercingClaw;
+    private GameObject manaBar;
 
     private PlayerView playerView;
 
     private void Awake()
     {
         playerView = GetComponent<PlayerView>();
-        manaScript = GetComponent<Mana>();
+        playerMana = GetComponent<PlayerMana>();
         piercingClaw = GetComponent<PiercingClaw>();
     }
 
@@ -28,7 +26,7 @@ public class ReceivingClaw : MonoBehaviour
     {
         if (playerView.PlayerModel.HasClaw)
         {
-            manaScript.enabled = true;
+            playerMana.enabled = true;
             piercingClaw.enabled = true;
             manaBar.SetActive(true);
         }
@@ -36,10 +34,10 @@ public class ReceivingClaw : MonoBehaviour
 
     public void EnableClaw()
     {
-        manaScript.enabled = true;
+        playerMana.enabled = true;
         piercingClaw.enabled = true;
         manaBar.SetActive(true);
-        Data.clawIsReceived = true;
+        playerView.PlayerModel.GetClaw();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
