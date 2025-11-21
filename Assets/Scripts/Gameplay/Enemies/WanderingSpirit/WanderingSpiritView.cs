@@ -8,8 +8,8 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData data;
     [SerializeField] private PlayerAttack playerAttack;
-    [SerializeField] private float lastPlayerAttackForce = 400f;
-    [SerializeField] private float playerAttackForce = 300f;
+    [SerializeField] private float lastPlayerAttackForce = 30f;
+    [SerializeField] private float playerAttackForce = 10f;
     [SerializeField] private bool isInvincible = false;
 
     [Header("Acceleration")]
@@ -72,6 +72,7 @@ public class WanderingSpiritView : MonoBehaviour
         if (damageApplied)
         {
             _damageFlash.CallDamageFlash();
+
             wsAnimation.SetBoolHit(true);
             StartCoroutine(HitTime(1f));
             rigidBody.linearVelocity = Vector2.zero;
@@ -81,10 +82,24 @@ public class WanderingSpiritView : MonoBehaviour
             SpawnDamageParticles(direction);
 
             if (playerAttack.AttackSeriesCount == 3)
-                rigidBody.AddForce(new Vector2(direction * lastPlayerAttackForce, 0));
+            {
+                //rigidBody.AddForce(new Vector2(direction * lastPlayerAttackForce, rigidBody.linearVelocity.y), ForceMode2D.Impulse);
+                KnockBack(direction, lastPlayerAttackForce);
+            }
             else if (playerAttack.AttackSeriesCount < 3)
-                rigidBody.AddForce(new Vector2(direction * playerAttackForce, 0));
+            {
+                //rigidBody.AddForce(new Vector2(direction * playerAttackForce, rigidBody.linearVelocity.y), ForceMode2D.Impulse);
+                KnockBack(direction, playerAttackForce);
+            }
         }
+    }
+
+    private void KnockBack(int direction, float forceAttack)
+    {
+        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        Vector2 directionVector = new Vector2(direction, rigidBody.linearVelocity.y);
+
+        rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
     }
 
     private void SpawnDamageParticles(int direction)
