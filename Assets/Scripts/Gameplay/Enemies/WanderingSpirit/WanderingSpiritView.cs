@@ -134,7 +134,7 @@ public class WanderingSpiritView : MonoBehaviour
         ChangeTag("isDead");
 
         wsAnimation.SetTriggerDead();
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -45f);
+        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);

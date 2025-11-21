@@ -29,6 +29,7 @@ public class SpiritGuideView : MonoBehaviour
     private SGAttack sgAttack;
     private SGMove sgMove;
     private DamageFlash _damageFlash;
+    private ScreenShaker _screenShaker;
 
     private int maxLifeForReading;
     private float secondStageLifeAmount;
@@ -59,6 +60,7 @@ public class SpiritGuideView : MonoBehaviour
         sgAttack = GetComponent<SGAttack>();
         sgMove = GetComponent<SGMove>();
         _damageFlash = GetComponent<DamageFlash>();
+        _screenShaker = GetComponent<ScreenShaker>();
     }
 
     private void FixedUpdate()
@@ -95,8 +97,10 @@ public class SpiritGuideView : MonoBehaviour
         if (damageApplied)
         {
             _damageFlash.CallDamageFlash();
+            _screenShaker.Shake();
             var direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
+
             Hit.Invoke();
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;
@@ -161,7 +165,7 @@ public class SpiritGuideView : MonoBehaviour
         ChangeLayer("DeadEnemy");
 
         // wsAnimation.SetTriggerDead();
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -45f);
+        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);

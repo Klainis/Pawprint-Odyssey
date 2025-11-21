@@ -23,6 +23,8 @@ public class ThornyPlant : MonoBehaviour {
     private Rigidbody2D rigidBody;
     private Transform shootPoints;
 
+    private ScreenShaker _screenShaker;
+
     private int shotsPerSeries = 3;
     private float timeBetweenShots = 0.35f;
     private float timeBetweenSeries = 2.5f;
@@ -42,6 +44,7 @@ public class ThornyPlant : MonoBehaviour {
     void Awake () {
         animator = GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody2D>();
+        _screenShaker = GetComponent<ScreenShaker>();
 
         shootPoints = transform.Find("ShootPoints");
     }
@@ -75,8 +78,12 @@ public class ThornyPlant : MonoBehaviour {
 		if (!isInvincible) 
 		{
             //animator.SetBool("Hit", true);
+            //_damageFlash.CallDamageFlash();
+            _screenShaker.Shake();
+
             var direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
+
             life -= Mathf.Abs(damage);
             StartCoroutine(HitTime());
         }
