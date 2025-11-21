@@ -6,6 +6,7 @@ public class PlayerHeart : MonoBehaviour
 {
     [SerializeField] private Transform canvas;
     [SerializeField] private GameObject heartsPrefab;
+    [SerializeField] private GameObject heartPrefab;
 
     private PlayerView playerView;
 
@@ -23,10 +24,15 @@ public class PlayerHeart : MonoBehaviour
 
     public void StartHearts()
     {
-        while (heartsList.Count < playerView.PlayerModel.MaxLife)
+        var cnt = 1;
+        Debug.Log("JJJJJJ: " + playerView.PlayerModel.Life);
+        while (heartsList.Count < playerView.PlayerModel.Life)
         {
-            foreach (Transform heart in heartsPrefab.transform)
-                heartsList.Add(heart.gameObject);
+            var heart = Instantiate(heartPrefab, new Vector3(25 * cnt, -51, 0), new Quaternion(), heartsPrefab.transform);
+            heartsList.Add(heart);
+            //foreach (Transform heart in heartsPrefab.transform)
+            //    heartsList.Add(heart.gameObject);
+            cnt++;
         }
     }
 
@@ -47,7 +53,7 @@ public class PlayerHeart : MonoBehaviour
         {
             var heart = Instantiate(heartsPrefab, canvas);
             heartsList.Add(heart);
-            playerView.PlayerModel.Heal(1);
+            playerView.PlayerModel.AddLife(1);
         }
     }
 }

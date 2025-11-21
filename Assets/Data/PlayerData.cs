@@ -3,35 +3,36 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Player Data")]
 public class PlayerData : ScriptableObject
 {
-    [Header("Player State")]
-    public bool isDead;
-    public bool facingRight;
-
     [Header("Player Health")]
-    public int currentLife;
+    public int life;
     public int maxLife;
+
+    [Header("Player Mana")]
+    public int mana;
+    public int maxMana;
+    public int manaAfterDeath;
 
     [Header("Player Damage")]
     public int damage;
-
-    [Header("Player Mana")]
-    public int currentMana;
-    public int maxMana;
-    public int manaAfterDead;
-
-    [Header("Received Abilities")]
-    public bool clawIsReceived;
+    public int clawDamage;
 
     [Header("Soul Crystal")]
-    public int soulCrystalCount;
+    public int soulCrystalsCollected;
 
     [Header("Current Scene")]
     public string currentScene;
 
+    [Header("Received Abilities")]
+    public bool hasClaw;
+
+    [Header("Player State")]
+    public bool facingRight;
+    public bool isDead;
+
     public void Reset()
     {
-        currentLife = maxLife;
-        currentMana = manaAfterDead;
+        life = maxLife;
+        mana = manaAfterDeath;
         isDead =false;
     }
 }

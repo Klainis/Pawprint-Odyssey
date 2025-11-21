@@ -37,7 +37,7 @@ public class ReceivingClaw : MonoBehaviour
         playerMana.enabled = true;
         piercingClaw.enabled = true;
         manaBar.SetActive(true);
-        playerView.PlayerModel.GetClaw();
+        playerView.PlayerModel.SetHasClaw();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

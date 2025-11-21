@@ -12,14 +12,14 @@ public class SoulCrystalCounter : MonoBehaviour
     private void Start()
     {
         counterText = InitializeManager._instance.soulCrystalText;
-        crystalCount = Data.soulCrystalCount;
+        crystalCount = Data.soulCrystalsCollected;
         counterText.text = crystalCount.ToString();
     }
 
     public void CrystalCounter()
     {
         crystalCount++;
-        Data.soulCrystalCount = crystalCount;
+        Data.soulCrystalsCollected = crystalCount;
         counterText.text = crystalCount.ToString();
     }
 }

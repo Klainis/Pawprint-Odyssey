@@ -6,22 +6,31 @@ public class PlayerModel
     public int MaxLife { get; private set; }
     public int Mana { get; private set; }
     public int MaxMana { get; private set; }
+    public int ManaAfterDeath { get; private set; }
     public int Damage { get; private set; }
+    public int ClawDamage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public bool HasClaw { get; private set; }
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
 
-    private PlayerModel(int life, int maxLife, int mana, int maxMana, int damage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
+    private PlayerModel(int life, int maxLife, int mana, int maxMana, int manaAfterDeath, int damage, int clawDamage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
     {
-        Life = Math.Max(1, life);
         MaxLife = Math.Max(1, maxLife);
-        Mana = Math.Max(0, mana);
+        Life = Math.Max(1, Math.Min(life, MaxLife));
+
         MaxMana = Math.Max(0, maxMana);
+        Mana = Math.Max(0, Math.Min(mana, MaxMana));
+        ManaAfterDeath = Math.Max(0, Math.Min(manaAfterDeath, MaxMana));
+
         Damage = Math.Max(1, damage);
+        ClawDamage = Math.Max(1, clawDamage);
+
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
+
         CurrentScene = currentScene;
+
         HasClaw = hasClaw;
         FacingRight = facingRight;
     }
@@ -29,14 +38,16 @@ public class PlayerModel
     public static PlayerModel CreateFromPlayerData(PlayerData playerData)
     {
         return new PlayerModel(
-            playerData.currentLife,
+            playerData.life,
             playerData.maxLife,
-            playerData.currentMana,
+            playerData.mana,
             playerData.maxMana,
+            playerData.manaAfterDeath,
             playerData.damage,
-            playerData.soulCrystalCount,
+            playerData.clawDamage,
+            playerData.soulCrystalsCollected,
             playerData.currentScene,
-            playerData.clawIsReceived,
+            playerData.hasClaw,
             playerData.facingRight
         );
     }
@@ -58,7 +69,7 @@ public class PlayerModel
         return true;
     }
 
-    public bool Heal(int value)
+    public bool AddLife(int value)
     {
         if (value <= 0)
             return false;
@@ -74,7 +85,7 @@ public class PlayerModel
         return true;
     }
 
-    public bool ChangeAmountOfMana(int value)
+    public bool SetMana(int value)
     {
         Mana = Math.Max(0, value);
         if (Mana > MaxMana)
@@ -82,9 +93,15 @@ public class PlayerModel
         return true;
     }
 
-    public bool ChangeDamage(int value)
+    public bool SetDamage(int value)
     {
         Damage = value;
+        return true;
+    }
+
+    public bool SetClawDamage(int value)
+    {
+        ClawDamage = value;
         return true;
     }
 
@@ -94,13 +111,13 @@ public class PlayerModel
         return true;
     }
 
-    public bool ChangeCurrentScene(string sceneName)
+    public bool SetCurrentScene(string sceneName)
     {
         CurrentScene = sceneName;
         return true;
     }
 
-    public bool GetClaw()
+    public bool SetHasClaw()
     {
         HasClaw = true;
         return HasClaw;

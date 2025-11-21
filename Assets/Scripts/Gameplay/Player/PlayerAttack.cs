@@ -52,17 +52,17 @@ public class PlayerAttack : MonoBehaviour
 
         if (attackSeriesCount == 1)
         {
-            playerView.PlayerModel.ChangeDamage(1);
+            playerView.PlayerModel.SetDamage(1);
             playerAnimation.SetTriggerAttack(1);
         }
         else if (attackSeriesCount == 2)
         {
-            playerView.PlayerModel.ChangeDamage(1);
+            playerView.PlayerModel.SetDamage(1);
             playerAnimation.SetTriggerAttack(2);
         }
         else if (attackSeriesCount == 3)
         {
-            playerView.PlayerModel.ChangeDamage(3);
+            playerView.PlayerModel.SetDamage(3);
             playerAnimation.SetTriggerAttack(3);
         }
 

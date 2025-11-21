@@ -5,10 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PiercingClaw : MonoBehaviour
 {
-    [Header("Main Attack Params")]
-    [SerializeField] private int dmgValue = 7;
     [SerializeField] private GameObject clawSprite;
-
     [SerializeField] private InputActionReference clawAction;
 
     private Vector2 clawSize = new(4f, 0.2f);
@@ -69,13 +66,12 @@ public class PiercingClaw : MonoBehaviour
 
     public void ClawDamage()
     {
-        dmgValue = Mathf.Abs(dmgValue);
         var collidersEnemies = Physics2D.OverlapBoxAll(attackCheck.position, clawSize, 0f);
         for (var i = 0; i < collidersEnemies.Length; i++)
         {
             if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
             {
-                var damageToApply = dmgValue;
+                var damageToApply = playerView.PlayerModel.ClawDamage;
                 if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
                     damageToApply = -damageToApply;
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);

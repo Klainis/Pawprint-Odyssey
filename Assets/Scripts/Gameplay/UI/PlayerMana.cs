@@ -30,13 +30,13 @@ public class PlayerMana : MonoBehaviour
 
     public void SpendMana()
     {
-        playerView.PlayerModel.ChangeAmountOfMana(playerView.PlayerModel.Mana - manaToSpend);
+        playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - manaToSpend);
         manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
     }
 
     public void GetMana()
     {
-        playerView.PlayerModel.ChangeAmountOfMana(playerView.PlayerModel.Mana + manaToGet);
+        playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana + manaToGet);
         manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
     }
 }
