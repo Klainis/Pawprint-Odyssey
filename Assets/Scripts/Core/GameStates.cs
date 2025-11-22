@@ -14,6 +14,7 @@ namespace GlobalEnums
         ENTERING_LEVEL,
         PLAYING,
         DEAD,
+        IN_FIGHT_ROOM,
         PAUSED,
         EXITING_LEVEL,
         CUTSCENE,

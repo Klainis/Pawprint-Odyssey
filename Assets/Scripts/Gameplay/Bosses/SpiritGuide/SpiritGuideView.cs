@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using GlobalEnums;
 
 public class SpiritGuideView : MonoBehaviour
 {
@@ -73,6 +74,7 @@ public class SpiritGuideView : MonoBehaviour
             Die.Invoke();
             StartCoroutine(DestroySelf());
             _fightDoor.CloseDoor(false);
+            GameManager._instance.SetGameState(GameState.PLAYING);
             return;
         }
 

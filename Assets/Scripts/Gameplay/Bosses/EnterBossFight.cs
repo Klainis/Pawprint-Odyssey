@@ -1,4 +1,5 @@
 using UnityEngine;
+using GlobalEnums;
 
 public class EnterBossFight : MonoBehaviour
 {
@@ -10,19 +11,19 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _health.InstantiateBossHealth();
-
-            if (_guideView.Model.Life > 0)
+            if (_guideView.Model.Life > 0 && GameManager._instance.GameState == GameState.PLAYING)
             {
+                GameManager._instance.SetGameState(GameState.IN_FIGHT_ROOM);
+                _health.InstantiateBossHealth();
                 _door.CloseDoor(true);
             }
+            //else if проверка на других боссов
         }
-
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && GameManager._instance.GameState != GameState.IN_FIGHT_ROOM)
         {
             _health.DestroyBossHealthSlider();
         }
