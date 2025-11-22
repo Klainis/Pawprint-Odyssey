@@ -2,13 +2,20 @@ using UnityEngine;
 
 public class EnterBossFight : MonoBehaviour
 {
-    [SerializeField] private BossHealth health;
+    [SerializeField] private BossHealth _health;
+    [SerializeField] private SpiritGuideView _guideView;
+    [SerializeField] private FightDoor _door;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            health.InstantiateBossHealth();
+            _health.InstantiateBossHealth();
+
+            if (_guideView.Model.Life > 0)
+            {
+                _door.CloseDoor(true);
+            }
         }
 
     }
@@ -17,7 +24,7 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            health.DestroyBossHealthSlider();
+            _health.DestroyBossHealthSlider();
         }
     }
 }

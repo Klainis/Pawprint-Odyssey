@@ -154,7 +154,7 @@ public class SGAttack : MonoBehaviour
 
     private IEnumerator LightZoneRoutine()
     {
-        //animator.SetBool("LightZoneTelegraph", true);
+        //_animator.SetBool("LightZoneTelegraph", true);
         var renderer = GetComponent<SpriteRenderer>();
         var normalColor = renderer.color;
         renderer.color = UnityEngine.Color.lightYellow;

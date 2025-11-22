@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Переход на сцену {targetScene}");
         SetGameState(GameState.ENTERING_LEVEL);
+        //Вызов сохранения
         StartCoroutine(DoSceneTransition(targetScene, entryGate));
     }
 

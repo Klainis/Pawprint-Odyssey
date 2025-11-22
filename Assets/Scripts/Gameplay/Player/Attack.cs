@@ -17,7 +17,7 @@
 //    const float attackCheckRadius = 1.1f;
 
 //    Gamepad gamepad;
-//    private Animator animator;
+//    private Animator _animator;
 //    private CharacterController2D playerController;
 //    private Transform attackCheck;
 //    private Rigidbody2D rb;
@@ -46,7 +46,7 @@
 
 //        attackCheck = transform.Find("AttackCheck");
 
-//        animator = GetComponent<Animator>();
+//        _animator = GetComponent<Animator>();
 //        playerController = GetComponent<CharacterController2D>();
 //        playerInput = GetComponent<PlayerInput>();
 //        rb = GetComponent<Rigidbody2D>();
@@ -54,7 +54,7 @@
 
 //    void Update()
 //    {
-//        animator.applyRootMotion = false;
+//        _animator.applyRootMotion = false;
 
 //        if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
 //        {
@@ -66,22 +66,22 @@
 //            lastAttackTime = Time.time;
 //            attackSeriesCount++;
 
-//            animator.SetBool("IsAttacking", true);
+//            _animator.SetBool("IsAttacking", true);
 
 //            if (attackSeriesCount == 1)
 //            {
 //                dmgValue = 1;
-//                animator.SetTrigger("Attack1");
+//                _animator.SetTrigger("Attack1");
 //            }
 //            else if (attackSeriesCount == 2)
 //            {
 //                dmgValue = 1;
-//                animator.SetTrigger("Attack2");
+//                _animator.SetTrigger("Attack2");
 //            }
 //            else if (attackSeriesCount == 3)
 //            {
 //                dmgValue = 3;
-//                animator.SetTrigger("Attack3");
+//                _animator.SetTrigger("Attack3");
 //            }
 
 //            isAttacking = true;
@@ -108,9 +108,9 @@
 //    {
 //        attackSeriesCount = 0;
 //        isAttacking = false;
-//        animator.ResetTrigger("Attack1");
-//        animator.ResetTrigger("Attack2");
-//        animator.ResetTrigger("Attack3");
+//        _animator.ResetTrigger("Attack1");
+//        _animator.ResetTrigger("Attack2");
+//        _animator.ResetTrigger("Attack3");
 //    }
 
 //    IEnumerator AttackCooldown(float durationAfterSeries)

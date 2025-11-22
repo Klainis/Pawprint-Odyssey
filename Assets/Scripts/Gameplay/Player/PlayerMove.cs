@@ -169,7 +169,7 @@ public class PlayerMove : MonoBehaviour
         //else if (dash && canDash)
         //{
         //    isWallSliding = false;
-        //    animator.SetBool("IsWallSliding", false);
+        //    _animator.SetBool("IsWallSliding", false);
         //    oldWallSlidding = false;
         //    m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
         //    canDoubleJump = true;

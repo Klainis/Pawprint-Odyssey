@@ -64,7 +64,7 @@
 //    private Gamepad gamepad;
 //    private Heart heart;
 
-//    private Animator animator;
+//    private Animator _animator;
 
 //    [Header("Particles")]
 //    [SerializeField] private ParticleSystem particleJumpUp; //Trail particles
@@ -89,7 +89,7 @@
 //        gamepad = Gamepad.current;
 
 //        m_Rigidbody2D = GetComponent<Rigidbody2D>();
-//        animator = GetComponent<Animator>();
+//        _animator = GetComponent<Animator>();
 //        heart = GetComponent<Heart>();
 
 //        if (OnFallEvent == null)
@@ -229,7 +229,7 @@
 //            isWallRunning = false;
 //            oldWallRunning = false;
 //            HandleWallSliding(moveY, moveX, false, false);
-//            animator.SetBool("IsWallRunning", false);
+//            _animator.SetBool("IsWallRunning", false);
 //        }
 
 //        // Скольжение по стене и дэш от нее
@@ -240,7 +240,7 @@
 //        else if (isWallSliding && !m_IsWall && canCheck)
 //        {
 //            isWallSliding = false;
-//            animator.SetBool("IsWallSliding", false);
+//            _animator.SetBool("IsWallSliding", false);
 //            oldWallSlidding = false;
 //            m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 //            canDoubleJump = true;
@@ -256,9 +256,9 @@
 //            Turn();
 //            StartCoroutine(WaitToCheck(0.1f));
 //            canDoubleJump = true;
-//            animator.SetBool("IsJumping", false);
-//            animator.SetBool("IsWallRunning", false);
-//            animator.SetBool("IsWallSliding", true);
+//            _animator.SetBool("IsJumping", false);
+//            _animator.SetBool("IsWallRunning", false);
+//            _animator.SetBool("IsWallSliding", true);
 //        }
 
 //        isDashing = false;
@@ -285,7 +285,7 @@
 //        //else if (dash && canDash)
 //        //{
 //        //    isWallSliding = false;
-//        //    animator.SetBool("IsWallSliding", false);
+//        //    _animator.SetBool("IsWallSliding", false);
 //        //    oldWallSlidding = false;
 //        //    m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 //        //    canDoubleJump = true;
@@ -304,9 +304,9 @@
 //                isWallRunning = true;
 //                Turn();
 
-//                animator.SetBool("IsJumping", false);
-//                animator.SetBool("IsWallSliding", false);
-//                animator.SetBool("IsWallRunning", true);
+//                _animator.SetBool("IsJumping", false);
+//                _animator.SetBool("IsWallSliding", false);
+//                _animator.SetBool("IsWallRunning", true);
 //            }
 
 //            if(isWallRunning)
@@ -365,8 +365,8 @@
 //        lastPressedJumpTime = 0;
 
 //        isJumping = true;
-//        animator.SetBool("IsJumping", true);
-//        animator.SetBool("JumpUp", true);
+//        _animator.SetBool("IsJumping", true);
+//        _animator.SetBool("JumpUp", true);
 //        m_Grounded = false;
 
 //        float force = jumpForce;
@@ -394,7 +394,7 @@
 
 //        //m_Rigidbody2D.linearVelocity = new Vector2(m_Rigidbody2D.linearVelocity.x, 0);
 //        //m_Rigidbody2D.AddForce(new Vector2(0f, doubleJumpForce));
-//        animator.SetBool("IsDoubleJumping", true);
+//        _animator.SetBool("IsDoubleJumping", true);
 //    }
 
 //    private void WallJump()
@@ -402,8 +402,8 @@
 //        lastOnGroundTime = 0;
 //        lastPressedJumpTime = 0;
 
-//        animator.SetBool("IsJumping", true);
-//        animator.SetBool("JumpUp", true);
+//        _animator.SetBool("IsJumping", true);
+//        _animator.SetBool("JumpUp", true);
 //        m_Rigidbody2D.linearVelocity = new Vector2(0f, 0f);
 
 //        Vector2 force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
@@ -424,7 +424,7 @@
 //        canDoubleJump = true;
 
 //        isWallSliding = false;
-//        animator.SetBool("IsWallSliding", false);
+//        _animator.SetBool("IsWallSliding", false);
 //        oldWallSlidding = false;
 //        m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 
@@ -466,7 +466,7 @@
 //    {
 //        if (isInvincible) return;
 
-//        animator.SetBool("Hit", true);
+//        _animator.SetBool("Hit", true);
 //        heart.RemoveHearts(damage);
 //        var damageDir = Vector3.Normalize(transform.position - position) * 40f;
 //        m_Rigidbody2D.linearVelocity = Vector2.zero;
@@ -486,7 +486,7 @@
 //    {
 //        if (!isInvincible)
 //        {
-//            animator.SetBool("Hit", true);
+//            _animator.SetBool("Hit", true);
 //            heart.RemoveHearts(damage);
 //            if (Data.currentLife < 1)
 //            {
@@ -507,7 +507,7 @@
 //            dashCounter++;
 //        }
 
-//        animator.SetBool("IsDashing", true);
+//        _animator.SetBool("IsDashing", true);
 //        isDashing = true;
 //        canDash = false;
 
@@ -552,14 +552,14 @@
 //        yield return new WaitForSeconds(0.1f);
 //        canDoubleJump = true;
 //        isWallSliding = false;
-//        animator.SetBool("IsWallSliding", false);
+//        _animator.SetBool("IsWallSliding", false);
 //        oldWallSlidding = false;
 //        m_WallCheck.localPosition = new Vector3(Mathf.Abs(m_WallCheck.localPosition.x), m_WallCheck.localPosition.y, 0);
 //    }
 
 //    IEnumerator WaitToDead()
 //    {
-//        animator.SetBool("IsDead", true);
+//        _animator.SetBool("IsDead", true);
 //        canMove = false;
 //        isInvincible = true;
 //        GetComponent<Attack>().enabled = false;

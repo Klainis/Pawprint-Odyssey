@@ -77,7 +77,7 @@ public class ThornyPlant : MonoBehaviour {
     public void ApplyDamage(int damage) {
 		if (!isInvincible) 
 		{
-            //animator.SetBool("Hit", true);
+            //_animator.SetBool("Hit", true);
             //_damageFlash.CallDamageFlash();
             _screenShaker.Shake();
 
@@ -140,7 +140,7 @@ public class ThornyPlant : MonoBehaviour {
 	IEnumerator DestroyEnemy()
 	{
         isInvincible = true;
-        //animator.SetTrigger("Dead");
+        //_animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         gameObject.tag = "isDead";
         Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);

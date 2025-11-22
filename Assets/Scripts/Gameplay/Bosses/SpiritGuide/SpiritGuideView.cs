@@ -19,6 +19,9 @@ public class SpiritGuideView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem damageParticale;
 
+    [Space(5)]
+    [SerializeField] private FightDoor _fightDoor;
+
     private const float groundedRadius = 0.2f;
 
     private Rigidbody2D rigidBody;
@@ -69,6 +72,7 @@ public class SpiritGuideView : MonoBehaviour
         {
             Die.Invoke();
             StartCoroutine(DestroySelf());
+            _fightDoor.CloseDoor(false);
             return;
         }
 
