@@ -8,6 +8,9 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float attackSeriesTimeout = 0.9f;
     [SerializeField] private int maxAttackSeriesCount = 3;
 
+    //[Header("Particles")]
+    //[SerializeField] private ParticleSystem _attackParticle;
+
     [SerializeField] private UnityEvent<GameObject> getMana;
 
     const float attackCheckRadius = 1.1f;
