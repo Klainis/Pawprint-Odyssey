@@ -38,8 +38,6 @@ public class PlayerHeart : MonoBehaviour
 
     public void RemoveHearts(int damage)
     {
-        playerView.PlayerModel.TakeDamage(damage);
-
         while (heartsList.Count > playerView.PlayerModel.Life)
         {
             Destroy(heartsList.Last());

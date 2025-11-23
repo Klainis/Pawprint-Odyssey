@@ -129,6 +129,7 @@ public class PlayerView : MonoBehaviour
         if (isInvincible) return;
 
         playerAnimation.SetBoolHit(true);
+        PlayerModel.TakeDamage(damage);
         heart.RemoveHearts(damage);
 
         var damageDir = Vector3.Normalize(transform.position - position) * 40f;
@@ -160,21 +161,21 @@ public class PlayerView : MonoBehaviour
         }
     }
 
-    IEnumerator Stun(float time)
+    private IEnumerator Stun(float time)
     {
         playerMove.CanMove = false;
         yield return new WaitForSeconds(time);
         playerMove.CanMove = true;
     }
 
-    IEnumerator MakeInvincible(float time)
+    private IEnumerator MakeInvincible(float time)
     {
         isInvincible = true;
         yield return new WaitForSeconds(time);
         isInvincible = false;
     }
 
-    IEnumerator WaitToDead()
+    private IEnumerator WaitToDead()
     {
         playerAnimation.SetBoolIsDead(true);
         playerMove.CanMove = false;
