@@ -104,13 +104,13 @@ public class PlayerAttack : MonoBehaviour
             var enemy = collidersEnemies[i].gameObject;
             var objectEnvironment = collidersEnemies[i].gameObject;
 
+            var damageToApply = playerView.PlayerModel.Damage;
+
+            if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
+                damageToApply = -damageToApply;
+
             if (enemy.CompareTag("Enemy"))
             {
-                var damageToApply = playerView.PlayerModel.Damage;
-
-                if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
-                    damageToApply = -damageToApply;
-
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 
                 if (getMana != null && !enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
@@ -118,7 +118,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             if (objectEnvironment.CompareTag("Object"))
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", false);
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
         }
     }
 

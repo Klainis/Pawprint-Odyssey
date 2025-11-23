@@ -69,15 +69,16 @@ public class PiercingClaw : MonoBehaviour
         var collidersEnemies = Physics2D.OverlapBoxAll(attackCheck.position, clawSize, 0f);
         for (var i = 0; i < collidersEnemies.Length; i++)
         {
+            var damageToApply = playerView.PlayerModel.ClawDamage;
+            if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
+                damageToApply = -damageToApply;
+
             if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
             {
-                var damageToApply = playerView.PlayerModel.ClawDamage;
-                if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
-                    damageToApply = -damageToApply;
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
             }
             if (collidersEnemies[i].gameObject.CompareTag("ClawObject"))
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", true);
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
         }
     }
 
