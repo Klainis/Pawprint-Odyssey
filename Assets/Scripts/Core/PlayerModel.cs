@@ -35,6 +35,23 @@ public class PlayerModel
         FacingRight = facingRight;
     }
 
+    public static PlayerModel CreateFromSave(ref PlayerSaveData data)
+    {
+        return new PlayerModel(
+            data.Life,
+            data.MaxLife,
+            data.Mana,
+            data.MaxMana,
+            data.ManaAfterDeath,
+            data.Damage,
+            data.ClawDamage,
+            data.SoulCrystalsCollected,
+            data.CurrentScene,
+            data.HasClaw,
+            data.FacingRight
+        );
+    }
+
     public static PlayerModel CreateFromPlayerData(PlayerData playerData)
     {
         return new PlayerModel(
@@ -134,11 +151,31 @@ public class PlayerModel
     public void Save(ref PlayerSaveData data)
     {
         data.Life = Life;
+        data.MaxLife = MaxLife;
+        data.Mana = Mana;
+        data.MaxMana = MaxMana;
+        data.ManaAfterDeath = ManaAfterDeath;
+        data.Damage = Damage;
+        data.ClawDamage = ClawDamage;
+        data.SoulCrystalsCollected = SoulCrystalsCollected;
+        data.CurrentScene = CurrentScene;
+        data.HasClaw = HasClaw;
+        data.FacingRight = FacingRight;
     }
 
     public void Load(PlayerSaveData data)
     {
         Life = data.Life;
+        MaxLife = data.MaxLife;
+        Mana = data.Mana;
+        MaxMana = data.MaxMana;
+        ManaAfterDeath = data.ManaAfterDeath;
+        Damage = data.Damage;
+        ClawDamage = data.ClawDamage;
+        SoulCrystalsCollected = data.SoulCrystalsCollected;
+        CurrentScene = data.CurrentScene;
+        HasClaw = data.HasClaw;
+        FacingRight = data.FacingRight;
     }
 
     #endregion
@@ -148,4 +185,14 @@ public class PlayerModel
 public struct PlayerSaveData
 {
     public int Life;
+    public int MaxLife;
+    public int Mana;
+    public int MaxMana;
+    public int ManaAfterDeath;
+    public int Damage;
+    public int ClawDamage;
+    public int SoulCrystalsCollected;
+    public string CurrentScene;
+    public bool HasClaw;
+    public bool FacingRight;
 }

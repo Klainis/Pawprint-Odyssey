@@ -48,8 +48,11 @@ public class DestructibleWall : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(bool isClaw, int damage)
+    public void ApplyDamage(object[] message)
     {
+        var isClaw = (bool)message[0];
+        var damage = (int)message[1];
+
         var direction = damage / Mathf.Abs(damage);
 
         if (isClaw)

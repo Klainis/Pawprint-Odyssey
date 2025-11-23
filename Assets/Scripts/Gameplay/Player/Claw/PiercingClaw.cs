@@ -74,11 +74,9 @@ public class PiercingClaw : MonoBehaviour
                 damageToApply = -damageToApply;
 
             if (collidersEnemies[i].gameObject.CompareTag("Enemy"))
-            {
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
-            }
             if (collidersEnemies[i].gameObject.CompareTag("ClawObject"))
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", new object[2] { true, damageToApply });
         }
     }
 

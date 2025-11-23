@@ -158,10 +158,33 @@ public class EntryPoint : MonoBehaviour
     public void InitializePlayer()
     {
         player = Instantiate(player);
-        var playerModel = PlayerModel.CreateFromPlayerData(playerData);
-        player.GetComponent<PlayerView>().PlayerModel = playerModel;
-        SetInitialPosition();
         DontDestroyOnLoad(player);
+
+        var playerView = player.GetComponent<PlayerView>();
+        var isLoaded = SaveSystem.TryLoad();
+
+        if (isLoaded)
+        {
+            Debug.Log("EntryPoint: Игра загружена из файла сохранения.");
+
+            // В будущем SetInitialPosition должен вызываться только если isLoaded == false,
+            // а position ставиться в SaveSystem.TryLoad
+            SetInitialPosition();
+        }
+        else
+        {
+            Debug.Log("EntryPoint: Сохранение не найдено. Новая игра по параметрам PlayerData.");
+
+            if (playerData != null)
+            {
+                var playerModel = PlayerModel.CreateFromPlayerData(playerData);
+                playerView.PlayerModel = playerModel;
+            }
+            else
+                Debug.LogError("CRITICAL: PlayerData не назначен в инспекторе EntryPoint!");
+
+            SetInitialPosition();
+        }
 
         var receivingClawScript = player.GetComponent<ReceivingClaw>();
         receivingClawScript.enabled = true;

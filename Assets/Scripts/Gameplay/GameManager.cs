@@ -15,11 +15,26 @@ public class GameManager : MonoBehaviour
 
     private TransitionDestination destination;
     private TransitionDestination[] destinations;
-    private GameObject player;
     private AudioListener Sounds;
     private BossHealth bossHealth;
+    private GameObject _playerCached;
 
     private bool isTransitioning;
+
+    private GameObject Player
+    {
+        get
+        {
+            if (_playerCached == null)
+            {
+                if (PlayerView.Instance != null)
+                    _playerCached = PlayerView.Instance.gameObject;
+                else
+                    _playerCached = GameObject.FindGameObjectWithTag("Player");
+            }
+            return _playerCached;
+        }
+    }
 
     private void Awake()
     {
@@ -36,16 +51,11 @@ public class GameManager : MonoBehaviour
         Sounds = GameManager.FindAnyObjectByType<AudioListener>();
     }
 
-    //private void Update()
-    //{
-       
-    //}
-
     public void BeginSceneTransition(string targetScene, string entryGate)
     {
-        if (isTransitioning)
-            return;
+        if (isTransitioning) return;
 
+        Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene);
         Debug.Log($"Переход на сцену {targetScene}");
         SetGameState(GameState.ENTERING_LEVEL);
         //Вызов сохранения
@@ -65,19 +75,20 @@ public class GameManager : MonoBehaviour
             yield return null;
 
         destination = FindEntryPoint(entryGate);
-        player = GameObject.FindGameObjectWithTag("Player");
+        _playerCached = null;
+        var currentPlayer = Player;
 
         if (destination == null)
         {
             Debug.Log($"Нет точки назначения в сцене {targetScene}");
             yield return null;
         }
-        if (player == null)
+        if (currentPlayer == null)
         {
             Debug.Log($"Игрок не найден в сцене в сцене {targetScene}");
             yield return null;
         }
-        player.transform.position = destination.transform.position;
+        currentPlayer.transform.position = destination.transform.position;
 
         //yield return screenFader.FadeIn();
         isTransitioning = false;
@@ -101,7 +112,7 @@ public class GameManager : MonoBehaviour
 
     public void InitializeComponent()
     {
-        /*ossHealth.*/
+        /*BossHealth.*/
     }
 
     public void SetGameState(GameState newState)
@@ -113,8 +124,8 @@ public class GameManager : MonoBehaviour
     {
         if (GameState == GameState.DEAD)
         {
-            Destroy(player);
-            SceneManager.LoadSceneAsync("F_Room_Tutorial"); //загружать сцены из сохранения
+            Destroy(Player);
+            SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
             EntryPoint._instance.InitializePlayer();
             SetGameState(GameState.PLAYING);
         }

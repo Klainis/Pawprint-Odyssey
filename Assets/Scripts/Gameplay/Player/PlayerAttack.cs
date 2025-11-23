@@ -118,7 +118,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             if (objectEnvironment.CompareTag("Object"))
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", new object[2] { false, damageToApply });
         }
     }
 

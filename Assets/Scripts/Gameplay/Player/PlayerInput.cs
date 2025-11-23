@@ -69,7 +69,7 @@ public class PlayerInput : MonoBehaviour {
         {
             if (loadAction.action.WasPressedThisFrame())
             {
-                SaveSystem.Load();
+                SaveSystem.TryLoad();
                 playerHeart.RemoveHearts();
             }
         }
