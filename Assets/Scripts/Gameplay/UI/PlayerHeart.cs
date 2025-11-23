@@ -25,18 +25,15 @@ public class PlayerHeart : MonoBehaviour
     public void StartHearts()
     {
         var cnt = 1;
-        Debug.Log("JJJJJJ: " + playerView.PlayerModel.Life);
         while (heartsList.Count < playerView.PlayerModel.Life)
         {
             var heart = Instantiate(heartPrefab, new Vector3(25 * cnt, -51, 0), new Quaternion(), heartsPrefab.transform);
             heartsList.Add(heart);
-            //foreach (Transform heart in heartsPrefab.transform)
-            //    heartsList.Add(heart.gameObject);
             cnt++;
         }
     }
 
-    public void RemoveHearts(int damage)
+    public void RemoveHearts()
     {
         while (heartsList.Count > playerView.PlayerModel.Life)
         {
@@ -47,11 +44,12 @@ public class PlayerHeart : MonoBehaviour
 
     public void AddHearts()
     {
-        while (heartsList.Count < playerView.PlayerModel.MaxLife)
+        var cnt = 1;
+        while (heartsList.Count < playerView.PlayerModel.Life)
         {
-            var heart = Instantiate(heartsPrefab, canvas);
+            var heart = Instantiate(heartPrefab, new Vector3(25 * cnt, -51, 0), new Quaternion(), heartsPrefab.transform);
             heartsList.Add(heart);
-            playerView.PlayerModel.AddLife(1);
+            cnt++;
         }
     }
 }

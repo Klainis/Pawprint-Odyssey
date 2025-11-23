@@ -24,7 +24,7 @@ public class PlayerView : MonoBehaviour
     private PlayerAttack playerAttack;
     private PlayerMove playerMove;
     private PlayerInput playerInput;
-    private PlayerHeart heart;
+    private PlayerHeart playerHeart;
 
     private bool isInvincible = false;
 
@@ -37,7 +37,7 @@ public class PlayerView : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         playerMove = GetComponent<PlayerMove>();
         playerInput = GetComponent<PlayerInput>();
-        heart = GetComponent<PlayerHeart>();
+        playerHeart = GetComponent<PlayerHeart>();
 
         if (OnFallEvent == null) OnFallEvent = new UnityEvent();
         if (OnLandEvent == null) OnLandEvent = new UnityEvent();
@@ -124,13 +124,24 @@ public class PlayerView : MonoBehaviour
         playerMove.ScaleJump();
     }
 
+    public void Heal(int life)
+    {
+        // Heal игрока на конкретное количество HP
+    }
+
+    public void FullHeal()
+    {
+        PlayerModel.FullHeal();
+        playerHeart.AddHearts();
+    }
+
     public void ApplyDamage(int damage, Vector3 position)
     {
         if (isInvincible) return;
 
         playerAnimation.SetBoolHit(true);
         PlayerModel.TakeDamage(damage);
-        heart.RemoveHearts(damage);
+        playerHeart.RemoveHearts();
 
         var damageDir = Vector3.Normalize(transform.position - position) * 40f;
         rigidBody.linearVelocity = Vector2.zero;
@@ -150,7 +161,8 @@ public class PlayerView : MonoBehaviour
         if (isInvincible) return;
 
         playerAnimation.SetBoolHit(true);
-        heart.RemoveHearts(damage);
+        PlayerModel.TakeDamage(damage);
+        playerHeart.RemoveHearts();
 
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());

@@ -77,6 +77,12 @@ public class PlayerModel
         return true;
     }
 
+    public bool FullHeal()
+    {
+        Life = MaxLife;
+        return true;
+    }
+
     public bool TakeDamage(int damage)
     {
         if (damage <= 0)
