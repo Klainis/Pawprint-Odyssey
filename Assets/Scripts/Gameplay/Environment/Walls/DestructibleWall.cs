@@ -13,6 +13,11 @@ public class DestructibleWall : MonoBehaviour
 
     [Space(5)]
     private DestroyBrokenWalls _destroyBrokenWalls;
+
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem _playerWeaponParticle;
+
+    private ParticleSystem _playerWeaponParticleInstance;
     //private string _currentScene;
     //[SerializeField] private string _currentWall;
 
@@ -22,26 +27,6 @@ public class DestructibleWall : MonoBehaviour
     {
         shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
         _destroyBrokenWalls = GetComponent<DestroyBrokenWalls>();
-        //_currentScene = SceneManager.GetActiveScene().name;
-
-        //foreach (WallsExistence.TransitionRoomWall room in WallsExistence.TransitionWalls)
-        //{
-        //    if (room.SceneName == _currentScene)
-        //    {
-        //        WallsExistence.WallItem[] wall = room.WallItems;
-        //        foreach (WallsExistence.WallItem wallItem in wall)
-        //        {
-        //            if (wallItem.WallName == _currentWall)
-        //            {
-        //                if (wallItem.isOpen)
-        //                {
-        //                    Debug.Log("Стена уничтожена");
-        //                    Destroy(gameObject);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     private void Start()
@@ -63,8 +48,10 @@ public class DestructibleWall : MonoBehaviour
         }
     }
 
-    public void ApplyDamage(bool isClaw)
+    public void ApplyDamage(bool isClaw, int damage)
     {
+        var direction = damage / Mathf.Abs(damage);
+
         if (isClaw)
         {
             life -= 9999;
@@ -73,7 +60,15 @@ public class DestructibleWall : MonoBehaviour
         else
         {
             life -= 1;
+            SpawnDamageParticles(direction);
             shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
         };
+    }
+
+    private void SpawnDamageParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
     }
 }

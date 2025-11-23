@@ -8,6 +8,11 @@ public class SoulCrystal : MonoBehaviour
     [Space(5)]
     private ShakeObjectAfterDamage shakeObjectAfterDamage;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem _playerWeaponParticle;
+
+    private ParticleSystem _playerWeaponParticleInstance;
+
     private int life;
 
     [SerializeField] private UnityEvent crystalCountEvent;
@@ -35,9 +40,18 @@ public class SoulCrystal : MonoBehaviour
         }
     }
 
-    public void ApplyDamage()
+    public void ApplyDamage(int damage)
     {
+        var direction = damage / Mathf.Abs(damage);
+        SpawnDamageParticles(direction);
         life -= 1;
         shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
     }
+    private void SpawnDamageParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
+    }
+
 }

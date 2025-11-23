@@ -16,8 +16,10 @@ public class ThornyPlant : MonoBehaviour {
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem damageParticale;
+    [SerializeField] private ParticleSystem _playerWeaponParticle;
 
     private ParticleSystem _damageParticleInstance;
+    private ParticleSystem _playerWeaponParticleInstance;
 
     private Animator animator;
     private Rigidbody2D rigidBody;
@@ -93,6 +95,8 @@ public class ThornyPlant : MonoBehaviour {
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(damageParticale, transform.position, spawnRotation);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
     }
 
 
