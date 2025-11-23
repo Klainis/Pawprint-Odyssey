@@ -7,29 +7,29 @@ public class PlayerInput : MonoBehaviour {
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference saveAction;
+    [SerializeField] private InputActionReference loadAction;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
-	private Gamepad gamepad;
     private PlayerAnimation playerAnimation;
     private PlayerMove playerMove;
+    private PlayerHeart playerHeart;
 
 	private float horizontalMove = 0f;
     private float verticalMove = 0f;
-    private float lastJumpTime;
     private bool attackPressed;
 	private bool jump = false;
 	private bool dash = false;
     private bool grab = false;
 
-    public bool AttackPressed { get {  return attackPressed; } private set { attackPressed = value; } }
+    public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
     private void Awake()
     {
-        gamepad = Gamepad.current;
-
         playerAnimation = GetComponent<PlayerAnimation>();
         playerMove = GetComponent<PlayerMove>();
+        playerHeart = GetComponent<PlayerHeart>();
     }
 
     private void Update () 
@@ -58,6 +58,20 @@ public class PlayerInput : MonoBehaviour {
         {
             if (dashAction.action.WasPressedThisFrame())
                 dash = true;
+        }
+
+        if (saveAction != null && saveAction.action != null)
+        {
+            if (saveAction.action.WasPressedThisFrame())
+                SaveSystem.Save();
+        }
+        if (loadAction != null && loadAction.action != null)
+        {
+            if (loadAction.action.WasPressedThisFrame())
+            {
+                SaveSystem.Load();
+                playerHeart.RemoveHearts();
+            }
         }
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));

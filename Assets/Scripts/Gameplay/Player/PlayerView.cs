@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerView : MonoBehaviour
 {
+    private static PlayerView instance;
+    public static PlayerView Instance { get { return instance; } }
+
     public PlayerModel PlayerModel { get; set; }
 
     [Header("")]
@@ -30,6 +33,8 @@ public class PlayerView : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+
         gamepad = Gamepad.current;
 
         rigidBody = GetComponent<Rigidbody2D>();
@@ -124,6 +129,8 @@ public class PlayerView : MonoBehaviour
         playerMove.ScaleJump();
     }
 
+    #region Heal
+
     public void Heal(int life)
     {
         // Heal игрока на конкретное количество HP
@@ -134,6 +141,10 @@ public class PlayerView : MonoBehaviour
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
     }
+
+    #endregion
+
+    #region ApplyDamage
 
     public void ApplyDamage(int damage, Vector3 position)
     {
@@ -173,6 +184,10 @@ public class PlayerView : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region IEnumerators
+
     private IEnumerator Stun(float time)
     {
         playerMove.CanMove = false;
@@ -200,4 +215,6 @@ public class PlayerView : MonoBehaviour
         GameManager._instance.SetGameState(GameState.DEAD);
         GameManager._instance.RevivalPlayer();
     }
+
+    #endregion
 }

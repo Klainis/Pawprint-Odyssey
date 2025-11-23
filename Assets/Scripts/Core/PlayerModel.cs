@@ -128,4 +128,24 @@ public class PlayerModel
         HasClaw = true;
         return HasClaw;
     }
+
+    #region Save & Load
+
+    public void Save(ref PlayerSaveData data)
+    {
+        data.Life = Life;
+    }
+
+    public void Load(PlayerSaveData data)
+    {
+        Life = data.Life;
+    }
+
+    #endregion
+}
+
+[System.Serializable]
+public struct PlayerSaveData
+{
+    public int Life;
 }
