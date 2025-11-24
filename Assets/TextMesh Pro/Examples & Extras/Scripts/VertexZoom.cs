@@ -74,7 +74,7 @@ namespace TMPro.Examples
                 // Allocate new vertices
                 if (hasTextChanged)
                 {
-                    // Get updated vertex data
+                    // Get updated vertex _data
                     cachedMeshInfoVertexData = textInfo.CopyMeshInfoVertexData();
 
                     hasTextChanged = false;

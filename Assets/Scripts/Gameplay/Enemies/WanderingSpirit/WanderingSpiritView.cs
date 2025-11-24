@@ -8,8 +8,8 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData data;
     [SerializeField] private PlayerAttack playerAttack;
-    [SerializeField] private float lastPlayerAttackForce = 30f;
-    [SerializeField] private float playerAttackForce = 10f;
+    [SerializeField] private float lastPlayerAttackForce = 12f;
+    [SerializeField] private float playerAttackForce = 7f;
     [SerializeField] private bool isInvincible = false;
 
     [Header("Acceleration")]
@@ -44,7 +44,7 @@ public class WanderingSpiritView : MonoBehaviour
     {
         Model = new EnemyModel(data.Life, data.Speed, data.Damage);
 
-        //playerAttack = GameObject.Find("Player").GetComponent<Attack>();
+        //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         playerAttack = InitializeManager._instance.player?.GetComponent<PlayerAttack>();
         Debug.Log(playerAttack == null);
         rigidBody = GetComponent<Rigidbody2D>();
@@ -85,12 +85,12 @@ public class WanderingSpiritView : MonoBehaviour
 
             if (playerAttack.AttackSeriesCount == 3)
             {
-                //rigidBody.AddForce(new Vector2(direction * lastPlayerAttackForce, rigidBody.linearVelocity.y), ForceMode2D.Impulse);
+                //_rigidBody.AddForce(new Vector2(direction * _lastPlayerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, lastPlayerAttackForce);
             }
             else if (playerAttack.AttackSeriesCount < 3)
             {
-                //rigidBody.AddForce(new Vector2(direction * playerAttackForce, rigidBody.linearVelocity.y), ForceMode2D.Impulse);
+                //_rigidBody.AddForce(new Vector2(direction * _playerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, playerAttackForce);
             }
         }
@@ -165,9 +165,9 @@ public class WanderingSpiritView : MonoBehaviour
     private IEnumerator HitTime(float time)
     {
         isHitted = true;
-        //isInvincible = true;
+        //_isInvincible = true;
         yield return new WaitForSeconds(time);
         isHitted = false;
-        //isInvincible = false;
+        //_isInvincible = false;
     }
 }
