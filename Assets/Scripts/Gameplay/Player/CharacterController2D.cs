@@ -56,7 +56,7 @@
 //    private bool oldWallRunning;
 //    private float prevVelocityX = 0f;
 //    private bool canCheck = false; //For check if player is wallsliding
-//    private bool isInvincible = false;
+//    private bool _isInvincible = false;
 //    private bool canMove = true;
 //    private bool isJumping;
 
@@ -464,7 +464,7 @@
 
 //    public void ApplyDamage(int damage, Vector3 position)
 //    {
-//        if (isInvincible) return;
+//        if (_isInvincible) return;
 
 //        _animator.SetBool("Hit", true);
 //        heart.RemoveHearts(damage);
@@ -484,7 +484,7 @@
 
 //    public void ApplyObjectDamage(int damage)
 //    {
-//        if (!isInvincible)
+//        if (!_isInvincible)
 //        {
 //            _animator.SetBool("Hit", true);
 //            heart.RemoveHearts(damage);
@@ -529,9 +529,9 @@
 //    }
 //    IEnumerator MakeInvincible(float time)
 //    {
-//        isInvincible = true;
+//        _isInvincible = true;
 //        yield return new WaitForSeconds(time);
-//        isInvincible = false;
+//        _isInvincible = false;
 //    }
 //    IEnumerator WaitToMove(float time)
 //    {
@@ -561,7 +561,7 @@
 //    {
 //        _animator.SetBool("IsDead", true);
 //        canMove = false;
-//        isInvincible = true;
+//        _isInvincible = true;
 //        GetComponent<Attack>().enabled = false;
 //        yield return new WaitForSeconds(0.4f);
 //        m_Rigidbody2D.linearVelocity = new Vector2(0, m_Rigidbody2D.linearVelocity.y);

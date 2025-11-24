@@ -135,10 +135,10 @@ public class ThornyPlant : MonoBehaviour {
     IEnumerator HitTime()
 	{
 		isHitted = true;
-		//isInvincible = true;
+		//_isInvincible = true;
 		yield return new WaitForSeconds(0.1f);
 		isHitted = false;
-		//isInvincible = false;
+		//_isInvincible = false;
 	}
 
 	IEnumerator DestroyEnemy()

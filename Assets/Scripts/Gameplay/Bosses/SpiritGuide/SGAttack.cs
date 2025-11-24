@@ -127,7 +127,7 @@ public class SGAttack : MonoBehaviour
 
     private IEnumerator RamTelegraph()
     {
-        // wsAnimation.SetBoolRamTelegraph(true);
+        // _bugAnimation.SetBoolRamTelegraph(true);
         var renderer = GetComponent<SpriteRenderer>();
         var normalColor = renderer.color;
         renderer.color = UnityEngine.Color.red;

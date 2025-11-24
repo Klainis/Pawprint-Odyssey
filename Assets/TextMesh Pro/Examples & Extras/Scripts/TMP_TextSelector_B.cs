@@ -72,7 +72,7 @@ namespace TMPro.Examples
         {
             if (obj == m_TextMeshPro)
             {
-                // Update cached vertex data.
+                // Update cached vertex _data.
                 m_cachedMeshInfoVertexData = m_TextMeshPro.textInfo.CopyMeshInfoVertexData();
             }
         }
