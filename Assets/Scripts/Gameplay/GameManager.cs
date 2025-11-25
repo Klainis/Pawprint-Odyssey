@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(Player);
             SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
-            EntryPoint._instance.InitializePlayer();
+            EntryPoint._instance.InitializeDataFromSave();
             SetGameState(GameState.PLAYING);
         }
     }

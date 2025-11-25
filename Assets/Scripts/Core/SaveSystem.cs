@@ -9,6 +9,7 @@ public class SaveSystem
     public struct SaveData
     {
         public PlayerSaveData PlayerSaveData;
+        public WallSaveData WallSaveData;
     }
 
     public static string SaveFileName()
@@ -41,15 +42,9 @@ public class SaveSystem
 
             saveData = JsonUtility.FromJson<SaveData>(json);
 
-            if (PlayerView.Instance != null)
-            {
-                PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref saveData.PlayerSaveData);
+            if (CreatePlayerModel(ref saveData.PlayerSaveData) &&
+                DestroyBrokenWalls(ref saveData.WallSaveData)) return true;
 
-                // Если нужно загрузить позицию игрока из сохранения
-                // PlayerView.Instance.transform.position = ...
-                
-                return true;
-            }
             return false;
         }
         catch (System.Exception e)
@@ -57,6 +52,31 @@ public class SaveSystem
             Debug.LogError("Ошибка чтения сохранения: " + e.Message);
             return false;
         }
+    }
+
+    private static bool CreatePlayerModel(ref PlayerSaveData data)
+    {
+        if (PlayerView.Instance != null)
+        {
+            PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
+
+            // Если нужно загрузить позицию игрока из сохранения
+            // PlayerView.Instance.transform.position = ...
+
+            return true;
+        }
+        return false;
+    }
+
+    private static bool DestroyBrokenWalls(ref WallSaveData data)
+    {
+        if (WallsManager.Instance != null)
+        {
+            WallsManager.Instance.WallsExistenceInstance = WallsExistence.CreateWallsExistence(ref data);
+            WallsManager.DestroyBrokenWalls();
+            return true;
+        }
+        return false;
     }
 
     public static void DeleteSave()
@@ -74,6 +94,11 @@ public class SaveSystem
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
+
+        if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
+        {
+            WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
         }
     }
 }

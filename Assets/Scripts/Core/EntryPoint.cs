@@ -12,6 +12,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private InputActionAsset newInputSystem;
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private WallsManager wallsManager;
     [SerializeField] private InitializeManager initializeManager;
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private GameObject player;
@@ -93,6 +94,9 @@ public class EntryPoint : MonoBehaviour
         gameManager = Instantiate(gameManager);
         DontDestroyOnLoad(gameManager);
 
+        wallsManager = Instantiate(wallsManager);
+        DontDestroyOnLoad(wallsManager);
+
         initializeManager = Instantiate(initializeManager);
         DontDestroyOnLoad(initializeManager);
         InitializeCanvas();
@@ -106,7 +110,7 @@ public class EntryPoint : MonoBehaviour
 
         InitializeFade();
 
-        InitializePlayer();
+        InitializeDataFromSave();
 
         manaBar = Instantiate(manaBar, canvas.transform);
         DontDestroyOnLoad(manaBar);
@@ -155,7 +159,7 @@ public class EntryPoint : MonoBehaviour
         InitializeManager._instance.soulCrystalText = text;
     }
 
-    public void InitializePlayer()
+    public void InitializeDataFromSave()
     {
         player = Instantiate(player);
         DontDestroyOnLoad(player);
