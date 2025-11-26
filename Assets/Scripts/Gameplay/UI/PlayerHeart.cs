@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerHeart : MonoBehaviour
 {
-    [SerializeField] private Transform canvas;
-    [SerializeField] private GameObject heartsPrefab;
     [SerializeField] private GameObject heartPrefab;
 
     private PlayerView playerView;
+    
+    private GameObject heartsInstance;
 
     private List<GameObject> heartsList = new();
 
@@ -17,17 +17,18 @@ public class PlayerHeart : MonoBehaviour
         playerView = GetComponent<PlayerView>();
     }
 
-    public void SetHeartsPrefab(GameObject prefab)
+    public void SetHeartsInstance(GameObject prefab)
     {
-        heartsPrefab = prefab;
+        heartsInstance = prefab;
     }
 
     public void StartHearts()
     {
         var cnt = 1;
+        Debug.Log(heartsInstance.transform.childCount);
         while (heartsList.Count < playerView.PlayerModel.Life)
         {
-            var heart = Instantiate(heartPrefab, new Vector3(25 * cnt, -51, 0), new Quaternion(), heartsPrefab.transform);
+            var heart = Instantiate(heartPrefab, new Vector3(-7 + 0.8f * cnt, 7, 0), Quaternion.identity, heartsInstance.transform.GetChild(0).transform);
             heartsList.Add(heart);
             cnt++;
         }
@@ -47,7 +48,7 @@ public class PlayerHeart : MonoBehaviour
         var cnt = 1;
         while (heartsList.Count < playerView.PlayerModel.Life)
         {
-            var heart = Instantiate(heartPrefab, new Vector3(25 * cnt, -51, 0), new Quaternion(), heartsPrefab.transform);
+            var heart = Instantiate(heartPrefab, new Vector3(-7 + 0.8f * cnt, 7, 0), Quaternion.identity, heartsInstance.transform.GetChild(0).transform);
             heartsList.Add(heart);
             cnt++;
         }

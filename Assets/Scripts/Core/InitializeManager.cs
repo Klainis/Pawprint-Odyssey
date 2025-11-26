@@ -12,7 +12,6 @@ public class InitializeManager : MonoBehaviour
     public GameObject bossHealth;
     public GameObject manaBar;
 
-
     private void Awake()
     {
         if (_instance != null)

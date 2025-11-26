@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private BossHealth bossHealth;
     private GameObject _playerCached;
 
+    private readonly string entryPointSceneName = "EntryPoint";
+
     private bool isTransitioning;
 
     private GameObject Player
@@ -130,4 +132,20 @@ public class GameManager : MonoBehaviour
             SetGameState(GameState.PLAYING);
         }
     }
+
+    #region Main Menu
+
+    public void PlayGame()
+    {
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        SceneManager.LoadScene(entryPointSceneName);
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Игра закрылась");
+        Application.Quit();
+    }
+
+    #endregion
 }

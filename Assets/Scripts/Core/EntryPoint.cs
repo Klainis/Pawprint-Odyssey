@@ -9,32 +9,40 @@ using TMPro;
 
 public class EntryPoint : MonoBehaviour
 {
-    [SerializeField] private InputActionAsset newInputSystem;
-    [SerializeField] private EventSystem eventSystem;
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private WallsManager wallsManager;
-    [SerializeField] private InitializeManager initializeManager;
-    [SerializeField] private GameObject mainCamera;
-    [SerializeField] private GameObject player;
-    [SerializeField] private Transform initialPosition;
-    [SerializeField] private GameObject canvas;
-    [SerializeField] private GameObject hearts;
-    [SerializeField] private GameObject transitionFade;
-    [SerializeField] private GameObject manaBar;
-    [SerializeField] private GameObject crystalCounter;
-    [SerializeField] private GameObject deadManager;
-    [SerializeField] private GameObject globalValue;
-
+    [Header("Settings")]
+    [SerializeField] private string startSceneName = "F_Room_Tutorial";
     [SerializeField] private PlayerData playerData;
 
-    //private GameObject mainCamera;
-    //private GameObject player;
-    //private Transform initialPosition;
-    //private GameObject canvas;
-    //private GameObject heartsList;
-    //private GameObject manaBar;
-    //private GameObject crystalCounter;
-    //private GameObject deadManager;
+    [Header("PREFABS (Assets)")]
+    [SerializeField] private WallsManager wallsManagerPrefab;
+    [SerializeField] private InitializeManager initializeManagerPrefab;
+    [SerializeField] private GameManager gameManagerPrefab;
+    [SerializeField] private GameObject mainCameraPrefab;
+    [SerializeField] private GameObject globalValuePrefab;
+    [SerializeField] private GameObject deadManagerPrefab;
+    [SerializeField] private GameObject canvasPrefab;
+    [SerializeField] private GameObject heartsPrefab;
+    [SerializeField] private GameObject manaBarPrefab;
+    [SerializeField] private GameObject crystalCounterPrefab;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject transitionFadePrefab;
+    [SerializeField] private InputActionAsset newInputSystem;
+    [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private Transform initialPosition;
+
+    // INSTANCES (Runtime objects)
+    private WallsManager _wallsManagerInstance;
+    private InitializeManager _initializeManagerInstance;
+    private GameManager _gameManagerInstance;
+    private GameObject _mainCameraInstance;
+    private GameObject _globalValueInstance;
+    private GameObject _deadManagerInstance;
+    private GameObject _canvasInstance;
+    private GameObject _transitionCanvasInstance;
+    private GameObject _heartsInstance;
+    private GameObject _manaBarInstance;
+    private GameObject _crystalCounterInstance;
+    private GameObject _playerInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -43,10 +51,7 @@ public class EntryPoint : MonoBehaviour
     public Image manaBarImage { get; private set; }
     private Canvas componentCanvas;
     private Canvas componentTransitionCanvas;
-    private GameObject TransitionCanvas;
     private CanvasScaler componentCanvasScaler;
-
-    [SerializeField] private string startSceneName = "F_Room_Tutorial";
 
     public static EntryPoint _instance { get; private set; }
 
@@ -82,89 +87,126 @@ public class EntryPoint : MonoBehaviour
 
     private void CreateObjects()
     {
-        mainCamera = Instantiate(mainCamera);
-        DontDestroyOnLoad(mainCamera);
+        if (mainCameraPrefab != null)
+        {
+            _mainCameraInstance = Instantiate(mainCameraPrefab);
+            DontDestroyOnLoad(_mainCameraInstance);
+        }
 
-        globalValue = Instantiate(globalValue);
-        DontDestroyOnLoad(globalValue);
+        if (globalValuePrefab != null)
+        {
+            _globalValueInstance = Instantiate(globalValuePrefab);
+            DontDestroyOnLoad(_globalValueInstance);
+        }
 
-        deadManager = Instantiate(deadManager);
-        DontDestroyOnLoad(deadManager);
+        if (deadManagerPrefab != null)
+        {
+            _deadManagerInstance = Instantiate(deadManagerPrefab);
+            DontDestroyOnLoad(_deadManagerInstance);
+        }
 
-        gameManager = Instantiate(gameManager);
-        DontDestroyOnLoad(gameManager);
+        if (GameManager._instance == null)
+        {
+            if (gameManagerPrefab != null)
+            {
+                _gameManagerInstance = Instantiate(gameManagerPrefab);
+                // DontDestroyOnLoad уже есть внутри Awake у GameManager
+            }
+        }
 
-        wallsManager = Instantiate(wallsManager);
-        DontDestroyOnLoad(wallsManager);
+        if (wallsManagerPrefab != null)
+        {
+            _wallsManagerInstance = Instantiate(wallsManagerPrefab);
+            DontDestroyOnLoad(_wallsManagerInstance);
+        }
 
-        initializeManager = Instantiate(initializeManager);
-        DontDestroyOnLoad(initializeManager);
-        InitializeCanvas();
+        if (initializeManagerPrefab != null)
+        {
+            _initializeManagerInstance = Instantiate(initializeManagerPrefab);
+            DontDestroyOnLoad(_initializeManagerInstance);
+            InitializeCanvas();
+        }
 
-        TransitionCanvas = Instantiate(canvas);
-        SetTransitionCanvasParamets();
-        DontDestroyOnLoad(TransitionCanvas);
+        if (canvasPrefab != null)
+        {
+            _transitionCanvasInstance = Instantiate(canvasPrefab);
+            SetTransitionCanvasParamets();
+            DontDestroyOnLoad(_transitionCanvasInstance);
+            InitializeFade();
+        }
 
-        eventSystem = Instantiate(eventSystem);
-        DontDestroyOnLoad(eventSystem);
-
-        InitializeFade();
+        if (FindAnyObjectByType<EventSystem>() == null)
+        {
+            eventSystem = Instantiate(eventSystem);
+            DontDestroyOnLoad(eventSystem);
+        }
 
         InitializeDataFromSave();
 
-        manaBar = Instantiate(manaBar, canvas.transform);
-        DontDestroyOnLoad(manaBar);
-        InitializeManager._instance.manaBar = manaBar;
+        if (_canvasInstance != null)
+        {
+            if (manaBarPrefab != null)
+            {
+                _manaBarInstance = Instantiate(manaBarPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad(_manaBarInstance);
+                InitializeManager._instance.manaBar = _manaBarInstance;
+                EnableMana();
+            }
 
-        InitializeSoulCrystalCounter();
+            InitializeSoulCrystalCounter();
 
-        //Нужна проверка получен ли Коготь у игрока
-        piercingClaw = player.GetComponent<PiercingClaw>();
-        piercingClaw.enabled = false;
-
-        EnableMana();
-
-        hearts = Instantiate(hearts, canvas.transform);
-        DontDestroyOnLoad(hearts);
-
-        if (playerInitialized) StartHearts();
+            if (heartsPrefab != null)
+            {
+                _heartsInstance = Instantiate(heartsPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad(_heartsInstance);
+                if (playerInitialized) StartHearts();
+            }
+        }
     }
 
     private void InitializeCanvas()
     {
-        canvas = Instantiate(canvas);
+        _canvasInstance = Instantiate(canvasPrefab);
         SetCanvasParamets();
-        DontDestroyOnLoad(canvas);
+        DontDestroyOnLoad(_canvasInstance);
 
-        InitializeManager._instance.canvas = canvas.GetComponent<Canvas>();
+        if (InitializeManager._instance != null)
+            InitializeManager._instance.canvas = _canvasInstance.GetComponent<Canvas>();
     }
 
     private void InitializeFade()
     {
-        transitionFade = Instantiate(transitionFade, TransitionCanvas.transform);
-        DontDestroyOnLoad(transitionFade);
-        var StartFade = transitionFade.GetComponent<CanvasGroup>();
-        StartFade.alpha = 1f;
-        fadeScript = transitionFade.GetComponent<TransitionFade>();
-        fadeScript.enabled = true;
-        fadeScript.canvasGroup = StartFade;
+        if (transitionFadePrefab != null && _transitionCanvasInstance != null)
+        {
+            var transitionFadeObj = Instantiate(transitionFadePrefab, _transitionCanvasInstance.transform);
+
+            var StartFade = transitionFadeObj.GetComponent<CanvasGroup>();
+            StartFade.alpha = 1f;
+            
+            fadeScript = transitionFadeObj.GetComponent<TransitionFade>();
+            fadeScript.enabled = true;
+            fadeScript.canvasGroup = StartFade;
+        }
     }
 
     private void InitializeSoulCrystalCounter()
     {
-        crystalCounter = Instantiate(crystalCounter, canvas.transform);
-        DontDestroyOnLoad(crystalCounter);
+        _crystalCounterInstance = Instantiate(crystalCounterPrefab, _canvasInstance.transform);
+        DontDestroyOnLoad(_crystalCounterInstance);
 
-        var text = crystalCounter.GetComponent<TMP_Text>();
+        var text = _crystalCounterInstance.GetComponent<TMP_Text>();
         InitializeManager._instance.soulCrystalText = text;
     }
 
     public void InitializeDataFromSave()
     {
-        player = Instantiate(player);
-        DontDestroyOnLoad(player);
+        if (playerPrefab != null)
+        {
+            _playerInstance = Instantiate(playerPrefab);
+            DontDestroyOnLoad(_playerInstance);
+        }
 
-        var playerView = player.GetComponent<PlayerView>();
+        var playerView = _playerInstance.GetComponent<PlayerView>();
         var isLoaded = SaveSystem.TryLoad();
 
         if (isLoaded)
@@ -190,19 +232,22 @@ public class EntryPoint : MonoBehaviour
             SetInitialPosition();
         }
 
-        var receivingClawScript = player.GetComponent<ReceivingClaw>();
+        var receivingClawScript = _playerInstance.GetComponent<ReceivingClaw>();
         receivingClawScript.enabled = true;
-        var collider = player.GetComponent<BoxCollider2D>();
+        var collider = _playerInstance.GetComponent<BoxCollider2D>();
         collider.enabled = true;
 
-        InitializeManager._instance.player = player;
+        piercingClaw = _playerInstance.GetComponent<PiercingClaw>();
+        if (piercingClaw) piercingClaw.enabled = false;
+
+        InitializeManager._instance.player = _playerInstance;
         playerInitialized = true;
     }
 
     private void SetInitialPosition()
     {
         // Координаты начальной комнаты
-        player.transform.position = /*initialPosition.position*/new Vector3(-150f, -4f, 0f);
+        _playerInstance.transform.position = /*initialPosition.position*/new Vector3(-150f, -4f, 0f);
 
         // Координаты комнаты с Claw
         //player.transform.position = new Vector3(35.97942f, -46.43025f, 0f);
@@ -210,42 +255,42 @@ public class EntryPoint : MonoBehaviour
 
     private void EnableMana()
     {
-        manaBarImage = manaBar.transform.Find("Bar").GetComponent<Image>();
+        manaBarImage = _manaBarInstance.transform.Find("Bar").GetComponent<Image>();
 
         //Нужна проверка активен ли у игрока компонент маны
-        playerMana = player.GetComponent<PlayerMana>();
+        playerMana = _playerInstance.GetComponent<PlayerMana>();
         playerMana.SetManaBarImage(manaBarImage);
         playerMana.enabled = false;
 
         //Проверка на то есть ли сейчас манабар  у игрока. Если есть, то установить значение из json
         // Сейчас ScOb, сделать проверку через json
         if (playerMana.enabled)
-            manaBar.SetActive(true);
+            _manaBarInstance.SetActive(true);
         else
-            manaBar.SetActive(false);
+            _manaBarInstance.SetActive(false);
     }
 
     private void SetCanvasParamets()
     {
-        componentCanvas = canvas.GetComponent<Canvas>();
+        componentCanvas = _canvasInstance.GetComponent<Canvas>();
         componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        componentCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
         componentCanvas.sortingOrder = 0;
     }
 
     private void SetTransitionCanvasParamets()
     {
-        componentTransitionCanvas = TransitionCanvas.GetComponent<Canvas>();
+        componentTransitionCanvas = _transitionCanvasInstance.GetComponent<Canvas>();
         componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        componentTransitionCanvas.worldCamera = mainCamera.GetComponent<Camera>();
+        componentTransitionCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
         componentTransitionCanvas.sortingOrder = 100;
     }
 
     private void StartHearts()
     {
-        playerHeart = player.GetComponent<PlayerHeart>();
+        playerHeart = _playerInstance.GetComponent<PlayerHeart>();
 
-        playerHeart.SetHeartsPrefab(hearts);
+        playerHeart.SetHeartsInstance(_heartsInstance);
         playerHeart.StartHearts();
         //Логика назначения текущего HP при запуске игры. Через json
     }
