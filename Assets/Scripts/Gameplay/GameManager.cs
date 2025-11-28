@@ -11,14 +11,14 @@ public class GameManager : MonoBehaviour
     public static GameManager _instance { get; private set; }
     public GameState GameState { get; private set; }
 
-    //[SerializeField] private ScreenFader screenFader;
-
     private TransitionDestination destination;
     private TransitionDestination[] destinations;
     private AudioListener Sounds;
     private BossHealth bossHealth;
     private GameObject _playerCached;
 
+    private readonly string mainMenuSceneName = "MainMenu";
+    private readonly string savesMenuSceneName = "SavesMenu";
     private readonly string entryPointSceneName = "EntryPoint";
 
     private bool isTransitioning;
@@ -133,9 +133,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region Main Menu
+    #region Menu
 
-    public void PlayGame()
+    public void OpenSavesMenu()
+    {
+        SceneManager.LoadScene(savesMenuSceneName);
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void StartGameFromProfile(int profileNumber)
     {
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         SceneManager.LoadScene(entryPointSceneName);
