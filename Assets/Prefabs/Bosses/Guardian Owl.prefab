@@ -15,10 +15,12 @@ GameObject:
   - component: {fileID: 1527360377936914368}
   - component: {fileID: 6938317827883733616}
   - component: {fileID: 4197663805361056210}
+  - component: {fileID: 3608303221265108472}
   - component: {fileID: 5296589202441859039}
   - component: {fileID: 5444862204575770593}
-  - component: {fileID: 3608303221265108472}
+  - component: {fileID: 1900318806219195236}
   - component: {fileID: 5025539658209776332}
+  - component: {fileID: 2570410720280912600}
   m_Layer: 6
   m_Name: Guardian Owl
   m_TagString: Enemy
@@ -252,6 +254,20 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 1, y: 0, z: 0}
+--- !u!114 &3608303221265108472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848648539469817835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
+  _health: {fileID: 5667069342582091114, guid: 1574d942d03fc3e459e2546883b94892, type: 3}
+  _canvas: {fileID: 0}
 --- !u!114 &5296589202441859039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2334ef9bcaa1948855e66a12f0f5c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GuardianOwlAnimation
---- !u!114 &3608303221265108472
+--- !u!114 &1900318806219195236
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -324,11 +340,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 5848648539469817835}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9aae4f8e0998c54aa49ae0685c51fad, type: 3}
+  m_Script: {fileID: 11500000, guid: 7caca0ef1d4fc9e478a09628a401e23a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossHealth
-  _health: {fileID: 5667069342582091114, guid: 1574d942d03fc3e459e2546883b94892, type: 3}
-  _canvas: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::SGAttack
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  acceleratedSpeed: 10
+  ramTelegraphTime: 0.25
+  ramPauseBetweenSeries: 3
+  lightZone: {fileID: 0}
+  lightZoneCooldown: 3
+  lightZoneChance: 0.8
+  lightZoneTime: 1
+  lightZoneTelegraphTime: 0.5
 --- !u!95 &5025539658209776332
 Animator:
   serializedVersion: 7
@@ -351,3 +379,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2570410720280912600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848648539469817835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7caca0ef1d4fc9e478a09628a401e23a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SGAttack
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  acceleratedSpeed: 10
+  ramTelegraphTime: 0.25
+  ramPauseBetweenSeries: 3
+  lightZone: {fileID: 0}
+  lightZoneCooldown: 3
+  lightZoneChance: 0.8
+  lightZoneTime: 1
+  lightZoneTelegraphTime: 0.5

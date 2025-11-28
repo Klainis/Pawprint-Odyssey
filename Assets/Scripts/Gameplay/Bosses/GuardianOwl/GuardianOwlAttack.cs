@@ -8,22 +8,30 @@ public class SGAttack : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private GameObject _player;
 
-    [Header("Attack 'Ram'")]
-    [SerializeField] private float acceleratedSpeed = 10f;
-    [SerializeField] private float ramTelegraphTime = 0.25f;
-    [SerializeField] private float ramPauseBetweenSeries = 3f;
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem _eyeAttack;
+    [SerializeField] private ParticleSystem _waveAttack;
 
-    [Header("Attack 'Light Zone'")]
-    [SerializeField] private GameObject lightZone;
-    [SerializeField] private float lightZoneCooldown = 3f;
-    [SerializeField] private float lightZoneChance = 0.8f;
-    [SerializeField] private float lightZoneTime = 1f;
-    [SerializeField] private float lightZoneTelegraphTime = 0.5f;
+    //[Header("Attack 'Ram'")]
+    //[SerializeField] private float acceleratedSpeed = 10f;
+    //[SerializeField] private float ramTelegraphTime = 0.25f;
+    //[SerializeField] private float ramPauseBetweenSeries = 3f;
+
+    //[Header("Attack 'Light Zone'")]
+    ////[SerializeField] private GameObject lightZone;
+    //[SerializeField] private float lightZoneCooldown = 3f;
+    //[SerializeField] private float lightZoneChance = 0.8f;
+    //[SerializeField] private float lightZoneTime = 1f;
+    //[SerializeField] private float lightZoneTelegraphTime = 0.5f;
+
+    private ParticleSystem _eyeAttackInstance;
+    private ParticleSystem _waveAttackInstance;
 
     public event Action OnPlayerDetected;
 
-    private SpiritGuideView sgView;
+    private GuardianOwlView _guardianOwlView;
 
     private Transform pivotTop;
     private Transform pivotBottom;
@@ -33,11 +41,11 @@ public class SGAttack : MonoBehaviour
     private float nextLightZoneTime = 0f;
     private bool inLightZone = false;
 
-    public float AcceleratedSpeed { get { return acceleratedSpeed; } }
+    //public float AcceleratedSpeed { get { return acceleratedSpeed; } }
 
     private void Awake()
     {
-        sgView = GetComponent<SpiritGuideView>();
+        _guardianOwlView = GetComponent<GuardianOwlView>();
 
         pivotTop = transform.Find("PivotTop");
         pivotBottom = transform.Find("PivotBottom");
@@ -47,44 +55,44 @@ public class SGAttack : MonoBehaviour
     {
         var wallHits = GetWallHits(6);
         var playerHitsSecondStage = GetPlayerHits(5, facingRight);
-        if (wallHits[0].collider == null && wallHits[1].collider == null && Time.time >= nextLightZoneTime)
-        {
-            if (UnityEngine.Random.value <= lightZoneChance
-                && (playerHitsSecondStage[0].collider != null || playerHitsSecondStage[1].collider != null))
-            {
-                StartCoroutine(LightZoneRoutine());
-                nextLightZoneTime = Time.time + lightZoneCooldown;
-            }
-            else if (!inLightZone)
-            {
-                StartCoroutine(RamTelegraph());
-                sgView.IsAccelerated = true;
-            }
-        }
+        //if (wallHits[0].collider == null && wallHits[1].collider == null && Time.time >= nextLightZoneTime)
+        //{
+        //    if (UnityEngine.Random.value <= lightZoneChance
+        //        && (playerHitsSecondStage[0].collider != null || playerHitsSecondStage[1].collider != null))
+        //    {
+        //        StartCoroutine(LightZoneRoutine());
+        //        nextLightZoneTime = Time.time + lightZoneCooldown;
+        //    }
+        //    else if (!inLightZone)
+        //    {
+        //        StartCoroutine(RamTelegraph());
+        //        _guardianOwlView.IsAccelerated = true;
+        //    }
+        //}
     }
 
     public void RamAttack(List<RaycastHit2D> playerHits)
     {
-        for (var i = 0; i < playerHits.Count; i++)
-        {
-            if (playerHits[i].collider != null)
-            {
-                StartCoroutine(RamTelegraph());
-                sgView.IsAccelerated = true;
-                ramSeriesCount += 1;
-                break;
-            }
-        }
+        //for (var i = 0; i < playerHits.Count; i++)
+        //{
+        //    if (playerHits[i].collider != null)
+        //    {
+        //        StartCoroutine(RamTelegraph());
+        //        _guardianOwlView.IsAccelerated = true;
+        //        ramSeriesCount += 1;
+        //        break;
+        //    }
+        //}
     }
 
-    public void CheckRamSeriesCountAndPause()
-    {
-        if (ramSeriesCount == maxRamSeriesCount)
-        {
-            ramSeriesCount = 0;
-            StartCoroutine(RamPause());
-        }
-    }
+    //public void CheckRamSeriesCountAndPause()
+    //{
+    //    if (ramSeriesCount == maxRamSeriesCount)
+    //    {
+    //        ramSeriesCount = 0;
+    //        StartCoroutine(RamPause());
+    //    }
+    //}
 
     public List<RaycastHit2D> GetPlayerHits(float distance, bool facingRight)
     {
@@ -105,10 +113,10 @@ public class SGAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (!sgView.Model.IsDead)
+            if (!_guardianOwlView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position);
             }
         }
     }
@@ -117,58 +125,58 @@ public class SGAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (!sgView.Model.IsDead)
+            if (!_guardianOwlView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position);
             }
         }
     }
 
-    private IEnumerator RamTelegraph()
-    {
-        // _bugAnimation.SetBoolRamTelegraph(true);
-        var renderer = GetComponent<SpriteRenderer>();
-        var normalColor = renderer.color;
-        renderer.color = UnityEngine.Color.red;
+    //private IEnumerator RamTelegraph()
+    //{
+    //    // _bugAnimation.SetBoolRamTelegraph(true);
+    //    var renderer = GetComponent<SpriteRenderer>();
+    //    var normalColor = renderer.color;
+    //    renderer.color = UnityEngine.Color.red;
 
-        var normalConstraints = sgView.RigidBody.constraints;
-        sgView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-        yield return new WaitForSeconds(ramTelegraphTime);
-        sgView.RigidBody.constraints = normalConstraints;
+    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
+    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+    //    yield return new WaitForSeconds(ramTelegraphTime);
+    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
 
-        renderer.color = normalColor;
-    }
+    //    renderer.color = normalColor;
+    //}
 
-    private IEnumerator RamPause()
-    {
-        sgView.MoveDisabled = true;
+    //private IEnumerator RamPause()
+    //{
+    //    //_guardianOwlView.MoveDisabled = true;
 
-        var normalConstraints = sgView.RigidBody.constraints;
-        sgView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-        yield return new WaitForSeconds(ramPauseBetweenSeries);
-        sgView.RigidBody.constraints = normalConstraints;
+    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
+    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+    //    yield return new WaitForSeconds(ramPauseBetweenSeries);
+    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
         
-        sgView.MoveDisabled = false;
-    }
+    //    //_guardianOwlView.MoveDisabled = false;
+    //}
 
-    private IEnumerator LightZoneRoutine()
-    {
-        //_animator.SetBool("LightZoneTelegraph", true);
-        var renderer = GetComponent<SpriteRenderer>();
-        var normalColor = renderer.color;
-        renderer.color = UnityEngine.Color.lightYellow;
+    //private IEnumerator LightZoneRoutine()
+    //{
+    //    //_animator.SetBool("LightZoneTelegraph", true);
+    //    var renderer = GetComponent<SpriteRenderer>();
+    //    var normalColor = renderer.color;
+    //    renderer.color = UnityEngine.Color.lightYellow;
 
-        inLightZone = true;
-        var normalConstraints = sgView.RigidBody.constraints;
-        sgView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-        yield return new WaitForSeconds(lightZoneTelegraphTime);
-        lightZone.SetActive(true);
-        yield return new WaitForSeconds(lightZoneTime);
-        lightZone.SetActive(false);
-        sgView.RigidBody.constraints = normalConstraints;
-        inLightZone = false;
+    //    inLightZone = true;
+    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
+    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+    //    yield return new WaitForSeconds(lightZoneTelegraphTime);
+    //    lightZone.SetActive(true);
+    //    yield return new WaitForSeconds(lightZoneTime);
+    //    lightZone.SetActive(false);
+    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
+    //    inLightZone = false;
 
-        renderer.color = normalColor;
-    }
+    //    renderer.color = normalColor;
+    //}
 }
