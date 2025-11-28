@@ -25,7 +25,6 @@ public class PlayerHeart : MonoBehaviour
     public void StartHearts()
     {
         var cnt = 1;
-        Debug.Log(heartsInstance.transform.childCount);
         while (heartsList.Count < playerView.PlayerModel.Life)
         {
             var heart = Instantiate(heartPrefab, new Vector3(-7 + 0.8f * cnt, 7, 0), Quaternion.identity, heartsInstance.transform.GetChild(0).transform);

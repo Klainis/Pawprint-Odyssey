@@ -211,7 +211,7 @@ public class EntryPoint : MonoBehaviour
 
         if (isLoaded)
         {
-            Debug.Log("EntryPoint: Игра загружена из файла сохранения.");
+            Debug.Log($"EntryPoint: Игра загружена из профиля {SaveSystem.CurrentProfileIndex}.");
 
             // В будущем SetInitialPosition должен вызываться только если isLoaded == false,
             // а position ставиться в SaveSystem.TryLoad
@@ -219,7 +219,7 @@ public class EntryPoint : MonoBehaviour
         }
         else
         {
-            Debug.Log("EntryPoint: Сохранение не найдено. Новая игра по параметрам PlayerData.");
+            Debug.Log($"EntryPoint: Сохранение из профиля {SaveSystem.CurrentProfileIndex} не найдено. Новая игра.");
 
             if (playerData != null)
             {
@@ -230,6 +230,7 @@ public class EntryPoint : MonoBehaviour
                 Debug.LogError("CRITICAL: PlayerData не назначен в инспекторе EntryPoint!");
 
             SetInitialPosition();
+            SaveSystem.Save();
         }
 
         var receivingClawScript = _playerInstance.GetComponent<ReceivingClaw>();

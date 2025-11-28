@@ -3,6 +3,8 @@ using System.IO;
 
 public class SaveSystem
 {
+    public static int CurrentProfileIndex { get; set; } = 1;
+
     private static SaveData saveData = new SaveData();
 
     [System.Serializable]
@@ -14,8 +16,15 @@ public class SaveSystem
 
     public static string SaveFileName()
     {
-        var saveFile = Application.persistentDataPath + "/save" + ".save";
+        var saveFile = $"{Application.persistentDataPath}/Saves/Profile_{CurrentProfileIndex}/save_{CurrentProfileIndex}.dat";
         return saveFile;
+    }
+
+    // Можно использовать для изменения UI кнопки с уже имеющемся сохранением. Или наоборот.
+    public static bool ProfileHasSave(int profileIndex)
+    {
+        var path = $"{Application.persistentDataPath}/Saves/Profile_{CurrentProfileIndex}/save_{profileIndex}.dat";
+        return File.Exists(path);
     }
 
     public static void Save()
@@ -23,16 +32,26 @@ public class SaveSystem
         HandleSaveData();
 
         var json = JsonUtility.ToJson(saveData, true);
+
+        var fullPath = SaveFileName();
+        var directoryPath = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directoryPath))
+            Directory.CreateDirectory(directoryPath);
+
         File.WriteAllText(SaveFileName(), json);
 
-        Debug.Log("Game Saved: " + SaveFileName());
+        Debug.Log($"SaveSystem: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
     }
 
     public static bool TryLoad()
     {
         var path = SaveFileName();
 
-        if (!File.Exists(path)) return false;
+        if (!File.Exists(path))
+        {
+            saveData = new SaveData();
+            return false;
+        }
 
         try
         {
@@ -49,7 +68,7 @@ public class SaveSystem
         }
         catch (System.Exception e)
         {
-            Debug.LogError("Ошибка чтения сохранения: " + e.Message);
+            Debug.LogError("SaveSystem: Ошибка чтения сохранения: " + e.Message);
             return false;
         }
     }
@@ -77,16 +96,6 @@ public class SaveSystem
             return true;
         }
         return false;
-    }
-
-    public static void DeleteSave()
-    {
-        var path = SaveFileName();
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-            Debug.Log("Save file deleted.");
-        }
     }
 
     private static void HandleSaveData()
