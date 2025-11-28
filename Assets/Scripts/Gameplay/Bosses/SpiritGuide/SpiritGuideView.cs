@@ -14,7 +14,7 @@ public class SpiritGuideView : MonoBehaviour
     [SerializeField] private bool isInvincible = false;
 
     [Header("Events")]
-    [SerializeField] private UnityEvent Hit;
+    [SerializeField] private UnityEvent<bool, bool> Hit;
     [SerializeField] private UnityEvent Die;
 
     [Header("Particles")]
@@ -33,7 +33,7 @@ public class SpiritGuideView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
 
     private SGAnimation sgAnimation;
-    private SGAttack sgAttack;
+    private GuardianOwlAttack sgAttack;
     private SGMove sgMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
@@ -64,7 +64,7 @@ public class SpiritGuideView : MonoBehaviour
         groundCheck = transform.Find("GroundCheck");
         
         sgAnimation = GetComponent<SGAnimation>();
-        sgAttack = GetComponent<SGAttack>();
+        sgAttack = GetComponent<GuardianOwlAttack>();
         sgMove = GetComponent<SGMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
@@ -110,7 +110,7 @@ public class SpiritGuideView : MonoBehaviour
             var direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
 
-            Hit.Invoke();
+            Hit.Invoke(false, true);
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;
             StartCoroutine(HitTime());

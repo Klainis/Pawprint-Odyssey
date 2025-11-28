@@ -466,7 +466,7 @@
 //    {
 //        if (_isInvincible) return;
 
-//        _animator.SetBool("Hit", true);
+//        _animator.SetBool("_Hit", true);
 //        heart.RemoveHearts(damage);
 //        var damageDir = Vector3.Normalize(transform.position - position) * 40f;
 //        m_Rigidbody2D.linearVelocity = Vector2.zero;
@@ -486,7 +486,7 @@
 //    {
 //        if (!_isInvincible)
 //        {
-//            _animator.SetBool("Hit", true);
+//            _animator.SetBool("_Hit", true);
 //            heart.RemoveHearts(damage);
 //            if (Data.currentLife < 1)
 //            {

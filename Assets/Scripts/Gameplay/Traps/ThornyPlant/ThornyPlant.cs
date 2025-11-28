@@ -79,7 +79,7 @@ public class ThornyPlant : MonoBehaviour {
     public void ApplyDamage(int damage) {
 		if (!isInvincible) 
 		{
-            //_animator.SetBool("Hit", true);
+            //_animator.SetBool("_Hit", true);
             //_damageFlash.CallDamageFlash();
             _screenShaker.Shake();
 

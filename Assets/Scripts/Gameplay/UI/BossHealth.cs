@@ -3,40 +3,53 @@ using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
 {
-    [SerializeField] private GameObject health;
-    [SerializeField] private Transform canvas;
+    [SerializeField] private GameObject _health;
+    [SerializeField] private Transform _canvas;
 
-    private SpiritGuideView sgView;
-    private Image bossHealthBar;
-    private GameObject bossHealth;
+    private SpiritGuideView _sgView;
+    private GuardianOwlView _guardianOwlView;
+    private Image _bossHealthBar;
+    private GameObject _bossHealth;
 
     private void Awake()
     {
-        canvas = InitializeManager._instance.canvas.transform;
+        _canvas = InitializeManager._instance.canvas.transform;
     }
 
     void Start()
     {
-        //canvas = gameObject.transform.Find("Canvas");
-        sgView = GetComponent<SpiritGuideView>();
+        _sgView = GetComponent<SpiritGuideView>();
+        _guardianOwlView = GetComponent<GuardianOwlView>();
     }
 
     public void InstantiateBossHealth()
     {
-        if (GameObject.FindWithTag("BossHealth") || sgView.Model.IsDead)
+        if (GameObject.FindWithTag("BossHealth") || 
+            _sgView? _sgView.Model.IsDead : false || 
+            _guardianOwlView? _guardianOwlView.Model.IsDead : false)
             return;
 
-        bossHealth = Instantiate(health, canvas);
-        bossHealthBar = bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
+        _bossHealth = Instantiate(_health, _canvas);
+        _bossHealthBar = _bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
+
+        Debug.Log(_bossHealthBar);
+        Debug.Log(_bossHealth.transform.Find("BossHealthBar").GetComponent<Image>().gameObject.name);
     }
 
-    public void HitBoss()
+    public void HitBoss(bool owlBoss, bool sgBoss)
     {
-        bossHealthBar.fillAmount = (float)sgView.Model.Life / (float)sgView.MaxLifeForReading;
+        if (sgBoss)
+        {
+            _bossHealthBar.fillAmount = (float)_sgView.Model.Life / (float)_sgView.MaxLifeForReading;
+        }
+        if (owlBoss)
+        {
+            _bossHealthBar.fillAmount = (float)_guardianOwlView.Model.Life / (float)_guardianOwlView.MaxLifeForReading;
+        }
     }
 
     public void DestroyBossHealthSlider()
     {
-        Destroy(bossHealth);
+        Destroy(_bossHealth);
     }
 }
