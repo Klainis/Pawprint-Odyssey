@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private BossHealth bossHealth;
     private GameObject _playerCached;
 
+    private readonly string entryPointSceneName = "EntryPoint";
+
     private bool isTransitioning;
 
     private GameObject Player
@@ -126,8 +128,24 @@ public class GameManager : MonoBehaviour
         {
             Destroy(Player);
             SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
-            EntryPoint._instance.InitializePlayer();
+            EntryPoint._instance.InitializeDataFromSave();
             SetGameState(GameState.PLAYING);
         }
     }
+
+    #region Main Menu
+
+    public void PlayGame()
+    {
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+        SceneManager.LoadScene(entryPointSceneName);
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Игра закрылась");
+        Application.Quit();
+    }
+
+    #endregion
 }

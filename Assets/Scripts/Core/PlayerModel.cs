@@ -69,17 +69,6 @@ public class PlayerModel
         );
     }
 
-    //public string GetJsonStringForSave()
-    //{
-    //    // Создать json строку(файл создавать сразу думаю не надо - его создавать уже из полученных отсюда данных)
-    //    return "json с данными игрока";
-    //}
-
-    //private string GetDataFromJsonSave(string jsonString)
-    //{
-    //    return "json с данными игрока";
-    //}
-
     public bool SetFacingRight(bool facingRight)
     {
         FacingRight = facingRight;

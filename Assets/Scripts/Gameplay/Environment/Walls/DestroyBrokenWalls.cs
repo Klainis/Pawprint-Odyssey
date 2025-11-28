@@ -4,14 +4,19 @@ public class DestroyBrokenWalls : MonoBehaviour
 {
     [SerializeField] private string _wallID;
 
+    private WallsManager wallsManager;
+
+    public string WallID { get { return _wallID; } }
+
     private void Awake()
     {
+        wallsManager = GameObject.FindGameObjectWithTag("WallsManager").GetComponent<WallsManager>();
         DestroyWall();
     }
 
-    private void DestroyWall()
+    public void DestroyWall()
     {
-        if (WallsExistence.IsWallBroken(_wallID))
+        if (wallsManager.WallsExistenceInstance.IsWallBroken(_wallID))
         {
             Destroy(gameObject);
         }
@@ -19,7 +24,7 @@ public class DestroyBrokenWalls : MonoBehaviour
 
     public void AddInDestroyWallList()
     {
-        WallsExistence.BreakWall(_wallID);
+        wallsManager.WallsExistenceInstance.BreakWall(_wallID);
         Debug.Log(_wallID);
     }
 }

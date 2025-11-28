@@ -1,19 +1,41 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public static class WallsExistence
+public class WallsExistence
 {
-    private static WallSaveData _wallData = new WallSaveData();
+    public HashSet<string> BrokenWalls { get; set; }
 
-    public static bool IsWallBroken(string wallID)
+    private WallsExistence(HashSet<string> brokenWalls)
     {
-        return _wallData.brokenWalls.Contains(wallID);
+        BrokenWalls = brokenWalls;
     }
 
-    public static void BreakWall(string wallID)
+    public static WallsExistence CreateWallsExistence(ref WallSaveData data)
     {
-        _wallData.brokenWalls.Add(wallID);
+        HashSet<string> wallsSet;
+        if (data.BrokenWalls == null)
+            wallsSet = new HashSet<string>();
+        else
+            wallsSet = new HashSet<string>(data.BrokenWalls);
+        return new WallsExistence(wallsSet);
     }
+
+    public bool IsWallBroken(string wallID)
+    {
+        return BrokenWalls.Contains(wallID);
+    }
+
+    public void BreakWall(string wallID)
+    {
+        BrokenWalls.Add(wallID);
+    }
+
+    public void Save(ref WallSaveData data)
+    {
+        data.BrokenWalls = new List<string>(BrokenWalls);
+    }
+
     //public class TransitionRoomWall
     //{
     //    public string SceneName;
@@ -142,4 +164,10 @@ public static class WallsExistence
     //        }
     //    },
     //};
+}
+
+[System.Serializable]
+public struct WallSaveData
+{
+    public List<string> BrokenWalls;
 }

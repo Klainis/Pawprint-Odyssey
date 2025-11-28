@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1439879484715149413
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 46146665050234620}
+  - component: {fileID: 8144203993202825892}
+  m_Layer: 0
+  m_Name: EntryPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &46146665050234620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439879484715149413}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20.36698, y: 1.70763, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8144203993202825892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439879484715149413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 898605e31a698674fa8adfb84c0271df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntryPoint
+  startSceneName: F_Room_Tutorial
+  playerData: {fileID: 11400000, guid: 58593124f2f19cc4d98dd40e3a26bbde, type: 2}
+  wallsManagerPrefab: {fileID: 6175280169493286734, guid: 64199c181cb709647810d13300fba943, type: 3}
+  initializeManagerPrefab: {fileID: 6159757207496420658, guid: cfd4552461aaf034b9b4a61a44ce0f5e, type: 3}
+  gameManagerPrefab: {fileID: 1669899751661029544, guid: bb8ba09721433b548a4a5931f4df1e78, type: 3}
+  mainCameraPrefab: {fileID: 1025145325119744, guid: d975e66254b08984ab50d4c39dcb947f, type: 3}
+  globalValuePrefab: {fileID: 6324197193557886517, guid: 9437676cff9ce3a4d83eb1237b048345, type: 3}
+  deadManagerPrefab: {fileID: 3966501623110455276, guid: aa27de1c7f35c2c44b102a5a2281818b, type: 3}
+  canvasPrefab: {fileID: 7178030642128010963, guid: d93f6d876afe4b240b2affc5b25c9502, type: 3}
+  heartsPrefab: {fileID: 7567480160736325036, guid: d22d27cff0fc36449abc7503495b8122, type: 3}
+  manaBarPrefab: {fileID: 52417479227479087, guid: 97718ee2e0ece3045b36d04314bb5da9, type: 3}
+  crystalCounterPrefab: {fileID: 4443981045678409451, guid: 2474d9d7444703c45b5f578d3470b3ac, type: 3}
+  playerPrefab: {fileID: 1377240496476148, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+  transitionFadePrefab: {fileID: 309292490302467633, guid: 1692d9a56fa02a742bbe75c87b5eb9c5, type: 3}
+  newInputSystem: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  eventSystem: {fileID: 8909387028098303834, guid: e989e826531b2484e92739046612c41e, type: 3}
+  initialPosition: {fileID: 5316945482365655823, guid: 866ba4574e2aad04db6a665f017ef5c4, type: 3}
