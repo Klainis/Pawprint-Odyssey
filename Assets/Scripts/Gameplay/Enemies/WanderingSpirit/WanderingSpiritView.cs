@@ -46,7 +46,6 @@ public class WanderingSpiritView : MonoBehaviour
 
         //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         playerAttack = InitializeManager._instance.player?.GetComponent<PlayerAttack>();
-        Debug.Log(playerAttack == null);
         rigidBody = GetComponent<Rigidbody2D>();
         wsAnimation = GetComponent<WSAnimation>();
         wsAttack = GetComponent<WSAttack>();

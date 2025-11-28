@@ -15,10 +15,8 @@ public class InteractArea : MonoBehaviour
         {
             interact.enabled = true;
 
-            if (gameObject.tag == "Heal")
-            {
-                interact.heal = true;
-            }
+            if (gameObject.CompareTag("Heal"))
+                interact.Heal = true;
         }
     }
 
@@ -27,7 +25,7 @@ public class InteractArea : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             interact.enabled = false;
-            interact.heal = false;
+            interact.Heal = false;
         }
     }
 }

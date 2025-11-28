@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class PlayerView : MonoBehaviour
 {
@@ -20,22 +19,21 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private UnityEvent OnFallEvent;
     [SerializeField] private UnityEvent OnLandEvent;
 
-    private Gamepad gamepad;
-
     private Rigidbody2D rigidBody;
     private PlayerAnimation playerAnimation;
     private PlayerAttack playerAttack;
     private PlayerMove playerMove;
     private PlayerInput playerInput;
     private PlayerHeart playerHeart;
+    private Interact playerInteract;
 
     private bool isInvincible = false;
+
+    #region Common Methods
 
     private void Awake()
     {
         instance = this;
-
-        gamepad = Gamepad.current;
 
         rigidBody = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -43,6 +41,7 @@ public class PlayerView : MonoBehaviour
         playerMove = GetComponent<PlayerMove>();
         playerInput = GetComponent<PlayerInput>();
         playerHeart = GetComponent<PlayerHeart>();
+        playerInteract = GetComponent<Interact>();
 
         if (OnFallEvent == null) OnFallEvent = new UnityEvent();
         if (OnLandEvent == null) OnLandEvent = new UnityEvent();
@@ -128,6 +127,13 @@ public class PlayerView : MonoBehaviour
 
         playerMove.ScaleJump();
     }
+
+    //private void OnEnable()
+    //{
+    //    playerInteract.
+    //}
+
+    #endregion
 
     #region Heal
 
