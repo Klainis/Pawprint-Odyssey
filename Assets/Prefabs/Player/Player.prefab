@@ -73,7 +73,7 @@ Transform:
   m_GameObject: {fileID: 1377240496476148}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.7, y: -1.37, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -111,8 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75a96b464a0c4c44fa1c966f54fc5efd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heart
-  canvas: {fileID: 8518606145567162077, guid: d93f6d876afe4b240b2affc5b25c9502, type: 3}
-  heartsPrefab: {fileID: 146539198543049472, guid: e1361ce18d6f267499a9ce993c91401f, type: 3}
   heartPrefab: {fileID: 7567480160736325036, guid: b4ab62ff55c40f1469a29d0496405eef, type: 3}
 --- !u!114 &6772023754791648629
 MonoBehaviour:
@@ -197,7 +195,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   attackSeriesTimeout: 0.9
   maxAttackSeriesCount: 3
-  _attackParticle: {fileID: 2868019777471740350}
   getMana:
     m_PersistentCalls:
       m_Calls:
@@ -242,7 +239,7 @@ MonoBehaviour:
   dashAction: {fileID: -657975949706170437, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   saveAction: {fileID: 7323548540738220381, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  loadAction: {fileID: 8234030111536675352, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  loadAction: {fileID: 0}
   runSpeed: 45
   jumpPressed:
     m_PersistentCalls:
@@ -357,7 +354,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  heal: 0
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0

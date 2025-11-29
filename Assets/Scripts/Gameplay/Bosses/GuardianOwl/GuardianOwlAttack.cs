@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SGAttack : MonoBehaviour
+public class GuardianOwlAttack : MonoBehaviour
 {
     [Header("Main params")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private GameObject _player;
+    private GameObject _player;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _eyeAttack;
@@ -29,12 +29,16 @@ public class SGAttack : MonoBehaviour
     private ParticleSystem _eyeAttackInstance;
     private ParticleSystem _waveAttackInstance;
 
+    private ParticleSystem.Particle[] _eyeAttackParticles;
+    private ParticleSystem.Particle[] _waveAttackParticles;
+
     public event Action OnPlayerDetected;
 
     private GuardianOwlView _guardianOwlView;
 
     private Transform pivotTop;
     private Transform pivotBottom;
+    private BoxCollider2D _colliderOfEyeAttack;
 
     private const int maxRamSeriesCount = 3;
     private int ramSeriesCount = 0;
@@ -46,10 +50,73 @@ public class SGAttack : MonoBehaviour
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
+        _player = InitializeManager._instance.player;
 
         pivotTop = transform.Find("PivotTop");
         pivotBottom = transform.Find("PivotBottom");
     }
+
+    #region Eye Attack
+    public void EyeOwlAttack()
+    {
+        _eyeAttackInstance = Instantiate(_eyeAttack, _player.transform.position, new Quaternion(0, 0, 0, 0));
+        _colliderOfEyeAttack = _eyeAttackInstance.gameObject.GetComponent<BoxCollider2D>();
+        _eyeAttackParticles = new ParticleSystem.Particle[_eyeAttackInstance.main.maxParticles];
+
+        StartCoroutine(EnableCollisionEyeAttack());
+    }
+
+    public void EyeAttackCoroutine(int amount)
+    {
+        StartCoroutine(SpawnEyeAttack(amount));
+    }
+
+    private IEnumerator EnableCollisionEyeAttack()
+    {
+        yield return new WaitForEndOfFrame();
+
+        int partCount = _eyeAttackInstance.GetParticles(_eyeAttackParticles);
+        Debug.Log($"ÂÛÇÂÀÍÀ ÊÎÐÓÒÈÍÀ ÂÊËÞ×ÅÍÈß ÊÎËËÀÉÄÅÐÀ, ïàðòèêëîâ:{partCount}");
+        while (_eyeAttackInstance != null && partCount > 0)
+        {
+            if (partCount > 0)
+            {
+                partCount = _eyeAttackInstance.GetParticles(_eyeAttackParticles);
+
+                var p = _eyeAttackParticles[0];
+
+                var sizeOverLifetime = p.startLifetime;
+                var remainingLifetime = p.remainingLifetime;
+
+                float t = 1f - (remainingLifetime / sizeOverLifetime);
+                float currentSizeValue = _eyeAttackInstance.sizeOverLifetime.size.Evaluate(t);
+
+                if (currentSizeValue < 0.9)
+                {
+                    Debug.Log($"Êîëëàéäåð âûêëþ÷åí {t}");
+                    _colliderOfEyeAttack.enabled = false;
+                }
+                if (currentSizeValue >= 0.9)
+                {
+                    Debug.Log($"Êîëëàéäåð âêëþ÷åí {t}");
+                    _colliderOfEyeAttack.enabled = true;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator SpawnEyeAttack(int attackTime)
+    {
+        while (attackTime > 0)
+        {
+            yield return new WaitForSeconds(2);
+            EyeOwlAttack();
+            attackTime--;
+        }
+        yield return null;
+    }
+    #endregion
 
     public void RandomAttack(bool facingRight)
     {
@@ -109,6 +176,7 @@ public class SGAttack : MonoBehaviour
         return new List<RaycastHit2D> { wallHitLeft, wallHitRight };
     }
 
+    #region Body Attack
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -132,6 +200,7 @@ public class SGAttack : MonoBehaviour
             }
         }
     }
+    #endregion
 
     //private IEnumerator RamTelegraph()
     //{
@@ -156,7 +225,7 @@ public class SGAttack : MonoBehaviour
     //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
     //    yield return new WaitForSeconds(ramPauseBetweenSeries);
     //    _guardianOwlView.RigidBody.constraints = normalConstraints;
-        
+
     //    //_guardianOwlView.MoveDisabled = false;
     //}
 

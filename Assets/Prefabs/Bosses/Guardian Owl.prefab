@@ -18,9 +18,8 @@ GameObject:
   - component: {fileID: 3608303221265108472}
   - component: {fileID: 5296589202441859039}
   - component: {fileID: 5444862204575770593}
-  - component: {fileID: 1900318806219195236}
+  - component: {fileID: 1939763099107170150}
   - component: {fileID: 5025539658209776332}
-  - component: {fileID: 2570410720280912600}
   m_Layer: 6
   m_Name: Guardian Owl
   m_TagString: Enemy
@@ -331,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2334ef9bcaa1948855e66a12f0f5c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GuardianOwlAnimation
---- !u!114 &1900318806219195236
+--- !u!114 &1939763099107170150
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -349,14 +348,9 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 512
-  acceleratedSpeed: 10
-  ramTelegraphTime: 0.25
-  ramPauseBetweenSeries: 3
-  lightZone: {fileID: 0}
-  lightZoneCooldown: 3
-  lightZoneChance: 0.8
-  lightZoneTime: 1
-  lightZoneTelegraphTime: 0.5
+  _player: {fileID: 1377240496476148, guid: 50936cccdb69523458c1b42052ebafff, type: 3}
+  _eyeAttack: {fileID: 1900145376438457523, guid: d4299bc30a9845f44b6356f07d95710a, type: 3}
+  _waveAttack: {fileID: 934394633686715650, guid: 3ac233ab2135dce49ab316a1ea049be1, type: 3}
 --- !u!95 &5025539658209776332
 Animator:
   serializedVersion: 7
@@ -379,29 +373,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2570410720280912600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5848648539469817835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7caca0ef1d4fc9e478a09628a401e23a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SGAttack
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  acceleratedSpeed: 10
-  ramTelegraphTime: 0.25
-  ramPauseBetweenSeries: 3
-  lightZone: {fileID: 0}
-  lightZoneCooldown: 3
-  lightZoneChance: 0.8
-  lightZoneTime: 1
-  lightZoneTelegraphTime: 0.5

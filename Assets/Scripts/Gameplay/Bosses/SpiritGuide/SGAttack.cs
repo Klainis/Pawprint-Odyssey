@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardianOwlAttack : MonoBehaviour
+public class SGAttack : MonoBehaviour
 {
     [Header("Main params")]
     [SerializeField] private LayerMask playerLayer;

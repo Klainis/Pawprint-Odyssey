@@ -31,9 +31,6 @@ public class BossHealth : MonoBehaviour
 
         _bossHealth = Instantiate(_health, _canvas);
         _bossHealthBar = _bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
-
-        Debug.Log(_bossHealthBar);
-        Debug.Log(_bossHealth.transform.Find("BossHealthBar").GetComponent<Image>().gameObject.name);
     }
 
     public void HitBoss(bool owlBoss, bool sgBoss)

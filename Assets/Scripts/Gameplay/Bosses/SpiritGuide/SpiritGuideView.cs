@@ -33,7 +33,7 @@ public class SpiritGuideView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
 
     private SGAnimation sgAnimation;
-    private GuardianOwlAttack sgAttack;
+    private SGAttack sgAttack;
     private SGMove sgMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
@@ -64,7 +64,7 @@ public class SpiritGuideView : MonoBehaviour
         groundCheck = transform.Find("GroundCheck");
         
         sgAnimation = GetComponent<SGAnimation>();
-        sgAttack = GetComponent<GuardianOwlAttack>();
+        sgAttack = GetComponent<SGAttack>();
         sgMove = GetComponent<SGMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();

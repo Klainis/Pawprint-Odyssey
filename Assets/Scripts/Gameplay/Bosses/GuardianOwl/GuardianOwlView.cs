@@ -65,7 +65,7 @@ public class GuardianOwlView : MonoBehaviour
         //groundCheck = transform.Find("GroundCheck");
 
         //sgAnimation = GetComponent<SGAnimation>();
-        //_guraduianOwlAttack = GetComponent<SGAttack>();
+        _guraduianOwlAttack = GetComponent<GuardianOwlAttack>();
         //sgMove = GetComponent<SGMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
@@ -140,11 +140,12 @@ public class GuardianOwlView : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer(layer);
     }
 
-    //private void OnEnable()
-    //{
-    //    sgMove.OnWallHit += HandleWallHit;
-    //    _guraduianOwlAttack.OnPlayerDetected += HandlePlayerDetected;
-    //}
+    private void OnEnable()
+    {
+        _guraduianOwlAttack.EyeAttackCoroutine(5);
+        //sgMove.OnWallHit += HandleWallHit;
+        //_guraduianOwlAttack.OnPlayerDetected += HandlePlayerDetected;
+    }
 
     //private void OnDisable()
     //{
