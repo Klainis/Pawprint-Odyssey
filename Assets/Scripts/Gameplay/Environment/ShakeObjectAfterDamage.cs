@@ -14,6 +14,7 @@ public class ShakeObjectAfterDamage : MonoBehaviour
 	private float dampingSpeed;
 
 	Vector3 initialPosition;
+
 	void Awake()
 	{
 		initialPosition = transform.localPosition;
@@ -25,6 +26,7 @@ public class ShakeObjectAfterDamage : MonoBehaviour
 		shakeMagnitude = environmentData.shakeMagnitude;
 		dampingSpeed = environmentData.dampingSpeed;
     }
+
     private void Update()
     {
         if (shakeDuration <= 0)

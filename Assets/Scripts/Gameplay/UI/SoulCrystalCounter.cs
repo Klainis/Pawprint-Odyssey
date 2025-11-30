@@ -3,23 +3,25 @@ using UnityEngine;
 
 public class SoulCrystalCounter : MonoBehaviour
 {
-    [Header("Data")]
-    [SerializeField] private PlayerData Data;
-    [Space(5)]
     private TMP_Text counterText;
     private int crystalCount;
 
     private void Start()
     {
         counterText = InitializeManager._instance.soulCrystalText;
-        crystalCount = Data.soulCrystalsCollected;
+        crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
         counterText.text = crystalCount.ToString();
     }
 
-    public void CrystalCounter()
+    public void CountCrystal()
     {
+        crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
         crystalCount++;
-        Data.soulCrystalsCollected = crystalCount;
+        PlayerView.Instance.PlayerModel.AddSoulCrystal();
+
         counterText.text = crystalCount.ToString();
+
+        Debug.Log(counterText.text);
+        Debug.Log(crystalCount);
     }
 }
