@@ -1,11 +1,12 @@
 using System;
+using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class EntryPoint : MonoBehaviour
 {
@@ -25,9 +26,10 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject manaBarPrefab;
     [SerializeField] private GameObject crystalCounterPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject pauseMenuCanvasPrefab;
     [SerializeField] private GameObject transitionFadePrefab;
     [SerializeField] private InputActionAsset newInputSystem;
-    [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private EventSystem eventSystemPrefab;
     [SerializeField] private Transform initialPosition;
 
     // INSTANCES (Runtime objects)
@@ -43,6 +45,8 @@ public class EntryPoint : MonoBehaviour
     private GameObject _manaBarInstance;
     private GameObject _crystalCounterInstance;
     private GameObject _playerInstance;
+    private GameObject _pauseMenuCanvasInstance;
+    private EventSystem _eventSystemInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -54,6 +58,7 @@ public class EntryPoint : MonoBehaviour
     private CanvasScaler componentCanvasScaler;
 
     public static EntryPoint _instance { get; private set; }
+    public InputActionAsset NewInputSystem { get { return newInputSystem; } }
 
     private bool playerInitialized = false;
 
@@ -135,10 +140,18 @@ public class EntryPoint : MonoBehaviour
             InitializeFade();
         }
 
+        if (pauseMenuCanvasPrefab != null)
+        {
+            _pauseMenuCanvasInstance = Instantiate(pauseMenuCanvasPrefab);
+            _pauseMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_pauseMenuCanvasInstance);
+            GameManager._instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
+        }
+
         if (FindAnyObjectByType<EventSystem>() == null)
         {
-            eventSystem = Instantiate(eventSystem);
-            DontDestroyOnLoad(eventSystem);
+            _eventSystemInstance = Instantiate(eventSystemPrefab);
+            DontDestroyOnLoad(_eventSystemInstance);
         }
 
         InitializeDataFromSave();
@@ -159,9 +172,26 @@ public class EntryPoint : MonoBehaviour
             {
                 _heartsInstance = Instantiate(heartsPrefab, _canvasInstance.transform);
                 DontDestroyOnLoad(_heartsInstance);
-                if (playerInitialized) StartHearts();
+                if (playerInitialized)
+                    StartHearts();
             }
         }
+    }
+
+    public void DestroyAllSessionObjects()
+    {
+        if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
+        if (_globalValueInstance != null) Destroy(_globalValueInstance);
+        if (_deadManagerInstance != null) Destroy(_deadManagerInstance);
+        if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance);
+        if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance);
+        if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
+        if (_eventSystemInstance != null) Destroy(_eventSystemInstance.gameObject);
+        if (_pauseMenuCanvasInstance != null) Destroy(_pauseMenuCanvasInstance);
+        if (_canvasInstance != null) Destroy(_canvasInstance);
+        if (_playerInstance != null) Destroy(_playerInstance);
+
+        Destroy(gameObject);
     }
 
     private void InitializeCanvas()
@@ -180,12 +210,12 @@ public class EntryPoint : MonoBehaviour
         {
             var transitionFadeObj = Instantiate(transitionFadePrefab, _transitionCanvasInstance.transform);
 
-            var StartFade = transitionFadeObj.GetComponent<CanvasGroup>();
-            StartFade.alpha = 1f;
-            
+            var startFade = transitionFadeObj.GetComponent<CanvasGroup>();
+            startFade.alpha = 1f;
+
             fadeScript = transitionFadeObj.GetComponent<TransitionFade>();
             fadeScript.enabled = true;
-            fadeScript.canvasGroup = StartFade;
+            fadeScript.canvasGroup = startFade;
         }
     }
 
@@ -258,13 +288,10 @@ public class EntryPoint : MonoBehaviour
     {
         manaBarImage = _manaBarInstance.transform.Find("Bar").GetComponent<Image>();
 
-        //Нужна проверка активен ли у игрока компонент маны
         playerMana = _playerInstance.GetComponent<PlayerMana>();
         playerMana.SetManaBarImage(manaBarImage);
         playerMana.enabled = false;
 
-        //Проверка на то есть ли сейчас манабар  у игрока. Если есть, то установить значение из json
-        // Сейчас ScOb, сделать проверку через json
         if (playerMana.enabled)
             _manaBarInstance.SetActive(true);
         else
@@ -293,11 +320,5 @@ public class EntryPoint : MonoBehaviour
 
         playerHeart.SetHeartsInstance(_heartsInstance);
         playerHeart.StartHearts();
-        //Логика назначения текущего HP при запуске игры. Через json
-    }
-
-    private bool isGetClaw()
-    {
-        throw new NotImplementedException();
     }
 }

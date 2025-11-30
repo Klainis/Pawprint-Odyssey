@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using GlobalEnums;
-using Cysharp.Threading.Tasks.Triggers;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,12 +13,14 @@ public class GameManager : MonoBehaviour
     private AudioListener Sounds;
     private BossHealth bossHealth;
     private GameObject _playerCached;
+    private GameObject _pauseMenuCanvasInstance;
 
     private readonly string mainMenuSceneName = "MainMenu";
     private readonly string savesMenuSceneName = "SavesMenu";
     private readonly string entryPointSceneName = "EntryPoint";
 
     private bool isTransitioning;
+    private bool inPauseMenu = false;
 
     private GameObject Player
     {
@@ -53,6 +52,29 @@ public class GameManager : MonoBehaviour
         Sounds = GameManager.FindAnyObjectByType<AudioListener>();
     }
 
+    //public void InitializeComponent()
+    //{
+    //    /*BossHealth.*/
+    //}
+
+    public void SetGameState(GameState newState)
+    {
+        GameState = newState;
+    }
+
+    public void RevivalPlayer()
+    {
+        if (GameState == GameState.DEAD)
+        {
+            Destroy(Player);
+            SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
+            EntryPoint._instance.InitializeDataFromSave();
+            SetGameState(GameState.PLAYING);
+        }
+    }
+
+    #region Transitions
+
     public void BeginSceneTransition(string targetScene, string entryGate)
     {
         if (isTransitioning) return;
@@ -76,7 +98,7 @@ public class GameManager : MonoBehaviour
         while (!loadOp.isDone)
             yield return null;
 
-        destination = FindEntryPoint(entryGate);
+        destination = FindRoomsEntryPoint(entryGate);
         _playerCached = null;
         var currentPlayer = Player;
 
@@ -100,7 +122,7 @@ public class GameManager : MonoBehaviour
         AudioListener.pause = false;
     }
 
-    private TransitionDestination FindEntryPoint(string tag)
+    private TransitionDestination FindRoomsEntryPoint(string tag)
     {
         destinations = GameObject.FindObjectsByType<TransitionDestination>(FindObjectsSortMode.None);
         foreach (var destinationPoint in destinations)
@@ -112,26 +134,7 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public void InitializeComponent()
-    {
-        /*BossHealth.*/
-    }
-
-    public void SetGameState(GameState newState)
-    {
-        GameState = newState;
-    }
-
-    public void RevivalPlayer()
-    {
-        if (GameState == GameState.DEAD)
-        {
-            Destroy(Player);
-            SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
-            EntryPoint._instance.InitializeDataFromSave();
-            SetGameState(GameState.PLAYING);
-        }
-    }
+    #endregion
 
     #region Menu
 
@@ -140,9 +143,22 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(savesMenuSceneName);
     }
 
-    public void BackToMainMenu()
+    public void FromSavesMenuToMainMenu()
     {
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void QuitToMainMenu()
+    {
+        Time.timeScale = 1;
+
+        SaveSystem.Save();
+
+        if (EntryPoint._instance != null)
+            EntryPoint._instance.DestroyAllSessionObjects();
+
+        SceneManager.LoadScene(mainMenuSceneName);
+        Destroy(gameObject);
     }
 
     public void StartGameFromProfile(int profileNumber)
@@ -158,6 +174,51 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager: Игра закрылась");
         Application.Quit();
+    }
+
+    public void OpenPauseMenu()
+    {
+        inPauseMenu = true;
+        PauseGame();
+        _pauseMenuCanvasInstance.SetActive(true);
+    }
+
+    public void ClosePauseMenu()
+    {
+        inPauseMenu = false;
+        _pauseMenuCanvasInstance.SetActive(false);
+        UnpauseGame();
+    }
+
+    public void SetPauseMenuCanvasInstance(GameObject obj)
+    {
+        _pauseMenuCanvasInstance = obj;
+    }
+
+    private void PauseGame()
+    {
+        Time.timeScale = 0;
+
+        var inputSystem = EntryPoint._instance.NewInputSystem;
+        if (inputSystem != null)
+        {
+            var playerMap = inputSystem.FindActionMap("Player");
+            if (playerMap != null)
+                playerMap.Disable();
+        }
+    }
+
+    private void UnpauseGame()
+    {
+        Time.timeScale = 1;
+
+        var inputSystem = EntryPoint._instance.NewInputSystem;
+        if (inputSystem != null)
+        {
+            var playerMap = inputSystem.FindActionMap("Player");
+            if (playerMap != null)
+                playerMap.Enable();
+        }
     }
 
     #endregion

@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerInput : MonoBehaviour {
-	[SerializeField] private InputActionReference moveAction;
+public class PlayerInput : MonoBehaviour
+{
+    [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private InputActionReference saveAction;
-    [SerializeField] private InputActionReference loadAction;
+    [SerializeField] private InputActionReference pauseMenuAction;
+    [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -16,11 +18,11 @@ public class PlayerInput : MonoBehaviour {
     private PlayerMove playerMove;
     private PlayerHeart playerHeart;
 
-	private float horizontalMove = 0f;
+    private float horizontalMove = 0f;
     private float verticalMove = 0f;
     private bool attackPressed;
-	private bool jump = false;
-	private bool dash = false;
+    private bool jump = false;
+    private bool dash = false;
     private bool grab = false;
 
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
@@ -32,8 +34,26 @@ public class PlayerInput : MonoBehaviour {
         playerHeart = GetComponent<PlayerHeart>();
     }
 
-    private void Update () 
-	{
+    private void Update()
+    {
+        if (Time.timeScale > 0)
+        {
+            if (pauseMenuAction != null && pauseMenuAction.action != null)
+            {
+                if (pauseMenuAction.action.WasPressedThisFrame())
+                    GameManager._instance.OpenPauseMenu();
+            }
+        }
+        else
+        {
+            if (pauseMenuActionUI != null && pauseMenuActionUI.action != null)
+            {
+                if (pauseMenuActionUI.action.WasPressedThisFrame())
+                    GameManager._instance.ClosePauseMenu();
+            }
+            return;
+        }
+
         if (attackAction != null && attackAction.action != null)
             attackPressed = attackAction.action.WasPressedThisFrame();
 
@@ -60,18 +80,11 @@ public class PlayerInput : MonoBehaviour {
                 dash = true;
         }
 
+        // убрать, когда появятся автоматические сохранения
         if (saveAction != null && saveAction.action != null)
         {
             if (saveAction.action.WasPressedThisFrame())
                 SaveSystem.Save();
-        }
-        if (loadAction != null && loadAction.action != null)
-        {
-            if (loadAction.action.WasPressedThisFrame())
-            {
-                SaveSystem.TryLoad();
-                playerHeart.RemoveHearts();
-            }
         }
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
@@ -114,12 +127,12 @@ public class PlayerInput : MonoBehaviour {
     }
 
     public void OnFall()
-	{
+    {
         playerAnimation.SetBoolIsJumping(true);
     }
 
     public void OnLanding()
-	{
+    {
         playerAnimation.SetBoolIsJumping(false);
     }
 }
