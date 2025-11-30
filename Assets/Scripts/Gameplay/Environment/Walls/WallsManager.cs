@@ -10,16 +10,19 @@ public class WallsManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        if (WallsExistenceInstance == null)
+            WallsExistenceInstance = WallsExistence.CreateEmpty();
     }
 
     public static void DestroyBrokenWalls()
     {
-        var walls = GameObject.FindGameObjectsWithTag("Object");
-        foreach (var wall in walls)
+        var objects = GameObject.FindGameObjectsWithTag("Object");
+        foreach (var obj in objects)
         {
-            if (wall.name == "Wall" ||  wall.name == "ClawWall")
+            if (obj.name == "Wall" ||  obj.name == "ClawWall")
             {
-                var destroyWalls = wall.GetComponent<DestroyBrokenWalls>();
+                var destroyWalls = obj.GetComponent<DestroyBrokenWalls>();
                 destroyWalls.DestroyWall();
             }
         }

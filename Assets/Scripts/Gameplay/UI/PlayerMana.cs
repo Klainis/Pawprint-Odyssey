@@ -14,8 +14,6 @@ public class PlayerMana : MonoBehaviour
     private void Awake()
     {
         playerView = GetComponent<PlayerView>();
-        entryPoint = GameObject.Find("EntryPoint").GetComponent<EntryPoint>();
-        manaBar = entryPoint.manaBarImage;
     }
 
     private void Start()

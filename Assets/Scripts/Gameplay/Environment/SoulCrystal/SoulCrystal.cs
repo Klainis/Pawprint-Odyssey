@@ -12,13 +12,14 @@ public class SoulCrystal : MonoBehaviour
     [SerializeField] private ParticleSystem _playerWeaponParticle;
 
     private ParticleSystem _playerWeaponParticleInstance;
-
+    private DestroyBrokenCrystals _destroyBrokenCrystals;
     private int life;
 
     [SerializeField] private UnityEvent crystalCountEvent;
 
     private void Awake()
     {
+        _destroyBrokenCrystals = GetComponent<DestroyBrokenCrystals>();
         shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
     }
 
@@ -34,6 +35,7 @@ public class SoulCrystal : MonoBehaviour
             shakeObjectAfterDamage.Shake();
             crystalCountEvent.Invoke();
             Destroy(gameObject);
+            _destroyBrokenCrystals.AddInDestroyCrystalList();
         }
         else if (shakeObjectAfterDamage.shakeDuration > 0)
         {

@@ -20,8 +20,5 @@ public class SoulCrystalCounter : MonoBehaviour
         PlayerView.Instance.PlayerModel.AddSoulCrystal();
 
         counterText.text = crystalCount.ToString();
-
-        Debug.Log(counterText.text);
-        Debug.Log(crystalCount);
     }
 }

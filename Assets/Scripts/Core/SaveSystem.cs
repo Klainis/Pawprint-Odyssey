@@ -12,6 +12,7 @@ public class SaveSystem
     {
         public PlayerSaveData PlayerSaveData;
         public WallSaveData WallSaveData;
+        public CrystalSaveData CrystalSaveData;
     }
 
     public static string SaveFileName()
@@ -62,7 +63,8 @@ public class SaveSystem
             saveData = JsonUtility.FromJson<SaveData>(json);
 
             if (CreatePlayerModel(ref saveData.PlayerSaveData) &&
-                DestroyBrokenWalls(ref saveData.WallSaveData)) return true;
+                DestroyBrokenWalls(ref saveData.WallSaveData) &&
+                DestroyBrokenCrystals(ref saveData.CrystalSaveData)) return true;
 
             return false;
         }
@@ -98,6 +100,17 @@ public class SaveSystem
         return false;
     }
 
+    private static bool DestroyBrokenCrystals(ref CrystalSaveData data)
+    {
+        if (CrystalsManager.Instance != null)
+        {
+            CrystalsManager.Instance.CrystalsExistenceInstance = CrystalsExistence.CreateCrystalsExistence(ref data);
+            CrystalsManager.DestroyBrokenCrystals();
+            return true;
+        }
+        return false;
+    }
+
     private static void HandleSaveData()
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
@@ -108,6 +121,11 @@ public class SaveSystem
         if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
         {
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
+        }
+
+        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        {
+            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
         }
     }
 }

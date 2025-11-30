@@ -16,6 +16,7 @@ public class EntryPoint : MonoBehaviour
 
     [Header("PREFABS (Assets)")]
     [SerializeField] private WallsManager wallsManagerPrefab;
+    [SerializeField] private CrystalsManager crystalsManagerPrefab;
     [SerializeField] private InitializeManager initializeManagerPrefab;
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
@@ -34,6 +35,7 @@ public class EntryPoint : MonoBehaviour
 
     // INSTANCES (Runtime objects)
     private WallsManager _wallsManagerInstance;
+    private CrystalsManager _crystalsManagerInstance;
     private InitializeManager _initializeManagerInstance;
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;
@@ -125,6 +127,12 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_wallsManagerInstance);
         }
 
+        if (crystalsManagerPrefab != null)
+        {
+            _crystalsManagerInstance = Instantiate(crystalsManagerPrefab);
+            DontDestroyOnLoad(_crystalsManagerInstance);
+        }
+
         if (initializeManagerPrefab != null)
         {
             _initializeManagerInstance = Instantiate(initializeManagerPrefab);
@@ -184,6 +192,7 @@ public class EntryPoint : MonoBehaviour
         if (_globalValueInstance != null) Destroy(_globalValueInstance);
         if (_deadManagerInstance != null) Destroy(_deadManagerInstance);
         if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance);
+        if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance);
         if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance);
         if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
         if (_eventSystemInstance != null) Destroy(_eventSystemInstance.gameObject);

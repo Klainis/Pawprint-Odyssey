@@ -11,6 +11,11 @@ public class WallsExistence
         BrokenWalls = brokenWalls;
     }
 
+    public static WallsExistence CreateEmpty()
+    {
+        return new WallsExistence(new HashSet<string>());
+    }
+
     public static WallsExistence CreateWallsExistence(ref WallSaveData data)
     {
         HashSet<string> wallsSet;

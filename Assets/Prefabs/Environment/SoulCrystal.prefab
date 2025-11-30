@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9044161707681283140}
   - component: {fileID: 8288162087379757067}
   - component: {fileID: 6619944964867631596}
+  - component: {fileID: 5889849359375903879}
   - component: {fileID: 437522381738558091}
   m_Layer: 0
   m_Name: SoulCrystal
@@ -149,6 +150,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5889849359375903879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b988d9e6d33d0d4ab43d022f57f026d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestroyBrokenCrystals
 --- !u!61 &437522381738558091
 BoxCollider2D:
   m_ObjectHideFlags: 0
