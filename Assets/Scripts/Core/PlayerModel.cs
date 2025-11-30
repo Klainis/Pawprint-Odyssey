@@ -149,7 +149,7 @@ public class PlayerModel
         data.SoulCrystalsCollected = SoulCrystalsCollected;
         data.CurrentScene = CurrentScene;
         data.HasClaw = HasClaw;
-        data.FacingRight = FacingRight;
+        data.FacingRight = true;
     }
 
     public void Load(PlayerSaveData data)

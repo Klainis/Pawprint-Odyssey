@@ -115,6 +115,7 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
+            saveData.PlayerSaveData.FacingRight = true;
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
 
