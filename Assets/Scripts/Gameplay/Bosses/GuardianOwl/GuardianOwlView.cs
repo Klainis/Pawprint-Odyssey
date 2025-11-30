@@ -11,7 +11,8 @@ public class GuardianOwlView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
     [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float secondStageLifeCoef = 0.6f;
+    [SerializeField] private float _secondStageLifeCoef = 0.6f;
+    [SerializeField] private float _thirdStageLifeCoef = 0.2f;
     [SerializeField] private bool _isInvincible = false;
 
     [Header("Events")]
@@ -25,33 +26,33 @@ public class GuardianOwlView : MonoBehaviour
     [Space(5)]
     [SerializeField] private FightDoor _fightDoor;
 
-    //private const float groundedRadius = 0.2f;
-
     private Rigidbody2D _rigidBody;
-    //private Transform groundCheck;
+
+    private BossStage BossStage;
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
 
     //private SGAnimation sgAnimation;
     private GuardianOwlAttack _guraduianOwlAttack;
-    //private SGMove sgMove;
+    private GuardianOwlMove _guraduianOwlMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
 
     private int _maxLifeForReading;
-    private float _secondStageLifeAmount;
+    private int _secondStageLifeAmount;
+    private int _thirdStageLifeAmount;
+
+    private bool _isFirstStage = false;
     private bool _isSecondStage = false;
+    private bool _isThirdStage = false;
+
     private bool _isHitted = false;
-    //private bool isAccelerated = false;
-    //private bool moveDisabled = false;
     private bool _facingRight = true;
 
     public Rigidbody2D RigidBody { get { return _rigidBody; } }
     public int MaxLifeForReading { get { return _maxLifeForReading; } }
     public bool IsHitted { get { return _isHitted; } }
-    //public bool IsAccelerated { get { return isAccelerated; } set { isAccelerated = value; } }
-    //public bool MoveDisabled { get { return moveDisabled; } set { moveDisabled = value; } }
     public bool FacingRight { get { return _facingRight; } }
 
     private void Awake()
@@ -59,16 +60,22 @@ public class GuardianOwlView : MonoBehaviour
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage);
 
         _maxLifeForReading = Model.Life;
-        _secondStageLifeAmount = Model.Life * secondStageLifeCoef;
+        _secondStageLifeAmount = (int)(Model.Life * _secondStageLifeCoef);
+        _thirdStageLifeAmount = (int)(Model.Life * _thirdStageLifeCoef);
 
         _rigidBody = GetComponent<Rigidbody2D>();
-        //groundCheck = transform.Find("GroundCheck");
 
         //sgAnimation = GetComponent<SGAnimation>();
         _guraduianOwlAttack = GetComponent<GuardianOwlAttack>();
-        //sgMove = GetComponent<SGMove>();
+        _guraduianOwlMove = GetComponent<GuardianOwlMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
+    }
+
+    private void Start()
+    {
+        BossStage = BossStage.STAGE_1;
+        _isFirstStage = true;
     }
 
     private void FixedUpdate()
@@ -84,22 +91,14 @@ public class GuardianOwlView : MonoBehaviour
             GameManager._instance.SetGameState(GameState.PLAYING);
             return;
         }
-
-        //var playerHits = _guraduianOwlAttack.GetPlayerHits(35, _facingRight);
-        //var isGrounded = CheckIfGrounded();
-        //if (!_isSecondStage && !isAccelerated && isGrounded)
-        //    _guraduianOwlAttack.RamAttack(playerHits);
-        //if (_isSecondStage && !isAccelerated)
-        //    _guraduianOwlAttack.RandomAttack(_facingRight);
-
-        //sgMove.Move(isAccelerated, _guraduianOwlAttack.AcceleratedSpeed);
     }
 
-    //private bool CheckIfGrounded()
-    //{
-    //    var groundHit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundedRadius, _groundLayer);
-    //    return groundHit.collider != null;
-    //}
+    #region BossStage
+    public void ChageBossStage(BossStage newBossStage)
+    {
+        BossStage = newBossStage;
+    }
+    #endregion
 
     public void ApplyDamage(int damage)
     {
@@ -115,8 +114,21 @@ public class GuardianOwlView : MonoBehaviour
             SpawnDamageParticles(direction);
 
             _Hit.Invoke(true, false);
-            if (Model.Life <= _secondStageLifeAmount)
+
+            if (Model.Life <= _secondStageLifeAmount && Model.Life >= _thirdStageLifeAmount)
+            {
+                ChageBossStage(BossStage.STAGE_2);
                 _isSecondStage = true;
+                _isFirstStage = false;
+                Debug.Log(BossStage);
+            }
+            else if (Model.Life <= _thirdStageLifeAmount)
+            {
+                ChageBossStage(BossStage.STAGE_3);
+                _isThirdStage = true;
+                _isSecondStage = false;
+                Debug.Log(BossStage);
+            }
             StartCoroutine(HitTime());
         }
     }
@@ -142,28 +154,95 @@ public class GuardianOwlView : MonoBehaviour
 
     private void OnEnable()
     {
-        _guraduianOwlAttack.EyeAttackCoroutine(5);
-        //sgMove.OnWallHit += HandleWallHit;
-        //_guraduianOwlAttack.OnPlayerDetected += HandlePlayerDetected;
+        StartCoroutine(OnEnteringBoss());
     }
 
-    //private void OnDisable()
-    //{
-    //    sgMove.OnWallHit -= HandleWallHit;
-    //    _guraduianOwlAttack.OnPlayerDetected -= HandlePlayerDetected;
-    //}
+    private IEnumerator OnEnteringBoss()
+    {
+        yield return new WaitForSeconds(2);
+        StartCoroutine(_guraduianOwlMove.MoveUp());
+        yield return new WaitForSeconds(3);
+        StartCoroutine(BehaviourLoop());
+    }
 
-    //private void HandleWallHit()
-    //{
-    //    isAccelerated = false;
-    //    _facingRight = sgMove.Turn(_facingRight);
-    //    _guraduianOwlAttack.CheckRamSeriesCountAndPause();
-    //}
+    #region Patterns
+    private IEnumerator BehaviourLoop()
+    {
+        while (!Model.IsDead)
+        {
+            switch (BossStage)
+            {
+                case BossStage.STAGE_1:
+                    yield return FirstStagePattern();
+                    break;
+                case BossStage.STAGE_2:
+                    yield return SecondStagePattern();
+                    break;
+                case BossStage.STAGE_3:
+                    _guraduianOwlAttack.ApplyEyeAtackSpeedModifier();
+                    _guraduianOwlMove.ApplySpeedModifier();
+                    yield return ThirdStagePattern();
+                    break;
+            }
+        }
 
-    //private void HandlePlayerDetected()
-    //{
-    //    isAccelerated = true;
-    //}
+    }
+
+    private IEnumerator FirstStagePattern()
+    {
+        Debug.Log("Первая стадия!!!!!!!!!!!");
+        yield return _guraduianOwlMove.MoveToPlayer();
+        yield return new WaitForSeconds(0.7f);
+
+        //телеграфф
+        yield return _guraduianOwlAttack.SpawnWaveAttack(3);
+        yield return new WaitForSeconds(1);
+
+        yield return _guraduianOwlMove.MoveUp();
+        yield return new WaitForSeconds(0.5f);
+
+    }
+
+    private IEnumerator SecondStagePattern()
+    {
+        Debug.Log("Вторая стадия!!!!!!!!!!!");
+        yield return _guraduianOwlMove.MoveToPlayer();
+        yield return new WaitForSeconds(0.7f);
+
+        yield return _guraduianOwlAttack.SpawnWaveAttack(4);
+        yield return new WaitForSeconds(1);
+
+        yield return _guraduianOwlMove.MoveUp();
+        yield return new WaitForSeconds(0.5f);
+
+        if (Random.value > 0.5f)
+        {
+            //телеграфф
+            yield return _guraduianOwlAttack.SpawnEyeAttack(5);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    private IEnumerator ThirdStagePattern()
+    {
+        Debug.Log("Вторая стадия!!!!!!!!!!!");
+        yield return _guraduianOwlMove.MoveToPlayer();
+        yield return new WaitForSeconds(0.7f);
+
+        yield return _guraduianOwlAttack.SpawnWaveAttack(4);
+        yield return new WaitForSeconds(1);
+
+        yield return _guraduianOwlMove.MoveUp();
+        yield return new WaitForSeconds(0.5f);
+
+        if (Random.value > 0.4f)
+        {
+            //телеграфф
+            yield return _guraduianOwlAttack.SpawnEyeAttack(5);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    #endregion
 
     private IEnumerator HitTime()
     {
@@ -184,7 +263,7 @@ public class GuardianOwlView : MonoBehaviour
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
+        //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
         yield return new WaitForSeconds(3f);
 
         Destroy(gameObject);

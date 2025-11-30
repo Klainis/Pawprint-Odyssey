@@ -14,7 +14,7 @@ public class ScreenShaker : MonoBehaviour
 
     public void Shake(/*Vector2 direction*/)
     {
-        Debug.Log("SHAKE");
+        //Debug.Log("SHAKE");
         _impusleSource.GenerateImpulse(/*-direction * */_shakeForce);
     }
 }

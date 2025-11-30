@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,17 +15,9 @@ public class GuardianOwlAttack : MonoBehaviour
     [SerializeField] private ParticleSystem _eyeAttack;
     [SerializeField] private ParticleSystem _waveAttack;
 
-    //[Header("Attack 'Ram'")]
-    //[SerializeField] private float acceleratedSpeed = 10f;
-    //[SerializeField] private float ramTelegraphTime = 0.25f;
-    //[SerializeField] private float ramPauseBetweenSeries = 3f;
-
-    //[Header("Attack 'Light Zone'")]
-    ////[SerializeField] private GameObject lightZone;
-    //[SerializeField] private float lightZoneCooldown = 3f;
-    //[SerializeField] private float lightZoneChance = 0.8f;
-    //[SerializeField] private float lightZoneTime = 1f;
-    //[SerializeField] private float lightZoneTelegraphTime = 0.5f;
+    [Space(5)]
+    [SerializeField] private float _waveVelocity = 7;
+    [SerializeField] private float _eyeAttackSpeedModifier = 0.6f;
 
     private ParticleSystem _eyeAttackInstance;
     private ParticleSystem _waveAttackInstance;
@@ -32,51 +25,132 @@ public class GuardianOwlAttack : MonoBehaviour
     private ParticleSystem.Particle[] _eyeAttackParticles;
     private ParticleSystem.Particle[] _waveAttackParticles;
 
-    public event Action OnPlayerDetected;
-
     private GuardianOwlView _guardianOwlView;
 
     private Transform pivotTop;
     private Transform pivotBottom;
     private BoxCollider2D _colliderOfEyeAttack;
+    private BoxCollider2D _colliderOfWaveAttack;
 
-    private const int maxRamSeriesCount = 3;
-    private int ramSeriesCount = 0;
-    private float nextLightZoneTime = 0f;
-    private bool inLightZone = false;
+    private Vector3 _targetWavePosition;
 
-    //public float AcceleratedSpeed { get { return acceleratedSpeed; } }
+    private float _realSpeedModifier = 1f;
 
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
         _player = InitializeManager._instance.player;
-
-        pivotTop = transform.Find("PivotTop");
-        pivotBottom = transform.Find("PivotBottom");
     }
 
+    #region Wave Attack
+    private void InstantiateWaveAttack()
+    {
+        var playerFromOwl = transform.position.x - _player.transform.position.x;
+
+        if (playerFromOwl > 0)//left wave
+        {
+            Vector3 particlePosition = new Vector3(transform.position.x - transform.localScale.x, transform.position.y, transform.position.z);
+            _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
+
+            //Ñìåùåíèå âçÿòî èç LifeTime ïàðòèêëà * íà Speed
+            _targetWavePosition = new Vector3(_waveAttackInstance.transform.position.x - 14, 
+                _waveAttackInstance.transform.position.y,
+                _waveAttackInstance.transform.position.z);
+        }
+        else if (playerFromOwl <= 0)//right wave
+        {
+            Vector3 particlePosition = new Vector3(transform.position.x + transform.localScale.x, transform.position.y, transform.position.z);
+            _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
+            var main = _waveAttackInstance.main;
+            main.startRotation = 180f * Mathf.Deg2Rad;
+
+            _targetWavePosition = new Vector3(_waveAttackInstance.transform.position.x + 14,
+                _waveAttackInstance.transform.position.y,
+                _waveAttackInstance.transform.position.z);
+        }
+
+        _colliderOfWaveAttack = _waveAttackInstance.gameObject.GetComponent<BoxCollider2D>();
+        _waveAttackParticles = new ParticleSystem.Particle[_waveAttackInstance.main.maxParticles];
+        StartCoroutine(CollisionWaveAttack());
+        StartCoroutine(VelocityOfWaveAttack());
+    }
+
+    private IEnumerator VelocityOfWaveAttack()
+    {
+        if (_waveAttackInstance != null)
+        {
+            while (Vector3.Distance(_waveAttackInstance.transform.position, _targetWavePosition) > 0.01f)
+            {
+                if (_waveAttackInstance == null)
+                    yield return null;
+
+                _waveAttackInstance.transform.position = Vector3.MoveTowards(
+                    _waveAttackInstance.transform.position,
+                    _targetWavePosition,
+                    _waveVelocity * Time.deltaTime);
+                yield return null;
+            }
+        }
+    }
+
+    private IEnumerator CollisionWaveAttack()
+    {
+        yield return new WaitForEndOfFrame();
+
+        int partCount = _waveAttackInstance.GetParticles(_waveAttackParticles);
+        //Debug.Log($"ÂÛÇÂÀÍÀ ÊÎÐÓÒÈÍÀ ÂÊËÞ×ÅÍÈß ÊÎËËÀÉÄÅÐÀ, ïàðòèêëîâ:{partCount}");
+        while (_waveAttackInstance != null && partCount > 0)
+        {
+            if (partCount > 0)
+            {
+                partCount = _waveAttackInstance.GetParticles(_waveAttackParticles);
+
+                var p = _waveAttackParticles[0];
+
+                var remainingLifetime = p.remainingLifetime;
+
+                if (remainingLifetime <= 0.2f)
+                {
+                    _colliderOfWaveAttack.enabled = false;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public IEnumerator SpawnWaveAttack(int attackCount)
+    {
+        while (attackCount > 0)
+        {
+            yield return new WaitForSeconds(1.5f);
+            InstantiateWaveAttack();
+            attackCount--;
+        }
+        yield return null;
+    }
+    #endregion
+
     #region Eye Attack
-    public void EyeOwlAttack()
+    private void InstantiateEyeOwlAttack()
     {
         _eyeAttackInstance = Instantiate(_eyeAttack, _player.transform.position, new Quaternion(0, 0, 0, 0));
         _colliderOfEyeAttack = _eyeAttackInstance.gameObject.GetComponent<BoxCollider2D>();
         _eyeAttackParticles = new ParticleSystem.Particle[_eyeAttackInstance.main.maxParticles];
 
-        StartCoroutine(EnableCollisionEyeAttack());
+        StartCoroutine(CollisionEyeAttack());
     }
 
-    public void EyeAttackCoroutine(int amount)
+    public void ApplyEyeAtackSpeedModifier()
     {
-        StartCoroutine(SpawnEyeAttack(amount));
+        _realSpeedModifier = _eyeAttackSpeedModifier;
     }
 
-    private IEnumerator EnableCollisionEyeAttack()
+    private IEnumerator CollisionEyeAttack()
     {
         yield return new WaitForEndOfFrame();
 
         int partCount = _eyeAttackInstance.GetParticles(_eyeAttackParticles);
-        Debug.Log($"ÂÛÇÂÀÍÀ ÊÎÐÓÒÈÍÀ ÂÊËÞ×ÅÍÈß ÊÎËËÀÉÄÅÐÀ, ïàðòèêëîâ:{partCount}");
+        //Debug.Log($"ÂÛÇÂÀÍÀ ÊÎÐÓÒÈÍÀ ÂÊËÞ×ÅÍÈß ÊÎËËÀÉÄÅÐÀ, ïàðòèêëîâ:{partCount}");
         while (_eyeAttackInstance != null && partCount > 0)
         {
             if (partCount > 0)
@@ -91,14 +165,14 @@ public class GuardianOwlAttack : MonoBehaviour
                 float t = 1f - (remainingLifetime / sizeOverLifetime);
                 float currentSizeValue = _eyeAttackInstance.sizeOverLifetime.size.Evaluate(t);
 
-                if (currentSizeValue < 0.9)
+                if (currentSizeValue < 0.99)
                 {
-                    Debug.Log($"Êîëëàéäåð âûêëþ÷åí {t}");
+                    //Debug.Log($"Êîëëàéäåð âûêëþ÷åí {t}");
                     _colliderOfEyeAttack.enabled = false;
                 }
                 if (currentSizeValue >= 0.9)
                 {
-                    Debug.Log($"Êîëëàéäåð âêëþ÷åí {t}");
+                    //Debug.Log($"Êîëëàéäåð âêëþ÷åí {t}");
                     _colliderOfEyeAttack.enabled = true;
                 }
             }
@@ -106,60 +180,17 @@ public class GuardianOwlAttack : MonoBehaviour
         }
     }
 
-    private IEnumerator SpawnEyeAttack(int attackTime)
+    public IEnumerator SpawnEyeAttack(int attackTime)
     {
         while (attackTime > 0)
         {
-            yield return new WaitForSeconds(2);
-            EyeOwlAttack();
+            yield return new WaitForSeconds(1.2f * _realSpeedModifier);
+            InstantiateEyeOwlAttack();
             attackTime--;
         }
         yield return null;
     }
     #endregion
-
-    public void RandomAttack(bool facingRight)
-    {
-        var wallHits = GetWallHits(6);
-        var playerHitsSecondStage = GetPlayerHits(5, facingRight);
-        //if (wallHits[0].collider == null && wallHits[1].collider == null && Time.time >= nextLightZoneTime)
-        //{
-        //    if (UnityEngine.Random.value <= lightZoneChance
-        //        && (playerHitsSecondStage[0].collider != null || playerHitsSecondStage[1].collider != null))
-        //    {
-        //        StartCoroutine(LightZoneRoutine());
-        //        nextLightZoneTime = Time.time + lightZoneCooldown;
-        //    }
-        //    else if (!inLightZone)
-        //    {
-        //        StartCoroutine(RamTelegraph());
-        //        _guardianOwlView.IsAccelerated = true;
-        //    }
-        //}
-    }
-
-    public void RamAttack(List<RaycastHit2D> playerHits)
-    {
-        //for (var i = 0; i < playerHits.Count; i++)
-        //{
-        //    if (playerHits[i].collider != null)
-        //    {
-        //        StartCoroutine(RamTelegraph());
-        //        _guardianOwlView.IsAccelerated = true;
-        //        ramSeriesCount += 1;
-        //        break;
-        //    }
-        //}
-    }
-
-    //public void CheckRamSeriesCountAndPause()
-    //{
-    //    if (ramSeriesCount == maxRamSeriesCount)
-    //    {
-    //        ramSeriesCount = 0;
-    //        StartCoroutine(RamPause());
-    //    }
-    //}
 
     public List<RaycastHit2D> GetPlayerHits(float distance, bool facingRight)
     {
@@ -227,25 +258,5 @@ public class GuardianOwlAttack : MonoBehaviour
     //    _guardianOwlView.RigidBody.constraints = normalConstraints;
 
     //    //_guardianOwlView.MoveDisabled = false;
-    //}
-
-    //private IEnumerator LightZoneRoutine()
-    //{
-    //    //_animator.SetBool("LightZoneTelegraph", true);
-    //    var renderer = GetComponent<SpriteRenderer>();
-    //    var normalColor = renderer.color;
-    //    renderer.color = UnityEngine.Color.lightYellow;
-
-    //    inLightZone = true;
-    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
-    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-    //    yield return new WaitForSeconds(lightZoneTelegraphTime);
-    //    lightZone.SetActive(true);
-    //    yield return new WaitForSeconds(lightZoneTime);
-    //    lightZone.SetActive(false);
-    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
-    //    inLightZone = false;
-
-    //    renderer.color = normalColor;
     //}
 }
