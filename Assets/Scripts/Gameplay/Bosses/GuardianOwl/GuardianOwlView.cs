@@ -14,6 +14,7 @@ public class GuardianOwlView : MonoBehaviour
     [SerializeField] private float _secondStageLifeCoef = 0.6f;
     [SerializeField] private float _thirdStageLifeCoef = 0.2f;
     [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private GameObject _doubleJumpItem;
 
     [Header("Events")]
     [SerializeField] private UnityEvent<bool, bool> _Hit;
@@ -43,10 +44,6 @@ public class GuardianOwlView : MonoBehaviour
     private int _secondStageLifeAmount;
     private int _thirdStageLifeAmount;
 
-    private bool _isFirstStage = false;
-    private bool _isSecondStage = false;
-    private bool _isThirdStage = false;
-
     private bool _isHitted = false;
     private bool _facingRight = true;
 
@@ -75,7 +72,6 @@ public class GuardianOwlView : MonoBehaviour
     private void Start()
     {
         BossStage = BossStage.STAGE_1;
-        _isFirstStage = true;
     }
 
     private void FixedUpdate()
@@ -118,15 +114,11 @@ public class GuardianOwlView : MonoBehaviour
             if (Model.Life <= _secondStageLifeAmount && Model.Life >= _thirdStageLifeAmount)
             {
                 ChageBossStage(BossStage.STAGE_2);
-                _isSecondStage = true;
-                _isFirstStage = false;
                 Debug.Log(BossStage);
             }
             else if (Model.Life <= _thirdStageLifeAmount)
             {
                 ChageBossStage(BossStage.STAGE_3);
-                _isThirdStage = true;
-                _isSecondStage = false;
                 Debug.Log(BossStage);
             }
             StartCoroutine(HitTime());
@@ -155,6 +147,11 @@ public class GuardianOwlView : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(OnEnteringBoss());
+    }
+
+    private void OnDestroy()
+    {
+        _doubleJumpItem.SetActive(true); 
     }
 
     private IEnumerator OnEnteringBoss()

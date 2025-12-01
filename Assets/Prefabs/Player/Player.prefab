@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 50738830109512580}
   - component: {fileID: 82701611152381692}
   - component: {fileID: 7627346660564273673}
+  - component: {fileID: 3252264936728192778}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -180,7 +181,6 @@ MonoBehaviour:
   particleJumpDown: {fileID: 198967111524372206}
   movementSmoothing: 0.05
   airControl: 1
-  doubleJump: 0
 --- !u!114 &1729494090702783638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,6 +605,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.27929688, y: 1.6797845}
   m_EdgeRadius: 0
+--- !u!114 &3252264936728192778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec10629ab9fd2f648aec7c5b0404d352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceivingDoubleJump
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0

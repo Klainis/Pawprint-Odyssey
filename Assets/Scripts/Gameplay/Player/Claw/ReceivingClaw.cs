@@ -42,7 +42,7 @@ public class ReceivingClaw : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "ClawGetItem")
+        if (collision.gameObject.tag == "ClawGetItem")
         {
             Destroy(collision.gameObject);
             EnableClaw();
