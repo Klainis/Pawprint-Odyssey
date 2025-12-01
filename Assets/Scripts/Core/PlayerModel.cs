@@ -2,6 +2,8 @@ using System;
 
 public class PlayerModel
 {
+    #region Properties
+
     public int Life { get; private set; }
     public int MaxLife { get; private set; }
     public int Mana { get; private set; }
@@ -12,10 +14,15 @@ public class PlayerModel
     public int SoulCrystalsCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public bool HasClaw { get; private set; }
+    public bool HasDoubleJump { get; private set; }
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
 
-    private PlayerModel(int life, int maxLife, int mana, int maxMana, int manaAfterDeath, int damage, int clawDamage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool facingRight)
+    #endregion
+
+    #region Init New Instance
+
+    private PlayerModel(int life, int maxLife, int mana, int maxMana, int manaAfterDeath, int damage, int clawDamage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool hasDoubleJump, bool facingRight)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -32,6 +39,7 @@ public class PlayerModel
         CurrentScene = currentScene;
 
         HasClaw = hasClaw;
+        HasDoubleJump = hasDoubleJump;
         FacingRight = facingRight;
     }
 
@@ -48,6 +56,7 @@ public class PlayerModel
             data.SoulCrystalsCollected,
             data.CurrentScene,
             data.HasClaw,
+            data.HasDoubleJump,
             data.FacingRight
         );
     }
@@ -65,9 +74,14 @@ public class PlayerModel
             playerData.soulCrystalsCollected,
             playerData.currentScene,
             playerData.hasClaw,
+            playerData.hasDoubleJump,
             playerData.facingRight
         );
     }
+
+    #endregion
+
+    #region Change Properties
 
     public bool SetFacingRight(bool facingRight)
     {
@@ -135,6 +149,14 @@ public class PlayerModel
         return HasClaw;
     }
 
+    public bool SetHasDoubleJump()
+    {
+        HasDoubleJump = true;
+        return HasDoubleJump;
+    }
+
+    #endregion
+
     #region Save & Load
 
     public void Save(ref PlayerSaveData data)
@@ -149,6 +171,7 @@ public class PlayerModel
         data.SoulCrystalsCollected = SoulCrystalsCollected;
         data.CurrentScene = CurrentScene;
         data.HasClaw = HasClaw;
+        data.HasDoubleJump = HasDoubleJump;
         data.FacingRight = true;
     }
 
@@ -164,6 +187,7 @@ public class PlayerModel
         SoulCrystalsCollected = data.SoulCrystalsCollected;
         CurrentScene = data.CurrentScene;
         HasClaw = data.HasClaw;
+        HasDoubleJump = data.HasDoubleJump;
         FacingRight = data.FacingRight;
     }
 
@@ -183,5 +207,6 @@ public struct PlayerSaveData
     public int SoulCrystalsCollected;
     public string CurrentScene;
     public bool HasClaw;
+    public bool HasDoubleJump;
     public bool FacingRight;
 }

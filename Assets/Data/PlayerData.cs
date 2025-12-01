@@ -24,6 +24,7 @@ public class PlayerData : ScriptableObject
 
     [Header("Received Abilities")]
     public bool hasClaw;
+    public bool hasDoubleJump;
 
     [Header("Player State")]
     public bool facingRight;
@@ -33,6 +34,6 @@ public class PlayerData : ScriptableObject
     {
         life = maxLife;
         mana = manaAfterDeath;
-        isDead =false;
+        isDead = false;
     }
 }

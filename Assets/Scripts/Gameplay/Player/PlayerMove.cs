@@ -24,12 +24,9 @@ public class PlayerMove : MonoBehaviour
     [Header("")]
     [SerializeField][Range(0, 0.3f)] private float movementSmoothing = 0.05f;
     [SerializeField] private bool airControl = false;
-    [SerializeField] private bool doubleJump = false;
 
     public const float groundCheckRadius = 0.2f;
     
-    private Gamepad gamepad;
-
     private Rigidbody2D rigidBody;
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
@@ -55,7 +52,7 @@ public class PlayerMove : MonoBehaviour
     private bool isWallSliding = false;
     private bool oldWallSliding = false;
     private bool canMove = true;
-    private bool canDoubleJump = false;
+    private bool canDoubleJump = true;
     private bool canCheck = false;
     private bool canDash = true;
     private bool limitVelOnWallJump = false;
@@ -81,8 +78,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        gamepad = Gamepad.current;
-
         rigidBody = GetComponent<Rigidbody2D>();
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -106,10 +101,10 @@ public class PlayerMove : MonoBehaviour
         // Прыжок
         if (lastPressedJumpTime > 0 && CanJump)
             Jump();
-        else if (lastPressedJumpTime > 0 && canDoubleJump && doubleJump)
+        else if (lastPressedJumpTime > 0 && canDoubleJump && playerView.PlayerModel.HasDoubleJump)
             DoubleJump();
 
-        //Взбирание по стене
+        // Взбирание по стене
         if (grab)
             WallRunnig(moveY, moveX, jump, dash);
         else if (isWallRunning && !grab)
