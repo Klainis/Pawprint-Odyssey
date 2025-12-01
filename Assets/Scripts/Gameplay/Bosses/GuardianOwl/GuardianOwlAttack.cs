@@ -1,3 +1,4 @@
+using GlobalEnums;
 using Newtonsoft.Json.Bson;
 using System;
 using System.Collections;
@@ -118,10 +119,15 @@ public class GuardianOwlAttack : MonoBehaviour
         }
     }
 
-    public IEnumerator SpawnWaveAttack(int attackCount)
+    public IEnumerator SpawnWaveAttack(int attackCount, BossStage stage)
     {
         while (attackCount > 0)
         {
+            if (_guardianOwlView.ShouldInterrupt(stage))
+            {
+                break;
+            }
+
             yield return new WaitForSeconds(1.5f);
             InstantiateWaveAttack();
             attackCount--;
@@ -180,10 +186,15 @@ public class GuardianOwlAttack : MonoBehaviour
         }
     }
 
-    public IEnumerator SpawnEyeAttack(int attackTime)
+    public IEnumerator SpawnEyeAttack(int attackTime, BossStage stage)
     {
         while (attackTime > 0)
         {
+            if (_guardianOwlView.ShouldInterrupt(stage))
+            {
+                break;
+            }
+
             yield return new WaitForSeconds(1.2f * _realSpeedModifier);
             InstantiateEyeOwlAttack();
             attackTime--;

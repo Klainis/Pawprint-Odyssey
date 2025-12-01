@@ -187,60 +187,143 @@ public class GuardianOwlView : MonoBehaviour
 
     private IEnumerator FirstStagePattern()
     {
+        BossStage myStage = BossStage.STAGE_1;
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
+
+
         Debug.Log("Первая стадия!!!!!!!!!!!");
         yield return _guraduianOwlMove.MoveToPlayer();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.7f);
 
+
         //телеграфф
-        yield return _guraduianOwlAttack.SpawnWaveAttack(3);
+        yield return _guraduianOwlAttack.SpawnWaveAttack(3, myStage);
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(1);
 
+
         yield return _guraduianOwlMove.MoveUp();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.5f);
 
     }
 
     private IEnumerator SecondStagePattern()
     {
+        BossStage myStage = BossStage.STAGE_2;
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
+
         Debug.Log("Вторая стадия!!!!!!!!!!!");
         yield return _guraduianOwlMove.MoveToPlayer();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.7f);
 
-        yield return _guraduianOwlAttack.SpawnWaveAttack(4);
+        yield return _guraduianOwlAttack.SpawnWaveAttack(4, myStage);
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(1);
 
         yield return _guraduianOwlMove.MoveUp();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.5f);
 
         if (Random.value > 0.5f)
         {
             //телеграфф
-            yield return _guraduianOwlAttack.SpawnEyeAttack(5);
+            yield return _guraduianOwlAttack.SpawnEyeAttack(5, myStage);
+            if (ShouldInterrupt(myStage))
+            {
+                yield return _guraduianOwlMove.MoveUp();
+                yield break;
+            }
             yield return new WaitForSeconds(0.5f);
         }
     }
 
     private IEnumerator ThirdStagePattern()
     {
+        BossStage myStage = BossStage.STAGE_3;
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
+
         Debug.Log("Вторая стадия!!!!!!!!!!!");
         yield return _guraduianOwlMove.MoveToPlayer();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.7f);
 
-        yield return _guraduianOwlAttack.SpawnWaveAttack(4);
+        yield return _guraduianOwlAttack.SpawnWaveAttack(4, myStage);
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(1);
 
         yield return _guraduianOwlMove.MoveUp();
+        if (ShouldInterrupt(myStage))
+        {
+            yield return _guraduianOwlMove.MoveUp();
+            yield break;
+        }
         yield return new WaitForSeconds(0.5f);
 
         if (Random.value > 0.4f)
         {
             //телеграфф
-            yield return _guraduianOwlAttack.SpawnEyeAttack(5);
+            yield return _guraduianOwlAttack.SpawnEyeAttack(5, myStage);
+            if (ShouldInterrupt(myStage))
+            {
+                yield return _guraduianOwlMove.MoveUp();
+                yield break;
+            }
             yield return new WaitForSeconds(0.5f);
         }
     }
     #endregion
 
+    public bool ShouldInterrupt(BossStage stage)
+    {
+        return Model.IsDead || BossStage != stage;
+    }
     private IEnumerator HitTime()
     {
         _isHitted = true;
@@ -259,9 +342,9 @@ public class GuardianOwlView : MonoBehaviour
         // _bugAnimation.SetTriggerDead();
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
-        yield return new WaitForSeconds(0.25f);
+        //yield return new WaitForSeconds(0.25f);
         //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         Destroy(gameObject);
     }
