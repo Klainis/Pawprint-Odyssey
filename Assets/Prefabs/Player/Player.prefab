@@ -51,13 +51,13 @@ GameObject:
   - component: {fileID: 8176099545049012028}
   - component: {fileID: 1738746197435764065}
   - component: {fileID: 1383110301925236467}
+  - component: {fileID: 3252264936728192778}
   - component: {fileID: 2135096380476152226}
   - component: {fileID: 212971026275759962}
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
   - component: {fileID: 82701611152381692}
   - component: {fileID: 7627346660564273673}
-  - component: {fileID: 3252264936728192778}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -327,6 +327,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7e5f6130d5d2c4389171c8775fd333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceivingClaw
+--- !u!114 &3252264936728192778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec10629ab9fd2f648aec7c5b0404d352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceivingDoubleJump
 --- !u!114 &2135096380476152226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,18 +617,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.27929688, y: 1.6797845}
   m_EdgeRadius: 0
---- !u!114 &3252264936728192778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec10629ab9fd2f648aec7c5b0404d352, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ReceivingDoubleJump
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0
