@@ -17,12 +17,20 @@ public class PlayerModel
     public bool HasDoubleJump { get; private set; }
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
+    public bool SpiritGuideKilled { get; private set; }
+    public bool GuardianOwlKilled { get; private set; }
 
     #endregion
 
     #region Init New Instance
 
-    private PlayerModel(int life, int maxLife, int mana, int maxMana, int manaAfterDeath, int damage, int clawDamage, int soulCrystalsCollected, string currentScene, bool hasClaw, bool hasDoubleJump, bool facingRight)
+    private PlayerModel(int life, int maxLife,
+                        int mana, int maxMana, int manaAfterDeath,
+                        int damage, int clawDamage,
+                        int soulCrystalsCollected,
+                        string currentScene,
+                        bool hasClaw, bool hasDoubleJump, bool facingRight,
+                        bool spiritGuideKilled, bool guardianOwlKilled)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -41,6 +49,8 @@ public class PlayerModel
         HasClaw = hasClaw;
         HasDoubleJump = hasDoubleJump;
         FacingRight = facingRight;
+        SpiritGuideKilled = spiritGuideKilled;
+        GuardianOwlKilled = guardianOwlKilled;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -57,7 +67,9 @@ public class PlayerModel
             data.CurrentScene,
             data.HasClaw,
             data.HasDoubleJump,
-            data.FacingRight
+            data.FacingRight,
+            data.SpiritGuideKilled,
+            data.GuardianOwlKilled
         );
     }
 
@@ -75,7 +87,9 @@ public class PlayerModel
             playerData.currentScene,
             playerData.hasClaw,
             playerData.hasDoubleJump,
-            playerData.facingRight
+            playerData.facingRight,
+            playerData.spiritGuideKilled,
+            playerData.guardianOwlKilled
         );
     }
 
@@ -155,6 +169,18 @@ public class PlayerModel
         return HasDoubleJump;
     }
 
+    public bool SetSpiritGuideKilled()
+    {
+        SpiritGuideKilled = true;
+        return SpiritGuideKilled;
+    }
+
+    public bool SetGuardianOwlKilled()
+    {
+        GuardianOwlKilled = true;
+        return GuardianOwlKilled;
+    }
+
     #endregion
 
     #region Save & Load
@@ -173,6 +199,8 @@ public class PlayerModel
         data.HasClaw = HasClaw;
         data.HasDoubleJump = HasDoubleJump;
         data.FacingRight = true;
+        data.SpiritGuideKilled = SpiritGuideKilled;
+        data.GuardianOwlKilled = GuardianOwlKilled;
     }
 
     public void Load(PlayerSaveData data)
@@ -189,6 +217,8 @@ public class PlayerModel
         HasClaw = data.HasClaw;
         HasDoubleJump = data.HasDoubleJump;
         FacingRight = data.FacingRight;
+        SpiritGuideKilled = data.SpiritGuideKilled;
+        GuardianOwlKilled = data.GuardianOwlKilled;
     }
 
     #endregion
@@ -209,4 +239,6 @@ public struct PlayerSaveData
     public bool HasClaw;
     public bool HasDoubleJump;
     public bool FacingRight;
+    public bool SpiritGuideKilled;
+    public bool GuardianOwlKilled;
 }

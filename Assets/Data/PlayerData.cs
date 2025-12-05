@@ -30,6 +30,10 @@ public class PlayerData : ScriptableObject
     public bool facingRight;
     public bool isDead;
 
+    [Header("Killed Bosses")]
+    public bool spiritGuideKilled;
+    public bool guardianOwlKilled;
+
     public void Reset()
     {
         life = maxLife;

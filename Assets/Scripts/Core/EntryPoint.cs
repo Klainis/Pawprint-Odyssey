@@ -287,7 +287,7 @@ public class EntryPoint : MonoBehaviour
     private void SetInitialPosition()
     {
         // Координаты начальной комнаты
-        _playerInstance.transform.position = /*initialPosition.position*/new Vector3(-150f, -4f, 0f);
+        _playerInstance.transform.position = /*initialPosition.position*/new Vector3(-150f, -3f, 0f);
 
         // Координаты комнаты с Claw
         //player.transform.position = new Vector3(35.97942f, -46.43025f, 0f);

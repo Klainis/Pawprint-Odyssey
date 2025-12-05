@@ -78,6 +78,7 @@ public class GuardianOwlView : MonoBehaviour
     {
         if (Model.IsDead)
         {
+            PlayerView.Instance.PlayerModel.SetGuardianOwlKilled();
             _Die.Invoke();
             StartCoroutine(DestroySelf());
             if (_fightDoor != null)
@@ -90,10 +91,12 @@ public class GuardianOwlView : MonoBehaviour
     }
 
     #region BossStage
-    public void ChageBossStage(BossStage newBossStage)
+    
+    public void ChangeBossStage(BossStage newBossStage)
     {
         BossStage = newBossStage;
     }
+
     #endregion
 
     public void ApplyDamage(int damage)
@@ -113,12 +116,12 @@ public class GuardianOwlView : MonoBehaviour
 
             if (Model.Life <= _secondStageLifeAmount && Model.Life >= _thirdStageLifeAmount)
             {
-                ChageBossStage(BossStage.STAGE_2);
+                ChangeBossStage(BossStage.STAGE_2);
                 Debug.Log(BossStage);
             }
             else if (Model.Life <= _thirdStageLifeAmount)
             {
-                ChageBossStage(BossStage.STAGE_3);
+                ChangeBossStage(BossStage.STAGE_3);
                 Debug.Log(BossStage);
             }
             StartCoroutine(HitTime());
@@ -151,7 +154,8 @@ public class GuardianOwlView : MonoBehaviour
 
     private void OnDestroy()
     {
-        _doubleJumpItem.SetActive(true); 
+        if (!PlayerView.Instance.PlayerModel.HasDoubleJump)
+            _doubleJumpItem.SetActive(true);
     }
 
     private IEnumerator OnEnteringBoss()

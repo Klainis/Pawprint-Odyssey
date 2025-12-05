@@ -74,6 +74,7 @@ public class SpiritGuideView : MonoBehaviour
     {
         if (Model.IsDead)
         {
+            PlayerView.Instance.PlayerModel.SetSpiritGuideKilled();
             Die.Invoke();
             StartCoroutine(DestroySelf());
             _fightDoor.CloseDoor(false);
