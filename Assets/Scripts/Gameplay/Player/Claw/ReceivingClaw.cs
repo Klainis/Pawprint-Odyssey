@@ -6,17 +6,22 @@ public class ReceivingClaw : MonoBehaviour
     private PiercingClaw piercingClaw;
     private GameObject manaBar;
 
-    private PlayerView playerView;
+    private readonly string clawGetItemName = "ClawGetItem";
+    private GameObject clawGetItem;
 
     private void Awake()
     {
-        playerView = GetComponent<PlayerView>();
         playerMana = GetComponent<PlayerMana>();
         piercingClaw = GetComponent<PiercingClaw>();
+
+        clawGetItem = GameObject.Find(clawGetItemName);
     }
 
     private void Start()
     {
+        if (PlayerView.Instance.PlayerModel.HasClaw)
+            Destroy(clawGetItem);
+
         manaBar = InitializeManager._instance.manaBar;
         Debug.Log(manaBar != null);
         SetActiveManaBar();
@@ -24,7 +29,7 @@ public class ReceivingClaw : MonoBehaviour
 
     public void SetActiveManaBar()
     {
-        if (playerView.PlayerModel.HasClaw)
+        if (PlayerView.Instance.PlayerModel.HasClaw)
         {
             playerMana.enabled = true;
             piercingClaw.enabled = true;
@@ -37,12 +42,12 @@ public class ReceivingClaw : MonoBehaviour
         playerMana.enabled = true;
         piercingClaw.enabled = true;
         manaBar.SetActive(true);
-        playerView.PlayerModel.SetHasClaw();
+        PlayerView.Instance.PlayerModel.SetHasClaw();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ClawGetItem")
+        if (collision.gameObject.CompareTag(clawGetItemName))
         {
             Destroy(collision.gameObject);
             EnableClaw();
