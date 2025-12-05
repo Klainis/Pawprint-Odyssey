@@ -146,6 +146,7 @@ public class PlayerView : MonoBehaviour
     {
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
+        SaveSystem.Save();
     }
 
     #endregion
