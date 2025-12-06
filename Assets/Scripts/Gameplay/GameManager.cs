@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
 
-        SaveSystem.Save();
+        // SaveSystem.Save();
 
         if (EntryPoint._instance != null)
             EntryPoint._instance.DestroyAllSessionObjects();

@@ -13,6 +13,12 @@ public class SoulCrystalCounter : MonoBehaviour
         counterText.text = crystalCount.ToString();
     }
 
+    //private void Update()
+    //{
+    //    if (counterText == null)
+    //        counterText = InitializeManager._instance.soulCrystalText;
+    //}
+
     public void CountCrystal()
     {
         crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;

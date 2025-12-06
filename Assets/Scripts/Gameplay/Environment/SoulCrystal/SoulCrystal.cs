@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 public class SoulCrystal : MonoBehaviour
 {
@@ -11,14 +10,14 @@ public class SoulCrystal : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _playerWeaponParticle;
 
+    private SoulCrystalCounter _crystalCounter;
     private ParticleSystem _playerWeaponParticleInstance;
     private DestroyBrokenCrystals _destroyBrokenCrystals;
     private int life;
 
-    [SerializeField] private UnityEvent crystalCountEvent;
-
     private void Awake()
     {
+        _crystalCounter = PlayerView.Instance.GetComponent<SoulCrystalCounter>();
         _destroyBrokenCrystals = GetComponent<DestroyBrokenCrystals>();
         shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
     }
@@ -33,7 +32,7 @@ public class SoulCrystal : MonoBehaviour
         if (life <= 0)
         {
             shakeObjectAfterDamage.Shake();
-            crystalCountEvent.Invoke();
+            _crystalCounter.CountCrystal();
             Destroy(gameObject);
             _destroyBrokenCrystals.AddInDestroyCrystalList();
         }
