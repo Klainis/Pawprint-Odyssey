@@ -16,7 +16,9 @@ public class InteractArea : MonoBehaviour
             interact.enabled = true;
 
             if (gameObject.CompareTag("Heal"))
-                interact.Heal = true;
+            {
+                interact.FullHeal = true;
+            }
         }
     }
 
@@ -25,7 +27,7 @@ public class InteractArea : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             interact.enabled = false;
-            interact.Heal = false;
+            interact.FullHeal = false;
         }
     }
 }

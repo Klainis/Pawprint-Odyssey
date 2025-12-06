@@ -8,7 +8,7 @@ public class PiercingClaw : MonoBehaviour
     [SerializeField] private GameObject clawSprite;
     [SerializeField] private InputActionReference clawAction;
 
-    private Vector2 clawSize = new(4f, 0.2f);
+    private Vector2 clawSize = new(4f, 0.6f);
 
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;

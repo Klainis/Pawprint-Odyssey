@@ -37,4 +37,10 @@ public class PlayerMana : MonoBehaviour
         playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana + manaToGet);
         manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
     }
+
+    public void FullMana()
+    {
+        playerView.PlayerModel.FullMana();
+        manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+    }
 }

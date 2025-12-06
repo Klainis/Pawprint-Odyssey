@@ -117,6 +117,12 @@ public class PlayerModel
         return true;
     }
 
+    public bool FullMana()
+    {
+        Mana = MaxMana;
+        return true;
+    }
+
     public bool TakeDamage(int damage)
     {
         if (damage <= 0)

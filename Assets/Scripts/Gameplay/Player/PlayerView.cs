@@ -25,6 +25,7 @@ public class PlayerView : MonoBehaviour
     private PlayerMove playerMove;
     private PlayerInput playerInput;
     private PlayerHeart playerHeart;
+    private PlayerMana playerMana;
     private Interact playerInteract;
 
     private bool isInvincible = false;
@@ -42,6 +43,7 @@ public class PlayerView : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerHeart = GetComponent<PlayerHeart>();
         playerInteract = GetComponent<Interact>();
+        playerMana = GetComponent<PlayerMana>();
 
         if (OnFallEvent == null) OnFallEvent = new UnityEvent();
         if (OnLandEvent == null) OnLandEvent = new UnityEvent();
@@ -139,13 +141,15 @@ public class PlayerView : MonoBehaviour
 
     public void Heal(int life)
     {
-        // Heal игрока на конкретное количество HP
+        // FullHeal игрока на конкретное количество HP
     }
 
     public void FullHeal()
     {
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
+        playerMana.FullMana();
+
         SaveSystem.Save();
     }
 
