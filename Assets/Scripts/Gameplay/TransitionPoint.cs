@@ -1,6 +1,5 @@
 using UnityEngine;
 using GlobalEnums;
-using Unity.VisualScripting;
 using System.Collections;
 
 public class TransitionPoint : MonoBehaviour
