@@ -19,8 +19,9 @@ public class PlayerData : ScriptableObject
     [Header("Soul Crystal")]
     public int soulCrystalsCollected;
 
-    [Header("Current Scene")]
+    [Header("Current Coords")]
     public string currentScene;
+    public float[] currentPosition;
 
     [Header("Received Abilities")]
     public bool hasClaw;

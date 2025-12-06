@@ -81,8 +81,8 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            // ≈сли нужно загрузить позицию игрока из сохранени€
-            // PlayerView.Instance.transform.position = ...
+            var posFromSave = new Vector3(data.CurrentPosition[0], data.CurrentPosition[1] + 2, data.CurrentPosition[2]);
+            EntryPoint._instance.SetPositionFromSave(posFromSave);
 
             return true;
         }
@@ -115,6 +115,10 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
+            var curPos = PlayerView.Instance.gameObject.transform.position;
+            var curPosToSave = new float[] { curPos.x, curPos.y, curPos.z };
+            PlayerView.Instance.PlayerModel.SetCurrentPosition(curPosToSave);
+
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
 

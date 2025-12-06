@@ -11,7 +11,6 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 public class EntryPoint : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private string startSceneName = "F_Room_Tutorial";
     [SerializeField] private PlayerData playerData;
 
     [Header("PREFABS (Assets)")]
@@ -81,7 +80,7 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
-        await SceneManager.LoadSceneAsync(startSceneName);
+        await SceneManager.LoadSceneAsync(_playerInstance.GetComponent<PlayerView>().PlayerModel.CurrentScene);
         fadeScript.FadeIn();
 
         //InstallDependencySpiritGuide();
@@ -251,10 +250,6 @@ public class EntryPoint : MonoBehaviour
         if (isLoaded)
         {
             Debug.Log($"EntryPoint: Игра загружена из профиля {SaveSystem.CurrentProfileIndex}.");
-
-            // В будущем SetInitialPosition должен вызываться только если isLoaded == false,
-            // а position ставиться в SaveSystem.TryLoad
-            SetInitialPosition();
         }
         else
         {
@@ -286,11 +281,13 @@ public class EntryPoint : MonoBehaviour
 
     private void SetInitialPosition()
     {
-        // Координаты начальной комнаты
-        _playerInstance.transform.position = /*initialPosition.position*/new Vector3(-150f, -3f, 0f);
+        // Координаты начальной комнаты (только если нет сохраненной позиции)
+        _playerInstance.transform.position = new Vector3(-150f, -3f, 0f);
+    }
 
-        // Координаты комнаты с Claw
-        //player.transform.position = new Vector3(35.97942f, -46.43025f, 0f);
+    public void SetPositionFromSave(Vector3 pos)
+    {
+        _playerInstance.transform.position = pos;
     }
 
     private void EnableMana()
