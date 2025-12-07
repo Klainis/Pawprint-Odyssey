@@ -6,10 +6,10 @@ public class DestructibleWall : MonoBehaviour
     //public WallsExistence wallsExistence { get; private set; }
 
     [Header("Data")]
-    [SerializeField] private EnvironmentData environmentData;
+    [SerializeField] private EnvironmentData _environmentData;
 
     [Space(5)]
-    private ShakeObjectAfterDamage shakeObjectAfterDamage;
+    private ShakeObjectAfterDamage _shakeObjectAfterDamage;
 
     [Space(5)]
     private DestroyBrokenWalls _destroyBrokenWalls;
@@ -25,26 +25,26 @@ public class DestructibleWall : MonoBehaviour
 
     private void Awake()
     {
-        shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
+        _shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
         _destroyBrokenWalls = GetComponent<DestroyBrokenWalls>();
     }
 
     private void Start()
     {
-        life = environmentData.wallLife;
+        life = _environmentData.wallLife;
     }
 
     private void Update()
     {
         if (life <= 0)
         {
-            shakeObjectAfterDamage.Shake();
+            _shakeObjectAfterDamage.Shake();
             Destroy(gameObject);
             _destroyBrokenWalls.AddInDestroyWallList();
         }
-        else if (shakeObjectAfterDamage.shakeDuration > 0)
+        else if (_shakeObjectAfterDamage.shakeDuration > 0)
         {
-            shakeObjectAfterDamage.Shake();
+            _shakeObjectAfterDamage.Shake();
         }
     }
 
@@ -57,14 +57,15 @@ public class DestructibleWall : MonoBehaviour
 
         if (isClaw)
         {
+            Debug.Log("Ударили по стене когтем");
+            _shakeObjectAfterDamage.shakeDuration = _environmentData.shakeDuration;
             life -= 9999;
-            shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
         }
         else
         {
+            _shakeObjectAfterDamage.shakeDuration = _environmentData.shakeDuration;
             life -= 1;
             SpawnDamageParticles(direction);
-            shakeObjectAfterDamage.shakeDuration = environmentData.shakeDuration;
         };
     }
 
