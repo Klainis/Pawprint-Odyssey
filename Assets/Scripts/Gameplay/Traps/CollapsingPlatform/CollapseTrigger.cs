@@ -14,6 +14,9 @@ public class CollapseTrigger : MonoBehaviour
         var player = collision.gameObject.CompareTag("Player");
         var enemy = collision.gameObject.CompareTag("Enemy");
         if ((player || enemy) && !collapsingPlatform.IsHidden)
+        {
+            //Debug.Log("Platform Destroy");
             StartCoroutine(collapsingPlatform.WaitAndChangeState());
+        }
     }
 }

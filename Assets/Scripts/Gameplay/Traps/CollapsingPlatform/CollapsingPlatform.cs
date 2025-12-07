@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class CollapsingPlatform : MonoBehaviour
 {
     [SerializeField] private float timeBeforeHide = 1.5f;
     [SerializeField] private float timeToReveal = 1.5f;
 
-    private SpriteRenderer spriteRenderer;
+    private SpriteShapeRenderer spriteRenderer;
     private Collider2D platformCollider;
     private Collider2D collapseTriggerCollider;
 
@@ -16,7 +17,7 @@ public class CollapsingPlatform : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteShapeRenderer>();
         platformCollider = GetComponent<Collider2D>();
         collapseTriggerCollider = GetComponentInChildren<CollapseTrigger>().GetComponent<Collider2D>();
     }
