@@ -364,8 +364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f69735ea097b2c4e86040336cdd0829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interact
-  interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  interactHealEvent:
+  _interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  _interactHealEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6772023754791648629}
@@ -380,6 +380,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _pollenExplosionParticle: {fileID: 8218929143799225855, guid: 20949d7cd74773046bc56f705636ab32, type: 3}
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -425,7 +426,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1891582151
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 120
   m_Sprite: {fileID: 21300000, guid: 96be36fcbc69e8944b5d9f089bc07112, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
