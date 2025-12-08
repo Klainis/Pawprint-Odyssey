@@ -40,7 +40,7 @@ public class GuardianOwlAttack : MonoBehaviour
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
-        _player = InitializeManager._instance.player;
+        _player = InitializeManager.Instance.player;
     }
 
     #region Wave Attack

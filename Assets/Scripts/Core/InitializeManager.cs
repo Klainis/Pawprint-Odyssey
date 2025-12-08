@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InitializeManager : MonoBehaviour
 {
-    public static InitializeManager _instance { get; private set; }
+    private static InitializeManager instance;
+    public static InitializeManager Instance { get { return instance; } }
 
     public GameObject player;
     public Canvas canvas;
@@ -14,13 +15,13 @@ public class InitializeManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
         }
 
-        _instance = this;
+        instance = this;
         DontDestroyOnLoad(gameObject);
     }
 }

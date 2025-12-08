@@ -3,6 +3,8 @@ using System.IO;
 
 public class SaveSystem
 {
+    private static float increasePosYFromSave = 0.5f;
+
     public static int CurrentProfileIndex { get; set; } = 1;
 
     private static SaveData saveData = new SaveData();
@@ -81,7 +83,7 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            var posFromSave = new Vector2(data.CurrentPosition[0], data.CurrentPosition[1] + 0.2f);
+            var posFromSave = new Vector2(data.CurrentPosition[0], data.CurrentPosition[1] + increasePosYFromSave);
             EntryPoint.Instance.SetPositionFromSave(posFromSave);
 
             return true;

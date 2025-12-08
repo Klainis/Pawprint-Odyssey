@@ -8,7 +8,7 @@ public class SoulCrystalCounter : MonoBehaviour
 
     private void Start()
     {
-        counterText = InitializeManager._instance.soulCrystalText;
+        counterText = InitializeManager.Instance.soulCrystalText;
         crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
         counterText.text = crystalCount.ToString();
     }

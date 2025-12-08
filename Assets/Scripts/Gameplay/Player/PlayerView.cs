@@ -30,6 +30,8 @@ public class PlayerView : MonoBehaviour
 
     private bool isInvincible = false;
 
+    public PlayerAnimation PlayerAnimation { get { return playerAnimation; } }
+
     #region Common Methods
 
     private void Awake()

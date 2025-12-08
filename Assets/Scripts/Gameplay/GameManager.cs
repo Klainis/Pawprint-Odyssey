@@ -68,8 +68,9 @@ public class GameManager : MonoBehaviour
         if (GameState == GameState.DEAD)
         {
             Destroy(Player);
-            SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
             EntryPoint.Instance.InitializeDataFromSave();
+            EntryPoint.Instance.InitializePlayerUI();
+            SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CurrentScene);
             SetGameState(GameState.PLAYING);
         }
     }

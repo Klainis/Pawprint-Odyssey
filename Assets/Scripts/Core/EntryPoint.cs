@@ -163,26 +163,7 @@ public class EntryPoint : MonoBehaviour
 
         InitializeDataFromSave();
 
-        if (_canvasInstance != null)
-        {
-            if (manaBarPrefab != null)
-            {
-                _manaBarInstance = Instantiate(manaBarPrefab, _canvasInstance.transform);
-                DontDestroyOnLoad(_manaBarInstance);
-                InitializeManager._instance.manaBar = _manaBarInstance;
-                EnableMana();
-            }
-
-            InitializeSoulCrystalCounter();
-
-            if (heartsPrefab != null)
-            {
-                _heartsInstance = Instantiate(heartsPrefab, _canvasInstance.transform);
-                DontDestroyOnLoad(_heartsInstance);
-                if (playerInitialized)
-                    StartHearts();
-            }
-        }
+        InitializePlayerUI();
     }
 
     public void DestroyAllSessionObjects()
@@ -208,8 +189,8 @@ public class EntryPoint : MonoBehaviour
         SetCanvasParamets();
         DontDestroyOnLoad(_canvasInstance);
 
-        if (InitializeManager._instance != null)
-            InitializeManager._instance.canvas = _canvasInstance.GetComponent<Canvas>();
+        if (InitializeManager.Instance != null)
+            InitializeManager.Instance.canvas = _canvasInstance.GetComponent<Canvas>();
     }
 
     private void InitializeFade()
@@ -233,7 +214,7 @@ public class EntryPoint : MonoBehaviour
         DontDestroyOnLoad(_crystalCounterInstance);
 
         var text = _crystalCounterInstance.GetComponent<TMP_Text>();
-        InitializeManager._instance.soulCrystalText = text;
+        InitializeManager.Instance.soulCrystalText = text;
     }
 
     public void InitializeDataFromSave()
@@ -275,8 +256,36 @@ public class EntryPoint : MonoBehaviour
         piercingClaw = _playerInstance.GetComponent<PiercingClaw>();
         if (piercingClaw) piercingClaw.enabled = false;
 
-        InitializeManager._instance.player = _playerInstance;
+        InitializeManager.Instance.player = _playerInstance;
         playerInitialized = true;
+    }
+
+    public void InitializePlayerUI()
+    {
+        if (_canvasInstance != null)
+        {
+            if (_canvasInstance.transform.childCount > 0)
+                for (var childIndex = 0; childIndex < _canvasInstance.transform.childCount; childIndex++)
+                    Destroy(_canvasInstance.transform.GetChild(childIndex).gameObject);
+
+            if (manaBarPrefab != null)
+            {
+                _manaBarInstance = Instantiate(manaBarPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad(_manaBarInstance);
+                InitializeManager.Instance.manaBar = _manaBarInstance;
+                EnableMana();
+            }
+
+            InitializeSoulCrystalCounter();
+
+            if (heartsPrefab != null)
+            {
+                _heartsInstance = Instantiate(heartsPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad(_heartsInstance);
+                if (playerInitialized)
+                    StartHearts();
+            }
+        }
     }
 
     private void SetInitialPosition()

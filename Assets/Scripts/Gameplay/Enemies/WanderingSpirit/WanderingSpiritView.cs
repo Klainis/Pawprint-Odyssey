@@ -45,7 +45,7 @@ public class WanderingSpiritView : MonoBehaviour
         Model = new EnemyModel(data.Life, data.Speed, data.Damage);
 
         //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
-        playerAttack = InitializeManager._instance.player?.GetComponent<PlayerAttack>();
+        playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
         rigidBody = GetComponent<Rigidbody2D>();
         wsAnimation = GetComponent<WSAnimation>();
         wsAttack = GetComponent<WSAttack>();

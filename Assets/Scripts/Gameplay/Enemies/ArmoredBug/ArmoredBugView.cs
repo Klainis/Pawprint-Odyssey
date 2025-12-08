@@ -46,7 +46,7 @@ public class ArmoredBugView : MonoBehaviour
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage);
 
         //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
-        _playerAttack = InitializeManager._instance.player?.GetComponent<PlayerAttack>();
+        _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
 
         _rigidBody = GetComponent<Rigidbody2D>();
         _bugAnimation = GetComponent<ArmoredBugAnimation>();

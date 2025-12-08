@@ -21,7 +21,7 @@ public class GuardianOwlMove : MonoBehaviour
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
         _bossCollider = GetComponent<BoxCollider2D>();
-        _player = InitializeManager._instance.player;
+        _player = InitializeManager.Instance.player;
     }
 
     public IEnumerator MoveUp()

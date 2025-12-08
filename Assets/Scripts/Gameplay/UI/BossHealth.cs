@@ -13,7 +13,7 @@ public class BossHealth : MonoBehaviour
 
     private void Awake()
     {
-        _canvas = InitializeManager._instance.canvas.transform;
+        _canvas = InitializeManager.Instance.canvas.transform;
     }
 
     void Start()
