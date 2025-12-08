@@ -4,22 +4,32 @@ using UnityEngine.InputSystem;
 
 public class Interact : MonoBehaviour
 {
-    [SerializeField] private InputActionReference interactAction;
-    [SerializeField] private UnityEvent interactHealEvent;
+    [SerializeField] private InputActionReference _interactAction;
+    [SerializeField] private UnityEvent _interactHealEvent;
+    [SerializeField] private ParticleSystem _pollenExplosionParticle;
+
+    private ParticleSystem _pollenExplosionInstance;
 
     public bool FullHeal { get; set; }
 
     private void Update()
     {
-        if (interactAction != null && interactAction.action != null)
+        if (_interactAction != null && _interactAction.action != null)
         {
-            if (interactAction.action.WasPressedThisFrame())
+            if (_interactAction.action.WasPressedThisFrame())
             {
                 if (FullHeal)
                 {
-                    interactHealEvent.Invoke(); //PlayerView
+                    InstantiateParticles();
+                    _interactHealEvent.Invoke(); //PlayerView
                 }
             }
         }
+    }
+
+    private void InstantiateParticles()
+    {
+        Quaternion _pollenRotation = Quaternion.identity;
+        _pollenExplosionInstance = Instantiate(_pollenExplosionParticle, transform.position, _pollenRotation);
     }
 }
