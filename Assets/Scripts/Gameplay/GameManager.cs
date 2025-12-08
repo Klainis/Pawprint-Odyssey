@@ -5,7 +5,8 @@ using GlobalEnums;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager _instance { get; private set; }
+    private static GameManager instance;
+    public static GameManager Instance { get { return instance; } }
     public GameState GameState { get; private set; }
 
     private TransitionDestination destination;
@@ -39,12 +40,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
         }
-        _instance = this;
+        instance = this;
         DontDestroyOnLoad(gameObject);
 
         SetGameState(GameState.PLAYING);
@@ -68,7 +69,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(Player);
             SceneManager.LoadSceneAsync("F_Room_Tutorial"); // Загружать сцены из сохранения
-            EntryPoint._instance.InitializeDataFromSave();
+            EntryPoint.Instance.InitializeDataFromSave();
             SetGameState(GameState.PLAYING);
         }
     }
@@ -154,8 +155,8 @@ public class GameManager : MonoBehaviour
 
         // SaveSystem.Save();
 
-        if (EntryPoint._instance != null)
-            EntryPoint._instance.DestroyAllSessionObjects();
+        if (EntryPoint.Instance != null)
+            EntryPoint.Instance.DestroyAllSessionObjects();
 
         SceneManager.LoadScene(mainMenuSceneName);
         Destroy(gameObject);
@@ -199,7 +200,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
 
-        var inputSystem = EntryPoint._instance.NewInputSystem;
+        var inputSystem = EntryPoint.Instance.NewInputSystem;
         if (inputSystem != null)
         {
             var playerMap = inputSystem.FindActionMap("Player");
@@ -212,7 +213,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
 
-        var inputSystem = EntryPoint._instance.NewInputSystem;
+        var inputSystem = EntryPoint.Instance.NewInputSystem;
         if (inputSystem != null)
         {
             var playerMap = inputSystem.FindActionMap("Player");

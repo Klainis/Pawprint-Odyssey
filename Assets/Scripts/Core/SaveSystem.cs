@@ -81,8 +81,8 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            var posFromSave = new Vector3(data.CurrentPosition[0], data.CurrentPosition[1] + 2, data.CurrentPosition[2]);
-            EntryPoint._instance.SetPositionFromSave(posFromSave);
+            var posFromSave = new Vector2(data.CurrentPosition[0], data.CurrentPosition[1] + 0.2f);
+            EntryPoint.Instance.SetPositionFromSave(posFromSave);
 
             return true;
         }
@@ -115,8 +115,9 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
-            var curPos = PlayerView.Instance.gameObject.transform.position;
-            var curPosToSave = new float[] { curPos.x, curPos.y, curPos.z };
+            // var curPos = PlayerView.Instance.gameObject.transform.position;
+            var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
+            var curPosToSave = new float[] { curPos.x, curPos.y };
             PlayerView.Instance.PlayerModel.SetCurrentPosition(curPosToSave);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);

@@ -45,6 +45,7 @@ public class GuardianOwlView : MonoBehaviour
 
     private bool _isHitted = false;
     private bool _facingRight = true;
+    private bool _deathDone = false;
 
     public Rigidbody2D RigidBody { get { return _rigidBody; } }
     public int MaxLifeForReading { get { return _maxLifeForReading; } }
@@ -75,16 +76,20 @@ public class GuardianOwlView : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_deathDone)
+            return;
         if (Model.IsDead)
         {
+            _deathDone = true;
             PlayerView.Instance.PlayerModel.SetGuardianOwlKilled();
+            SaveSystem.Save();
             _Die.Invoke();
             StartCoroutine(DestroySelf());
             if (_fightDoor != null)
             {
                 _fightDoor.CloseDoor(false);
             }
-            GameManager._instance.SetGameState(GameState.PLAYING);
+            GameManager.Instance.SetGameState(GameState.PLAYING);
             return;
         }
     }

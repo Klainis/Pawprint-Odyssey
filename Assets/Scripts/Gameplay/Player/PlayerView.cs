@@ -223,8 +223,8 @@ public class PlayerView : MonoBehaviour
         rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
         yield return new WaitForSeconds(1.1f);
         //SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        GameManager._instance.SetGameState(GameState.DEAD);
-        GameManager._instance.RevivalPlayer();
+        GameManager.Instance.SetGameState(GameState.DEAD);
+        GameManager.Instance.RevivalPlayer();
     }
 
     #endregion

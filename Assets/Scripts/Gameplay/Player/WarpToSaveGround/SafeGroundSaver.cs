@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class SafeGroundSaver : MonoBehaviour
 {
-    [SerializeField] private float saveFreauency = 1f;
+    private static SafeGroundSaver instance;
+    public static SafeGroundSaver Instance { get { return instance; } }
+
+    [SerializeField] private float saveFrequency = 1f;
 
     public Vector2 SafeGroundLocation { get; private set; } = Vector2.zero;
 
@@ -12,6 +15,7 @@ public class SafeGroundSaver : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         groundCheck = GetComponent<GroundCheckForSaveGround>();
     }
 
@@ -24,8 +28,8 @@ public class SafeGroundSaver : MonoBehaviour
 
     private IEnumerator SaveGroundLocation()
     {
-        float elapsedTime = 0f;
-        while (elapsedTime < saveFreauency)
+        var elapsedTime = 0f;
+        while (elapsedTime < saveFrequency)
         {
             elapsedTime += Time.deltaTime;
             yield return null;

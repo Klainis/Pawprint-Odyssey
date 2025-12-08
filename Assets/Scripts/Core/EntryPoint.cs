@@ -58,20 +58,20 @@ public class EntryPoint : MonoBehaviour
     private Canvas componentTransitionCanvas;
     private CanvasScaler componentCanvasScaler;
 
-    public static EntryPoint _instance { get; private set; }
+    private static EntryPoint instance;
+    public static EntryPoint Instance { get { return instance; } }
     public InputActionAsset NewInputSystem { get { return newInputSystem; } }
 
     private bool playerInitialized = false;
 
     private void Awake()
     {
-        if (_instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
         }
-
-        _instance = this;
+        instance = this;
         DontDestroyOnLoad(gameObject);
     }
     private async void Start()
@@ -111,7 +111,7 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_deadManagerInstance);
         }
 
-        if (GameManager._instance == null)
+        if (GameManager.Instance == null)
         {
             if (gameManagerPrefab != null)
             {
@@ -152,7 +152,7 @@ public class EntryPoint : MonoBehaviour
             _pauseMenuCanvasInstance = Instantiate(pauseMenuCanvasPrefab);
             _pauseMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_pauseMenuCanvasInstance);
-            GameManager._instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
+            GameManager.Instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
         }
 
         if (FindAnyObjectByType<EventSystem>() == null)

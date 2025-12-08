@@ -45,6 +45,7 @@ public class SpiritGuideView : MonoBehaviour
     private bool isAccelerated = false;
     private bool moveDisabled = false;
     private bool facingRight = true;
+    private bool deathDone = false;
 
     public Rigidbody2D RigidBody { get { return rigidBody; } }
     public int MaxLifeForReading { get { return maxLifeForReading; } }
@@ -72,13 +73,17 @@ public class SpiritGuideView : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (deathDone)
+            return;
         if (Model.IsDead)
         {
+            deathDone = true;
             PlayerView.Instance.PlayerModel.SetSpiritGuideKilled();
+            SaveSystem.Save();
             Die.Invoke();
             StartCoroutine(DestroySelf());
             _fightDoor.CloseDoor(false);
-            GameManager._instance.SetGameState(GameState.PLAYING);
+            GameManager.Instance.SetGameState(GameState.PLAYING);
             return;
         }
 

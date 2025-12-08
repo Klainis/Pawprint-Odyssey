@@ -8,7 +8,6 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
-    [SerializeField] private InputActionReference saveAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private float runSpeed = 40f;
@@ -41,7 +40,7 @@ public class PlayerInput : MonoBehaviour
             if (pauseMenuAction != null && pauseMenuAction.action != null)
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
-                    GameManager._instance.OpenPauseMenu();
+                    GameManager.Instance.OpenPauseMenu();
             }
         }
         else
@@ -49,7 +48,7 @@ public class PlayerInput : MonoBehaviour
             if (pauseMenuActionUI != null && pauseMenuActionUI.action != null)
             {
                 if (pauseMenuActionUI.action.WasPressedThisFrame())
-                    GameManager._instance.ClosePauseMenu();
+                    GameManager.Instance.ClosePauseMenu();
             }
             return;
         }
@@ -78,13 +77,6 @@ public class PlayerInput : MonoBehaviour
         {
             if (dashAction.action.WasPressedThisFrame())
                 dash = true;
-        }
-
-        // убрать, когда появятся автоматические сохранения
-        if (saveAction != null && saveAction.action != null)
-        {
-            if (saveAction.action.WasPressedThisFrame())
-                SaveSystem.Save();
         }
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));

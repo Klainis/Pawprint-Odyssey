@@ -32,9 +32,9 @@ public class EnterBossFight : MonoBehaviour
                 _guideView = _spiritGuide.GetComponent<SpiritGuideView>();
                 _guideView.enabled = true;
 
-                if (!_guideView.Model.IsDead && GameManager._instance.GameState == GameState.PLAYING)
+                if (!_guideView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
-                    GameManager._instance.SetGameState(GameState.IN_FIGHT_ROOM);
+                    GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                     _door.CloseDoor(true);
                 }
@@ -50,9 +50,9 @@ public class EnterBossFight : MonoBehaviour
                 _guardianOwlView = _guardianOwl.GetComponent<GuardianOwlView>();
                 _guardianOwlView.enabled = true;
 
-                if (!_guardianOwlView.Model.IsDead && GameManager._instance.GameState == GameState.PLAYING)
+                if (!_guardianOwlView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
-                    GameManager._instance.SetGameState(GameState.IN_FIGHT_ROOM);
+                    GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                 }
             }
@@ -65,7 +65,7 @@ public class EnterBossFight : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && GameManager._instance.GameState != GameState.IN_FIGHT_ROOM)
+        if (collision.gameObject.CompareTag("Player") && GameManager.Instance.GameState != GameState.IN_FIGHT_ROOM)
         {
             _health.DestroyBossHealthSlider();
         }

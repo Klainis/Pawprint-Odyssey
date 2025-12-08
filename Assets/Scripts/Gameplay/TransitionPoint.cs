@@ -23,7 +23,7 @@ public class TransitionPoint : MonoBehaviour
 
     private void Awake()
     {
-        gameManager = GameManager._instance;
+        gameManager = GameManager.Instance;
         playerInput = GameObject.FindAnyObjectByType<PlayerInput>(); // Надо будет заменить на Singleton
         if (playerInput != null)
             Debug.Log($"PlayerInput найден:{(bool)playerInput}");
