@@ -14,7 +14,8 @@ public class PlayerModel
     public int ClawDamage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
     public string CurrentScene { get; private set; }
-    public float[] CurrentPosition { get; private set; }
+    public float CurPosX { get; private set; }
+    public float CurPosY { get; private set; }
     public bool HasClaw { get; private set; }
     public bool HasDoubleJump { get; private set; }
     public bool FacingRight { get; private set; }
@@ -30,7 +31,7 @@ public class PlayerModel
                         int mana, int maxMana, int manaAfterDeath,
                         int damage, int clawDamage,
                         int soulCrystalsCollected,
-                        string currentScene, float[] currentPosition,
+                        string currentScene, float curPosX, float curPosY,
                         bool hasClaw, bool hasDoubleJump, bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled)
     {
@@ -47,7 +48,8 @@ public class PlayerModel
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
 
         CurrentScene = currentScene;
-        CurrentPosition = currentPosition;
+        CurPosX = curPosX;
+        CurPosY = curPosY;
 
         HasClaw = hasClaw;
         HasDoubleJump = hasDoubleJump;
@@ -68,7 +70,8 @@ public class PlayerModel
             data.ClawDamage,
             data.SoulCrystalsCollected,
             data.CurrentScene,
-            data.CurrentPosition,
+            data.CurPosX,
+            data.CurPosY,
             data.HasClaw,
             data.HasDoubleJump,
             data.FacingRight,
@@ -89,7 +92,8 @@ public class PlayerModel
             playerData.clawDamage,
             playerData.soulCrystalsCollected,
             playerData.currentScene,
-            playerData.currentPosition,
+            playerData.curPosX,
+            playerData.curPosY,
             playerData.hasClaw,
             playerData.hasDoubleJump,
             playerData.facingRight,
@@ -168,9 +172,10 @@ public class PlayerModel
         return true;
     }
 
-    public bool SetCurrentPosition(float[] pos)
+    public bool SetCurrentPosition(float curPosX, float curPosY)
     {
-        CurrentPosition = pos;
+        CurPosX = curPosX;
+        CurPosY = curPosY;
         return true;
     }
 
@@ -213,7 +218,8 @@ public class PlayerModel
         data.ClawDamage = ClawDamage;
         data.SoulCrystalsCollected = SoulCrystalsCollected;
         data.CurrentScene = CurrentScene;
-        data.CurrentPosition = CurrentPosition;
+        data.CurPosX = CurPosX;
+        data.CurPosY = CurPosY;
         data.HasClaw = HasClaw;
         data.HasDoubleJump = HasDoubleJump;
         data.FacingRight = true;
@@ -232,7 +238,8 @@ public class PlayerModel
         ClawDamage = data.ClawDamage;
         SoulCrystalsCollected = data.SoulCrystalsCollected;
         CurrentScene = data.CurrentScene;
-        CurrentPosition = data.CurrentPosition;
+        CurPosX = data.CurPosX;
+        CurPosY = data.CurPosY;
         HasClaw = data.HasClaw;
         HasDoubleJump = data.HasDoubleJump;
         FacingRight = data.FacingRight;
@@ -255,7 +262,8 @@ public struct PlayerSaveData
     public int ClawDamage;
     public int SoulCrystalsCollected;
     public string CurrentScene;
-    public float[] CurrentPosition;
+    public float CurPosX;
+    public float CurPosY;
     public bool HasClaw;
     public bool HasDoubleJump;
     public bool FacingRight;

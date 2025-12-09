@@ -21,7 +21,8 @@ public class PlayerData : ScriptableObject
 
     [Header("Current Coords")]
     public string currentScene;
-    public float[] currentPosition;
+    public float curPosX;
+    public float curPosY;
 
     [Header("Received Abilities")]
     public bool hasClaw;

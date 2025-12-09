@@ -17,13 +17,12 @@ public class SafeGroundSaver : MonoBehaviour
     {
         instance = this;
         groundCheck = GetComponent<GroundCheckForSaveGround>();
+        SafeGroundLocation = transform.position;
     }
 
     private void Start()
     {
         safeGroundCoroutine = StartCoroutine(SaveGroundLocation());
-
-        SafeGroundLocation = transform.position;
     }
 
     private IEnumerator SaveGroundLocation()

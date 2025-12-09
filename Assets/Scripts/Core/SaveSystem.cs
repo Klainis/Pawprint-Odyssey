@@ -3,7 +3,7 @@ using System.IO;
 
 public class SaveSystem
 {
-    private static float increasePosYFromSave = 0.5f;
+    private static float increasePosYFromSave = 1f;
 
     public static int CurrentProfileIndex { get; set; } = 1;
 
@@ -83,7 +83,7 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            var posFromSave = new Vector2(data.CurrentPosition[0], data.CurrentPosition[1] + increasePosYFromSave);
+            var posFromSave = new Vector2(data.CurPosX, data.CurPosY + increasePosYFromSave);
             EntryPoint.Instance.SetPositionFromSave(posFromSave);
 
             return true;
@@ -117,10 +117,10 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
-            // var curPos = PlayerView.Instance.gameObject.transform.position;
             var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
-            var curPosToSave = new float[] { curPos.x, curPos.y };
-            PlayerView.Instance.PlayerModel.SetCurrentPosition(curPosToSave);
+            if (curPos == Vector2.zero)
+                curPos = PlayerView.Instance.gameObject.transform.position;
+            PlayerView.Instance.PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }

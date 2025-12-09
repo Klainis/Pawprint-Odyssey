@@ -31,6 +31,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private InputActionAsset newInputSystem;
     [SerializeField] private EventSystem eventSystemPrefab;
     [SerializeField] private Transform initialPosition;
+    [SerializeField] private GameObject mapCanvasPrefab;
 
     // INSTANCES (Runtime objects)
     private WallsManager _wallsManagerInstance;
@@ -48,6 +49,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _playerInstance;
     private GameObject _pauseMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
+    private GameObject _mapCanvasInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -147,6 +149,12 @@ public class EntryPoint : MonoBehaviour
             InitializeFade();
         }
 
+        if (mapCanvasPrefab != null)
+        {
+            _mapCanvasInstance = Instantiate(mapCanvasPrefab);
+            DontDestroyOnLoad(_mapCanvasInstance);
+        }
+
         if (pauseMenuCanvasPrefab != null)
         {
             _pauseMenuCanvasInstance = Instantiate(pauseMenuCanvasPrefab);
@@ -179,6 +187,7 @@ public class EntryPoint : MonoBehaviour
         if (_pauseMenuCanvasInstance != null) Destroy(_pauseMenuCanvasInstance);
         if (_canvasInstance != null) Destroy(_canvasInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
+        if (_mapCanvasInstance != null) Destroy(_mapCanvasInstance);
 
         Destroy(gameObject);
     }
@@ -291,7 +300,8 @@ public class EntryPoint : MonoBehaviour
     private void SetInitialPosition()
     {
         // Координаты начальной комнаты (только если нет сохраненной позиции)
-        _playerInstance.transform.position = new Vector3(-150f, -3f, 0f);
+        _playerInstance.transform.position = new Vector3(playerData.curPosX, playerData.curPosY, 0f);
+        PlayerView.Instance.PlayerModel.SetCurrentPosition(playerData.curPosX, playerData.curPosY);
     }
 
     public void SetPositionFromSave(Vector3 pos)
