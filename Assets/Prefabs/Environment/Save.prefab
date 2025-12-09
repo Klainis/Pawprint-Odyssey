@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 65818666686177427}
   - component: {fileID: 8102010192825777154}
   - component: {fileID: 6589679957725721351}
+  - component: {fileID: 4165313677594625142}
   m_Layer: 0
   m_Name: Save
   m_TagString: Heal
@@ -28,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 7157061716701184020}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.02, y: -1.147, z: 0}
-  m_LocalScale: {x: 0.4549762, y: 0.42661136, z: 0.1265796}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4549762, y: 0.42661136, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7760877413112672793}
@@ -143,6 +144,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: -2.42}
   m_Radius: 2.914376
+--- !u!114 &4165313677594625142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7157061716701184020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac2baf841482d64bb04309660feff04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateParticles
+  _pollenExplosionParticle: {fileID: 8218929143799225855, guid: 20949d7cd74773046bc56f705636ab32, type: 3}
 --- !u!1 &8627461439948164577
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,7 +183,7 @@ Transform:
   m_GameObject: {fileID: 8627461439948164577}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.91, y: -0.713, z: 0}
+  m_LocalPosition: {x: -1.97, y: -0.72, z: 0}
   m_LocalScale: {x: 0.32595557, y: 0.34762788, z: 1.1716106}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -219,8 +233,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 364494515
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 4400925208325629729, guid: f832385679c43c6419c36a8ef7e23a60, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -255,11 +269,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2644324826485773421, guid: 217c12f291b456d4ea241ff9e9e12d9e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.869
+      value: -1.924
       objectReference: {fileID: 0}
     - target: {fileID: 2644324826485773421, guid: 217c12f291b456d4ea241ff9e9e12d9e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.484
+      value: -0.438
       objectReference: {fileID: 0}
     - target: {fileID: 2644324826485773421, guid: 217c12f291b456d4ea241ff9e9e12d9e, type: 3}
       propertyPath: m_LocalPosition.z

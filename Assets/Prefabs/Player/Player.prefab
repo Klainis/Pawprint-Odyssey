@@ -251,7 +251,6 @@ MonoBehaviour:
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   dashAction: {fileID: -657975949706170437, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  saveAction: {fileID: 7323548540738220381, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pauseMenuAction: {fileID: 954110573549900416, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pauseMenuActionUI: {fileID: 3072407570729947297, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   runSpeed: 45
@@ -282,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf8b84cffaeb1084eac3bb277ca3921c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SafeGroundSaver
-  saveFreauency: 1
+  saveFrequency: 1
 --- !u!114 &8176099545049012028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,7 +379,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _pollenExplosionParticle: {fileID: 8218929143799225855, guid: 20949d7cd74773046bc56f705636ab32, type: 3}
+  _instantiatePollenParticleEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1377240496476148}
+        m_TargetAssemblyTypeName: InstantiateParticles, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0

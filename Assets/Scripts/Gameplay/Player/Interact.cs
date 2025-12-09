@@ -6,9 +6,8 @@ public class Interact : MonoBehaviour
 {
     [SerializeField] private InputActionReference _interactAction;
     [SerializeField] private UnityEvent _interactHealEvent;
-    [SerializeField] private ParticleSystem _pollenExplosionParticle;
 
-    private ParticleSystem _pollenExplosionInstance;
+    private InstantiateParticles _particles;
 
     public bool FullHeal { get; set; }
 
@@ -20,16 +19,12 @@ public class Interact : MonoBehaviour
             {
                 if (FullHeal)
                 {
-                    InstantiateParticles();
+                    _particles = FindAnyObjectByType<InstantiateParticles>();
+                    _particles.InstantiatePollen();
+
                     _interactHealEvent.Invoke(); //PlayerView
                 }
             }
         }
-    }
-
-    private void InstantiateParticles()
-    {
-        Quaternion _pollenRotation = Quaternion.identity;
-        _pollenExplosionInstance = Instantiate(_pollenExplosionParticle, transform.position, _pollenRotation);
     }
 }
