@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 
 public class PlayerModel
 {
@@ -16,6 +15,9 @@ public class PlayerModel
     public string CurrentScene { get; private set; }
     public float CurPosX { get; private set; }
     public float CurPosY { get; private set; }
+    public string CheckPointScene { get; private set; }
+    public float CheckPointPosX { get; private set; }
+    public float CheckPointPosY { get; private set; }
     public bool HasClaw { get; private set; }
     public bool HasDoubleJump { get; private set; }
     public bool FacingRight { get; private set; }
@@ -32,6 +34,7 @@ public class PlayerModel
                         int damage, int clawDamage,
                         int soulCrystalsCollected,
                         string currentScene, float curPosX, float curPosY,
+                        string checkPointScene, float checkPointPosX, float checkPointPosY,
                         bool hasClaw, bool hasDoubleJump, bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled)
     {
@@ -50,6 +53,10 @@ public class PlayerModel
         CurrentScene = currentScene;
         CurPosX = curPosX;
         CurPosY = curPosY;
+
+        CheckPointScene = checkPointScene;
+        CheckPointPosX = checkPointPosX;
+        CheckPointPosY = checkPointPosY;
 
         HasClaw = hasClaw;
         HasDoubleJump = hasDoubleJump;
@@ -72,6 +79,9 @@ public class PlayerModel
             data.CurrentScene,
             data.CurPosX,
             data.CurPosY,
+            data.CheckPointScene,
+            data.CheckPointPosX,
+            data.CheckPointPosY,
             data.HasClaw,
             data.HasDoubleJump,
             data.FacingRight,
@@ -94,6 +104,9 @@ public class PlayerModel
             playerData.currentScene,
             playerData.curPosX,
             playerData.curPosY,
+            playerData.checkPointScene,
+            playerData.checkPointPosX,
+            playerData.checkPointPosY,
             playerData.hasClaw,
             playerData.hasDoubleJump,
             playerData.facingRight,
@@ -172,10 +185,23 @@ public class PlayerModel
         return true;
     }
 
-    public bool SetCurrentPosition(float curPosX, float curPosY)
+    public bool SetCurrentPosition(float posX, float posY)
     {
-        CurPosX = curPosX;
-        CurPosY = curPosY;
+        CurPosX = posX;
+        CurPosY = posY;
+        return true;
+    }
+
+    public bool SetCheckPointScene(string sceneName)
+    {
+        CheckPointScene = sceneName;
+        return true;
+    }
+
+    public bool SetCheckPointPosition(float posX, float posY)
+    {
+        CheckPointPosX = posX;
+        CheckPointPosY = posY;
         return true;
     }
 
@@ -220,6 +246,9 @@ public class PlayerModel
         data.CurrentScene = CurrentScene;
         data.CurPosX = CurPosX;
         data.CurPosY = CurPosY;
+        data.CheckPointScene = CheckPointScene;
+        data.CheckPointPosX = CheckPointPosX;
+        data.CheckPointPosY = CheckPointPosY;
         data.HasClaw = HasClaw;
         data.HasDoubleJump = HasDoubleJump;
         data.FacingRight = true;
@@ -240,6 +269,9 @@ public class PlayerModel
         CurrentScene = data.CurrentScene;
         CurPosX = data.CurPosX;
         CurPosY = data.CurPosY;
+        CheckPointScene = data.CheckPointScene;
+        CheckPointPosX = data.CheckPointPosX;
+        CheckPointPosY = data.CheckPointPosY;
         HasClaw = data.HasClaw;
         HasDoubleJump = data.HasDoubleJump;
         FacingRight = data.FacingRight;
@@ -264,6 +296,9 @@ public struct PlayerSaveData
     public string CurrentScene;
     public float CurPosX;
     public float CurPosY;
+    public string CheckPointScene;
+    public float CheckPointPosX;
+    public float CheckPointPosY;
     public bool HasClaw;
     public bool HasDoubleJump;
     public bool FacingRight;

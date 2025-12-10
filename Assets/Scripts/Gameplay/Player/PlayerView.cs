@@ -139,16 +139,28 @@ public class PlayerView : MonoBehaviour
 
     #endregion
 
-    #region Heal
+    #region Heal & CheckPoint
 
     public void FullHeal()
     {
+        SetCheckPoint();
         MapManager.Instance.ShowOpenedRooms();
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
         playerMana.FullMana();
 
         SaveSystem.Save();
+    }
+
+    private void SetCheckPoint()
+    {
+        var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
+        if (curPos == Vector2.zero)
+            curPos = gameObject.transform.position;
+        PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
+
+        PlayerModel.SetCheckPointScene(PlayerModel.CurrentScene);
+        PlayerModel.SetCheckPointPosition(PlayerModel.CurPosX, PlayerModel.CurPosY);
     }
 
     #endregion

@@ -24,6 +24,11 @@ public class PlayerData : ScriptableObject
     public float curPosX;
     public float curPosY;
 
+    [Header("CheckPoint Coords")]
+    public string checkPointScene;
+    public float checkPointPosX;
+    public float checkPointPosY;
+
     [Header("Received Abilities")]
     public bool hasClaw;
     public bool hasDoubleJump;

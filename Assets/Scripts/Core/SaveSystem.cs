@@ -85,8 +85,10 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            var posFromSave = new Vector2(data.CurPosX, data.CurPosY + increasePosYFromSave);
-            EntryPoint.Instance.SetPositionFromSave(posFromSave);
+            var checkPointPosFromSave = new Vector2(data.CheckPointPosX, data.CheckPointPosY + increasePosYFromSave);
+            EntryPoint.Instance.SetPositionFromSave(checkPointPosFromSave);
+
+            MapManager.Instance.SetMapIcon(PlayerView.Instance.PlayerModel.CurrentScene);
 
             return true;
         }
