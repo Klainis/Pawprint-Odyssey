@@ -51,7 +51,7 @@ public class PlayerInput : MonoBehaviour
 
             if (IsValidAction(mapAction))
             {
-                if (mapAction.action.WasPressedThisFrame())
+                if (mapAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
                     GameManager.Instance.OpenMap();
             }
         }
