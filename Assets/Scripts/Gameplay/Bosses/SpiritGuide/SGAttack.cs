@@ -21,7 +21,7 @@ public class SGAttack : MonoBehaviour
     [SerializeField] private float lightZoneTime = 1f;
     [SerializeField] private float lightZoneTelegraphTime = 0.5f;
 
-    public event Action OnPlayerDetected;
+    //public event Action OnPlayerDetected;
 
     private SpiritGuideView sgView;
 
