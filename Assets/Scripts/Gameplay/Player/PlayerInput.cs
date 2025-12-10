@@ -10,6 +10,8 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
+    [SerializeField] private InputActionReference mapAction;
+    [SerializeField] private InputActionReference mapActionUI;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -35,28 +37,46 @@ public class PlayerInput : MonoBehaviour
 
     private void Update()
     {
-        if (Time.timeScale > 0)
+        var isGameActive = Time.timeScale > 0;
+        if (isGameActive)
         {
-            if (pauseMenuAction != null && pauseMenuAction.action != null)
+            if (IsValidAction(pauseMenuAction))
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
+                {
                     GameManager.Instance.OpenPauseMenu();
+                    return;
+                }
+            }
+
+            if (IsValidAction(mapAction))
+            {
+                if (mapAction.action.WasPressedThisFrame())
+                    GameManager.Instance.OpenMap();
             }
         }
         else
         {
-            if (pauseMenuActionUI != null && pauseMenuActionUI.action != null)
+            if (IsValidAction(pauseMenuActionUI))
             {
                 if (pauseMenuActionUI.action.WasPressedThisFrame())
+                {
                     GameManager.Instance.ClosePauseMenu();
+                    return;
+                }
             }
-            return;
+
+            if (IsValidAction(mapActionUI))
+            {
+                if (mapActionUI.action.WasPressedThisFrame())
+                    GameManager.Instance.CloseMap();
+            }
         }
 
-        if (attackAction != null && attackAction.action != null)
+        if (IsValidAction(attackAction))
             attackPressed = attackAction.action.WasPressedThisFrame();
 
-        if (moveAction != null && moveAction.action != null)
+        if (IsValidAction(moveAction))
         {
             var move = moveAction.action.ReadValue<Vector2>();
 
@@ -64,7 +84,7 @@ public class PlayerInput : MonoBehaviour
             WallRun(move);
         }
 
-        if (jumpAction != null && jumpAction.action != null)
+        if (IsValidAction(jumpAction))
         {
             if (jumpAction.action.WasPressedThisFrame())
             {
@@ -73,7 +93,7 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        if (dashAction != null && dashAction.action != null)
+        if (IsValidAction(dashAction))
         {
             if (dashAction.action.WasPressedThisFrame())
                 dash = true;
@@ -92,6 +112,11 @@ public class PlayerInput : MonoBehaviour
 
         jump = false;
         dash = false;
+    }
+
+    private bool IsValidAction(InputActionReference actionReference)
+    {
+        return actionReference != null && actionReference.action != null;
     }
 
     private void WallRun(Vector2 move)

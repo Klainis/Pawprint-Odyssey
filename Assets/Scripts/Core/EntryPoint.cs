@@ -32,6 +32,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private EventSystem eventSystemPrefab;
     [SerializeField] private Transform initialPosition;
     [SerializeField] private GameObject mapCanvasPrefab;
+    [SerializeField] private GameObject mapManagerPrefab;
 
     // INSTANCES (Runtime objects)
     private WallsManager _wallsManagerInstance;
@@ -50,6 +51,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _pauseMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
     private GameObject _mapCanvasInstance;
+    private GameObject _mapManagerInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -128,6 +130,12 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_wallsManagerInstance);
         }
 
+        if (mapManagerPrefab != null)
+        {
+            _mapManagerInstance = Instantiate(mapManagerPrefab);
+            DontDestroyOnLoad(_mapManagerInstance);
+        }
+
         if (crystalsManagerPrefab != null)
         {
             _crystalsManagerInstance = Instantiate(crystalsManagerPrefab);
@@ -152,7 +160,10 @@ public class EntryPoint : MonoBehaviour
         if (mapCanvasPrefab != null)
         {
             _mapCanvasInstance = Instantiate(mapCanvasPrefab);
+            _mapCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_mapCanvasInstance);
+            GameManager.Instance.SetMapCanvasInstance(_mapCanvasInstance);
+            MapManager.Instance.SetMapCanvasInstance(_mapCanvasInstance);
         }
 
         if (pauseMenuCanvasPrefab != null)
@@ -180,6 +191,7 @@ public class EntryPoint : MonoBehaviour
         if (_globalValueInstance != null) Destroy(_globalValueInstance);
         if (_deadManagerInstance != null) Destroy(_deadManagerInstance);
         if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance);
+        if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance);
         if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance);
         if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);

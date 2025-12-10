@@ -15,6 +15,7 @@ public class SaveSystem
         public PlayerSaveData PlayerSaveData;
         public WallSaveData WallSaveData;
         public CrystalSaveData CrystalSaveData;
+        public MapRoomsSaveData MapRoomsSaveData;
     }
 
     public static string SaveFileName()
@@ -66,13 +67,14 @@ public class SaveSystem
 
             if (CreatePlayerModel(ref saveData.PlayerSaveData) &&
                 DestroyBrokenWalls(ref saveData.WallSaveData) &&
-                DestroyBrokenCrystals(ref saveData.CrystalSaveData)) return true;
+                DestroyBrokenCrystals(ref saveData.CrystalSaveData) &&
+                LoadOpenedMapRooms(ref saveData.MapRoomsSaveData)) return true;
 
             return false;
         }
         catch (System.Exception e)
         {
-            Debug.LogError("SaveSystem: Ошибка чтения сохранения: " + e.Message);
+            Debug.LogError($"SaveSystem: Ошибка чтения сохранения: {e.Message}\n{e.StackTrace}");
             return false;
         }
     }
@@ -113,6 +115,16 @@ public class SaveSystem
         return false;
     }
 
+    private static bool LoadOpenedMapRooms(ref MapRoomsSaveData data)
+    {
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.OpenRoomsFromSave(ref data);
+            return true;
+        }
+        return false;
+    }
+
     private static void HandleSaveData()
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
@@ -133,6 +145,11 @@ public class SaveSystem
         if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
         {
             CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+        }
+
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.Save(ref saveData.MapRoomsSaveData);
         }
     }
 }

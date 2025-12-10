@@ -15,13 +15,16 @@ public class GameManager : MonoBehaviour
     private BossHealth bossHealth;
     private GameObject _playerCached;
     private GameObject _pauseMenuCanvasInstance;
+    private GameObject _mapCanvasInstance;
 
     private readonly string mainMenuSceneName = "MainMenu";
     private readonly string savesMenuSceneName = "SavesMenu";
     private readonly string entryPointSceneName = "EntryPoint";
 
     private bool isTransitioning;
+    private bool mapOpened = false;
     private bool inPauseMenu = false;
+    private bool gamePaused = false;
 
     private GameObject Player
     {
@@ -96,6 +99,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        MapManager.Instance.OpenRoom(targetScene);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(targetScene);
         while (!loadOp.isDone)
             yield return null;
@@ -180,6 +184,9 @@ public class GameManager : MonoBehaviour
 
     public void OpenPauseMenu()
     {
+        if (mapOpened)
+            return;
+
         inPauseMenu = true;
         PauseGame();
         _pauseMenuCanvasInstance.SetActive(true);
@@ -187,6 +194,9 @@ public class GameManager : MonoBehaviour
 
     public void ClosePauseMenu()
     {
+        if (mapOpened)
+            return;
+
         inPauseMenu = false;
         _pauseMenuCanvasInstance.SetActive(false);
         UnpauseGame();
@@ -197,8 +207,16 @@ public class GameManager : MonoBehaviour
         _pauseMenuCanvasInstance = obj;
     }
 
+    #endregion
+
+    #region Pause & Unpause
+
     private void PauseGame()
     {
+        if (gamePaused)
+            return;
+        gamePaused = true;
+
         Time.timeScale = 0;
 
         var inputSystem = EntryPoint.Instance.NewInputSystem;
@@ -212,6 +230,10 @@ public class GameManager : MonoBehaviour
 
     private void UnpauseGame()
     {
+        if (!gamePaused)
+            return;
+        gamePaused = false;
+
         Time.timeScale = 1;
 
         var inputSystem = EntryPoint.Instance.NewInputSystem;
@@ -221,6 +243,35 @@ public class GameManager : MonoBehaviour
             if (playerMap != null)
                 playerMap.Enable();
         }
+    }
+
+    #endregion
+
+    #region Map
+
+    public void OpenMap()
+    {
+        if (inPauseMenu)
+            return;
+
+        mapOpened = true;
+        PauseGame();
+        _mapCanvasInstance.SetActive(true);
+    }
+
+    public void CloseMap()
+    {
+        if (inPauseMenu)
+            return;
+
+        mapOpened = false;
+        _mapCanvasInstance.SetActive(false);
+        UnpauseGame();
+    }
+
+    public void SetMapCanvasInstance(GameObject obj)
+    {
+        _mapCanvasInstance = obj;
     }
 
     #endregion

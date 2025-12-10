@@ -141,13 +141,9 @@ public class PlayerView : MonoBehaviour
 
     #region Heal
 
-    public void Heal(int life)
-    {
-        // FullHeal игрока на конкретное количество HP
-    }
-
     public void FullHeal()
     {
+        MapManager.Instance.ShowOpenedRooms();
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
         playerMana.FullMana();
