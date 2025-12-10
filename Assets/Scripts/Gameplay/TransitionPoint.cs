@@ -50,8 +50,7 @@ public class TransitionPoint : MonoBehaviour
     private IEnumerator WalkIntoGate(Collider2D playerCollider, /*Vector2 targetPosotion,*/ float speed)
     {
         playerInput.enabled = false;
-        // Так же разделить логику от всего остального CharacterController и отключать его
-        playerView.enabled = false;
+        //playerView.enabled = false;
         Rigidbody2D playerRB1 = playerCollider.gameObject.GetComponent<Rigidbody2D>();
 
         GatePosition gatePosition = GetGatePosition();
@@ -76,7 +75,7 @@ public class TransitionPoint : MonoBehaviour
 
             playerCollider.transform.position = playerPosition;
             playerRB1.position = playerPosition;
-            playerRB1.linearVelocity = Vector2.zero;
+            //playerRB1.linearVelocity = Vector2.zero;
 
             activated = true;
         }
@@ -98,6 +97,9 @@ public class TransitionPoint : MonoBehaviour
                     playerCollider.transform.position = playerPosition;
                     yield return null;
                 }
+
+                playerCollider.transform.position = playerPosition;
+                playerRB1.position = playerPosition;
                 activated = true;
             }
             else if (gatePosition == GatePosition.bottom)
@@ -121,8 +123,8 @@ public class TransitionPoint : MonoBehaviour
         if (gatePosition == GatePosition.right || gatePosition == GatePosition.left)
         {
             playerView.enabled = true;
-            if (playerRB1)
-                playerRB1.linearVelocity = Vector2.zero;
+            //if (playerRB1)
+            //    playerRB1.linearVelocity = Vector2.zero;
 
             Bounds gateBounds = col.bounds;
             Bounds playerBounds = playerCollider.bounds;
@@ -153,28 +155,6 @@ public class TransitionPoint : MonoBehaviour
 
             if (gatePosition == GatePosition.bottom)
             {
-                //Debug.Log("ЗАХОД СНИЗУ");
-
-                //float x = (characterController.m_FacingRight) ? 40f : -40f; //вынести в чистый класс
-                //x = 50;
-
-                //float y = 250;
-                //if (playerRB1.linearVelocity.y < 0)
-                //    force -= playerRB1.linearVelocity.y;
-
-                //playerRB1.AddForce(new Vector2(x, force)/*ForceMode2D.Impulse*/);
-
-                //characterController.enabled = true;
-                //characterController.Jump();
-
-                //playerRB1.linearVelocity = new Vector2(x, /*playerRB1.linearVelocity.y*/force);///////////////////////////////////
-                //Debug.Log(playerRB1.linearVelocity);
-
-                //playerRB1.linearVelocity = new Vector2(x, 0f);
-
-                // Добавляем импульс вверх
-                //playerRB1.AddForce(new Vector2(x, y), ForceMode2D.Impulse);
-                //playerRB1.linearVelocity = new Vector2(x, y); 
                 saveGround = GameObject.FindGameObjectWithTag("SaveGround").transform;
 
                 Vector3 saveGrounsPosition= new Vector3(saveGround.position.x, saveGround.position.y, 0);
