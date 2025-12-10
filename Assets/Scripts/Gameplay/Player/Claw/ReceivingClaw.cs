@@ -18,7 +18,7 @@ public class ReceivingClaw : MonoBehaviour
     private void Start()
     {
         manaBar = InitializeManager.Instance.manaBar;
-        Debug.Log(manaBar != null);
+        //Debug.Log(manaBar != null);
         SetActiveManaBar();
     }
 

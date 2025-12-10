@@ -56,11 +56,6 @@ public class GameManager : MonoBehaviour
         Sounds = GameManager.FindAnyObjectByType<AudioListener>();
     }
 
-    //public void InitializeComponent()
-    //{
-    //    /*BossHealth.*/
-    //}
-
     public void SetGameState(GameState newState)
     {
         GameState = newState;
@@ -99,6 +94,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        MapManager.Instance.SetMapIcon(targetScene);
         MapManager.Instance.OpenRoom(targetScene);
         AsyncOperation loadOp = SceneManager.LoadSceneAsync(targetScene);
         while (!loadOp.isDone)

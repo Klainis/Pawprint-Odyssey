@@ -145,13 +145,13 @@ public class SpiritGuideView : MonoBehaviour
     private void OnEnable()
     {
         sgMove.OnWallHit += HandleWallHit;
-        sgAttack.OnPlayerDetected += HandlePlayerDetected;
+        //sgAttack.OnPlayerDetected += HandlePlayerDetected;
     }
 
     private void OnDisable()
     {
         sgMove.OnWallHit -= HandleWallHit;
-        sgAttack.OnPlayerDetected -= HandlePlayerDetected;
+        //sgAttack.OnPlayerDetected -= HandlePlayerDetected;
     }
 
     private void HandleWallHit()

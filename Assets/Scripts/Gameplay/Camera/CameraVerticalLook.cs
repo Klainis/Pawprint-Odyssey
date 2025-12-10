@@ -38,7 +38,7 @@ public class CameraVerticalLook : MonoBehaviour
         if (lookAction != null && lookAction.action != null)
         {
             lookAction.action.Enable();
-            Debug.Log("Look enabled");
+            //Debug.Log("Look enabled");
         }
     }
 

@@ -8,6 +8,9 @@ public class MapManager : MonoBehaviour
 
     private List<string> OpenedRooms = new();
     private GameObject _mapCanvasInstance;
+    private Transform _mapIconTransform;
+
+    private readonly string mapIconObjName = "PlayerIconImage";
     private readonly string startRoomName = "F_Room_Tutorial";
     private readonly string roomsContainerName = "RoomsImages";
 
@@ -27,6 +30,7 @@ public class MapManager : MonoBehaviour
     public void SetMapCanvasInstance(GameObject obj)
     {
         _mapCanvasInstance = obj;
+        _mapIconTransform = _mapCanvasInstance.transform.Find(mapIconObjName);
     }
 
     public void OpenRoomsFromSave(ref MapRoomsSaveData data)
@@ -71,6 +75,20 @@ public class MapManager : MonoBehaviour
     {
         if (!OpenedRooms.Contains(roomName))
             OpenedRooms.Add(roomName);
+    }
+
+    public void SetMapIcon(string roomName)
+    {
+        if (_mapCanvasInstance == null)
+        {
+            Debug.LogError("MapManager: _mapCanvasInstance == null!");
+            return;
+        }
+
+        var roomsContainer = _mapCanvasInstance.transform.Find(roomsContainerName);
+        var roomTransform = roomsContainer.Find(roomName);
+        if (roomTransform != null)
+            _mapIconTransform.transform.position = roomTransform.position;
     }
 
     public void Save(ref MapRoomsSaveData data)

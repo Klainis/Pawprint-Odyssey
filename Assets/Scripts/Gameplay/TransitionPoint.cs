@@ -25,8 +25,8 @@ public class TransitionPoint : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         playerInput = GameObject.FindAnyObjectByType<PlayerInput>(); // Ќадо будет заменить на Singleton
-        if (playerInput != null)
-            Debug.Log($"PlayerInput найден:{(bool)playerInput}");
+        //if (playerInput != null)
+        //    Debug.Log($"PlayerInput найден:{(bool)playerInput}");
 
         playerView = GameObject.FindAnyObjectByType<PlayerView>();
         col = GetComponent<Collider2D>();
