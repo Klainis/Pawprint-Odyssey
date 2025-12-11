@@ -10,7 +10,7 @@ public class SoulCrystalCounter : MonoBehaviour
     {
         counterText = InitializeManager.Instance.soulCrystalText;
         crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
-        counterText.text = crystalCount.ToString();
+        counterText.text = $"{crystalCount.ToString()} / 12";
     }
 
     //private void Update()
@@ -25,6 +25,6 @@ public class SoulCrystalCounter : MonoBehaviour
         crystalCount++;
         PlayerView.Instance.PlayerModel.AddSoulCrystal();
 
-        counterText.text = crystalCount.ToString();
+        counterText.text = $"{crystalCount.ToString()} / 12";
     }
 }

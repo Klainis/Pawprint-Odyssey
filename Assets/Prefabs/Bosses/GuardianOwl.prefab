@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 3608303221265108472}
   - component: {fileID: 5025539658209776332}
   m_Layer: 6
-  m_Name: Guardian Owl
+  m_Name: GuardianOwl
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4096
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -268,8 +268,10 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 512
-  secondStageLifeCoef: 0.6
+  _secondStageLifeCoef: 0.6
+  _thirdStageLifeCoef: 0.2
   _isInvincible: 0
+  _doubleJumpItem: {fileID: 0}
   _Hit:
     m_PersistentCalls:
       m_Calls:

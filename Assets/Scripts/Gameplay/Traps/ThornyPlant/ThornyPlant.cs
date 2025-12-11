@@ -68,6 +68,9 @@ public class ThornyPlant : MonoBehaviour {
 
     public void ChangeForm(bool toHidden)
     {
+        if (gameObject.tag == "isDead")
+            return;
+
         isHidden = toHidden;
         openForm.SetActive(!toHidden);
         closeForm.SetActive(toHidden);
@@ -147,8 +150,9 @@ public class ThornyPlant : MonoBehaviour {
         //_animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         gameObject.tag = "isDead";
-        Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
-        transform.rotation = Quaternion.Euler(rotator);
+        ChangeForm(true);
+        //Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
+        //transform.rotation = Quaternion.Euler(rotator);
         //yield return new WaitForSeconds(0.25f);
         //rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         yield return new WaitForSeconds(3f);

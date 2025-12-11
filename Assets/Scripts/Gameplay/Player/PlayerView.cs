@@ -27,6 +27,7 @@ public class PlayerView : MonoBehaviour
     private PlayerHeart playerHeart;
     private PlayerMana playerMana;
     private Interact playerInteract;
+    private BoxCollider2D _playerCollider;
 
     private bool isInvincible = false;
 
@@ -39,6 +40,7 @@ public class PlayerView : MonoBehaviour
         instance = this;
 
         rigidBody = GetComponent<Rigidbody2D>();
+        _playerCollider = GetComponent<BoxCollider2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
         playerAttack = GetComponent<PlayerAttack>();
         playerMove = GetComponent<PlayerMove>();
@@ -219,7 +221,9 @@ public class PlayerView : MonoBehaviour
     private IEnumerator MakeInvincible(float time)
     {
         isInvincible = true;
+        gameObject.layer = LayerMask.NameToLayer("Invincible");
         yield return new WaitForSeconds(time);
+        gameObject.layer = LayerMask.NameToLayer("Player");
         isInvincible = false;
     }
 
