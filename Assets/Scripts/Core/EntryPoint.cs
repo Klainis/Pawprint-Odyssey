@@ -20,6 +20,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
     [SerializeField] private GameObject globalValuePrefab;
+    [SerializeField] private GameObject globalLightPrefab;
     [SerializeField] private GameObject deadManagerPrefab;
     [SerializeField] private GameObject canvasPrefab;
     [SerializeField] private GameObject heartsPrefab;
@@ -41,6 +42,7 @@ public class EntryPoint : MonoBehaviour
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;
     private GameObject _globalValueInstance;
+    private GameObject _globalLightInstance;
     private GameObject _deadManagerInstance;
     private GameObject _canvasInstance;
     private GameObject _transitionCanvasInstance;
@@ -107,6 +109,12 @@ public class EntryPoint : MonoBehaviour
         {
             _globalValueInstance = Instantiate(globalValuePrefab);
             DontDestroyOnLoad(_globalValueInstance);
+        }
+
+        if (globalLightPrefab != null)
+        {
+            _globalLightInstance = Instantiate(globalLightPrefab);
+            DontDestroyOnLoad(_globalLightInstance);
         }
 
         if (deadManagerPrefab != null)
