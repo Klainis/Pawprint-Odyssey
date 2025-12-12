@@ -104,7 +104,6 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Move our character
         playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
 
         if (jump)

@@ -99,7 +99,6 @@ public class PlayerView : MonoBehaviour
             {
                 playerMove.ResetDashCounter();
                 playerMove.IsDashing = false;
-                playerMove.IsJumping = false;
             }
 
             playerMove.PrevVelocityX = rigidBody.linearVelocity.x;
@@ -133,11 +132,6 @@ public class PlayerView : MonoBehaviour
 
         playerMove.ScaleJump();
     }
-
-    //private void OnEnable()
-    //{
-    //    playerInteract.
-    //}
 
     #endregion
 
