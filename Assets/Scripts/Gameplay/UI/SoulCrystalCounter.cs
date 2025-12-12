@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class SoulCrystalCounter : MonoBehaviour
 {
+    [SerializeField] private string _amountOfCrystal = "12";
     private TMP_Text counterText;
     private int crystalCount;
 
@@ -10,7 +11,9 @@ public class SoulCrystalCounter : MonoBehaviour
     {
         counterText = InitializeManager.Instance.soulCrystalText;
         crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
-        counterText.text = $"{crystalCount.ToString()} / 12";
+
+        var amountCr = _amountOfCrystal != null? _amountOfCrystal : "0";
+        counterText.text = $"{crystalCount.ToString()} / {amountCr}";
     }
 
     //private void Update()
