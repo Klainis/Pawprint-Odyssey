@@ -82,7 +82,7 @@ public class GuardianOwlView : MonoBehaviour
         {
             _deathDone = true;
             PlayerView.Instance.PlayerModel.SetGuardianOwlKilled();
-            SaveSystem.Save();
+            SaveSystem.AutoSave();
             _Die.Invoke();
             StartCoroutine(DestroySelf());
             if (_fightDoor != null)

@@ -275,6 +275,7 @@ public class EntryPoint : MonoBehaviour
 
             SetInitialPosition();
             SaveSystem.Save();
+            SaveSystem.AutoSave();
         }
 
         var receivingClawScript = _playerInstance.GetComponent<ReceivingClaw>();

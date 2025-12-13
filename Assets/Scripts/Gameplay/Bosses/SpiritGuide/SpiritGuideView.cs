@@ -79,7 +79,7 @@ public class SpiritGuideView : MonoBehaviour
         {
             deathDone = true;
             PlayerView.Instance.PlayerModel.SetSpiritGuideKilled();
-            SaveSystem.Save();
+            SaveSystem.AutoSave();
             Die.Invoke();
             StartCoroutine(DestroySelf());
             _fightDoor.CloseDoor(false);

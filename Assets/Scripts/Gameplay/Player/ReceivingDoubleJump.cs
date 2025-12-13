@@ -7,7 +7,7 @@ public class ReceivingDoubleJump : MonoBehaviour
     public void EnableDoubleJump()
     {
         PlayerView.Instance.PlayerModel.SetHasDoubleJump();
-        SaveSystem.Save();
+        SaveSystem.AutoSave();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

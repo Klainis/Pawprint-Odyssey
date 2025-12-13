@@ -41,7 +41,7 @@ public class DestructibleWall : MonoBehaviour
             _shakeObjectAfterDamage.Shake();
             Destroy(gameObject);
             _destroyBrokenWalls.AddInDestroyWallList();
-            SaveSystem.Save();
+            SaveSystem.AutoSave();
         }
         else if (_shakeObjectAfterDamage.shakeDuration > 0)
         {

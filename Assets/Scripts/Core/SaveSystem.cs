@@ -44,7 +44,23 @@ public class SaveSystem
 
         File.WriteAllText(SaveFileName(), json);
 
-        Debug.Log($"SaveSystem: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+        Debug.Log($"SaveSystem.Save: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+    }
+
+    public static void AutoSave()
+    {
+        HandleAutoSaveData();
+
+        var json = JsonUtility.ToJson(saveData, true);
+
+        var fullPath = SaveFileName();
+        var directoryPath = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directoryPath))
+            Directory.CreateDirectory(directoryPath);
+
+        File.WriteAllText(SaveFileName(), json);
+
+        Debug.Log($"SaveSystem.AutoSave: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
     }
 
     public static bool TryLoad()
@@ -131,10 +147,36 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
+
+            PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
+
+        if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
+        {
+            WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
+        }
+
+        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        {
+            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+        }
+
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.Save(ref saveData.MapRoomsSaveData);
+        }
+    }
+
+    private static void HandleAutoSaveData()
+    {
+        if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
+        {
             var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
             if (curPos == Vector3.zero)
                 curPos = PlayerView.Instance.gameObject.transform.position;
             PlayerView.Instance.PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
+            var playerModel = PlayerView.Instance.PlayerModel;
+            playerModel.SetCheckPointPosition(playerModel.CurPosX, playerModel.CurPosY);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
