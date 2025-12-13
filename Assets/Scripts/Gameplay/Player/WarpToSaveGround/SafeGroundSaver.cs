@@ -1,5 +1,7 @@
 using System.Collections;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SafeGroundSaver : MonoBehaviour
 {
@@ -10,19 +12,37 @@ public class SafeGroundSaver : MonoBehaviour
 
     public Vector2 SafeGroundLocation { get; private set; } = Vector2.zero;
 
-    private Coroutine safeGroundCoroutine;
-    private GroundCheckForSaveGround groundCheck;
+    private Coroutine _safeGroundCoroutine;
+    private string _sceneName;
+    private string _newSceneName;
+
+    private GroundCheckForSaveGround _groundCheck;
 
     private void Awake()
     {
         instance = this;
-        groundCheck = GetComponent<GroundCheckForSaveGround>();
+        _groundCheck = GetComponent<GroundCheckForSaveGround>();
         SafeGroundLocation = transform.position;
     }
 
     private void Start()
     {
-        safeGroundCoroutine = StartCoroutine(SaveGroundLocation());
+        _sceneName = _newSceneName = SceneManager.GetActiveScene().name;
+
+        _safeGroundCoroutine = StartCoroutine(SaveGroundLocation());
+    }
+
+    public void SetNewSafeGroundLocation()
+    {
+        if (_groundCheck.IsSaveGround())
+        {
+            SafeGroundLocation = transform.position;
+        }
+        else
+        {
+            SafeGroundLocation = GameObject.FindGameObjectWithTag("SafeGroundLocation").transform.position;
+        }
+
     }
 
     private IEnumerator SaveGroundLocation()
@@ -34,11 +54,11 @@ public class SafeGroundSaver : MonoBehaviour
             yield return null;
         }
 
-        if (groundCheck.IsSaveGround())
+        if (_groundCheck.IsSaveGround())
         {
             SafeGroundLocation = transform.position;
         }
 
-        safeGroundCoroutine = StartCoroutine(SaveGroundLocation());
+        _safeGroundCoroutine = StartCoroutine(SaveGroundLocation());
     }
 }

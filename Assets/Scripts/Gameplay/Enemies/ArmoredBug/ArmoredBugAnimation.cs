@@ -14,6 +14,11 @@ public class ArmoredBugAnimation : MonoBehaviour
         _animator.SetBool("Hit", value);
     }
 
+    public void SetBoolMove(bool value)
+    {
+        _animator.SetBool("Move", value);
+    }
+
     public void SetTriggerDead()
     {
         _animator.SetTrigger("Dead");

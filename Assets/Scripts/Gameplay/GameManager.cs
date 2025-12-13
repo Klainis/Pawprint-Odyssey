@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 
         SetGameState(GameState.PLAYING);
 
-        Sounds = GameManager.FindAnyObjectByType<AudioListener>();
+        Sounds = GameObject.FindAnyObjectByType<AudioListener>();
     }
 
     public void SetGameState(GameState newState)

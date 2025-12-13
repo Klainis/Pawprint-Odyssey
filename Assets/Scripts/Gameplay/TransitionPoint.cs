@@ -162,10 +162,12 @@ public class TransitionPoint : MonoBehaviour
             }
 
         }
+
         playerView.enabled = true;
         playerInput.enabled = true;
-        gameManager.SetGameState(GameState.PLAYING);
+        SafeGroundSaver.Instance.SetNewSafeGroundLocation();
 
+        gameManager.SetGameState(GameState.PLAYING);
     }
 
     public void TryDoTransition(Collider2D playerCollider)
