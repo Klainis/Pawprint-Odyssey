@@ -19,7 +19,8 @@ public class Interact : MonoBehaviour
             {
                 if (FullHeal)
                 {
-                    _particles = FindAnyObjectByType<InstantiateParticles>();
+                    _particles = FindAnyObjectByType<InstantiateParticles>();//находится на сейвке
+                    PlayerView.Instance.SetCheckPoint(_particles.transform.position - new Vector3(0, 2, 0)); //смещаю чуть вниз, чтобы на земле был игрок, лень настраивать 
                     _particles.InstantiatePollen();
 
                     _interactHealEvent.Invoke(); //PlayerView

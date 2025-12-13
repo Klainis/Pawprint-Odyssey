@@ -10,7 +10,7 @@ public class SafeGroundSaver : MonoBehaviour
 
     [SerializeField] private float saveFrequency = 1f;
 
-    public Vector2 SafeGroundLocation { get; private set; } = Vector2.zero;
+    public Vector3 SafeGroundLocation { get; private set; } = Vector2.zero;
 
     private Coroutine _safeGroundCoroutine;
     private string _sceneName;
@@ -40,7 +40,12 @@ public class SafeGroundSaver : MonoBehaviour
         }
         else
         {
-            SafeGroundLocation = GameObject.FindGameObjectWithTag("SafeGroundLocation").transform.position;
+            var safeLocation = GameObject.FindGameObjectWithTag("SafeGroundLocation");
+
+            if (safeLocation != null)
+            {
+                SafeGroundLocation = safeLocation.transform.position;
+            }
         }
 
     }

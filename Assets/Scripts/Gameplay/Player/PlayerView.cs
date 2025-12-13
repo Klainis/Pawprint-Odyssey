@@ -139,7 +139,7 @@ public class PlayerView : MonoBehaviour
 
     public void FullHeal()
     {
-        SetCheckPoint();
+        //SetCheckPoint();
         MapManager.Instance.ShowOpenedRooms();
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
@@ -148,12 +148,12 @@ public class PlayerView : MonoBehaviour
         SaveSystem.Save();
     }
 
-    private void SetCheckPoint()
+    public void SetCheckPoint(Vector3 checkPointPos)
     {
-        var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
-        if (curPos == Vector2.zero)
-            curPos = gameObject.transform.position;
-        PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
+        //var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
+        //if (curPos == Vector3.zero)
+        //    curPos = gameObject.transform.position;
+        PlayerModel.SetCurrentPosition(checkPointPos.x, checkPointPos.y);
 
         PlayerModel.SetCheckPointScene(PlayerModel.CurrentScene);
         PlayerModel.SetCheckPointPosition(PlayerModel.CurPosX, PlayerModel.CurPosY);

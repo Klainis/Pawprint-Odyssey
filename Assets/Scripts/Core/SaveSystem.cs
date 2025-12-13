@@ -85,7 +85,7 @@ public class SaveSystem
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
 
-            var checkPointPosFromSave = new Vector2(data.CheckPointPosX, data.CheckPointPosY + increasePosYFromSave);
+            var checkPointPosFromSave = new Vector3(data.CheckPointPosX, data.CheckPointPosY + increasePosYFromSave, 0);
             EntryPoint.Instance.SetPositionFromSave(checkPointPosFromSave);
 
             MapManager.Instance.SetMapIcon(PlayerView.Instance.PlayerModel.CurrentScene);
@@ -132,7 +132,7 @@ public class SaveSystem
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
-            if (curPos == Vector2.zero)
+            if (curPos == Vector3.zero)
                 curPos = PlayerView.Instance.gameObject.transform.position;
             PlayerView.Instance.PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
 
