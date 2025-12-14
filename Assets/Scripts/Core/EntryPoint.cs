@@ -86,7 +86,7 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
-        await SceneManager.LoadSceneAsync(_playerInstance.GetComponent<PlayerView>().PlayerModel.CurrentScene);
+        await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CurrentScene);
         fadeScript.FadeIn();
 
         //InstallDependencySpiritGuide();
@@ -273,6 +273,7 @@ public class EntryPoint : MonoBehaviour
             else
                 Debug.LogError("CRITICAL: PlayerData не назначен в инспекторе EntryPoint!");
 
+            SetInitialScene();
             SetInitialPosition();
             SaveSystem.Save();
             SaveSystem.AutoSave();
@@ -323,6 +324,12 @@ public class EntryPoint : MonoBehaviour
         // Координаты начальной комнаты (только если нет сохраненной позиции)
         _playerInstance.transform.position = new Vector3(playerData.curPosX, playerData.curPosY, 0f);
         PlayerView.Instance.PlayerModel.SetCurrentPosition(playerData.curPosX, playerData.curPosY);
+    }
+
+    private void SetInitialScene()
+    {
+        GameManager.Instance.currentScene = "F_Room_Tutorial";
+        Debug.Log(PlayerView.Instance.PlayerModel.CurrentScene);
     }
 
     public void SetPositionFromSave(Vector3 pos)

@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return instance; } }
     public GameState GameState { get; private set; }
 
+    private string _currentScene;
+
+    public string currentScene { get { return _currentScene; } set { _currentScene = value; } }
+
     private TransitionDestination destination;
     private TransitionDestination[] destinations;
     private AudioListener Sounds;
@@ -79,7 +83,8 @@ public class GameManager : MonoBehaviour
     {
         if (isTransitioning) return;
 
-        Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene);
+        _currentScene = targetScene;
+        //Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene); // Сохранять сцену только при сохранении, а не при переходе!!!
         Debug.Log($"GameManager: Переход на сцену {targetScene}");
         SetGameState(GameState.ENTERING_LEVEL);
         //Вызов сохранения

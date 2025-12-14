@@ -19,7 +19,9 @@ public class DestroyBrokenCrystals : MonoBehaviour
     public void DestroyCrystal()
     {
         if (crystalsManager.CrystalsExistenceInstance.IsCrystalBroken(_crystalID))
+        {
             Destroy(gameObject);
+        }
     }
 
     public void AddInDestroyCrystalList()

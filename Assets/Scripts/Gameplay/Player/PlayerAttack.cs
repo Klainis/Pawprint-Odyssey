@@ -80,7 +80,7 @@ public class PlayerAttack : MonoBehaviour
         if (attackSeriesCount >= maxAttackSeriesCount)
         {
             StartCoroutine(AttackCooldown(0.3f));
-            Debug.Log("Серия завершена");
+            //Debug.Log("Серия завершена");
             ResetCombo();
         }
         else

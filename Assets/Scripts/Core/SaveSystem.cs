@@ -63,6 +63,22 @@ public class SaveSystem
         Debug.Log($"SaveSystem.AutoSave: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
     }
 
+    public static void CrystalSave()
+    {
+        CrystalHandleSaveData();
+
+        var json = JsonUtility.ToJson(saveData, true);
+
+        var fullPath = SaveFileName();
+        var directoryPath = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directoryPath))
+            Directory.CreateDirectory(directoryPath);
+
+        File.WriteAllText(SaveFileName(), json);
+
+        Debug.Log($"SaveSystem.CrystalSave: Игра (Кристаллы) сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+    }
+
     public static bool TryLoad()
     {
         var path = SaveFileName();
@@ -147,8 +163,10 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
-
+            //Позиция записывается в PlayerModel в скрипте сейвки
+            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.currentScene);
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+            Debug.Log($"{PlayerView.Instance.PlayerModel.CheckPointPosX}, {PlayerView.Instance.PlayerModel.CheckPointPosY}");
         }
 
         if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
@@ -171,12 +189,16 @@ public class SaveSystem
     {
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
+            //Позиция
             var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
             if (curPos == Vector3.zero)
                 curPos = PlayerView.Instance.gameObject.transform.position;
-            PlayerView.Instance.PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
             var playerModel = PlayerView.Instance.PlayerModel;
+            playerModel.SetCurrentPosition(curPos.x, curPos.y);
             playerModel.SetCheckPointPosition(playerModel.CurPosX, playerModel.CurPosY);
+            
+            //Сцена
+            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.currentScene);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
@@ -195,5 +217,19 @@ public class SaveSystem
         {
             MapManager.Instance.Save(ref saveData.MapRoomsSaveData);
         }
+    }
+
+    private static void CrystalHandleSaveData()
+    {
+        if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
+        {
+            PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
+
+        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        {
+            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+        }
+        //Debug.Log($"{PlayerView.Instance.PlayerModel.CheckPointPosX}, {PlayerView.Instance.PlayerModel.CheckPointPosY}");
     }
 }

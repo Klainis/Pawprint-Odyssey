@@ -35,6 +35,7 @@ public class SoulCrystal : MonoBehaviour
             _crystalCounter.CountCrystal();
             Destroy(gameObject);
             _destroyBrokenCrystals.AddInDestroyCrystalList();
+            SaveSystem.CrystalSave();
         }
         else if (shakeObjectAfterDamage.shakeDuration > 0)
         {
