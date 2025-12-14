@@ -13,6 +13,10 @@ public class ThornyPlant : MonoBehaviour {
     [Header("Параметры выстрелов")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 7f;
+    [SerializeField] private int shotsPerSeries = 3;
+    [SerializeField] private float timeBetweenShots = 0.35f;
+    [SerializeField] private float timeBetweenSeries = 2.5f;
+    [SerializeField] private float delayAfterOpen = 1f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem damageParticale;
@@ -27,11 +31,7 @@ public class ThornyPlant : MonoBehaviour {
 
     private ScreenShaker _screenShaker;
 
-    private int shotsPerSeries = 3;
-    private float timeBetweenShots = 0.35f;
-    private float timeBetweenSeries = 2.5f;
     private float lastSeriesTime = 0;
-    private float delayAfterOpen = 1.2f;
     private float lastOpenTime = 0;
     private bool canShoot = false;
     private bool isShooting = false;
