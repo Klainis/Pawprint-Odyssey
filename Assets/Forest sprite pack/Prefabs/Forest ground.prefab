@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7066146461792856489}
   - component: {fileID: 7066146461792856488}
   - component: {fileID: 7066146461792856491}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Forest ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,11 +79,11 @@ SpriteShapeRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1073651459
-  m_SortingLayer: 3
+  m_SortingLayer: 11
   m_SortingOrder: 50
   m_Color: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   m_MaskInteraction: 0
-  m_ShapeTexture: {fileID: 2800000, guid: 111ea4ac01976534d894beb48434b9e8, type: 3}
+  m_ShapeTexture: {fileID: 2800000, guid: ab134170319a5664ca5cb6faadf00530, type: 3}
   m_Sprites:
   - {fileID: -9003733832132763845, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: 5070222756407925866, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
@@ -91,13 +91,14 @@ SpriteShapeRenderer:
   - {fileID: 4500427456996776979, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -7170742918285860501, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -7170742918285860501, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
-  - {fileID: -2235782250807310466, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: 226365927551303755, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
-  - {fileID: 754596645059331292, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -7170742918285860501, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
+  - {fileID: -2235782250807310466, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
+  - {fileID: 754596645059331292, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: 6156770330583124409, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -2084948043075760409, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -4671000020934413352, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
+  - {fileID: 21300000, guid: 5bf667168a0480e498f675198386a7f4, type: 3}
   - {fileID: 226365927551303755, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: -7170742918285860501, guid: 76dcb53c0ed026c4285198071b9b8eeb, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
@@ -107,8 +108,8 @@ SpriteShapeRenderer:
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   m_LocalAABB:
-    m_Center: {x: -7.983576, y: -8.575651, z: 0}
-    m_Extent: {x: 2.963629, y: 3.1114404, z: 0}
+    m_Center: {x: -7.978857, y: -8.575651, z: 0}
+    m_Extent: {x: 3.0317116, y: 3.1114404, z: 0}
   m_SpriteSortPoint: 0
 --- !u!114 &7066146461792856491
 MonoBehaviour:
@@ -133,7 +134,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 1
       m_CornerMode: 1
-    - position: {x: -9.565727, y: -6.857077, z: 0}
+    - position: {x: -9.582779, y: -6.7427897, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
       mode: 0
@@ -166,7 +167,7 @@ MonoBehaviour:
   m_WorldSpaceUV: 0
   m_CornerAngleThreshold: 30
   m_ColliderDetail: 16
-  m_ColliderOffset: 0
+  m_ColliderOffset: 0.29
   m_UpdateCollider: 1
   m_EnableTangents: 0
   m_GeometryCached: 0
@@ -178,5 +179,15 @@ MonoBehaviour:
   m_UpdateGeometry: 1
   m_Creator: {fileID: 0}
   m_Modifiers: []
-  m_ColliderSegment: []
+  m_ColliderSegment:
+  - {x: -9.824645, y: -10.702461}
+  - {x: -10.261179, y: -10.285439}
+  - {x: -10.174202, y: -6.728328}
+  - {x: -9.566186, y: -6.2578073}
+  - {x: -6.3812103, y: -6.2502174}
+  - {x: -5.689953, y: -6.8355117}
+  - {x: -5.744306, y: -10.532055}
+  - {x: -6.3164325, y: -11.084417}
+  - {x: -9.417025, y: -11.095418}
+  - {x: -9.824645, y: -10.702461}
   m_ShadowSegment: []
