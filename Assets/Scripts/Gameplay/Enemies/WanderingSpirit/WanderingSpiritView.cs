@@ -113,7 +113,7 @@ public class WanderingSpiritView : MonoBehaviour
 
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
 
-        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
         _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
     }
 

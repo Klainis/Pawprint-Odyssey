@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -8,18 +9,19 @@ public class DestructibleWall : MonoBehaviour
     [Header("Data")]
     [SerializeField] private EnvironmentData _environmentData;
 
-    [Space(5)]
-    private ShakeObjectAfterDamage _shakeObjectAfterDamage;
-
-    [Space(5)]
-    private DestroyBrokenWalls _destroyBrokenWalls;
-
     [Header("Particles")]
     [SerializeField] private ParticleSystem _playerWeaponParticle;
 
+    [Space(5)]
+    [SerializeField] private GameObject _lightDoorGameObject;
+    [SerializeField] private string entryGate;
+
     private ParticleSystem _playerWeaponParticleInstance;
+    private GameObject _lightDoorGameObjectInstance;
     //private string _currentScene;
     //[SerializeField] private string _currentWall;
+    private DestroyBrokenWalls _destroyBrokenWalls;
+    private ShakeObjectAfterDamage _shakeObjectAfterDamage;
 
     private int life;
 
@@ -36,17 +38,38 @@ public class DestructibleWall : MonoBehaviour
 
     private void Update()
     {
-        if (life <= 0)
+        if (_shakeObjectAfterDamage.shakeDuration > 0)
         {
             _shakeObjectAfterDamage.Shake();
+        }
+
+        if (life <= 0)
+        {
             Destroy(gameObject);
+            InstantiateDoorLight();
             _destroyBrokenWalls.AddInDestroyWallList();
             SaveSystem.AutoSave();
         }
-        else if (_shakeObjectAfterDamage.shakeDuration > 0)
+    }
+
+    private void InstantiateDoorLight()
+    {
+        Quaternion rotaion = Quaternion.identity;
+        Vector3 positionOffset = new Vector3(0.4f, 0, 0);
+        Vector3 position = Vector3.zero;
+
+        if (entryGate.Contains("right"))
         {
-            _shakeObjectAfterDamage.Shake();
+            position = transform.position + positionOffset;
+            rotaion = Quaternion.Euler(0, 0, 90);
         }
+        else if (entryGate.Contains("left"))
+        {
+            position = transform.position - positionOffset;
+            rotaion = Quaternion.Euler(0, 0, -90);
+        }
+
+        _lightDoorGameObjectInstance = Instantiate(_lightDoorGameObject, position, rotaion);
     }
 
     public void ApplyDamage(object[] message)

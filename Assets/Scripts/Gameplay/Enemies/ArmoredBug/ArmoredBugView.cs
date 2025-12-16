@@ -138,7 +138,7 @@ public class ArmoredBugView : MonoBehaviour
     {
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
-        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
     }
 
     private void ChangeTag(string tag)

@@ -50,6 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DestructibleWall
   _environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
   _playerWeaponParticle: {fileID: 0}
+  _lightDoorGameObject: {fileID: 7170095949984127991, guid: a30b63b1b333c2541b76482facfba8cf, type: 3}
+  entryGate: right
 --- !u!114 &4800506895995311666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +79,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestroyBrokenWalls
   _wallID: 4-16
+  _lightDoorGameObject: {fileID: 0}
+  entryGate: 
 --- !u!212 &674462890114976014
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -122,7 +126,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1073651459
-  m_SortingLayer: 5
+  m_SortingLayer: 10
   m_SortingOrder: -3
   m_Sprite: {fileID: 21300008, guid: 3af4957675b28264588522d33802222f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
