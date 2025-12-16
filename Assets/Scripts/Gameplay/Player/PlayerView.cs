@@ -11,8 +11,12 @@ public class PlayerView : MonoBehaviour
 
     public PlayerModel PlayerModel { get; set; }
 
-    [Header("")]
+    [Header("Layers")]
     [SerializeField] private LayerMask whatIsGround;
+
+    [Header("Parameters")]
+    [SerializeField] private float _invisibleTime = 1.3f;
+    [SerializeField] private float _damageFlashSpeed = 5.5f;
 
     [Header("Events")]
     [Space]
@@ -20,6 +24,7 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private UnityEvent OnLandEvent;
 
     private Rigidbody2D rigidBody;
+    private SpriteRenderer _spriteRenderer;
     private PlayerAnimation playerAnimation;
     private PlayerAttack playerAttack;
     private PlayerMove playerMove;
@@ -40,6 +45,7 @@ public class PlayerView : MonoBehaviour
         instance = this;
 
         rigidBody = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerCollider = GetComponent<BoxCollider2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
         playerAttack = GetComponent<PlayerAttack>();
@@ -180,7 +186,7 @@ public class PlayerView : MonoBehaviour
         else
         {
             StartCoroutine(Stun(0.25f));
-            StartCoroutine(MakeInvincible(1f));
+            StartCoroutine(MakeInvincible(_invisibleTime));
         }
     }
 
@@ -197,10 +203,14 @@ public class PlayerView : MonoBehaviour
         else
         {
             StartCoroutine(Stun(0.25f));
-            StartCoroutine(MakeInvincible(1f));
+            StartCoroutine(MakeInvincible(_invisibleTime));
         }
     }
 
+    private void SetFlashAmount(float flashAmount)
+    {
+        _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount); // когда появится нормальный арт героя, скоррекировать
+    }
     #endregion
 
     #region IEnumerators
@@ -216,9 +226,29 @@ public class PlayerView : MonoBehaviour
     {
         isInvincible = true;
         gameObject.layer = LayerMask.NameToLayer("Invincible");
+        StartCoroutine(FlashWhileInvicible(_damageFlashSpeed, time));
         yield return new WaitForSeconds(time);
         gameObject.layer = LayerMask.NameToLayer("Player");
         isInvincible = false;
+    }
+
+    private IEnumerator FlashWhileInvicible(float flashSpeed, float flashTime)
+    {
+        Debug.Log($"В корутине, передано {flashTime} времени");
+        float currentFlashAmount = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < flashTime)
+        {
+            elapsedTime += Time.deltaTime;
+            Debug.Log($"В цикле, осталось {flashTime}");
+            //_spriteRenderer.material.color = Color.Lerp(Color.white, Color.black, Mathf.PingPong(Time.time * flashSpeed, 1f));
+            currentFlashAmount = Mathf.Lerp(0.03f, 1f, Mathf.PingPong(Time.time*flashSpeed, 1f)/*(elapsedTime / _flashTime)*/);
+            SetFlashAmount(currentFlashAmount);
+            yield return null;
+        }
+        SetFlashAmount(1f);///////
+        //_spriteRenderer.material.color = Color.white;
     }
 
     private IEnumerator WaitToDead()
