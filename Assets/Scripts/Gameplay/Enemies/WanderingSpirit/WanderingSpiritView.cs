@@ -19,9 +19,11 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
+    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
+    private ParticleSystem _playerWeaponSliceParticleInstance;
 
     private Rigidbody2D rigidBody;
     private WSAnimation wsAnimation;
@@ -108,8 +110,11 @@ public class WanderingSpiritView : MonoBehaviour
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
+        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
     }
 
     private void ChangeTag(string tag)

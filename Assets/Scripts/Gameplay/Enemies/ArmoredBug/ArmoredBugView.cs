@@ -19,9 +19,11 @@ public class ArmoredBugView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
+    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
+    private ParticleSystem _playerWeaponSliceParticleInstance;
 
     private Rigidbody2D _rigidBody;
     private ArmoredBugAnimation _bugAnimation;
@@ -129,6 +131,8 @@ public class ArmoredBugView : MonoBehaviour
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+
+        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
     }
     private void SpawnPlayerAttackParticles(int direction)
     {

@@ -22,6 +22,9 @@ public class GuardianOwlView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
+    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+
+    private ParticleSystem _playerWeaponSliceParticleInstance;
 
     [Space(5)]
     [SerializeField] private FightDoor _fightDoor;
@@ -137,8 +140,10 @@ public class GuardianOwlView : MonoBehaviour
         var vectorDirection = new Vector2(direction, 0);
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+
         var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
+        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
     }
 
     private void ChangeTag(string tag)
