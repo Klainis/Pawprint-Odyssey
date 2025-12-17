@@ -1114,7 +1114,7 @@ ParticleSystem:
       repeatInterval: 0.01
       probability: 1
   SizeModule:
-    enabled: 0
+    enabled: 1
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -1125,30 +1125,21 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 1
-          inSlope: -2
-          outSlope: -2
-          tangentMode: 0
+          value: 0.8273773
+          inSlope: 0.31526637
+          outSlope: 0.31526637
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.0068755746
-          value: 0.99466974
-          inSlope: -0.09199867
-          outSlope: -0.09199867
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: -0.44226414
-          outSlope: -0.44226414
-          tangentMode: 0
+          time: 0.49090576
+          value: 0.9821434
+          inSlope: 0.31526637
+          outSlope: 0.31526637
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0.46470392
+          inWeight: 0.33333334
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -1283,7 +1274,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    separateAxes: 1
+    separateAxes: 0
   RotationModule:
     enabled: 0
     x:
