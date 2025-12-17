@@ -146,7 +146,7 @@ public class PlayerView : MonoBehaviour
     public void FullHeal()
     {
         //SetCheckPoint();
-        MapManager.Instance.ShowOpenedRooms();
+        MapManager.Instance.ShowAllOpenedRoomsAndWalls();
         PlayerModel.FullHeal();
         playerHeart.AddHearts();
         playerMana.FullMana();

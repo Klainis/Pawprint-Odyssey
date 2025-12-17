@@ -153,7 +153,7 @@ public class SaveSystem
     {
         if (MapManager.Instance != null)
         {
-            MapManager.Instance.OpenRoomsFromSave(ref data);
+            MapManager.Instance.LoadAndShow(ref data);
             return true;
         }
         return false;

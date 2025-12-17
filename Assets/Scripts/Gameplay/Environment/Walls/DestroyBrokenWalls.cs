@@ -19,9 +19,6 @@ public class DestroyBrokenWalls : MonoBehaviour
 
         if (wallsManager.WallsExistenceInstance != null)
             DestroyWall();
-
-        //if (_lightDoorGameObjectInstance != null)
-        //    Destroy(_lightDoorGameObjectInstance);
     }
 
     public void DestroyWall()
@@ -34,9 +31,9 @@ public class DestroyBrokenWalls : MonoBehaviour
     }
     private void InstantiateDoorLight()
     {
-        Quaternion rotaion = Quaternion.identity;
-        Vector3 positionOffset = new Vector3(0.4f, 0, 0);
-        Vector3 position = Vector3.zero;
+        var rotaion = Quaternion.identity;
+        var positionOffset = new Vector3(0.4f, 0, 0);
+        var position = Vector3.zero;
 
         if (entryGate.Contains("right"))
         {
@@ -55,5 +52,6 @@ public class DestroyBrokenWalls : MonoBehaviour
     public void AddInDestroyWallList()
     {
         wallsManager.WallsExistenceInstance.BreakWall(_wallID);
+        MapManager.Instance.OpenDestructibleWall(_wallID);
     }
 }
