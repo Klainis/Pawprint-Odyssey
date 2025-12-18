@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7430623332203944571}
   - component: {fileID: 4203374594003467237}
   - component: {fileID: 3310407751137793160}
-  - component: {fileID: 6374894966246043491}
   m_Layer: 9
   m_Name: Ground
   m_TagString: Untagged
@@ -80,7 +79,7 @@ SpriteShapeRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1073651459
-  m_SortingLayer: 11
+  m_SortingLayer: 10
   m_SortingOrder: 200
   m_Color: {r: 0.36535335, g: 0.57232696, b: 0.41709673, a: 1}
   m_MaskInteraction: 0
@@ -178,62 +177,3 @@ MonoBehaviour:
   - {x: 34.993793, y: 10.301358}
   - {x: 46.2629, y: 10.381945}
   m_ShadowSegment: []
---- !u!68 &6374894966246043491
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838755450825445093}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 73035f974857c94489896440d1e2b9e8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -3.6218634, y: 1.0495023}
-  - {x: 4.377764, y: 1.0491635}
-  - {x: 14.307208, y: 1.052023}
-  - {x: 21.40701, y: 1.0570986}
-  - {x: 24.826107, y: 1.0610557}
-  - {x: 27.935223, y: 1.0660973}
-  - {x: 30.85491, y: 1.073246}
-  - {x: 32.712025, y: 1.0799404}
-  - {x: 34.14741, y: 1.0895396}
-  - {x: 34.154644, y: 1.464706}
-  - {x: 34.15854, y: 3.7393043}
-  - {x: 34.1513, y: 7.313778}
-  - {x: 34.154587, y: 8.745941}
-  - {x: 34.17122, y: 9.6238365}
-  - {x: 34.380554, y: 10.1426935}
-  - {x: 34.947372, y: 10.300593}
-  - {x: 38.559017, y: 10.330927}
-  - {x: 46.2629, y: 10.381945}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
