@@ -12,6 +12,7 @@ public class SaveSystem
     [System.Serializable]
     public struct SaveData
     {
+        public string BuildVersion;
         public PlayerSaveData PlayerSaveData;
         public WallSaveData WallSaveData;
         public CrystalSaveData CrystalSaveData;
@@ -97,6 +98,9 @@ public class SaveSystem
 
             saveData = JsonUtility.FromJson<SaveData>(json);
 
+            if (Application.version != saveData.BuildVersion)
+                return false;
+
             if (CreatePlayerModel(ref saveData.PlayerSaveData) &&
                 DestroyBrokenWalls(ref saveData.WallSaveData) &&
                 DestroyBrokenCrystals(ref saveData.CrystalSaveData) &&
@@ -161,6 +165,7 @@ public class SaveSystem
 
     private static void HandleSaveData()
     {
+        saveData.BuildVersion = Application.version;
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             //Позиция записывается в PlayerModel в скрипте сейвки
