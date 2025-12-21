@@ -13,10 +13,8 @@ public class PiercingClaw : MonoBehaviour
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
     private PlayerMana playerMana;
+    private PlayerMove playerMove;
     private Transform attackCheck;
-    private Rigidbody2D rb;
-    private GameObject enemy;
-    private Gamepad gamepad;
 
     private bool canAttack = true;
     private bool clawPressed;
@@ -37,17 +35,17 @@ public class PiercingClaw : MonoBehaviour
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
         playerMana = GetComponent<PlayerMana>();
+        playerMove = GetComponent<PlayerMove>();
 
         attackCheck = transform.Find("ClawAttackCheck");
         clawSprite.SetActive(false);
-        gamepad = Gamepad.current;
     }
 
     private void Update()
     {
         playerAnimation.ApplyRootMotion(false);
  
-        if (clawAction != null && clawAction.action != null)
+        if (clawAction != null && clawAction.action != null && playerMove.IsGrounded)
             clawPressed = clawAction.action.WasPressedThisFrame();
 
         if (clawPressed && canAttack && playerView.PlayerModel.Mana >= 25)

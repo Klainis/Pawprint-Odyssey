@@ -28,6 +28,8 @@ public class PlayerInput : MonoBehaviour
 
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
+    #region Common Methods
+
     private void Awake()
     {
         playerAnimation = GetComponent<PlayerAnimation>();
@@ -112,6 +114,8 @@ public class PlayerInput : MonoBehaviour
         jump = false;
         dash = false;
     }
+
+    #endregion
 
     private bool IsValidAction(InputActionReference actionReference)
     {
