@@ -61,7 +61,7 @@ MonoBehaviour:
   m_LookaheadTime: 0.05
   m_LookaheadSmoothing: 1
   m_LookaheadIgnoreY: 0
-  m_XDamping: 0.75
+  m_XDamping: 3
   m_YDamping: 2
   m_ZDamping: 0
   m_TargetMovementOnly: 1
@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 8252740716077878135}
   - component: {fileID: 7074529048883925340}
   - component: {fileID: 5734253192667827862}
+  - component: {fileID: 8164139351803112109}
   m_Layer: 0
   m_Name: PlayerFollowCamera (OpenRooms)
   m_TagString: Untagged
@@ -230,3 +231,15 @@ MonoBehaviour:
     m_FrequencyGain: 1
     m_Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &8164139351803112109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432379303684670639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03be7e15ca4da32458526e46effda7e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraSetOffset
