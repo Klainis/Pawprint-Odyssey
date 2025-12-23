@@ -34,6 +34,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private Transform initialPosition;
     [SerializeField] private GameObject mapCanvasPrefab;
     [SerializeField] private GameObject mapManagerPrefab;
+    [SerializeField] private GameObject moneyManagerPrefab;
 
     // INSTANCES (Runtime objects)
     private WallsManager _wallsManagerInstance;
@@ -54,6 +55,7 @@ public class EntryPoint : MonoBehaviour
     private EventSystem _eventSystemInstance;
     private GameObject _mapCanvasInstance;
     private GameObject _mapManagerInstance;
+    private GameObject _moneyManagerInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -148,6 +150,12 @@ public class EntryPoint : MonoBehaviour
         {
             _crystalsManagerInstance = Instantiate(crystalsManagerPrefab);
             DontDestroyOnLoad(_crystalsManagerInstance);
+        }
+
+        if (moneyManagerPrefab != null)
+        {
+            _moneyManagerInstance = Instantiate(moneyManagerPrefab);
+            DontDestroyOnLoad(_moneyManagerInstance);
         }
 
         if (initializeManagerPrefab != null)

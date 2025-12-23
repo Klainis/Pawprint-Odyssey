@@ -18,15 +18,13 @@ public class CameraSetOffset : MonoBehaviour
     private void Start()
     {
         _player = _virtualCamera.Follow;
-        _playerMove = _player.gameObject.GetComponent<PlayerMove>();
-        
+        _playerMove = _player.gameObject.GetComponent<PlayerMove>();  
     }
 
     private void FixedUpdate()
     {
         if (_playerMove.WallCheck.localPosition.x < 0)
         {
-            Debug.Log("На стене");
             _transposer.m_TrackedObjectOffset.x = -1;
         }
         else

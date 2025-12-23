@@ -20,6 +20,7 @@ public class WanderingSpiritView : MonoBehaviour
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
     [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+    private InstantiateMoney _money;
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
@@ -52,6 +53,7 @@ public class WanderingSpiritView : MonoBehaviour
         wsAnimation = GetComponent<WSAnimation>();
         wsAttack = GetComponent<WSAttack>();
         wsMove = GetComponent<WSMove>();
+        _money = FindAnyObjectByType<InstantiateMoney>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
     }
@@ -72,6 +74,7 @@ public class WanderingSpiritView : MonoBehaviour
         if (isInvincible) return;
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+
         if (damageApplied)
         {
             _damageFlash.CallDamageFlash();
@@ -150,6 +153,11 @@ public class WanderingSpiritView : MonoBehaviour
         isAccelerated = true;
     }
 
+    private void OnDestroy()
+    {
+        _money.InstantiateMon(transform.position);
+    }
+
     private IEnumerator DestroySelf()
     {
         isInvincible = true;
@@ -161,7 +169,7 @@ public class WanderingSpiritView : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         Destroy(gameObject);
     }

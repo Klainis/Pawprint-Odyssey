@@ -234,16 +234,15 @@ public class PlayerView : MonoBehaviour
 
     private IEnumerator FlashWhileInvicible(float flashSpeed, float flashTime)
     {
-        Debug.Log($"В корутине, передано {flashTime} времени");
         float currentFlashAmount = 0f;
         float elapsedTime = 0f;
 
         while (elapsedTime < flashTime)
         {
             elapsedTime += Time.deltaTime;
-            Debug.Log($"В цикле, осталось {flashTime}");
+            //Debug.Log($"В цикле, осталось {flashTime}");
             //_spriteRenderer.material.color = Color.Lerp(Color.white, Color.black, Mathf.PingPong(Time.time * flashSpeed, 1f));
-            currentFlashAmount = Mathf.Lerp(0.03f, 1f, Mathf.PingPong(Time.time*flashSpeed, 1f)/*(elapsedTime / _flashTime)*/);
+            currentFlashAmount = Mathf.Lerp(0.03f, 1f, Mathf.PingPong(Time.time*flashSpeed, 1f));
             SetFlashAmount(currentFlashAmount);
             yield return null;
         }

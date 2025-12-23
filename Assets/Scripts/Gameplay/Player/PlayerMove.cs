@@ -153,6 +153,8 @@ public class PlayerMove : MonoBehaviour
 
     private void MoveHorizontal(float move)
     {
+        if (limitVelOnWallJump) return;
+
         if (!(isGrounded || airControl)) return;
 
         if (rigidBody.linearVelocity.y < -limitFallSpeed)
@@ -242,9 +244,11 @@ public class PlayerMove : MonoBehaviour
         {
             rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, moveY * 10f);
             oldWallRunning = true;
+        }
 
-            if (jump)
-                WallJump();
+        if (jump && isWallRunning)
+        {
+            WallRunningJump();
         }
     }
 
@@ -320,6 +324,32 @@ public class PlayerMove : MonoBehaviour
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;
+        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+    }
+
+    private void WallRunningJump()
+    {
+        lastOnGroundTime = 0;
+        lastPressedJumpTime = 0;
+
+        isJumping = true;
+
+        playerAnimation.SetBoolIsJumping(true);
+        playerAnimation.SetBoolJumpUp(true);
+
+        rigidBody.linearVelocity = Vector2.zero;
+
+        var force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
+
+        rigidBody.AddForce(force, ForceMode2D.Impulse);
+
+        limitVelOnWallJump = true;
+        canAirJump = true;
+        canDoubleJump = false;
+
+        isWallRunning = false;
+        playerAnimation.SetBoolIsWallRunning(false);
+        oldWallRunning = false;
         wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
     }
 
