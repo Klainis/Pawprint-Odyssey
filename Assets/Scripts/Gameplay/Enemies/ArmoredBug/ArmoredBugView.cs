@@ -20,7 +20,9 @@ public class ArmoredBugView : MonoBehaviour
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
     [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
 
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
     private ParticleSystem _playerWeaponSliceParticleInstance;
@@ -91,7 +93,7 @@ public class ArmoredBugView : MonoBehaviour
             Debug.Log("”дар по броне");
             damageApplied = false;
             _screenShaker.Shake();
-            SpawnPlayerAttackParticles(direction);
+            SpawnBlockedAttackParticles(direction);
             //«вук удара по броне
         }
 
@@ -111,17 +113,18 @@ public class ArmoredBugView : MonoBehaviour
 
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
-            SpawnPlayerAttackParticles(direction);
 
             if (_playerAttack.AttackSeriesCount == 3)
             {
                 //_rigidBody.AddForce(new Vector2(direction * _lastPlayerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, _lastPlayerAttackForce);
+                SpawnPlayerLastAttackParticles();
             }
             else if (_playerAttack.AttackSeriesCount < 3)
             {
                 //_rigidBody.AddForce(new Vector2(direction * _playerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, _playerAttackForce);
+                SpawnPlayerAttakParticles(direction);
             }
         }
     }
@@ -138,14 +141,30 @@ public class ArmoredBugView : MonoBehaviour
     {
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
-        _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
-        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+        _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
-    private void SpawnPlayerAttackParticles(int direction)
+
+    private void SpawnPlayerAttakParticles(int direction)
     {
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnBlockedAttackParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
     }
 
@@ -193,7 +212,7 @@ public class ArmoredBugView : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.1f);
 
         Destroy(gameObject);
     }

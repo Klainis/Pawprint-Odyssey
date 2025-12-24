@@ -20,11 +20,13 @@ public class ThornyPlant : MonoBehaviour {
     [SerializeField] private float delayAfterOpen = 1f;
 
     [Header("Particles")]
-    [SerializeField] private ParticleSystem damageParticale;
+    [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
-    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
 
-    private ParticleSystem _playerWeaponSliceParticleInstance;
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
+    private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
 
@@ -34,6 +36,7 @@ public class ThornyPlant : MonoBehaviour {
 
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
+    private PlayerAttack playerAttack;
 
     private float lastSeriesTime = 0;
     private float lastOpenTime = 0;
@@ -52,6 +55,7 @@ public class ThornyPlant : MonoBehaviour {
         rigidBody = GetComponent<Rigidbody2D>();
         _screenShaker = GetComponent<ScreenShaker>();
         _money = FindAnyObjectByType<InstantiateMoney>();
+        playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
 
         shootPoints = transform.Find("ShootPoints");
     }
@@ -92,7 +96,6 @@ public class ThornyPlant : MonoBehaviour {
             _screenShaker.Shake();
 
             var direction = damage / Mathf.Abs(damage);
-            SpawnDamageParticles(direction);
 
             life -= Mathf.Abs(damage);
 
@@ -102,17 +105,40 @@ public class ThornyPlant : MonoBehaviour {
                 _money.InstantiateMon(transform.position);
             }
             StartCoroutine(HitTime());
+
+            SpawnDamageParticles(direction);
+
+            if (playerAttack.AttackSeriesCount == 3)
+            {
+                SpawnPlayerLastAttackParticles();
+            }
+            else if (playerAttack.AttackSeriesCount < 3)
+            {
+                SpawnPlayerAttakParticles(direction);
+            }
         }
 	}
     private void SpawnDamageParticles(int direction)
     {
         Vector2 vectorDirection = new Vector2(direction, 0);
         Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
-        _damageParticleInstance = Instantiate(damageParticale, transform.position, spawnRotation);
-
         Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
-        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
-        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+
+        _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+    }
+
+    private void SpawnPlayerAttakParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
 
 
@@ -168,7 +194,7 @@ public class ThornyPlant : MonoBehaviour {
         //transform.rotation = Quaternion.Euler(rotator);
         //yield return new WaitForSeconds(0.25f);
         //_rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
 }

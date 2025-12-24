@@ -19,12 +19,13 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
-    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
-    private InstantiateMoney _money;
+    [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
 
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
-    private ParticleSystem _playerWeaponSliceParticleInstance;
+    private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
     private Rigidbody2D rigidBody;
     private WSAnimation wsAnimation;
@@ -32,6 +33,7 @@ public class WanderingSpiritView : MonoBehaviour
     private WSMove wsMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
+    private InstantiateMoney _money;
 
     private bool isHitted = false;
     private bool isAccelerated = false;
@@ -95,13 +97,13 @@ public class WanderingSpiritView : MonoBehaviour
 
             if (playerAttack.AttackSeriesCount == 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _lastPlayerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, lastPlayerAttackForce);
+                SpawnPlayerLastAttackParticles();
             }
             else if (playerAttack.AttackSeriesCount < 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _playerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
                 KnockBack(direction, playerAttackForce);
+                SpawnPlayerAttakParticles(direction);
             }
         }
     }
@@ -121,9 +123,20 @@ public class WanderingSpiritView : MonoBehaviour
         Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+    }
+
+    private void SpawnPlayerAttakParticles(int direction)
+    {
+        Vector2 vectorDirection = new Vector2(direction, 0);
+        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
-        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
 
     private void ChangeTag(string tag)

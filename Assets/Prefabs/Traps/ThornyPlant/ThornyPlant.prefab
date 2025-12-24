@@ -361,9 +361,10 @@ MonoBehaviour:
   timeBetweenShots: 0.35
   timeBetweenSeries: 2.5
   delayAfterOpen: 1
-  damageParticale: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
+  _damageParticle: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
   _playerWeaponParticle: {fileID: 3511315664987222026, guid: f2dc37c6a64b774478fe8ad8855bb747, type: 3}
-  _playerWeaponSliceParticle: {fileID: 3154493305798405897, guid: 7cdb3613ebab18b48b19433f66e4a6af, type: 3}
+  _playerWeaponLastSliceParticle: {fileID: 3154493305798405897, guid: 7cdb3613ebab18b48b19433f66e4a6af, type: 3}
+  _playerWeapomSimpleSliceParticle: {fileID: 3154493305798405897, guid: 0e70413749c301945b4604e69da603e8, type: 3}
 --- !u!114 &4218130657944194462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,7 +695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
   _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
   _objectCount: 5
-  _force: 8
+  _force: 3
 --- !u!1 &6975535308133693805
 GameObject:
   m_ObjectHideFlags: 0
