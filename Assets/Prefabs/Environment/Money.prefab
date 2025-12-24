@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 11
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.22325061, g: 0.5109635, b: 0.8553459, a: 0.88235295}
+  m_Color: {r: 0.899371, g: 0.3587655, b: 0, a: 0.61960787}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -183,7 +183,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 710492ef989d0e44da6590611a31128f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -236,8 +236,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.22352941, g: 0.50980395, b: 0.85490197, a: 1}
-      key1: {r: 0.22352941, g: 0.50980395, b: 0.85490197, a: 0}
+      key0: {r: 0.022947362, g: 0.8490566, b: 0, a: 1}
+      key1: {r: 0.9372549, g: 0.25490198, b: 0.21960784, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -252,8 +252,8 @@ TrailRenderer:
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 32511
-      atime1: 65535
+      atime0: 29427
+      atime1: 49087
       atime2: 0
       atime3: 0
       atime4: 0
@@ -288,6 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5fb47567a517c45907680634e2f847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoneyPickup
-  followDelay: 0.5
-  followSpeed: 10
-  pickupDistance: 0.2
+  followDelay: 0.4
+  followSpeed: 11
+  pickupDistance: 0.1
+  reward: 0

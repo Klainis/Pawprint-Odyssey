@@ -31,6 +31,7 @@ public class ArmoredBugView : MonoBehaviour
     private ArmoredBugMove _bugMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
+    private InstantiateMoney _money;
 
     private bool _isHitted = false;
     private bool _isAccelerated = false;
@@ -45,7 +46,7 @@ public class ArmoredBugView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage);
+        Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
         //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
@@ -56,6 +57,7 @@ public class ArmoredBugView : MonoBehaviour
         _bugMove = GetComponent<ArmoredBugMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
+        _money = FindAnyObjectByType<InstantiateMoney>();
     }
 
     private void FixedUpdate()
@@ -91,6 +93,12 @@ public class ArmoredBugView : MonoBehaviour
             _screenShaker.Shake();
             SpawnPlayerAttackParticles(direction);
             //«вук удара по броне
+        }
+
+        if (Model.IsDead)
+        {
+            _money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position);
         }
 
         if (damageApplied)

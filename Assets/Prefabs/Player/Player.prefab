@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 3512841439597258566}
   - component: {fileID: 2596477941260737167}
   - component: {fileID: 1149790071750726509}
+  - component: {fileID: 1968765889069116662}
   - component: {fileID: 6772023754791648629}
   - component: {fileID: 3721457989882947448}
   - component: {fileID: 1729494090702783638}
@@ -57,8 +58,8 @@ GameObject:
   - component: {fileID: 212971026275759962}
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
-  - component: {fileID: 82701611152381692}
   - component: {fileID: 7627346660564273673}
+  - component: {fileID: 82701611152381692}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -126,7 +127,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed023d56d5517c548ac775e47161c98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoulCrystalCounter
-  _amountOfCrystal: 14
+--- !u!114 &1968765889069116662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc2d83ceb40fac4c8053901a627d009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoneyCounter
 --- !u!114 &6772023754791648629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +503,52 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!61 &7627346660564273673
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.00255844, y: -0.2148639}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 3, y: 2.25}
+    newSize: {x: 2.9985716, y: 2.249375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.54025644, y: 1.6797845}
+  m_EdgeRadius: 0
 --- !u!82 &82701611152381692
 AudioSource:
   m_ObjectHideFlags: 0
@@ -588,52 +646,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!61 &7627346660564273673
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377240496476148}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: -0.00255844, y: -0.2148639}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3, y: 2.25}
-    newSize: {x: 2.9985716, y: 2.249375}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.54025644, y: 1.6797845}
-  m_EdgeRadius: 0
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0

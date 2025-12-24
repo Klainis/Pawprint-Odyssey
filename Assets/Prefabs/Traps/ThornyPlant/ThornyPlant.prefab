@@ -309,6 +309,7 @@ GameObject:
   - component: {fileID: 2218530661163346480}
   - component: {fileID: 1783784446871732833}
   - component: {fileID: 2350378804106640721}
+  - component: {fileID: 22529380790437098}
   m_Layer: 6
   m_Name: ThornyPlant
   m_TagString: Enemy
@@ -679,6 +680,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &22529380790437098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898921375461313706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92e37645027e4142afaa404b62f3578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
+  _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
+  _objectCount: 5
+  _force: 8
 --- !u!1 &6975535308133693805
 GameObject:
   m_ObjectHideFlags: 0

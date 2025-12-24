@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
@@ -10,43 +11,49 @@ public class MoneyPickup : MonoBehaviour
     [Header("Pickup")]
     [SerializeField] private float pickupDistance = 0.2f;
 
-    private Transform player;
-    private Rigidbody2D rb;
-    private bool isFollowing;
+    private MoneyCounter _moneyCounter;
+
+    private Transform _player;
+    private Rigidbody2D _rb;
+    private bool _isFollowing;
+
+    public int reward;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _moneyCounter = _player.GetComponent<MoneyCounter>();
     }
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
         Invoke(nameof(StartFollowing), followDelay);
-    }
-
-    private void StartFollowing()
-    {
-        rb.gravityScale = Mathf.Lerp(rb.gravityScale, 0f, 0.2f);
-        isFollowing = true;
     }
 
     private void FixedUpdate()
     {
-        if (!isFollowing || player == null) return;
+        if (!_isFollowing || _player == null) return;
 
-        Vector2 dir = (player.position - transform.position).normalized;
-        rb.linearVelocity = dir * followSpeed;
+        Vector2 dir = (_player.position - transform.position).normalized;
+        _rb.linearVelocity = dir * followSpeed;
+    }
 
-        if (Vector2.Distance(transform.position, player.position) <= pickupDistance)
-        {
-            Pickup();
-        }
+    private void StartFollowing()
+    {
+        _rb.gravityScale = Mathf.Lerp(_rb.gravityScale, 0f, 0.2f);
+        StartCoroutine(WaitFollowing());
+    }
+
+    private IEnumerator WaitFollowing()
+    {
+        yield return new WaitForSeconds(0.2f);
+        _isFollowing = true;
     }
 
     private void Pickup()
     {
-        // TODO: добавить деньги игроку
+        _moneyCounter.CountMoney(reward);
         Destroy(gameObject);
     }
 

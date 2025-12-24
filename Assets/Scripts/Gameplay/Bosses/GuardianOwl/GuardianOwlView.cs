@@ -57,7 +57,7 @@ public class GuardianOwlView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage);
+        Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
         _maxLifeForReading = Model.Life;
         _secondStageLifeAmount = (int)(Model.Life * _secondStageLifeCoef);

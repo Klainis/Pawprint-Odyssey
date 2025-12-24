@@ -12,6 +12,7 @@ public class PlayerModel
     public int Damage { get; private set; }
     public int ClawDamage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
+    public int MoneyCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public float CurPosX { get; private set; }
     public float CurPosY { get; private set; }
@@ -33,6 +34,7 @@ public class PlayerModel
                         int mana, int maxMana, int manaAfterDeath,
                         int damage, int clawDamage,
                         int soulCrystalsCollected,
+                        int moneyCollected,
                         string currentScene, float curPosX, float curPosY,
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
                         bool hasClaw, bool hasDoubleJump, bool facingRight,
@@ -49,6 +51,7 @@ public class PlayerModel
         ClawDamage = Math.Max(1, clawDamage);
 
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
+        MoneyCollected = Math.Max (0, moneyCollected);
 
         CurrentScene = currentScene;
         CurPosX = curPosX;
@@ -76,6 +79,7 @@ public class PlayerModel
             data.Damage,
             data.ClawDamage,
             data.SoulCrystalsCollected,
+            data.MoneyCollected,
             data.CurrentScene,
             data.CurPosX,
             data.CurPosY,
@@ -101,6 +105,7 @@ public class PlayerModel
             playerData.damage,
             playerData.clawDamage,
             playerData.soulCrystalsCollected,
+            playerData.moneyCollected,
             playerData.currentScene,
             playerData.curPosX,
             playerData.curPosY,
@@ -179,6 +184,12 @@ public class PlayerModel
         return true;
     }
 
+    public bool AddMoney(int reward)
+    {
+        MoneyCollected += reward;
+        return true;
+    }
+
     public bool SetCurrentScene(string sceneName)
     {
         CurrentScene = sceneName;
@@ -243,6 +254,7 @@ public class PlayerModel
         data.Damage = Damage;
         data.ClawDamage = ClawDamage;
         data.SoulCrystalsCollected = SoulCrystalsCollected;
+        data.MoneyCollected = MoneyCollected;
         data.CurrentScene = CurrentScene;
         data.CurPosX = CurPosX;
         data.CurPosY = CurPosY;
@@ -266,6 +278,7 @@ public class PlayerModel
         Damage = data.Damage;
         ClawDamage = data.ClawDamage;
         SoulCrystalsCollected = data.SoulCrystalsCollected;
+        MoneyCollected = data.MoneyCollected;
         CurrentScene = data.CurrentScene;
         CurPosX = data.CurPosX;
         CurPosY = data.CurPosY;
@@ -293,6 +306,7 @@ public struct PlayerSaveData
     public int Damage;
     public int ClawDamage;
     public int SoulCrystalsCollected;
+    public int MoneyCollected;
     public string CurrentScene;
     public float CurPosX;
     public float CurPosY;

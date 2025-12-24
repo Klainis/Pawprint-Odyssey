@@ -45,7 +45,7 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new EnemyModel(data.Life, data.Speed, data.Damage);
+        Model = new EnemyModel(data.Life, data.Speed, data.Damage, data.Reward);
 
         //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
@@ -74,6 +74,12 @@ public class WanderingSpiritView : MonoBehaviour
         if (isInvincible) return;
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+
+        if (Model.IsDead)
+        {
+            _money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position);
+        }
 
         if (damageApplied)
         {
@@ -153,11 +159,6 @@ public class WanderingSpiritView : MonoBehaviour
         isAccelerated = true;
     }
 
-    private void OnDestroy()
-    {
-        _money.InstantiateMon(transform.position);
-    }
-
     private IEnumerator DestroySelf()
     {
         isInvincible = true;
@@ -169,7 +170,7 @@ public class WanderingSpiritView : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         Destroy(gameObject);
     }

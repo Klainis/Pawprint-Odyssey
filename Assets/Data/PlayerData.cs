@@ -19,6 +19,9 @@ public class PlayerData : ScriptableObject
     [Header("Soul Crystal")]
     public int soulCrystalsCollected;
 
+    [Header("Money")]
+    public int moneyCollected;
+
     [Header("Current Coords")]
     public string currentScene;
     public float curPosX;

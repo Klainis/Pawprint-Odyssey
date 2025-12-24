@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 137965811215627985}
   - component: {fileID: 5053216333607833666}
   - component: {fileID: 3019112785933529478}
+  - component: {fileID: -4372151327910475540}
   m_Layer: 6
   m_Name: ArmoredBug
   m_TagString: Enemy
@@ -439,6 +440,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 874766bc745e2ce4d8a6ecd48c9b748d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArmoredBugAnimation
+--- !u!114 &-4372151327910475540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2168523111348330540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92e37645027e4142afaa404b62f3578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
+  _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
+  _objectCount: 5
+  _force: 8
 --- !u!1 &4096650351032133998
 GameObject:
   m_ObjectHideFlags: 0

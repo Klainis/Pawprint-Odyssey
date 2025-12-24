@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.InferenceEngine;
 using UnityEngine;
 
 public class ThornyPlant : MonoBehaviour {
@@ -32,6 +33,7 @@ public class ThornyPlant : MonoBehaviour {
     private Transform shootPoints;
 
     private ScreenShaker _screenShaker;
+    private InstantiateMoney _money;
 
     private float lastSeriesTime = 0;
     private float lastOpenTime = 0;
@@ -49,6 +51,7 @@ public class ThornyPlant : MonoBehaviour {
         animator = GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody2D>();
         _screenShaker = GetComponent<ScreenShaker>();
+        _money = FindAnyObjectByType<InstantiateMoney>();
 
         shootPoints = transform.Find("ShootPoints");
     }
@@ -92,6 +95,12 @@ public class ThornyPlant : MonoBehaviour {
             SpawnDamageParticles(direction);
 
             life -= Mathf.Abs(damage);
+
+            if (life <= 0)
+            {
+                _money.SetReward(2);
+                _money.InstantiateMon(transform.position);
+            }
             StartCoroutine(HitTime());
         }
 	}
@@ -158,7 +167,7 @@ public class ThornyPlant : MonoBehaviour {
         //Vector3 rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         //transform.rotation = Quaternion.Euler(rotator);
         //yield return new WaitForSeconds(0.25f);
-        //rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        //_rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(3f);
         Destroy(gameObject);
     }

@@ -59,7 +59,7 @@ public class SpiritGuideView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new EnemyModel(data.Life, data.Speed, data.Damage);
+        Model = new EnemyModel(data.Life, data.Speed, data.Damage, data.Reward);
 
         maxLifeForReading = Model.Life;
         secondStageLifeAmount = Model.Life * secondStageLifeCoef;

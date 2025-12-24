@@ -11,11 +11,16 @@ public class InstantiateMoney : MonoBehaviour
 
     [SerializeField] private int _objectCount = 5;
     [SerializeField] private float _force = 6;
+
+    private int reward;
+
     public void InstantiateMon(Vector3 position)
     {
         for (int i = 1; i <= _objectCount; i++)
         {
             _moneyObjectInstance = Instantiate(_moneyObject, position, Quaternion.identity);
+
+            _moneyObjectInstance.GetComponent<MoneyPickup>().reward = reward;
 
             float angle = Random.Range(0f, 360f);
             Vector2 dir = new Vector2(
@@ -27,7 +32,11 @@ public class InstantiateMoney : MonoBehaviour
 
             float randomForce = Random.Range(_force * 0.7f, _force * 1.2f);
             _moneyRigidbody.AddForce(dir * randomForce, ForceMode2D.Impulse);
-            Debug.Log(randomForce);
         }
+    }
+
+    public void SetReward(int rew)
+    {
+        reward = rew;
     }
 }

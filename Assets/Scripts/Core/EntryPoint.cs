@@ -26,6 +26,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject heartsPrefab;
     [SerializeField] private GameObject manaBarPrefab;
     [SerializeField] private GameObject crystalCounterPrefab;
+    [SerializeField] private GameObject moneyCounterPrefab;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject pauseMenuCanvasPrefab;
     [SerializeField] private GameObject transitionFadePrefab;
@@ -50,6 +51,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _heartsInstance;
     private GameObject _manaBarInstance;
     private GameObject _crystalCounterInstance;
+    private GameObject _moneyCounterInstance;
     private GameObject _playerInstance;
     private GameObject _pauseMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
@@ -254,6 +256,15 @@ public class EntryPoint : MonoBehaviour
         InitializeManager.Instance.soulCrystalText = text;
     }
 
+    private void InitializeMoneyCounter()
+    {
+        _moneyCounterInstance = Instantiate(moneyCounterPrefab, _canvasInstance.transform);
+        DontDestroyOnLoad(_moneyCounterInstance);
+
+        var text = _moneyCounterInstance.GetComponent<TMP_Text>();
+        InitializeManager.Instance.moneyText = text;
+    }
+
     public void InitializeDataFromSave()
     {
         if (playerPrefab != null)
@@ -316,6 +327,7 @@ public class EntryPoint : MonoBehaviour
             }
 
             InitializeSoulCrystalCounter();
+            InitializeMoneyCounter();
 
             if (heartsPrefab != null)
             {
