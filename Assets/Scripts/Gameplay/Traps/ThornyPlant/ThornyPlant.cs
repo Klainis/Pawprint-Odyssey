@@ -1,17 +1,18 @@
 using System.Collections;
-using Unity.InferenceEngine;
 using UnityEngine;
 
 public class ThornyPlant : MonoBehaviour {
 
-    [Header("Основные параметры")]
+    #region Variables
+
+    [Header("Main params")]
     [SerializeField] private float life = 10;
     [SerializeField] private int damage = 1;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private GameObject openForm;
     [SerializeField] private GameObject closeForm;
 
-    [Header("Параметры выстрелов")]
+    [Header("Shots params")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 7f;
     [SerializeField] private int shotsPerSeries = 3;
@@ -46,9 +47,17 @@ public class ThornyPlant : MonoBehaviour {
     private bool isHitted = false;
     private bool isHidden = true;
 
+    #endregion
+
+    #region Properties
+
     public int Damage { get { return damage; } }
     public bool IsShooting { get { return isShooting; } }
     public bool IsHidden { get { return isHidden; } }
+
+    #endregion
+
+    #region Common Methods
 
     void Awake () {
         animator = GetComponent<Animator>();
@@ -75,9 +84,18 @@ public class ThornyPlant : MonoBehaviour {
             StartCoroutine(ShootRoutine());
 	}
 
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+            if (life > 0)
+                collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position);
+    }
+
+    #endregion
+
     public void ChangeForm(bool toHidden)
     {
-        if (gameObject.tag == "isDead")
+        if (gameObject.CompareTag("isDead"))
             return;
 
         isHidden = toHidden;
@@ -86,6 +104,18 @@ public class ThornyPlant : MonoBehaviour {
 
         if (!toHidden)
             lastOpenTime = Time.time;
+    }
+
+    private void Shoot()
+    {
+        for (var i = 0; i < shootPoints.childCount; i++)
+        {
+            var shootPoint = shootPoints.GetChild(i);
+            var bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation, transform);
+            rigidBody = bullet.GetComponent<Rigidbody2D>();
+            if (rigidBody != null)
+                rigidBody.linearVelocity = shootPoint.right * bulletSpeed;
+        }
     }
 
     public void ApplyDamage(int damage) {
@@ -118,19 +148,22 @@ public class ThornyPlant : MonoBehaviour {
             }
         }
 	}
+
+    #region Particles
+
     private void SpawnDamageParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
     private void SpawnPlayerAttakParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
         _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
@@ -141,27 +174,11 @@ public class ThornyPlant : MonoBehaviour {
         _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
 
+    #endregion
 
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-			if (life > 0)
-                collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position);
-    }
+    #region IEnumerators
 
-    private void Shoot()
-    {
-        for (var i = 0; i < shootPoints.childCount; i++)
-        {
-            var shootPoint = shootPoints.GetChild(i);
-            var bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation, transform);
-            rigidBody = bullet.GetComponent<Rigidbody2D>();
-            if (rigidBody != null)
-                rigidBody.linearVelocity = shootPoint.right * bulletSpeed;
-        }
-    }
-
-    IEnumerator ShootRoutine()
+    private IEnumerator ShootRoutine()
     {
         isShooting = true;
         canShoot = false;
@@ -174,7 +191,7 @@ public class ThornyPlant : MonoBehaviour {
         isShooting = false;
     }
 
-    IEnumerator HitTime()
+    private IEnumerator HitTime()
 	{
 		isHitted = true;
 		//_isInvincible = true;
@@ -183,7 +200,7 @@ public class ThornyPlant : MonoBehaviour {
 		//_isInvincible = false;
 	}
 
-	IEnumerator DestroyEnemy()
+	private IEnumerator DestroyEnemy()
 	{
         isInvincible = true;
         //_animator.SetTrigger("Dead");
@@ -197,4 +214,6 @@ public class ThornyPlant : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
+
+    #endregion
 }

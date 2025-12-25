@@ -80,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 1891582151
   m_SortingLayer: 9
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7441757544032855661, guid: 0d4977b3e68988046b24d4d9047b941b, type: 3}
+  m_Sprite: {fileID: 6417872230571393678, guid: 6aa0bbd29233e6b4cb5c8f542e157b2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -282,7 +282,7 @@ SpriteRenderer:
   m_SortingLayer: 9
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.26832676, g: 0.764151, b: 0.2559185, a: 1}
+  m_Color: {r: 0.8773585, g: 0.23449235, b: 0.2027857, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -304,12 +304,12 @@ GameObject:
   - component: {fileID: 5064882855902842272}
   - component: {fileID: 4218130657944194462}
   - component: {fileID: 8584527271125209279}
+  - component: {fileID: 22529380790437098}
   - component: {fileID: 6161068721778089037}
   - component: {fileID: 4646129809869343597}
   - component: {fileID: 2218530661163346480}
   - component: {fileID: 1783784446871732833}
   - component: {fileID: 2350378804106640721}
-  - component: {fileID: 22529380790437098}
   m_Layer: 6
   m_Name: ThornyPlant
   m_TagString: Enemy
@@ -431,6 +431,21 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 1, y: 0, z: 0}
+--- !u!114 &22529380790437098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898921375461313706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92e37645027e4142afaa404b62f3578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
+  _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
+  _objectCount: 5
+  _force: 3
 --- !u!50 &6161068721778089037
 Rigidbody2D:
   serializedVersion: 5
@@ -681,21 +696,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &22529380790437098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6898921375461313706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c92e37645027e4142afaa404b62f3578, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
-  _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
-  _objectCount: 5
-  _force: 3
 --- !u!1 &6975535308133693805
 GameObject:
   m_ObjectHideFlags: 0
