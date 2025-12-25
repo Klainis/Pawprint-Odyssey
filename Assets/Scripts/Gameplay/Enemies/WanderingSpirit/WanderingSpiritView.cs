@@ -38,6 +38,10 @@ public class WanderingSpiritView : MonoBehaviour
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
 
+    private Coroutine _telegraphCoroutine;
+    private Color _defaultColor;
+    private RigidbodyConstraints2D _defaultConstraints;
+
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool facingRight = true;
@@ -69,6 +73,10 @@ public class WanderingSpiritView : MonoBehaviour
         _money = FindAnyObjectByType<InstantiateMoney>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
+
+        var renderer = GetComponent<SpriteRenderer>();
+        _defaultColor = renderer.color;
+        _defaultConstraints = rigidBody.constraints;
     }
 
     private void FixedUpdate()
@@ -194,23 +202,20 @@ public class WanderingSpiritView : MonoBehaviour
         facingRight = wsMove.Turn(facingRight);
     }
 
-    private void HandlePlayerLeftDetected()
+    private void HandlePlayerLeftDetected() => StartTelegraph(false);
+    private void HandlePlayerRightDetected() => StartTelegraph(true);
+
+    private void StartTelegraph(bool faceRight)
     {
         if (isAccelerated) return;
 
-        StartCoroutine(AttackTelegraph());
-        if (facingRight)
-            facingRight = wsMove.Turn(facingRight);
-        isAccelerated = true;
-    }
+        if (_telegraphCoroutine != null)
+            StopCoroutine(_telegraphCoroutine);
 
-    private void HandlePlayerRightDetected()
-    {
-        if (isAccelerated) return;
-
-        StartCoroutine(AttackTelegraph());
-        if (!facingRight)
+        if (faceRight != facingRight)
             facingRight = wsMove.Turn(facingRight);
+
+        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
         isAccelerated = true;
     }
 
@@ -218,19 +223,19 @@ public class WanderingSpiritView : MonoBehaviour
 
     #region IEnumerators
 
-    private IEnumerator AttackTelegraph()
+    private IEnumerator AttackTelegraphRoutine()
     {
         var renderer = GetComponent<SpriteRenderer>();
-        var normalColor = renderer.color;
 
-        renderer.color = UnityEngine.Color.red;
+        renderer.color = Color.red;
+        rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        var normalConstraints = rigidBody.constraints;
-        rigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
         yield return new WaitForSeconds(telegraphTime);
-        rigidBody.constraints = normalConstraints;
 
-        renderer.color = normalColor;
+        renderer.color = _defaultColor;
+        rigidBody.constraints = _defaultConstraints;
+
+        _telegraphCoroutine = null;
     }
 
     private IEnumerator HitTime(float time)

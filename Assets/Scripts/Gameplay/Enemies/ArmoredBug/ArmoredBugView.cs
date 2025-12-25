@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class ArmoredBugView : MonoBehaviour
 {
+
+    #region Variables
+
     public EnemyModel Model { get; private set; }
 
     [Header("Main params")]
@@ -36,10 +39,16 @@ public class ArmoredBugView : MonoBehaviour
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
 
+    private Coroutine _telegraphCoroutine;
+    private Color _defaultColor;
+    private RigidbodyConstraints2D _defaultConstraints;
+
     private bool _isHitted = false;
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool damageApplied = false;
+    
+    #endregion
 
     #region Properties
 
@@ -67,6 +76,10 @@ public class ArmoredBugView : MonoBehaviour
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _money = FindAnyObjectByType<InstantiateMoney>();
+
+        var renderer = GetComponent<SpriteRenderer>();
+        _defaultColor = renderer.color;
+        _defaultConstraints = _rigidBody.constraints;
     }
 
     private void FixedUpdate()
@@ -219,23 +232,20 @@ public class ArmoredBugView : MonoBehaviour
         _facingRight = _bugMove.Turn(_facingRight);
     }
 
-    private void HandlePlayerLeftDetected()
+    private void HandlePlayerLeftDetected() => StartTelegraph(false);
+    private void HandlePlayerRightDetected() => StartTelegraph(true);
+
+    private void StartTelegraph(bool faceRight)
     {
         if (_isAccelerated) return;
 
-        StartCoroutine(AttackTelegraph());
-        if (_facingRight)
-            _facingRight = _bugMove.Turn(_facingRight);
-        _isAccelerated = true;
-    }
+        if (_telegraphCoroutine != null)
+            StopCoroutine(_telegraphCoroutine);
 
-    private void HandlePlayerRightDetected()
-    {
-        if (_isAccelerated) return;
-
-        StartCoroutine(AttackTelegraph());
-        if (!_facingRight)
+        if (faceRight != _facingRight)
             _facingRight = _bugMove.Turn(_facingRight);
+
+        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
         _isAccelerated = true;
     }
 
@@ -243,19 +253,19 @@ public class ArmoredBugView : MonoBehaviour
 
     #region IEnumerators
 
-    private IEnumerator AttackTelegraph()
+    private IEnumerator AttackTelegraphRoutine()
     {
         var renderer = GetComponent<SpriteRenderer>();
-        var normalColor = renderer.color;
 
-        renderer.color = UnityEngine.Color.red;
+        renderer.color = Color.red;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        var normalConstraints = _rigidBody.constraints;
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
         yield return new WaitForSeconds(_telegraphTime);
-        _rigidBody.constraints = normalConstraints;
 
-        renderer.color = normalColor;
+        renderer.color = _defaultColor;
+        _rigidBody.constraints = _defaultConstraints;
+
+        _telegraphCoroutine = null;
     }
 
     private IEnumerator HitTime(float time)
