@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class WanderingSpiritView : MonoBehaviour
 {
+    #region Variables
+
     public EnemyModel Model { get; private set; }
 
     [Header("Main params")]
@@ -15,6 +17,7 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Acceleration")]
     [SerializeField] private float acceleratedSpeed = 5f;
     [SerializeField] private float playerDetectDist = 5f;
+    [SerializeField] private float telegraphTime = 0.25f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -39,11 +42,19 @@ public class WanderingSpiritView : MonoBehaviour
     private bool isAccelerated = false;
     private bool facingRight = true;
 
+    #endregion
+
+    #region Properties
+
     public float PlayerDetectDist { get { return playerDetectDist; } }
     public Rigidbody2D RigidBody { get { return rigidBody; } }
     public bool IsHitted { get { return isHitted; } }
     public bool IsAccelerated { get { return isAccelerated; } set { isAccelerated = value; } }
     public bool FacingRight { get { return facingRight; } set { facingRight = value; } }
+
+    #endregion
+
+    #region Common Methods
 
     private void Awake()
     {
@@ -70,6 +81,8 @@ public class WanderingSpiritView : MonoBehaviour
         else
             wsMove.Move(isAccelerated, acceleratedSpeed);
     }
+
+    #endregion
 
     public void ApplyDamage(int damage)
     {
@@ -111,24 +124,26 @@ public class WanderingSpiritView : MonoBehaviour
     private void KnockBack(int direction, float forceAttack)
     {
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        Vector2 directionVector = new Vector2(direction, rigidBody.linearVelocity.y);
+        var directionVector = new Vector2(direction, rigidBody.linearVelocity.y);
 
         rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
     }
 
+    #region Particles
+
     private void SpawnDamageParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
     private void SpawnPlayerAttakParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
         _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
@@ -138,6 +153,10 @@ public class WanderingSpiritView : MonoBehaviour
     {
         _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
+
+    #endregion
+
+    #region Change Tag & Layer
 
     private void ChangeTag(string tag)
     {
@@ -149,16 +168,24 @@ public class WanderingSpiritView : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer(layer);
     }
 
+    #endregion
+
+    #region Events
+
     private void OnEnable()
     {
         wsMove.OnWallHit += HandleWallHit;
-        wsAttack.OnPlayerDetected += HandlePlayerDetected;
+     
+        wsAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
+        wsAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
     }
 
     private void OnDisable()
     {
         wsMove.OnWallHit -= HandleWallHit;
-        wsAttack.OnPlayerDetected -= HandlePlayerDetected;
+
+        wsAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
+        wsAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
     }
 
     private void HandleWallHit()
@@ -167,9 +194,52 @@ public class WanderingSpiritView : MonoBehaviour
         facingRight = wsMove.Turn(facingRight);
     }
 
-    private void HandlePlayerDetected()
+    private void HandlePlayerLeftDetected()
     {
+        if (isAccelerated) return;
+
+        StartCoroutine(AttackTelegraph());
+        if (facingRight)
+            facingRight = wsMove.Turn(facingRight);
         isAccelerated = true;
+    }
+
+    private void HandlePlayerRightDetected()
+    {
+        if (isAccelerated) return;
+
+        StartCoroutine(AttackTelegraph());
+        if (!facingRight)
+            facingRight = wsMove.Turn(facingRight);
+        isAccelerated = true;
+    }
+
+    #endregion
+
+    #region IEnumerators
+
+    private IEnumerator AttackTelegraph()
+    {
+        var renderer = GetComponent<SpriteRenderer>();
+        var normalColor = renderer.color;
+
+        renderer.color = UnityEngine.Color.red;
+
+        var normalConstraints = rigidBody.constraints;
+        rigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+        yield return new WaitForSeconds(telegraphTime);
+        rigidBody.constraints = normalConstraints;
+
+        renderer.color = normalColor;
+    }
+
+    private IEnumerator HitTime(float time)
+    {
+        isHitted = true;
+        //_isInvincible = true;
+        yield return new WaitForSeconds(time);
+        isHitted = false;
+        //_isInvincible = false;
     }
 
     private IEnumerator DestroySelf()
@@ -188,12 +258,5 @@ public class WanderingSpiritView : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private IEnumerator HitTime(float time)
-    {
-        isHitted = true;
-        //_isInvincible = true;
-        yield return new WaitForSeconds(time);
-        isHitted = false;
-        //_isInvincible = false;
-    }
+    #endregion
 }

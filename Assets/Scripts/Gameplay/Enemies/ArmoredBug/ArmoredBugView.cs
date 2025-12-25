@@ -15,6 +15,7 @@ public class ArmoredBugView : MonoBehaviour
     [Header("Acceleration")]
     [SerializeField] private float _acceleratedSpeed = 5f;
     [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _telegraphTime = 0.25f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -40,11 +41,17 @@ public class ArmoredBugView : MonoBehaviour
     private bool _facingRight = true;
     private bool damageApplied = false;
 
+    #region Properties
+
     public float PlayerDetectDist { get { return _playerDetectDist; } }
     public Rigidbody2D RigidBody { get { return _rigidBody; } }
     public bool IsHitted { get { return _isHitted; } }
     public bool IsAccelerated { get { return _isAccelerated; } set { _isAccelerated = value; } }
     public bool FacingRight { get { return _facingRight; } set { _facingRight = value; } }
+
+    #endregion
+
+    #region Common Methods
 
     private void Awake()
     {
@@ -75,6 +82,8 @@ public class ArmoredBugView : MonoBehaviour
         //Debug.Log(_facingRight);
         //Debug.Log(damageApplied);
     }
+
+    #endregion
 
     public void ApplyDamage(int damage)
     {
@@ -132,24 +141,26 @@ public class ArmoredBugView : MonoBehaviour
     private void KnockBack(int direction, float forceAttack)
     {
         _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        Vector2 directionVector = new Vector2(direction, _rigidBody.linearVelocity.y);
+        var directionVector = new Vector2(direction, _rigidBody.linearVelocity.y);
 
         _rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
     }
 
+    #region Particles
+
     private void SpawnDamageParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
     private void SpawnPlayerAttakParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
         _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
@@ -162,11 +173,15 @@ public class ArmoredBugView : MonoBehaviour
 
     private void SpawnBlockedAttackParticles(int direction)
     {
-        Vector2 vectorDirection = new Vector2(direction, 0);
-        Quaternion spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
 
         _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
     }
+
+    #endregion
+
+    #region Change Tag & Layer
 
     private void ChangeTag(string tag)
     {
@@ -178,16 +193,24 @@ public class ArmoredBugView : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer(layer);
     }
 
+    #endregion
+
+    #region Events
+
     private void OnEnable()
     {
         _bugMove.OnWallHit += HandleWallHit;
-        _bugAttack.OnPlayerDetected += HandlePlayerDetected;
+
+        _bugAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
+        _bugAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
     }
 
     private void OnDisable()
     {
         _bugMove.OnWallHit -= HandleWallHit;
-        _bugAttack.OnPlayerDetected -= HandlePlayerDetected;
+
+        _bugAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
+        _bugAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
     }
 
     private void HandleWallHit()
@@ -196,9 +219,50 @@ public class ArmoredBugView : MonoBehaviour
         _facingRight = _bugMove.Turn(_facingRight);
     }
 
-    private void HandlePlayerDetected()
+    private void HandlePlayerLeftDetected()
     {
+        if (_isAccelerated) return;
+
+        StartCoroutine(AttackTelegraph());
+        if (_facingRight)
+            _facingRight = _bugMove.Turn(_facingRight);
         _isAccelerated = true;
+    }
+
+    private void HandlePlayerRightDetected()
+    {
+        if (_isAccelerated) return;
+
+        StartCoroutine(AttackTelegraph());
+        if (!_facingRight)
+            _facingRight = _bugMove.Turn(_facingRight);
+        _isAccelerated = true;
+    }
+
+    #endregion
+
+    #region IEnumerators
+
+    private IEnumerator AttackTelegraph()
+    {
+        var renderer = GetComponent<SpriteRenderer>();
+        var normalColor = renderer.color;
+
+        renderer.color = UnityEngine.Color.red;
+
+        var normalConstraints = _rigidBody.constraints;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
+        yield return new WaitForSeconds(_telegraphTime);
+        _rigidBody.constraints = normalConstraints;
+
+        renderer.color = normalColor;
+    }
+
+    private IEnumerator HitTime(float time)
+    {
+        _isHitted = true;
+        yield return new WaitForSeconds(time);
+        _isHitted = false;
     }
 
     private IEnumerator DestroySelf()
@@ -217,10 +281,5 @@ public class ArmoredBugView : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private IEnumerator HitTime(float time)
-    {
-        _isHitted = true;
-        yield return new WaitForSeconds(time);
-        _isHitted = false;
-    }
+    #endregion
 }

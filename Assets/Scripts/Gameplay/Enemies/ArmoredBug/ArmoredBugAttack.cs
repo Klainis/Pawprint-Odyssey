@@ -5,7 +5,8 @@ public class ArmoredBugAttack : MonoBehaviour
 {
     [SerializeField] private LayerMask _playerLayer;
 
-    public event Action OnPlayerDetected;
+    public event Action OnPlayerLeftDetected;
+    public event Action OnPlayerRightDetected;
 
     private ArmoredBugView _bugView;
 
@@ -16,11 +17,7 @@ public class ArmoredBugAttack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var playerHitDir = _bugView.FacingRight ? Vector2.left : Vector2.right;
-
-        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, _bugView.PlayerDetectDist, _playerLayer);
-        if (playerHit.collider != null)
-            OnPlayerDetected?.Invoke();
+        CheckPlayerHits();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -34,5 +31,16 @@ public class ArmoredBugAttack : MonoBehaviour
                 playerView.ApplyDamage(_bugView.Model.Damage, transform.position);
             }
         }
+    }
+
+    private void CheckPlayerHits()
+    {
+        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, _bugView.PlayerDetectDist, _playerLayer);
+        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, _bugView.PlayerDetectDist, _playerLayer);
+
+        if (playerHitLeft.collider != null)
+            OnPlayerLeftDetected?.Invoke();
+        else if (playerHitRight.collider != null)
+            OnPlayerRightDetected?.Invoke();
     }
 }

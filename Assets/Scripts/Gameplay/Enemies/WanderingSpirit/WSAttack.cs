@@ -5,7 +5,8 @@ public class WSAttack : MonoBehaviour
 {
     [SerializeField] private LayerMask playerLayer;
 
-    public event Action OnPlayerDetected;
+    public event Action OnPlayerLeftDetected;
+    public event Action OnPlayerRightDetected;
 
     private WanderingSpiritView wsView;
 
@@ -16,10 +17,7 @@ public class WSAttack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var playerHitDir = wsView.FacingRight ? Vector2.left : Vector2.right;
-        var playerHit = Physics2D.Raycast(transform.position, playerHitDir, wsView.PlayerDetectDist, playerLayer);
-        if (playerHit.collider != null)
-            OnPlayerDetected?.Invoke();
+        CheckPlayerHits();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -33,5 +31,16 @@ public class WSAttack : MonoBehaviour
                 playerView.ApplyDamage(wsView.Model.Damage, transform.position);
             }
         }
+    }
+
+    private void CheckPlayerHits()
+    {
+        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, wsView.PlayerDetectDist, playerLayer);
+        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, wsView.PlayerDetectDist, playerLayer);
+
+        if (playerHitLeft.collider != null)
+            OnPlayerLeftDetected?.Invoke();
+        else if (playerHitRight.collider != null)
+            OnPlayerRightDetected?.Invoke();
     }
 }
