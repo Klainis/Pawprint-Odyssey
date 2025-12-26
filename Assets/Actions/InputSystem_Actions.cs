@@ -210,7 +210,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Map"",
+                    ""name"": ""GameMenu"",
                     ""type"": ""Button"",
                     ""id"": ""e5e201a1-17ed-484a-a611-49e00e82a321"",
                     ""expectedControlType"": """",
@@ -623,7 +623,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Map"",
+                    ""action"": ""GameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -634,7 +634,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Map"",
+                    ""action"": ""GameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -744,9 +744,36 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Map"",
+                    ""name"": ""GameMenu"",
                     ""type"": ""Button"",
                     ""id"": ""77bef2b8-c386-4876-9e07-90b49afbf1ad"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CloseWindow"",
+                    ""type"": ""Button"",
+                    ""id"": ""07be43f1-0408-4605-b2e5-649435ddd982"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftSwapGameMenuWindow"",
+                    ""type"": ""Button"",
+                    ""id"": ""ead3d489-5309-4560-9bbc-6cb0bd5b1fda"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightSwapGameMenuWindow"",
+                    ""type"": ""Button"",
+                    ""id"": ""ff634984-220a-4588-b693-6a4ee3035fee"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1201,7 +1228,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Map"",
+                    ""action"": ""GameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1212,7 +1239,73 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Map"",
+                    ""action"": ""GameMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5cc3129e-2edc-4397-b1f2-fff104848cfb"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""CloseWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46d065df-1b1d-47d7-87b5-59c4a7728b9d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""CloseWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""308b7150-7118-4c4f-b175-c029b0d6f261"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""LeftSwapGameMenuWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3f96f3f-a0b0-4176-b0d7-f532fa387b04"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""LeftSwapGameMenuWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f3d5ac6-a739-4651-9f8f-d71750ba49bc"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""RightSwapGameMenuWindow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c7cb76f-9e37-4cd0-9cc5-f153551237ce"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RightSwapGameMenuWindow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1297,7 +1390,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Save = m_Player.FindAction("Save", throwIfNotFound: true);
         m_Player_PauseMenu = m_Player.FindAction("PauseMenu", throwIfNotFound: true);
-        m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
+        m_Player_GameMenu = m_Player.FindAction("GameMenu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1311,7 +1404,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_PauseMenu = m_UI.FindAction("PauseMenu", throwIfNotFound: true);
-        m_UI_Map = m_UI.FindAction("Map", throwIfNotFound: true);
+        m_UI_GameMenu = m_UI.FindAction("GameMenu", throwIfNotFound: true);
+        m_UI_CloseWindow = m_UI.FindAction("CloseWindow", throwIfNotFound: true);
+        m_UI_LeftSwapGameMenuWindow = m_UI.FindAction("LeftSwapGameMenuWindow", throwIfNotFound: true);
+        m_UI_RightSwapGameMenuWindow = m_UI.FindAction("RightSwapGameMenuWindow", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1406,7 +1502,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Save;
     private readonly InputAction m_Player_PauseMenu;
-    private readonly InputAction m_Player_Map;
+    private readonly InputAction m_Player_GameMenu;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1471,9 +1567,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PauseMenu => m_Wrapper.m_Player_PauseMenu;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Map".
+        /// Provides access to the underlying input action "Player/GameMenu".
         /// </summary>
-        public InputAction @Map => m_Wrapper.m_Player_Map;
+        public InputAction @GameMenu => m_Wrapper.m_Player_GameMenu;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1539,9 +1635,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PauseMenu.started += instance.OnPauseMenu;
             @PauseMenu.performed += instance.OnPauseMenu;
             @PauseMenu.canceled += instance.OnPauseMenu;
-            @Map.started += instance.OnMap;
-            @Map.performed += instance.OnMap;
-            @Map.canceled += instance.OnMap;
+            @GameMenu.started += instance.OnGameMenu;
+            @GameMenu.performed += instance.OnGameMenu;
+            @GameMenu.canceled += instance.OnGameMenu;
         }
 
         /// <summary>
@@ -1592,9 +1688,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PauseMenu.started -= instance.OnPauseMenu;
             @PauseMenu.performed -= instance.OnPauseMenu;
             @PauseMenu.canceled -= instance.OnPauseMenu;
-            @Map.started -= instance.OnMap;
-            @Map.performed -= instance.OnMap;
-            @Map.canceled -= instance.OnMap;
+            @GameMenu.started -= instance.OnGameMenu;
+            @GameMenu.performed -= instance.OnGameMenu;
+            @GameMenu.canceled -= instance.OnGameMenu;
         }
 
         /// <summary>
@@ -1643,7 +1739,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_PauseMenu;
-    private readonly InputAction m_UI_Map;
+    private readonly InputAction m_UI_GameMenu;
+    private readonly InputAction m_UI_CloseWindow;
+    private readonly InputAction m_UI_LeftSwapGameMenuWindow;
+    private readonly InputAction m_UI_RightSwapGameMenuWindow;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1700,9 +1799,21 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PauseMenu => m_Wrapper.m_UI_PauseMenu;
         /// <summary>
-        /// Provides access to the underlying input action "UI/Map".
+        /// Provides access to the underlying input action "UI/GameMenu".
         /// </summary>
-        public InputAction @Map => m_Wrapper.m_UI_Map;
+        public InputAction @GameMenu => m_Wrapper.m_UI_GameMenu;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/CloseWindow".
+        /// </summary>
+        public InputAction @CloseWindow => m_Wrapper.m_UI_CloseWindow;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/LeftSwapGameMenuWindow".
+        /// </summary>
+        public InputAction @LeftSwapGameMenuWindow => m_Wrapper.m_UI_LeftSwapGameMenuWindow;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/RightSwapGameMenuWindow".
+        /// </summary>
+        public InputAction @RightSwapGameMenuWindow => m_Wrapper.m_UI_RightSwapGameMenuWindow;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1762,9 +1873,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PauseMenu.started += instance.OnPauseMenu;
             @PauseMenu.performed += instance.OnPauseMenu;
             @PauseMenu.canceled += instance.OnPauseMenu;
-            @Map.started += instance.OnMap;
-            @Map.performed += instance.OnMap;
-            @Map.canceled += instance.OnMap;
+            @GameMenu.started += instance.OnGameMenu;
+            @GameMenu.performed += instance.OnGameMenu;
+            @GameMenu.canceled += instance.OnGameMenu;
+            @CloseWindow.started += instance.OnCloseWindow;
+            @CloseWindow.performed += instance.OnCloseWindow;
+            @CloseWindow.canceled += instance.OnCloseWindow;
+            @LeftSwapGameMenuWindow.started += instance.OnLeftSwapGameMenuWindow;
+            @LeftSwapGameMenuWindow.performed += instance.OnLeftSwapGameMenuWindow;
+            @LeftSwapGameMenuWindow.canceled += instance.OnLeftSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.started += instance.OnRightSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.performed += instance.OnRightSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.canceled += instance.OnRightSwapGameMenuWindow;
         }
 
         /// <summary>
@@ -1809,9 +1929,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PauseMenu.started -= instance.OnPauseMenu;
             @PauseMenu.performed -= instance.OnPauseMenu;
             @PauseMenu.canceled -= instance.OnPauseMenu;
-            @Map.started -= instance.OnMap;
-            @Map.performed -= instance.OnMap;
-            @Map.canceled -= instance.OnMap;
+            @GameMenu.started -= instance.OnGameMenu;
+            @GameMenu.performed -= instance.OnGameMenu;
+            @GameMenu.canceled -= instance.OnGameMenu;
+            @CloseWindow.started -= instance.OnCloseWindow;
+            @CloseWindow.performed -= instance.OnCloseWindow;
+            @CloseWindow.canceled -= instance.OnCloseWindow;
+            @LeftSwapGameMenuWindow.started -= instance.OnLeftSwapGameMenuWindow;
+            @LeftSwapGameMenuWindow.performed -= instance.OnLeftSwapGameMenuWindow;
+            @LeftSwapGameMenuWindow.canceled -= instance.OnLeftSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.started -= instance.OnRightSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.performed -= instance.OnRightSwapGameMenuWindow;
+            @RightSwapGameMenuWindow.canceled -= instance.OnRightSwapGameMenuWindow;
         }
 
         /// <summary>
@@ -2009,12 +2138,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPauseMenu(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Map" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "GameMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMap(InputAction.CallbackContext context);
+        void OnGameMenu(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
@@ -2101,11 +2230,32 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPauseMenu(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Map" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "GameMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMap(InputAction.CallbackContext context);
+        void OnGameMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CloseWindow" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCloseWindow(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LeftSwapGameMenuWindow" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftSwapGameMenuWindow(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightSwapGameMenuWindow" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightSwapGameMenuWindow(InputAction.CallbackContext context);
     }
 }

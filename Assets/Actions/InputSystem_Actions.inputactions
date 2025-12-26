@@ -124,7 +124,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Map",
+                    "name": "GameMenu",
                     "type": "Button",
                     "id": "e5e201a1-17ed-484a-a611-49e00e82a321",
                     "expectedControlType": "",
@@ -537,7 +537,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Map",
+                    "action": "GameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -548,7 +548,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Map",
+                    "action": "GameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -658,9 +658,36 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Map",
+                    "name": "GameMenu",
                     "type": "Button",
                     "id": "77bef2b8-c386-4876-9e07-90b49afbf1ad",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CloseWindow",
+                    "type": "Button",
+                    "id": "07be43f1-0408-4605-b2e5-649435ddd982",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftSwapGameMenuWindow",
+                    "type": "Button",
+                    "id": "ead3d489-5309-4560-9bbc-6cb0bd5b1fda",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightSwapGameMenuWindow",
+                    "type": "Button",
+                    "id": "ff634984-220a-4588-b693-6a4ee3035fee",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1115,7 +1142,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Map",
+                    "action": "GameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1126,7 +1153,73 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Map",
+                    "action": "GameMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5cc3129e-2edc-4397-b1f2-fff104848cfb",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "CloseWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "46d065df-1b1d-47d7-87b5-59c4a7728b9d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "CloseWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "308b7150-7118-4c4f-b175-c029b0d6f261",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "LeftSwapGameMenuWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f3f96f3f-a0b0-4176-b0d7-f532fa387b04",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "LeftSwapGameMenuWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f3d5ac6-a739-4651-9f8f-d71750ba49bc",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "RightSwapGameMenuWindow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7c7cb76f-9e37-4cd0-9cc5-f153551237ce",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "RightSwapGameMenuWindow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

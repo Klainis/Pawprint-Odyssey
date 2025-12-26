@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using GlobalEnums;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -10,8 +11,11 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference attackAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
-    [SerializeField] private InputActionReference mapAction;
-    [SerializeField] private InputActionReference mapActionUI;
+    [SerializeField] private InputActionReference gameMenuAction;
+    [SerializeField] private InputActionReference gameMenuActionUI;
+    [SerializeField] private InputActionReference closeWindowButton;
+    [SerializeField] private InputActionReference swapToRightGameMenuWindow;
+    [SerializeField] private InputActionReference swapToLeftGameMenuWindow;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -51,10 +55,21 @@ public class PlayerInput : MonoBehaviour
                 }
             }
 
-            if (IsValidAction(mapAction))
+            //if (IsValidAction(mapAction))
+            //{
+            //    if (mapAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
+            //    {
+            //        GameManager.Instance.OpenMap();
+            //        return;
+            //    }
+            //}
+            if (IsValidAction(gameMenuAction))
             {
-                if (mapAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
-                    GameManager.Instance.OpenMap();
+                if (gameMenuAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
+                {
+                    GameManager.Instance.OpenGameMenu();
+                    return;
+                }
             }
         }
         else
@@ -68,11 +83,58 @@ public class PlayerInput : MonoBehaviour
                 }
             }
 
-            if (IsValidAction(mapActionUI))
+            if (IsValidAction(gameMenuActionUI))
             {
-                if (mapActionUI.action.WasPressedThisFrame())
-                    GameManager.Instance.CloseMap();
+                if (gameMenuActionUI.action.WasPressedThisFrame())
+                {
+                    GameManager.Instance.CloseGameMenu();
+                    return;
+                }
             }
+
+            if (IsValidAction(closeWindowButton))
+            {
+                if (closeWindowButton.action.WasPressedThisFrame())
+                {
+                    if (GameManager.Instance.GameState == GameState.GAME_MENU)
+                    {
+                        GameManager.Instance.CloseGameMenu();
+                        return;
+                    }
+                    if (GameManager.Instance.GameState == GameState.PAUSE_MENU)
+                    {
+                        GameManager.Instance.ClosePauseMenu();
+                        return;
+                    }
+                }
+            }
+
+            if (IsValidAction(swapToRightGameMenuWindow))
+            {
+                if (swapToRightGameMenuWindow.action.WasPressedThisFrame())
+                {
+                    GameMenuUI.Instance.SwapToRightWindow();
+                    return;
+                }
+            }
+
+            if (IsValidAction(swapToLeftGameMenuWindow))
+            {
+                if (swapToLeftGameMenuWindow.action.WasPressedThisFrame())
+                {
+                    GameMenuUI.Instance.SwapToLeftWindow();
+                    return;
+                }
+            }
+
+            //if (IsValidAction(mapActionUI) || IsValidAction(closeWindowButton))
+            //{
+            //    if (mapActionUI.action.WasPressedThisFrame() || closeWindowButton.action.WasPressedThisFrame())
+            //    {
+            //        GameManager.Instance.CloseMap();
+            //        return;
+            //    }
+            //}
         }
 
         if (IsValidAction(attackAction))

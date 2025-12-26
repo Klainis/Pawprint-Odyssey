@@ -35,6 +35,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private Transform initialPosition;
     [SerializeField] private GameObject mapCanvasPrefab;
     [SerializeField] private GameObject mapManagerPrefab;
+    [SerializeField] private GameObject gameMenuCanvasPrefab;
+    [SerializeField] private GameObject abilitiesTreeCanvasPrefab;
     [SerializeField] private GameObject moneyManagerPrefab;
 
     // INSTANCES (Runtime objects)
@@ -56,6 +58,8 @@ public class EntryPoint : MonoBehaviour
     private GameObject _pauseMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
     private GameObject _mapCanvasInstance;
+    private GameObject _gameMenuCanvasInstance;
+    private GameObject _abilitiesTreeCanvasInstance;
     private GameObject _mapManagerInstance;
     private GameObject _moneyManagerInstance;
 
@@ -154,11 +158,11 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_crystalsManagerInstance);
         }
 
-        if (moneyManagerPrefab != null)
-        {
-            _moneyManagerInstance = Instantiate(moneyManagerPrefab);
-            DontDestroyOnLoad(_moneyManagerInstance);
-        }
+        //if (moneyManagerPrefab != null)
+        //{
+        //    _moneyManagerInstance = Instantiate(moneyManagerPrefab);
+        //    DontDestroyOnLoad(_moneyManagerInstance);
+        //}
 
         if (initializeManagerPrefab != null)
         {
@@ -175,10 +179,29 @@ public class EntryPoint : MonoBehaviour
             InitializeFade();
         }
 
+        if (gameMenuCanvasPrefab != null)
+        {
+            _gameMenuCanvasInstance = Instantiate(gameMenuCanvasPrefab);
+            SetCanvasParamets(_gameMenuCanvasInstance, 30);
+            _gameMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_gameMenuCanvasInstance);
+            GameManager.Instance.SetGameMenuCanvasInstance(_gameMenuCanvasInstance);
+        }
+
+        if (abilitiesTreeCanvasPrefab != null)
+        {
+            _abilitiesTreeCanvasInstance = Instantiate(abilitiesTreeCanvasPrefab, _gameMenuCanvasInstance.transform);
+            //SetCanvasParamets(_abilitiesTreeCanvasInstance, 50);
+            _abilitiesTreeCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_abilitiesTreeCanvasInstance);
+            GameManager.Instance.SetAbilitiesTreeCanvasInstance(_abilitiesTreeCanvasInstance);
+        }
+
         if (mapCanvasPrefab != null)
         {
-            _mapCanvasInstance = Instantiate(mapCanvasPrefab);
-            _mapCanvasInstance.SetActive(false);
+            _mapCanvasInstance = Instantiate(mapCanvasPrefab, _gameMenuCanvasInstance.transform);
+            //SetCanvasParamets(_mapCanvasInstance, 50);
+            _mapCanvasInstance.SetActive(true);
             DontDestroyOnLoad(_mapCanvasInstance);
             GameManager.Instance.SetMapCanvasInstance(_mapCanvasInstance);
             MapManager.Instance.SetMapCanvasInstance(_mapCanvasInstance);
@@ -187,6 +210,7 @@ public class EntryPoint : MonoBehaviour
         if (pauseMenuCanvasPrefab != null)
         {
             _pauseMenuCanvasInstance = Instantiate(pauseMenuCanvasPrefab);
+            SetCanvasParamets(_pauseMenuCanvasInstance, 50);
             _pauseMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_pauseMenuCanvasInstance);
             GameManager.Instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
@@ -218,6 +242,8 @@ public class EntryPoint : MonoBehaviour
         if (_canvasInstance != null) Destroy(_canvasInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
         if (_mapCanvasInstance != null) Destroy(_mapCanvasInstance);
+        if (_gameMenuCanvasInstance != null) Destroy(_gameMenuCanvasInstance);
+        if (_abilitiesTreeCanvasInstance != null) Destroy(_abilitiesTreeCanvasInstance);
 
         Destroy(gameObject);
     }
@@ -225,7 +251,7 @@ public class EntryPoint : MonoBehaviour
     private void InitializeCanvas()
     {
         _canvasInstance = Instantiate(canvasPrefab);
-        SetCanvasParamets();
+        SetCanvasParamets(_canvasInstance, 0);
         DontDestroyOnLoad(_canvasInstance);
 
         if (InitializeManager.Instance != null)
@@ -371,12 +397,12 @@ public class EntryPoint : MonoBehaviour
             _manaBarInstance.SetActive(false);
     }
 
-    private void SetCanvasParamets()
+    private void SetCanvasParamets(GameObject canvasInstance, int sortOrder)
     {
-        componentCanvas = _canvasInstance.GetComponent<Canvas>();
+        componentCanvas = canvasInstance.GetComponent<Canvas>();
         componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
-        componentCanvas.sortingOrder = 0;
+        componentCanvas.sortingOrder = sortOrder;
     }
 
     private void SetTransitionCanvasParamets()

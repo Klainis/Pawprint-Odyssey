@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     private GameObject _playerCached;
     private GameObject _pauseMenuCanvasInstance;
     private GameObject _mapCanvasInstance;
+    private GameObject _gameMenuCanvasInstance;
+    private GameObject _abilitiesTreeCanvasInstance;
 
     private readonly string mainMenuSceneName = "MainMenu";
     private readonly string savesMenuSceneName = "SavesMenu";
@@ -28,7 +30,11 @@ public class GameManager : MonoBehaviour
     private bool isTransitioning;
     private bool mapOpened = false;
     private bool inPauseMenu = false;
+    private bool inGameMenu = false;
     private bool gamePaused = false;
+
+    public bool InPauseMenu { get { return inGameMenu; }}
+    public bool InGameMenu { get { return inGameMenu; }}
 
     private GameObject Player
     {
@@ -44,6 +50,11 @@ public class GameManager : MonoBehaviour
             return _playerCached;
         }
     }
+
+    //private void Update()
+    //{
+    //    Debug.Log($"Pause Menu is {inPauseMenu}");
+    //}
 
     private void Awake()
     {
@@ -185,22 +196,24 @@ public class GameManager : MonoBehaviour
 
     public void OpenPauseMenu()
     {
-        if (mapOpened)
+        if (inGameMenu)
             return;
 
         inPauseMenu = true;
+        SetGameState(GameState.PAUSE_MENU);
         PauseGame();
         _pauseMenuCanvasInstance.SetActive(true);
     }
 
     public void ClosePauseMenu()
     {
-        if (mapOpened)
+        if (inGameMenu)
             return;
 
         inPauseMenu = false;
         _pauseMenuCanvasInstance.SetActive(false);
         UnpauseGame();
+        SetGameState(GameState.PLAYING);
     }
 
     public void SetPauseMenuCanvasInstance(GameObject obj)
@@ -216,7 +229,9 @@ public class GameManager : MonoBehaviour
     {
         if (gamePaused)
             return;
+
         gamePaused = true;
+        //SetGameState(GameState.PAUSED);
 
         Time.timeScale = 0;
 
@@ -233,7 +248,9 @@ public class GameManager : MonoBehaviour
     {
         if (!gamePaused)
             return;
+
         gamePaused = false;
+        //SetGameState(GameState.PLAYING);
 
         Time.timeScale = 1;
 
@@ -252,28 +269,68 @@ public class GameManager : MonoBehaviour
 
     public void OpenMap()
     {
-        if (inPauseMenu)
-            return;
-
-        mapOpened = true;
-        PauseGame();
+        CloseAbilitiesTree();
         _mapCanvasInstance.SetActive(true);
     }
 
     public void CloseMap()
     {
-        if (inPauseMenu)
-            return;
-
-        mapOpened = false;
         _mapCanvasInstance.SetActive(false);
-        UnpauseGame();
     }
 
     public void SetMapCanvasInstance(GameObject obj)
     {
         _mapCanvasInstance = obj;
     }
+    #endregion
 
+    #region Abilities Tree
+
+    public void OpenAbilitiesTree()
+    {
+        CloseMap();
+        _abilitiesTreeCanvasInstance.SetActive(true);
+    }
+
+    public void CloseAbilitiesTree()
+    {
+        _abilitiesTreeCanvasInstance.SetActive(false);
+    }
+
+    public void SetAbilitiesTreeCanvasInstance(GameObject obj)
+    {
+        _abilitiesTreeCanvasInstance = obj;
+    }
+    #endregion
+
+    #region GameMenu
+    public void OpenGameMenu()
+    {
+        if (inPauseMenu)
+            return;
+
+        inGameMenu = true;
+        SetGameState(GameState.GAME_MENU);
+        PauseGame();
+        _gameMenuCanvasInstance.SetActive(true);
+    }
+
+    public void CloseGameMenu()
+    {
+        if (inPauseMenu)
+            return;
+
+        inGameMenu = false;
+        _gameMenuCanvasInstance.SetActive(false);
+        CloseMap();
+        CloseAbilitiesTree();
+        UnpauseGame();
+        SetGameState(GameState.PLAYING);
+    }
+
+    public void SetGameMenuCanvasInstance(GameObject obj)
+    {
+        _gameMenuCanvasInstance = obj;
+    }
     #endregion
 }

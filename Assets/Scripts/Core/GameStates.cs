@@ -10,6 +10,8 @@ namespace GlobalEnums
     {
         INACTIVE,
         MAIN_MENU,
+        GAME_MENU,
+        PAUSE_MENU,
         LOADING,
         ENTERING_LEVEL,
         PLAYING,
