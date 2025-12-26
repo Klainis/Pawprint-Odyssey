@@ -70,7 +70,7 @@ public class GameMenuUI : MonoBehaviour
     {
         _windowNumber--;
 
-        if (_windowNumber <= _windowButtons.Count)
+        if (_windowNumber < 0)
         {
             _windowNumber = _windowButtons.Count - 1;
         }

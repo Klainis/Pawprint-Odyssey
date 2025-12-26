@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PauseMenuUI : MonoBehaviour
@@ -8,6 +9,8 @@ public class PauseMenuUI : MonoBehaviour
 
     private void Start()
     {
+        EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+
         continueButton.onClick.AddListener(() =>
         {
             if (GameManager.Instance != null)
