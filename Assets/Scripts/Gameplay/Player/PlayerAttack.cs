@@ -4,6 +4,9 @@ using UnityEngine.Events;
 
 public class PlayerAttack : MonoBehaviour
 {
+    private static PlayerAttack instance;
+    public static PlayerAttack Instance { get { return instance; } }
+
     [Header("Main Attack Params")]
     [SerializeField] private float attackSeriesTimeout = 0.9f;
     [SerializeField] private int maxAttackSeriesCount = 3;
@@ -30,6 +33,13 @@ public class PlayerAttack : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(instance);
+            return;
+        }
+        instance = this;
+
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
@@ -42,18 +52,6 @@ public class PlayerAttack : MonoBehaviour
 
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
             ResetCombo();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemy" &&
-            LayerMask.LayerToName(gameObject.layer) == "PlayerDash")
-        {
-            if (playerView.PlayerModel.HasDamageDash)
-            {
-                AttackDashDamage();
-            }
-        }
     }
 
     public void Attack()

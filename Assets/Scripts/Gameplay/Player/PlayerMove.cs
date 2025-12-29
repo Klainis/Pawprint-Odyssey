@@ -410,7 +410,7 @@ public class PlayerMove : MonoBehaviour
         if (isDashing)
             rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
-        yield return new WaitForSeconds(0.11f); //0.1 
+        yield return new WaitForSeconds(0.13f); //0.1 
         isDashing = false;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
