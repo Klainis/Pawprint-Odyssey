@@ -11,6 +11,10 @@ public class GameMenuUI : MonoBehaviour
     [SerializeField] private Button _mapButton;
     [SerializeField] private Button _abilityButton;
 
+    //[Header("Select Color")]
+    //[SerializeField] private Color _selectColor;
+    //[SerializeField] private Color _unSelectColor;
+
     private List<Button> _windowButtons = new ();
 
     private int _windowNumber = 0;
@@ -63,6 +67,14 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
+        //ColorBlock colorBlock1 = _windowButtons[_windowNumber - 1].colors;
+        //colorBlock1.normalColor = _unSelectColor;
+        //_windowButtons[_windowNumber].colors = colorBlock1;
+
+        //ColorBlock colorBlock2 = _windowButtons[_windowNumber].colors;
+        //colorBlock2.normalColor = _selectColor;
+        //_windowButtons[_windowNumber].colors = colorBlock2;
+
         _windowButtons[_windowNumber].onClick.Invoke();
     }
 
@@ -76,6 +88,14 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
+        //ColorBlock colorBlock1 = _windowButtons[_windowNumber + 1].colors;
+        //colorBlock1.normalColor = _unSelectColor;
+        //_windowButtons[_windowNumber].colors = colorBlock1;
+
+        //ColorBlock colorBlock2 = _windowButtons[_windowNumber].colors;
+        //colorBlock2.normalColor = _selectColor;
+        //_windowButtons[_windowNumber].colors = colorBlock2;
+
         _windowButtons[_windowNumber].onClick.Invoke();
     }
 

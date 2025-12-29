@@ -21,6 +21,10 @@ public class PlayerModel
     public float CheckPointPosY { get; private set; }
     public bool HasClaw { get; private set; }
     public bool HasDoubleJump { get; private set; }
+    public bool HasDash { get; private set; }
+    public bool HasWallRun { get; private set; }
+    public bool HasRun { get; private set; }
+    public bool HasDamageDash { get; private set; }
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
     public bool SpiritGuideKilled { get; private set; }
@@ -37,7 +41,8 @@ public class PlayerModel
                         int moneyCollected,
                         string currentScene, float curPosX, float curPosY,
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
-                        bool hasClaw, bool hasDoubleJump, bool facingRight,
+                        bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash,
+                        bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled)
     {
         MaxLife = Math.Max(1, maxLife);
@@ -63,6 +68,10 @@ public class PlayerModel
 
         HasClaw = hasClaw;
         HasDoubleJump = hasDoubleJump;
+        HasDash = hasDash;
+        HasWallRun = hasWallRun;
+        HasRun = hasRun;
+        HasDamageDash = hasDamageDash;
         FacingRight = facingRight;
         SpiritGuideKilled = spiritGuideKilled;
         GuardianOwlKilled = guardianOwlKilled;
@@ -88,6 +97,10 @@ public class PlayerModel
             data.CheckPointPosY,
             data.HasClaw,
             data.HasDoubleJump,
+            data.HasDash,
+            data.HasWallRun,
+            data.HasRun,
+            data.HasDamageDash,
             data.FacingRight,
             data.SpiritGuideKilled,
             data.GuardianOwlKilled
@@ -114,6 +127,10 @@ public class PlayerModel
             playerData.checkPointPosY,
             playerData.hasClaw,
             playerData.hasDoubleJump,
+            playerData.hasDash,
+            playerData.hasWallRun,
+            playerData.hasRun,
+            playerData.hasDamageDash,
             playerData.facingRight,
             playerData.spiritGuideKilled,
             playerData.guardianOwlKilled
@@ -190,6 +207,18 @@ public class PlayerModel
         return true;
     }
 
+    public bool SpendCrystal(int spend)
+    {
+        SoulCrystalsCollected -= spend;
+        return true;
+    }
+
+    public bool SpendMoney(int spend)
+    {
+        MoneyCollected -= spend;
+        return true;
+    }
+
     public bool SetCurrentScene(string sceneName)
     {
         CurrentScene = sceneName;
@@ -228,6 +257,30 @@ public class PlayerModel
         return HasDoubleJump;
     }
 
+    public bool SetHasDash()
+    {
+        HasDash = true;
+        return HasDash;
+    }
+
+    public bool SetHasWallRun()
+    {
+        HasWallRun = true;
+        return HasWallRun;
+    }
+
+    public bool SetHasRun()
+    {
+        HasRun = true;
+        return HasRun;
+    }
+
+    public bool SetHasDamageDash()
+    {
+        HasDamageDash = true;
+        return HasDamageDash;
+    }
+
     public bool SetSpiritGuideKilled()
     {
         SpiritGuideKilled = true;
@@ -263,6 +316,10 @@ public class PlayerModel
         data.CheckPointPosY = CheckPointPosY;
         data.HasClaw = HasClaw;
         data.HasDoubleJump = HasDoubleJump;
+        data.HasDash = HasDash;
+        data.HasWallRun = HasWallRun;
+        data.HasRun = HasRun;
+        data.HasDamageDash = HasDamageDash;
         data.FacingRight = true;
         data.SpiritGuideKilled = SpiritGuideKilled;
         data.GuardianOwlKilled = GuardianOwlKilled;
@@ -287,6 +344,10 @@ public class PlayerModel
         CheckPointPosY = data.CheckPointPosY;
         HasClaw = data.HasClaw;
         HasDoubleJump = data.HasDoubleJump;
+        HasDash = data.HasDash;
+        HasWallRun = data.HasWallRun;
+        HasRun = data.HasRun;
+        HasDamageDash = data.HasDamageDash;
         FacingRight = data.FacingRight;
         SpiritGuideKilled = data.SpiritGuideKilled;
         GuardianOwlKilled = data.GuardianOwlKilled;
@@ -315,6 +376,10 @@ public struct PlayerSaveData
     public float CheckPointPosY;
     public bool HasClaw;
     public bool HasDoubleJump;
+    public bool HasDash;
+    public bool HasWallRun;
+    public bool HasRun;
+    public bool HasDamageDash;
     public bool FacingRight;
     public bool SpiritGuideKilled;
     public bool GuardianOwlKilled;

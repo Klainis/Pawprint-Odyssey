@@ -35,6 +35,10 @@ public class PlayerData : ScriptableObject
     [Header("Received Abilities")]
     public bool hasClaw;
     public bool hasDoubleJump;
+    public bool hasWallRun;
+    public bool hasDash;
+    public bool hasRun;
+    public bool hasDamageDash;
 
     [Header("Player State")]
     public bool facingRight;

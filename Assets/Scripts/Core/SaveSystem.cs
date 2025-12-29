@@ -80,6 +80,22 @@ public class SaveSystem
         Debug.Log($"SaveSystem.CrystalSave: Игра (Кристаллы) сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
     }
 
+    public static void MoneySave()
+    {
+        MoneyHandleSaveData();
+
+        var json = JsonUtility.ToJson(saveData, true);
+
+        var fullPath = SaveFileName();
+        var directoryPath = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directoryPath))
+            Directory.CreateDirectory(directoryPath);
+
+        File.WriteAllText(SaveFileName(), json);
+
+        Debug.Log($"SaveSystem.CrystalSave: Игра (Кристаллы) сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+    }
+
     public static bool TryLoad()
     {
         var path = SaveFileName();
@@ -236,5 +252,13 @@ public class SaveSystem
             CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
         }
         //Debug.Log($"{PlayerView.Instance.PlayerModel.CheckPointPosX}, {PlayerView.Instance.PlayerModel.CheckPointPosY}");
+    }
+
+    private static void MoneyHandleSaveData()
+    {
+        if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
+        {
+            PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
     }
 }

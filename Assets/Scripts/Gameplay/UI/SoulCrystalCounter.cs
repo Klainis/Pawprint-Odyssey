@@ -24,4 +24,13 @@ public class SoulCrystalCounter : MonoBehaviour
 
         counterText.text = $"{(crystalCount + _initialAmountOfCrystal)}";
     }
+
+    public void SpendCrystal(int spend)
+    {
+        crystalCount = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
+        crystalCount -= spend;
+        PlayerView.Instance.PlayerModel.SpendCrystal(spend);
+
+        counterText.text = $"{(crystalCount + _initialAmountOfCrystal)}";
+    }
 }

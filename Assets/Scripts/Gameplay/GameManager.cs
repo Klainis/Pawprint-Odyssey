@@ -290,6 +290,7 @@ public class GameManager : MonoBehaviour
     {
         CloseMap();
         _abilitiesTreeCanvasInstance.SetActive(true);
+        _abilitiesTreeCanvasInstance.GetComponent<AbilitiesTreeUIManager>().SetSelectedAfterOpenWindow();
     }
 
     public void CloseAbilitiesTree()

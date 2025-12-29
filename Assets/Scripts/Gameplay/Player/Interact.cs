@@ -10,6 +10,7 @@ public class Interact : MonoBehaviour
     private InstantiateParticles _particles;
 
     public bool FullHeal { get; set; }
+    public bool AbilitiesTree { get; set; } = false;
 
     private void Update()
     {
