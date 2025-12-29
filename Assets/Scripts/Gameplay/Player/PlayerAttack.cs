@@ -44,6 +44,18 @@ public class PlayerAttack : MonoBehaviour
             ResetCombo();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemy" &&
+            LayerMask.LayerToName(gameObject.layer) == "PlayerDash")
+        {
+            if (playerView.PlayerModel.HasDamageDash)
+            {
+                AttackDashDamage();
+            }
+        }
+    }
+
     public void Attack()
     {
         if (isAttacking || !canAttack) return;
@@ -96,7 +108,7 @@ public class PlayerAttack : MonoBehaviour
         playerAnimation.ResetTriggerAttack(3);
     }
 
-    public void AttackDamage()
+    public void AttackDamage() //Вызывается в середние анимаци атаки
     {
         var collidersEnemies = Physics2D.OverlapCircleAll(attackCheck.position, attackCheckRadius);
         for (var i = 0; i < collidersEnemies.Length; i++)
@@ -120,6 +132,28 @@ public class PlayerAttack : MonoBehaviour
             if (objectEnvironment.CompareTag("Object"))
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", new object[2] { false, damageToApply });
         }
+    }
+
+    public void AttackDashDamage()
+    {
+        var collidersEnemies = Physics2D.OverlapCircleAll(transform.position, attackCheckRadius);
+        for (var i = 0; i < collidersEnemies.Length; i++)
+        {
+            var enemy = collidersEnemies[i].gameObject;
+            var objectEnvironment = collidersEnemies[i].gameObject;
+
+            playerView.PlayerModel.SetDamage(1);
+            var damageToApply = playerView.PlayerModel.Damage;
+
+            if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
+                damageToApply = -damageToApply;
+
+            if (enemy.CompareTag("Enemy"))
+            {
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+            }
+        }
+
     }
 
     private IEnumerator AttackCooldown(float durationAfterSeries)

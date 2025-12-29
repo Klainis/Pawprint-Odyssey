@@ -12,6 +12,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float dashForce;
     [SerializeField] private Vector2 wallJumpForce;
 
+    [Header("Cooldowns")]
+    [SerializeField] private float dashCoolDown = 0.3f;
+
     [Header("Actions")]
     [SerializeField] private InputActionReference jumpAction;
 
@@ -63,6 +66,7 @@ public class PlayerMove : MonoBehaviour
     private bool canDash = true;
     private bool limitVelOnWallJump = false;
     private bool canAirJump = false;
+    private bool canJump = true;
 
     #endregion
 
@@ -110,35 +114,42 @@ public class PlayerMove : MonoBehaviour
     {
         //if (!canMove) return;
 
-        // Дэш
-        if (dash && canDash && !isWallSliding && isGrounded)
-            StartCoroutine(DashCooldown());
-        else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
-            StartCoroutine(DashCooldown());
+        // --- DASH ---
+        if (playerView.PlayerModel.HasDash)
+        {
+            if (dash && canDash && !isWallSliding && isGrounded)
+                StartCoroutine(DashCooldown());
+            else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
+                StartCoroutine(DashCooldown());
+        }
 
+        // --- MOVE ---
         if (!isDashing && canMove)
             MoveHorizontal(moveX);
 
-        // Прыжок
-        if (lastPressedJumpTime > 0 && CanJump)
+        // --- JUMP ---
+        if (lastPressedJumpTime > 0 && CanJump && canJump)
             Jump();
-        else if (lastPressedJumpTime > 0 && canAirJump)
+        else if (lastPressedJumpTime > 0 && canAirJump && canJump)
             AirJump();
-        else if (lastPressedJumpTime > 0 && canDoubleJump && playerView.PlayerModel.HasDoubleJump)
+        else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && playerView.PlayerModel.HasDoubleJump)
             DoubleJump();
 
-        // Взбирание по стене
-        if (grab)
-            WallRunnig(moveY, moveX, jump, dash);
-        else if (isWallRunning && !grab)
+        // --- WALL RUN ---
+        if (playerView.PlayerModel.HasWallRun)
         {
-            isWallRunning = false;
-            oldWallRunning = false;
-            HandleWallSliding(moveY, moveX, false, false);
-            playerAnimation.SetBoolIsWallRunning(false);
+            if (grab)
+                WallRunnig(moveY, moveX, jump, dash);
+            else if (isWallRunning && !grab)
+            {
+                isWallRunning = false;
+                oldWallRunning = false;
+                HandleWallSliding(moveY, moveX, false, false);
+                playerAnimation.SetBoolIsWallRunning(false);
+            }
         }
 
-        // Скольжение по стене и дэш от нее
+        // --- WALL SLIDING ---
         if (isWall && !isGrounded && !grab)
             HandleWallSliding(moveY, moveX, jump, dash);
         else if (isWallSliding && !isWall && canCheck)
@@ -390,16 +401,21 @@ public class PlayerMove : MonoBehaviour
         if (!isGrounded)
             dashCounter++;
 
+        gameObject.layer = LayerMask.NameToLayer("PlayerDash");
         playerAnimation.SetBoolIsDashing(true);
         isDashing = true;
         canDash = false;
+        canJump = false;
 
         if (isDashing)
             rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
-        yield return new WaitForSeconds(0.1f); //0.1 
+        yield return new WaitForSeconds(0.11f); //0.1 
         isDashing = false;
-        yield return new WaitForSeconds(0.3f); //0.25
+        canJump = true;
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        rigidBody.linearVelocity = Vector3.Lerp(Vector3.zero, rigidBody.linearVelocity, 0.01f);
+        yield return new WaitForSeconds(dashCoolDown); //0.25
         canDash = true;
     }
 
