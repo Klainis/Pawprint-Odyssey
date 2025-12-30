@@ -29,6 +29,7 @@ public class PlayerInput : MonoBehaviour
     private bool jump = false;
     private bool dash = false;
     private bool grab = false;
+    private bool run = false;
 
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
@@ -148,6 +149,18 @@ public class PlayerInput : MonoBehaviour
             WallRun(move);
         }
 
+        if (IsValidAction(dashAction))
+        {
+            if(dashAction.action.IsPressed())
+            {
+                run = true;
+            }
+            else
+            {
+                run = false;
+            }
+        }
+
         if (IsValidAction(jumpAction))
         {
             if (jumpAction.action.WasPressedThisFrame())
@@ -163,12 +176,12 @@ public class PlayerInput : MonoBehaviour
                 dash = true;
         }
 
-        playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
+        //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
     }
 
     private void FixedUpdate()
     {
-        playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab);
+        playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
 
         if (jump)
             jumpPressed.Invoke();

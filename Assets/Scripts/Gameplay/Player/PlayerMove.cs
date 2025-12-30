@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float doubleJumpForce;
     [SerializeField] private float dashForce;
+    [SerializeField][Range(0.01f, 5f)] private float speedRunModifier;
     [SerializeField] private Vector2 wallJumpForce;
 
     [Header("Cooldowns")]
@@ -37,7 +39,7 @@ public class PlayerMove : MonoBehaviour
     public const float groundCheckRadius = 0.2f;
     
     private Rigidbody2D rigidBody;
-    private PlayerView playerView;
+    //private PlayerView playerView;
     private PlayerAnimation playerAnimation;
 
     private Transform groundCheck;
@@ -55,6 +57,7 @@ public class PlayerMove : MonoBehaviour
     private bool isWall = false;
     private bool isGrounded;
     private bool isJumping;
+    private bool isSpeedRunning;
     private bool isDashing = false;
     private bool isWallRunning;
     private bool oldWallRunning;
@@ -67,6 +70,8 @@ public class PlayerMove : MonoBehaviour
     private bool limitVelOnWallJump = false;
     private bool canAirJump = false;
     private bool canJump = true;
+    private bool wallHit = false;
+    private bool isKnockBack = false;
 
     #endregion
 
@@ -89,6 +94,8 @@ public class PlayerMove : MonoBehaviour
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
     public bool IsDashing { get { return isDashing; } set { isDashing = value; } }
+    public bool IsSpeedRunning { get { return isSpeedRunning; } set { isSpeedRunning = value; } }
+    public bool WallHit { get { return wallHit; } set { wallHit = value; } }
     public bool LimitVelOnWallJump { get { return limitVelOnWallJump; } set { limitVelOnWallJump = value; } }
 
     #endregion
@@ -96,7 +103,7 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        playerView = GetComponent<PlayerView>();
+        //playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
         groundCheck = transform.Find("GroundCheck");
@@ -109,18 +116,32 @@ public class PlayerMove : MonoBehaviour
     }
 
     #region Movement
-
-    public void Move(float moveY, float moveX, bool jump, bool dash, bool grab)
+    public void Move(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
     {
-        //if (!canMove) return;
+        if (!canMove) return;
 
         // --- DASH ---
-        if (playerView.PlayerModel.HasDash)
+        if (PlayerView.Instance.PlayerModel.HasDash)
         {
             if (dash && canDash && !isWallSliding && isGrounded)
                 StartCoroutine(DashCooldown());
             else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
                 StartCoroutine(DashCooldown());
+        }
+
+        // --- RUN ---
+        if (PlayerView.Instance.PlayerModel.HasRun)
+        {
+            //Отталкивание от стены во View
+            if (!isDashing && isGrounded && speedRun && canMove)
+            {
+                MoveHorizontal(moveX * speedRunModifier);
+                isSpeedRunning = true;
+            }
+            else
+            {
+                isSpeedRunning= false;
+            }
         }
 
         // --- MOVE ---
@@ -132,11 +153,11 @@ public class PlayerMove : MonoBehaviour
             Jump();
         else if (lastPressedJumpTime > 0 && canAirJump && canJump)
             AirJump();
-        else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && playerView.PlayerModel.HasDoubleJump)
+        else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
             DoubleJump();
 
         // --- WALL RUN ---
-        if (playerView.PlayerModel.HasWallRun)
+        if (PlayerView.Instance.PlayerModel.HasWallRun)
         {
             if (grab)
                 WallRunnig(moveY, moveX, jump, dash);
@@ -164,6 +185,8 @@ public class PlayerMove : MonoBehaviour
 
     private void MoveHorizontal(float move)
     {
+        if (isKnockBack) return;
+
         if (limitVelOnWallJump) return;
 
         if (!(isGrounded || airControl)) return;
@@ -171,14 +194,16 @@ public class PlayerMove : MonoBehaviour
         if (rigidBody.linearVelocity.y < -limitFallSpeed)
             rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, -limitFallSpeed);
 
+        playerAnimation.SetFloatSpeed(Mathf.Abs(move));
+
         var targetVelocity = new Vector2(move * 10f, rigidBody.linearVelocity.y);
         rigidBody.linearVelocity = Vector3.SmoothDamp(rigidBody.linearVelocity, targetVelocity, ref velocity, movementSmoothing);
 
         if (!isWallSliding)
         {
-            if (move > 0 && !playerView.PlayerModel.FacingRight)
+            if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
                 Turn();
-            else if (move < 0 && playerView.PlayerModel.FacingRight)
+            else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
                 Turn();
         }
     }
@@ -186,7 +211,7 @@ public class PlayerMove : MonoBehaviour
     private void Turn()
     {
         Vector3 rotator;
-        if (playerView.PlayerModel.FacingRight)
+        if (PlayerView.Instance.PlayerModel.FacingRight)
         {
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
@@ -196,10 +221,25 @@ public class PlayerMove : MonoBehaviour
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
         }
-        playerView.PlayerModel.SetFacingRight(!playerView.PlayerModel.FacingRight);
+        PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
         transform.rotation = Quaternion.Euler(rotator);
     }
 
+    #endregion
+
+    #region Run
+    //public void StopRunAfterHit()
+    //{
+    //    Debug.Log("Вызов стопа");
+    //    isSpeedRunning = false;
+    //    isKnockBack = true;
+
+    //    var damageDir = Vector2.right * (-turnCoefficient);
+    //    rigidBody.linearVelocity = Vector2.zero;
+    //    rigidBody.AddForce(damageDir * 4, ForceMode2D.Impulse);
+    //    StartCoroutine(WaitToMove(1f));
+    //    //isKnockBack = false;
+    //}
     #endregion
 
     #region Wall Sliding & Runnig
@@ -279,7 +319,7 @@ public class PlayerMove : MonoBehaviour
 
         var force = jumpForce;
         if (rigidBody.linearVelocity.y < 0)
-            force -= rigidBody.linearVelocity.y;
+            force -= 2 * rigidBody.linearVelocity.y;
 
         rigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
 
@@ -410,7 +450,7 @@ public class PlayerMove : MonoBehaviour
         if (isDashing)
             rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
-        yield return new WaitForSeconds(0.13f); //0.1 
+        yield return new WaitForSeconds(0.15f); //0.1 
         isDashing = false;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
@@ -424,6 +464,7 @@ public class PlayerMove : MonoBehaviour
         canMove = false;
         yield return new WaitForSeconds(time);
         canMove = true;
+        //    isKnockBack = false;
     }
 
     private IEnumerator WaitToCheck(float time)

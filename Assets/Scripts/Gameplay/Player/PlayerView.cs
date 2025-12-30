@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerView : MonoBehaviour
 {
@@ -94,6 +95,26 @@ public class PlayerView : MonoBehaviour
                 if (rigidBody.linearVelocity.y < 0f)
                     playerMove.LimitVelOnWallJump = false;
             }
+        }
+
+        playerMove.WallHit = false;
+
+        if (playerMove.IsSpeedRunning)
+        {
+            var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            playerMove.WallHit = leftHit || rightHit;
+
+            //if (playerMove.WallHit)
+            //{
+            //    playerMove.IsSpeedRunning = false;
+
+            //    var damageDir = Vector3.Normalize(new Vector3(-playerMove.TurnCoefficient, 0, 0)) * 40f;
+            //    rigidBody.linearVelocity = Vector2.zero;
+            //    rigidBody.AddForce(damageDir * 15);
+
+            //    StartCoroutine(Stun(0.25f));
+            //}
         }
 
         playerMove.IsWall = false;
