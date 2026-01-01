@@ -11,10 +11,25 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [SerializeField] private Button _runButton;
     [SerializeField] private Button _damageDashButton;
 
+    [Header("Nodes Frames")]
+    [SerializeField] private Image _dashNodeFrameImage;
+    [SerializeField] private Image _wallRunNodeFrameImage;
+    [SerializeField] private Image _runNodeFrameImage;
+    [SerializeField] private Image _damageDashNodeFrameImage;
+
+    [Header("Nodes Images")]
+    [SerializeField] private Image _dashAbilityImage;
+    [SerializeField] private Image _wallRunAbilityImage;
+    [SerializeField] private Image _runAbilityImage;
+    [SerializeField] private Image _damageDashAbilityImage;
+
     [Header("Color Of Node State")]
     [SerializeField] private Color _getColor;
     [SerializeField] private Color _canGetColor;
     [SerializeField] private Color _canNotGetColor;
+    [SerializeField] private Color _getFrameColor;
+    [SerializeField] private Color _canGetFrameColor;
+    [SerializeField] private Color _canNotGetFrameColor;
 
     [Header("Ability Card")]
     [SerializeField] private GameObject _dashAbilityText;
@@ -28,11 +43,6 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private MoneyCounter _moneyCounter;
     private SoulCrystalCounter _soulCrystalCounter;
     private Interact _interact;
-
-    private Image _dashAbilityImage;
-    private Image _wallRunAbilityImage;
-    private Image _runAbilityImage;
-    private Image _damageDashAbilityImage;
 
     private CostAbilitiesCheck _dashCostCheck;
     private CostAbilitiesCheck _wallRunCostCheck;
@@ -59,10 +69,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _runCostCheck = _runButton.GetComponent<CostAbilitiesCheck>();
         _damageDashCostCheck = _damageDashButton.GetComponent<CostAbilitiesCheck>();
 
-        _dashAbilityImage = _dashButton.GetComponent<Image>();
-        _wallRunAbilityImage = _wallRunButton.GetComponent<Image>();
-        _runAbilityImage = _runButton.GetComponent<Image>();
-        _damageDashAbilityImage = _damageDashButton.GetComponent<Image>();
+
+        //_dashAbilityImage = (Image)_dashButton.targetGraphic;
+        //_wallRunAbilityImage = (Image)_wallRunButton.targetGraphic;
+        //_runAbilityImage = (Image)_runButton.targetGraphic;
+        //_damageDashAbilityImage = (Image)_damageDashButton.targetGraphic;
 
         InitializeNodes();
 
@@ -127,24 +138,39 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         {
             GetDashTreeState();
         }
+        //else
+        //{
+        //    DontGetDashTreeState();
+        //}
         if (_playerModel.HasWallRun)
         { 
             GetWallRunTreeState();
         }
+        //else
+        //{
+        //    DontGetWallRunTreeState();
+        //}
         if (_playerModel.HasRun)
         {
             GetRunTreeState();
         }
+        //else
+        //{
+        //    DontGetRunTreeState();
+        //}
         if( _playerModel.HasDamageDash)
         {
             GetDamageDashTreeState();
         }
+        //else
+        //{
+        //    DontGetDamageDashTreeState();
+        //}
     }
 
     public void EnableAreaErrorText(bool enabled)
     {
         _areaErrorText.SetActive(enabled);
-        Debug.Log($" Text of Abilities Tree Error is {enabled}");
     }
 
     #region Buy and Save Logic
@@ -156,6 +182,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_dashCostCheck.MoneyCost);
 
         GetDashTreeState();
+        _eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();
 
@@ -167,7 +195,19 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _dashAbilityImage.color = _getColor;
         _wallRunAbilityImage.color = _canGetColor;
+
+        _dashNodeFrameImage.color = _getFrameColor;
+        _wallRunNodeFrameImage.color = _canGetFrameColor;
     }
+
+    //private void DontGetDashTreeState()
+    //{
+    //    _dashAbilityImage.color = _canGetColor;
+    //    _wallRunAbilityImage.color = _canNotGetColor;
+
+    //    _dashNodeFrameImage.color = _canGetFrameColor;
+    //    _wallRunNodeFrameImage.color = _canNotGetFrameColor;
+    //}
 
     private void BuyWallRun()
     {
@@ -176,6 +216,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_wallRunCostCheck.MoneyCost);
 
         GetWallRunTreeState();
+        _eventSystem.SetSelectedGameObject(_runButton.gameObject);
+
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();
     }
@@ -186,7 +228,21 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _wallRunAbilityImage.color = _getColor;
         _runAbilityImage.color = _canGetColor;
+
+        _wallRunNodeFrameImage.color = _getFrameColor;
+        _runNodeFrameImage.color = _canGetFrameColor;
     }
+
+    //private void DontGetWallRunTreeState()
+    //{
+    //    _wallRunCostCheck.HideCost();
+
+    //    _wallRunAbilityImage.color = _getColor;
+    //    _runAbilityImage.color = _canGetColor;
+
+    //    _wallRunNodeFrameImage.color = _getFrameColor;
+    //    _runNodeFrameImage.color = _canGetFrameColor;
+    //}
 
     private void BuyRun()
     {
@@ -195,6 +251,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_runCostCheck.MoneyCost);
 
         GetRunTreeState();
+        _eventSystem.SetSelectedGameObject(_damageDashButton.gameObject);
+
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();
     }
@@ -205,7 +263,21 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _runAbilityImage.color = _getColor;
         _damageDashAbilityImage.color = _canGetColor;
+
+        _runNodeFrameImage.color= _getFrameColor;
+        _damageDashNodeFrameImage.color = _canGetFrameColor;
     }
+
+    //private void DontGetRunTreeState()
+    //{
+    //    _runCostCheck.HideCost();
+
+    //    _runAbilityImage.color = _getColor;
+    //    _damageDashAbilityImage.color = _canGetColor;
+
+    //    _runNodeFrameImage.color = _getFrameColor;
+    //    _damageDashNodeFrameImage.color = _canGetFrameColor;
+    //}
 
     private void BuyDamageDash()
     {
@@ -224,7 +296,19 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _damageDashAbilityImage.color = _getColor;
         //_wallRunAbilityImage.color = _canGetColor;
+
+        _damageDashNodeFrameImage.color = _getFrameColor;
     }
+
+    //private void DontGetDamageDashTreeState()
+    //{
+    //    _damageDashCostCheck.HideCost();
+
+    //    _damageDashAbilityImage.color = _getColor;
+    //    //_wallRunAbilityImage.color = _canGetColor;
+
+    //    _damageDashNodeFrameImage.color = _getFrameColor;
+    //}
     #endregion
 
     public void SetSelectedAfterOpenWindow()

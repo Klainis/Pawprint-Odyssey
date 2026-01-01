@@ -201,9 +201,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   jumpForce: 14
   doubleJumpForce: 13.5
-  dashForce: 20
+  dashForce: 18
   speedRunModifier: 1.8
-  wallJumpForce: {x: 10, y: 11}
+  wallJumpForce: {x: 20, y: 12}
   dashCoolDown: 0.3
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   coyoteTime: 0.15
@@ -276,7 +276,7 @@ MonoBehaviour:
   closeWindowButton: {fileID: 8217583759492313438, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   swapToRightGameMenuWindow: {fileID: -8959414344620423567, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   swapToLeftGameMenuWindow: {fileID: -170651518334182406, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  runSpeed: 42
+  runSpeed: 40
   jumpPressed:
     m_PersistentCalls:
       m_Calls:
@@ -402,6 +402,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _fullHeal: 0
+  _abilitiesTree: 1
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0

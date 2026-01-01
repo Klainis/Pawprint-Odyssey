@@ -7,10 +7,14 @@ public class Interact : MonoBehaviour
     [SerializeField] private InputActionReference _interactAction;
     [SerializeField] private UnityEvent _interactHealEvent;
 
+    [Space(5)]
+    [SerializeField] private bool _fullHeal = false;
+    [SerializeField] private bool _abilitiesTree = false;
+
     private InstantiateParticles _particles;
 
-    public bool FullHeal { get; set; }
-    public bool AbilitiesTree { get; set; } = false;
+    public bool FullHeal { get { return _fullHeal; } set { _fullHeal = value; } }
+    public bool AbilitiesTree { get { return _abilitiesTree; } set { _abilitiesTree = value; } }
 
     private void Update()
     {

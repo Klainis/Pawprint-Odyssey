@@ -79,6 +79,7 @@ public class PlayerView : MonoBehaviour
         if (Physics2D.Raycast(playerMove.GroundCheck.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
         {
             playerMove.IsGrounded = true;
+            //playerMove.SetGroundedAirState();
             playerMove.ResetDashCounter();
             playerMove.IsJumping = false;
             playerMove.LastOnGroundTime = playerMove.CoyoteTime;
@@ -132,6 +133,9 @@ public class PlayerView : MonoBehaviour
                 playerMove.ResetDashCounter();
                 playerMove.IsDashing = false;
             }
+
+            //if (!playerMove.IsWallSliding)
+            //    playerMove.SetFallingAirState();
 
             playerMove.PrevVelocityX = rigidBody.linearVelocity.x;
         }
