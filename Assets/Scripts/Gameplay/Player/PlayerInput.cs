@@ -79,6 +79,8 @@ public class PlayerInput : MonoBehaviour
             {
                 if (pauseMenuActionUI.action.WasPressedThisFrame())
                 {
+                    if (GameManager.Instance.InOptionsMenu)
+                        return;
                     GameManager.Instance.ClosePauseMenu();
                     return;
                 }

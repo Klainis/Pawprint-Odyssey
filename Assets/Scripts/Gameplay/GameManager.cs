@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private BossHealth bossHealth;
     private GameObject _playerCached;
     private GameObject _pauseMenuCanvasInstance;
+    private GameObject _optionsMenuCanvasInstance;
+    private GameObject _controlsMenuCanvasInstance;
     private GameObject _mapCanvasInstance;
     private GameObject _gameMenuCanvasInstance;
     private GameObject _abilitiesTreeCanvasInstance;
@@ -31,10 +33,12 @@ public class GameManager : MonoBehaviour
     private bool mapOpened = false;
     private bool inPauseMenu = false;
     private bool inGameMenu = false;
+    private bool inOptionsMenu = false;
     private bool gamePaused = false;
 
-    public bool InPauseMenu { get { return inGameMenu; }}
-    public bool InGameMenu { get { return inGameMenu; }}
+    public bool InPauseMenu { get { return inPauseMenu; } }
+    public bool InGameMenu { get { return inGameMenu; } }
+    public bool InOptionsMenu { get { return inOptionsMenu; } }
 
     private GameObject Player
     {
@@ -216,9 +220,45 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.PLAYING);
     }
 
+    public void OpenOptionsMenu()
+    {
+        inOptionsMenu = true;
+        _optionsMenuCanvasInstance.SetActive(true);
+        _pauseMenuCanvasInstance.SetActive(false);
+    }
+
+    public void CloseOptionsMenu()
+    {
+        inOptionsMenu = false;
+        _pauseMenuCanvasInstance.SetActive(true);
+        _optionsMenuCanvasInstance.SetActive(false);
+    }
+
+    public void OpenControlsMenu()
+    {
+        _controlsMenuCanvasInstance.SetActive(true);
+        _optionsMenuCanvasInstance.SetActive(false);
+    }
+
+    public void CloseControlsMenu()
+    {
+        _optionsMenuCanvasInstance.SetActive(true);
+        _controlsMenuCanvasInstance.SetActive(false);
+    }
+
     public void SetPauseMenuCanvasInstance(GameObject obj)
     {
         _pauseMenuCanvasInstance = obj;
+    }
+
+    public void SetOptionsMenuCanvasInstance(GameObject obj)
+    {
+        _optionsMenuCanvasInstance = obj;
+    }
+
+    public void SetControlsMenuCanvasInstance(GameObject obj)
+    {
+        _controlsMenuCanvasInstance = obj;
     }
 
     #endregion
@@ -282,6 +322,7 @@ public class GameManager : MonoBehaviour
     {
         _mapCanvasInstance = obj;
     }
+
     #endregion
 
     #region Abilities Tree
@@ -302,9 +343,11 @@ public class GameManager : MonoBehaviour
     {
         _abilitiesTreeCanvasInstance = obj;
     }
+
     #endregion
 
     #region GameMenu
+
     public void OpenGameMenu()
     {
         if (inPauseMenu)
@@ -333,5 +376,6 @@ public class GameManager : MonoBehaviour
     {
         _gameMenuCanvasInstance = obj;
     }
+
     #endregion
 }

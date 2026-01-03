@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -29,6 +28,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject moneyCounterPrefab;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject pauseMenuCanvasPrefab;
+    [SerializeField] private GameObject optionsMenuCanvasPrefab;
+    [SerializeField] private GameObject controlsMenuCanvasPrefab;
     [SerializeField] private GameObject transitionFadePrefab;
     [SerializeField] private InputActionAsset newInputSystem;
     [SerializeField] private EventSystem eventSystemPrefab;
@@ -56,6 +57,8 @@ public class EntryPoint : MonoBehaviour
     private GameObject _moneyCounterInstance;
     private GameObject _playerInstance;
     private GameObject _pauseMenuCanvasInstance;
+    private GameObject _optionsMenuCanvasInstance;
+    private GameObject _controlsMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
     private GameObject _mapCanvasInstance;
     private GameObject _gameMenuCanvasInstance;
@@ -214,6 +217,24 @@ public class EntryPoint : MonoBehaviour
             _pauseMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_pauseMenuCanvasInstance);
             GameManager.Instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
+        }
+
+        if (optionsMenuCanvasPrefab != null)
+        {
+            _optionsMenuCanvasInstance = Instantiate(optionsMenuCanvasPrefab);
+            SetCanvasParamets(_optionsMenuCanvasInstance, 50);
+            _optionsMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_optionsMenuCanvasInstance);
+            GameManager.Instance.SetOptionsMenuCanvasInstance(_optionsMenuCanvasInstance);
+        }
+
+        if (controlsMenuCanvasPrefab != null)
+        {
+            _controlsMenuCanvasInstance = Instantiate(controlsMenuCanvasPrefab);
+            SetCanvasParamets(_controlsMenuCanvasInstance, 50);
+            _controlsMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_controlsMenuCanvasInstance);
+            GameManager.Instance.SetControlsMenuCanvasInstance(_controlsMenuCanvasInstance);
         }
 
         if (FindAnyObjectByType<EventSystem>() == null)
