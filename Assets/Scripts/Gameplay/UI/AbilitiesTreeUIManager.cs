@@ -10,6 +10,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [SerializeField] private Button _wallRunButton;
     [SerializeField] private Button _runButton;
     [SerializeField] private Button _damageDashButton;
+    [SerializeField] private Button _dashBuyButton;
+    [SerializeField] private Button _wallRunBuyButton;
+    [SerializeField] private Button _runBuyButton;
+    [SerializeField] private Button _damageDashBuyButton;
 
     [Header("Nodes Frames")]
     [SerializeField] private Image _dashNodeFrameImage;
@@ -79,7 +83,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         InitializeNodes();
 
-        _dashButton.onClick.AddListener(() =>
+        _dashBuyButton.onClick.AddListener(() =>
         {
             if (_interact.AbilitiesTree)
             {
@@ -89,7 +93,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 }
             }
         });
-        _wallRunButton.onClick.AddListener(() =>
+        _wallRunBuyButton.onClick.AddListener(() =>
         {
             if (_interact.AbilitiesTree)
             {
@@ -100,7 +104,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 }
             }
         });
-        _runButton.onClick.AddListener(() =>
+        _runBuyButton.onClick.AddListener(() =>
         {
             if (_interact.AbilitiesTree)
             {
@@ -111,7 +115,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 }
             }
         });
-        _damageDashButton.onClick.AddListener(() =>
+        _damageDashBuyButton.onClick.AddListener(() =>
         {
             if (_interact.AbilitiesTree)
             {
@@ -128,10 +132,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     {
         EnableAreaErrorText(!_interact.AbilitiesTree);
 
-        _dashAbilityText.SetActive(IsSelected(_dashButton));
-        _wallRunAbilityText.SetActive(IsSelected(_wallRunButton));
-        _runAbilityText.SetActive(IsSelected(_runButton));
-        _damageDashAbilityText.SetActive(IsSelected(_damageDashButton));
+        _dashAbilityText.SetActive(IsSelected(_dashButton) || IsSelected(_dashBuyButton));
+        _wallRunAbilityText.SetActive(IsSelected(_wallRunButton) || IsSelected(_wallRunBuyButton));
+        _runAbilityText.SetActive(IsSelected(_runButton) || IsSelected(_runBuyButton));
+        _damageDashAbilityText.SetActive(IsSelected(_damageDashButton) || IsSelected(_damageDashBuyButton));
     }
 
     private void InitializeNodes()
@@ -195,6 +199,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void GetDashTreeState()
     {
         _dashCostCheck.HideCost();
+        _dashBuyButton.gameObject.SetActive(false);
 
         _dashAbilityImage.color = _getColor;
         _wallRunAbilityImage.color = _canGetColor;
@@ -229,6 +234,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void GetWallRunTreeState()
     {
         _wallRunCostCheck.HideCost();
+        _wallRunBuyButton.gameObject.SetActive(false);
 
         _wallRunAbilityImage.color = _getColor;
         _runAbilityImage.color = _canGetColor;
@@ -265,6 +271,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void GetRunTreeState()
     {
         _runCostCheck.HideCost();
+        _runBuyButton.gameObject.SetActive(false);
 
         _runAbilityImage.color = _getColor;
         _damageDashAbilityImage.color = _canGetColor;
@@ -299,6 +306,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void GetDamageDashTreeState()
     {
         _damageDashCostCheck.HideCost();
+        _damageDashBuyButton.gameObject.SetActive(false);
 
         _damageDashAbilityImage.color = _getColor;
         //_wallRunAbilityImage.color = _canGetColor;
