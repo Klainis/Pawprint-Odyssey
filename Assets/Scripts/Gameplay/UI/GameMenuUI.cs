@@ -8,8 +8,8 @@ public class GameMenuUI : MonoBehaviour
     private static GameMenuUI instance;
     public static GameMenuUI Instance { get { return instance; } }
 
-    [SerializeField] private Button _mapButton;
-    [SerializeField] private Button _abilityButton;
+    [SerializeField] private Toggle _mapButton;
+    [SerializeField] private Toggle _abilityButton;
 
     [SerializeField] private Color _selectedColor;
     [SerializeField] private Color _normalColor;
@@ -18,7 +18,7 @@ public class GameMenuUI : MonoBehaviour
     //[SerializeField] private Color _selectColor;
     //[SerializeField] private Color _unSelectColor;
 
-    private List<Button> _windowButtons = new ();
+    private List<Toggle> _windowButtons = new ();
 
     private int _windowNumber = 0;
 
@@ -42,15 +42,21 @@ public class GameMenuUI : MonoBehaviour
             return;
         }
 
-        _mapButton.onClick.AddListener(() =>
+        _mapButton.onValueChanged.AddListener((value) =>
         {
-            if (GameManager.Instance != null)
-                GameManager.Instance.OpenMap();
+            if (_mapButton.isOn)
+            {
+                if (GameManager.Instance != null)
+                    GameManager.Instance.OpenMap();
+            }
         });
-        _abilityButton.onClick.AddListener(() =>
+        _abilityButton.onValueChanged.AddListener((value) =>
         {
-            if (GameManager.Instance != null)
-                GameManager.Instance.OpenAbilitiesTree();
+            if (_abilityButton.isOn)
+            {
+                if (GameManager.Instance != null)
+                    GameManager.Instance.OpenAbilitiesTree();
+            }
         });
     }
 
@@ -62,7 +68,7 @@ public class GameMenuUI : MonoBehaviour
 
     public void SwapToRightWindow()
     {
-        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
+        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber++;
 
         if (_windowNumber >= _windowButtons.Count)
@@ -71,7 +77,8 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
-        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
+        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
+
         //ColorBlock colorBlock1 = _windowButtons[_windowNumber - 1].colors;
         //colorBlock1.normalColor = _unSelectColor;
         //_windowButtons[_windowNumber].colors = colorBlock1;
@@ -80,12 +87,12 @@ public class GameMenuUI : MonoBehaviour
         //colorBlock2.normalColor = _selectColor;
         //_windowButtons[_windowNumber].colors = colorBlock2;
 
-        _windowButtons[_windowNumber].onClick.Invoke();
+        _windowButtons[_windowNumber].isOn = true;
     }
 
     public void SwapToLeftWindow()
     {
-        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
+        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber--;
 
         if (_windowNumber < 0)
@@ -94,7 +101,8 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
-        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
+        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
+
         //ColorBlock colorBlock1 = _windowButtons[_windowNumber + 1].colors;
         //colorBlock1.normalColor = _unSelectColor;
         //_windowButtons[_windowNumber].colors = colorBlock1;
@@ -103,7 +111,7 @@ public class GameMenuUI : MonoBehaviour
         //colorBlock2.normalColor = _selectColor;
         //_windowButtons[_windowNumber].colors = colorBlock2;
 
-        _windowButtons[_windowNumber].onClick.Invoke();
+        _windowButtons[_windowNumber].isOn = true;
     }
 
     void OnEnable()
@@ -115,6 +123,6 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
-        _mapButton.onClick.Invoke();
+        _mapButton.isOn = true;
     }
 }
