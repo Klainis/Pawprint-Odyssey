@@ -11,6 +11,9 @@ public class GameMenuUI : MonoBehaviour
     [SerializeField] private Button _mapButton;
     [SerializeField] private Button _abilityButton;
 
+    [SerializeField] private Color _selectedColor;
+    [SerializeField] private Color _normalColor;
+
     //[Header("Select Color")]
     //[SerializeField] private Color _selectColor;
     //[SerializeField] private Color _unSelectColor;
@@ -59,6 +62,7 @@ public class GameMenuUI : MonoBehaviour
 
     public void SwapToRightWindow()
     {
+        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber++;
 
         if (_windowNumber >= _windowButtons.Count)
@@ -67,6 +71,7 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
+        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
         //ColorBlock colorBlock1 = _windowButtons[_windowNumber - 1].colors;
         //colorBlock1.normalColor = _unSelectColor;
         //_windowButtons[_windowNumber].colors = colorBlock1;
@@ -80,6 +85,7 @@ public class GameMenuUI : MonoBehaviour
 
     public void SwapToLeftWindow()
     {
+        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber--;
 
         if (_windowNumber < 0)
@@ -88,6 +94,7 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
+        _windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
         //ColorBlock colorBlock1 = _windowButtons[_windowNumber + 1].colors;
         //colorBlock1.normalColor = _unSelectColor;
         //_windowButtons[_windowNumber].colors = colorBlock1;

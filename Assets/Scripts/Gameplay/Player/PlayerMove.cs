@@ -145,7 +145,6 @@ public class PlayerMove : MonoBehaviour
     #region Movement
     public void Move(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
     {
-        Debug.Log(_airState);
         if (!canMove) return;
 
         if (!isGrounded &&
@@ -207,7 +206,7 @@ public class PlayerMove : MonoBehaviour
             case AirState.Grounded:
                 if (lastPressedJumpTime > 0 && CanJump && canJump) //LastPressedTime время с последнего нажатия прыжка выполняет роль флага jump
                 {
-                    Debug.Log("Grounded Jump");
+                    //Debug.Log("Grounded Jump");
                     Jump();
                 }
                 break;
@@ -399,7 +398,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        Debug.Log("Jump");
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
@@ -422,7 +420,7 @@ public class PlayerMove : MonoBehaviour
 
     private void DoubleJump()
     {
-        Debug.Log("Double Jump");
+        //Debug.Log("Double Jump");
         if (!canDoubleJump || isWallSliding) return;
 
         lastPressedJumpTime = 0;
@@ -436,7 +434,7 @@ public class PlayerMove : MonoBehaviour
 
     private void WallJump()
     {
-        Debug.Log("Wall Jump");
+        //Debug.Log("Wall Jump");
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);

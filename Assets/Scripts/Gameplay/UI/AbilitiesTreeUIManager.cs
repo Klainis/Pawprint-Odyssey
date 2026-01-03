@@ -43,6 +43,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private MoneyCounter _moneyCounter;
     private SoulCrystalCounter _soulCrystalCounter;
     private Interact _interact;
+    private InstantiateParticles _instantiateParticles;
 
     private CostAbilitiesCheck _dashCostCheck;
     private CostAbilitiesCheck _wallRunCostCheck;
@@ -59,6 +60,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     {
         _eventSystem = EventSystem.current;
         _playerModel = PlayerView.Instance.PlayerModel;
+        _instantiateParticles = GetComponent<InstantiateParticles>();
 
         _moneyCounter = GameObject.FindAnyObjectByType<MoneyCounter>();
         _soulCrystalCounter = GameObject.FindAnyObjectByType<SoulCrystalCounter>();
@@ -182,6 +184,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_dashCostCheck.MoneyCost);
 
         GetDashTreeState();
+        _instantiateParticles.InstantiateNodePollen(_dashButton.transform.position);
         _eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
 
         SaveSystem.CrystalSave();
@@ -216,6 +219,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_wallRunCostCheck.MoneyCost);
 
         GetWallRunTreeState();
+        _instantiateParticles.InstantiateNodePollen(_wallRunButton.transform.position);
         _eventSystem.SetSelectedGameObject(_runButton.gameObject);
 
         SaveSystem.CrystalSave();
@@ -251,6 +255,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_runCostCheck.MoneyCost);
 
         GetRunTreeState();
+        _instantiateParticles.InstantiateNodePollen(_runButton.transform.position);
         _eventSystem.SetSelectedGameObject(_damageDashButton.gameObject);
 
         SaveSystem.CrystalSave();
@@ -286,6 +291,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _moneyCounter.SpendMoney(_damageDashCostCheck.MoneyCost);
 
         GetDamageDashTreeState();
+        _instantiateParticles.InstantiateNodePollen(_damageDashButton.transform.position);
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();
     }
