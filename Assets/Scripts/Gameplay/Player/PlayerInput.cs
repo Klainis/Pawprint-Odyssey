@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference closeWindowButton;
     [SerializeField] private InputActionReference swapToRightGameMenuWindow;
     [SerializeField] private InputActionReference swapToLeftGameMenuWindow;
+    [SerializeField] private InputActionReference buyAbility;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -75,6 +76,23 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
+            if (IsValidAction(closeWindowButton))
+            {
+                if (closeWindowButton.action.WasPressedThisFrame())
+                {
+                    if (GameManager.Instance.GameState == GameState.GAME_MENU)
+                    {
+                        GameManager.Instance.CloseGameMenu();
+                        return;
+                    }
+                    if (GameManager.Instance.GameState == GameState.PAUSE_MENU)
+                    {
+                        GameManager.Instance.ClosePauseMenu();
+                        return;
+                    }
+                }
+            }
+
             if (IsValidAction(pauseMenuActionUI))
             {
                 if (pauseMenuActionUI.action.WasPressedThisFrame())
@@ -93,23 +111,6 @@ public class PlayerInput : MonoBehaviour
                 }
             }
 
-            if (IsValidAction(closeWindowButton))
-            {
-                if (closeWindowButton.action.WasPressedThisFrame())
-                {
-                    if (GameManager.Instance.GameState == GameState.GAME_MENU)
-                    {
-                        GameManager.Instance.CloseGameMenu();
-                        return;
-                    }
-                    if (GameManager.Instance.GameState == GameState.PAUSE_MENU)
-                    {
-                        GameManager.Instance.ClosePauseMenu();
-                        return;
-                    }
-                }
-            }
-
             if (IsValidAction(swapToRightGameMenuWindow))
             {
                 if (swapToRightGameMenuWindow.action.WasPressedThisFrame())
@@ -125,6 +126,14 @@ public class PlayerInput : MonoBehaviour
                 {
                     GameMenuUI.Instance.SwapToLeftWindow();
                     return;
+                }
+            }
+
+            if (IsValidAction(buyAbility))
+            {
+                if (buyAbility.action.WasPressedThisFrame())
+                {
+                    AbilitiesTreeUIManager.Instance.BuyNode();
                 }
             }
 

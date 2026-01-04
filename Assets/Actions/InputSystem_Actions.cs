@@ -102,6 +102,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""MoveUp"",
+                    ""type"": ""Value"",
+                    ""id"": ""0601bd20-a199-4fa2-978c-1ea613f37a16"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""6b444451-8a00-4d00-a97e-f47457f736a8"",
@@ -159,15 +168,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Next"",
                     ""type"": ""Button"",
                     ""id"": ""b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Sprint"",
-                    ""type"": ""Button"",
-                    ""id"": ""641cd816-40e6-41b4-8c3d-04687c349290"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -243,9 +243,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""e2062cb9-1b15-46a2-838c-2f8d72a0bdd9"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""name"": ""left"",
+                    ""id"": ""2e46982e-44cc-431b-9f0b-c11910bf467a"",
+                    ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -265,61 +265,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
-                    ""id"": ""320bffee-a40b-4347-ac70-c210eb8bc73a"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""1c5327b5-f71c-4f60-99c7-4e737386f1d1"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""d2581a9b-1d11-4566-b27d-b92aff5fabbc"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""2e46982e-44cc-431b-9f0b-c11910bf467a"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""fcfe95b8-67b9-4526-84b5-5d0bc98d6400"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""77bff152-3580-4b21-b6de-dcd0c7e41164"",
                     ""path"": ""<Keyboard>/rightArrow"",
@@ -327,6 +272,39 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb3ac22b-6ec1-4411-ae3d-f66f64a16d5c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""e58727c6-f48f-48c4-a97b-3b77ebb0bb3d"",
+                    ""path"": ""Dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""37dd1f1a-deb4-40ad-8710-664adfb1a888"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MoveUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -404,39 +382,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Next"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f2e9ba44-c423-42a7-ad56-f20975884794"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8cbb2f4b-a784-49cc-8d5e-c010b8c7f4e6"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d8bf24bf-3f2f-4160-a97c-38ec1eb520ba"",
-                    ""path"": ""<XRController>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
-                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -657,7 +602,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -774,6 +719,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""RightSwapGameMenuWindow"",
                     ""type"": ""Button"",
                     ""id"": ""ff634984-220a-4588-b693-6a4ee3035fee"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Buy"",
+                    ""type"": ""Button"",
+                    ""id"": ""fa5f37a2-dbc4-4d2a-b724-409c40d250a9"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1069,6 +1023,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""76795a9a-2c3f-4ce3-9205-d0132041fadc"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b47ec35-0747-4657-b808-5a8bd41f88d9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""c52c8e0b-8179-41d3-b8a1-d149033bbe86"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
@@ -1113,33 +1089,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8d66d5ba-88d7-48e6-b1cd-198bbfef7ace"",
-                    ""path"": ""<Pen>/tip"",
+                    ""id"": ""b2d2f78c-01e8-4dc4-8b2a-14f340034187"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""47c2a644-3ebc-4dae-a106-589b7ca75b59"",
-                    ""path"": ""<Touchscreen>/touch*/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bb9e6b34-44bf-4381-ac63-5aa15d19f677"",
-                    ""path"": ""<XRController>/trigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""XR"",
+                    ""groups"": """",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -1308,6 +1262,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""RightSwapGameMenuWindow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""886213cc-6c56-4621-a776-966f8e764653"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Buy"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e4f028e-eb10-4cc8-bd57-0b85b68eb029"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Buy"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1378,6 +1354,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_MoveUp = m_Player.FindAction("MoveUp", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
@@ -1385,7 +1362,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
-        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Claw = m_Player.FindAction("Claw", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Save = m_Player.FindAction("Save", throwIfNotFound: true);
@@ -1408,6 +1384,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_CloseWindow = m_UI.FindAction("CloseWindow", throwIfNotFound: true);
         m_UI_LeftSwapGameMenuWindow = m_UI.FindAction("LeftSwapGameMenuWindow", throwIfNotFound: true);
         m_UI_RightSwapGameMenuWindow = m_UI.FindAction("RightSwapGameMenuWindow", throwIfNotFound: true);
+        m_UI_Buy = m_UI.FindAction("Buy", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1490,6 +1467,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_MoveUp;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Interact;
@@ -1497,7 +1475,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
-    private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Claw;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Save;
@@ -1518,6 +1495,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Move".
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MoveUp".
+        /// </summary>
+        public InputAction @MoveUp => m_Wrapper.m_Player_MoveUp;
         /// <summary>
         /// Provides access to the underlying input action "Player/Look".
         /// </summary>
@@ -1546,10 +1527,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Next".
         /// </summary>
         public InputAction @Next => m_Wrapper.m_Player_Next;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Sprint".
-        /// </summary>
-        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         /// <summary>
         /// Provides access to the underlying input action "Player/Claw".
         /// </summary>
@@ -1599,6 +1576,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @MoveUp.started += instance.OnMoveUp;
+            @MoveUp.performed += instance.OnMoveUp;
+            @MoveUp.canceled += instance.OnMoveUp;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -1620,9 +1600,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Next.started += instance.OnNext;
             @Next.performed += instance.OnNext;
             @Next.canceled += instance.OnNext;
-            @Sprint.started += instance.OnSprint;
-            @Sprint.performed += instance.OnSprint;
-            @Sprint.canceled += instance.OnSprint;
             @Claw.started += instance.OnClaw;
             @Claw.performed += instance.OnClaw;
             @Claw.canceled += instance.OnClaw;
@@ -1652,6 +1629,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @MoveUp.started -= instance.OnMoveUp;
+            @MoveUp.performed -= instance.OnMoveUp;
+            @MoveUp.canceled -= instance.OnMoveUp;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
@@ -1673,9 +1653,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Next.started -= instance.OnNext;
             @Next.performed -= instance.OnNext;
             @Next.canceled -= instance.OnNext;
-            @Sprint.started -= instance.OnSprint;
-            @Sprint.performed -= instance.OnSprint;
-            @Sprint.canceled -= instance.OnSprint;
             @Claw.started -= instance.OnClaw;
             @Claw.performed -= instance.OnClaw;
             @Claw.canceled -= instance.OnClaw;
@@ -1743,6 +1720,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_CloseWindow;
     private readonly InputAction m_UI_LeftSwapGameMenuWindow;
     private readonly InputAction m_UI_RightSwapGameMenuWindow;
+    private readonly InputAction m_UI_Buy;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1815,6 +1793,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @RightSwapGameMenuWindow => m_Wrapper.m_UI_RightSwapGameMenuWindow;
         /// <summary>
+        /// Provides access to the underlying input action "UI/Buy".
+        /// </summary>
+        public InputAction @Buy => m_Wrapper.m_UI_Buy;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1885,6 +1867,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RightSwapGameMenuWindow.started += instance.OnRightSwapGameMenuWindow;
             @RightSwapGameMenuWindow.performed += instance.OnRightSwapGameMenuWindow;
             @RightSwapGameMenuWindow.canceled += instance.OnRightSwapGameMenuWindow;
+            @Buy.started += instance.OnBuy;
+            @Buy.performed += instance.OnBuy;
+            @Buy.canceled += instance.OnBuy;
         }
 
         /// <summary>
@@ -1941,6 +1926,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @RightSwapGameMenuWindow.started -= instance.OnRightSwapGameMenuWindow;
             @RightSwapGameMenuWindow.performed -= instance.OnRightSwapGameMenuWindow;
             @RightSwapGameMenuWindow.canceled -= instance.OnRightSwapGameMenuWindow;
+            @Buy.started -= instance.OnBuy;
+            @Buy.performed -= instance.OnBuy;
+            @Buy.canceled -= instance.OnBuy;
         }
 
         /// <summary>
@@ -2054,6 +2042,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "MoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMoveUp(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -2102,13 +2097,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNext(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSprint(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Claw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2257,5 +2245,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRightSwapGameMenuWindow(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Buy" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnBuy(InputAction.CallbackContext context);
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,13 +15,20 @@ public class GameMenuUI : MonoBehaviour
     [SerializeField] private Color _selectedColor;
     [SerializeField] private Color _normalColor;
 
-    //[Header("Select Color")]
-    //[SerializeField] private Color _selectColor;
-    //[SerializeField] private Color _unSelectColor;
+    //[Header("Currency Text")]
+    //[SerializeField] private TMP_Text _abilityTreeMoneyText;
+    //[SerializeField] private TMP_Text _abilityTreeCrystalText;
+    //[SerializeField] private TMP_Text _mapCrystalText;
+
+    private TMP_Text _mapCrystalText;
 
     private List<Toggle> _windowButtons = new ();
 
     private int _windowNumber = 0;
+
+    //public TMP_Text AbilityTreeMoneyText { get { return _abilityTreeMoneyText; } }
+    //public TMP_Text AbilityTreeCrystalText { get { return _abilityTreeCrystalText; } }
+    //public TMP_Text MapCrystalText { get { return _mapCrystalText; } }
 
     private void Awake()
     {
@@ -41,6 +49,9 @@ public class GameMenuUI : MonoBehaviour
             Debug.Log("Ability Button is NULL!");
             return;
         }
+
+        //var mapObject = GameManager.Instance.MapOb;
+        //_mapCrystalText = mapObject.GetComponentInChildren<TMP_Text>();
 
         _mapButton.onValueChanged.AddListener((value) =>
         {
@@ -68,7 +79,6 @@ public class GameMenuUI : MonoBehaviour
 
     public void SwapToRightWindow()
     {
-        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber++;
 
         if (_windowNumber >= _windowButtons.Count)
@@ -77,22 +87,12 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
-        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
-
-        //ColorBlock colorBlock1 = _windowButtons[_windowNumber - 1].colors;
-        //colorBlock1.normalColor = _unSelectColor;
-        //_windowButtons[_windowNumber].colors = colorBlock1;
-
-        //ColorBlock colorBlock2 = _windowButtons[_windowNumber].colors;
-        //colorBlock2.normalColor = _selectColor;
-        //_windowButtons[_windowNumber].colors = colorBlock2;
 
         _windowButtons[_windowNumber].isOn = true;
     }
 
     public void SwapToLeftWindow()
     {
-        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _normalColor;
         _windowNumber--;
 
         if (_windowNumber < 0)
@@ -101,26 +101,24 @@ public class GameMenuUI : MonoBehaviour
         }
 
         EventSystem.current.SetSelectedGameObject(_windowButtons[_windowNumber].gameObject);
-        //_windowButtons[_windowNumber].gameObject.GetComponent<Image>().color = _selectedColor;
-
-        //ColorBlock colorBlock1 = _windowButtons[_windowNumber + 1].colors;
-        //colorBlock1.normalColor = _unSelectColor;
-        //_windowButtons[_windowNumber].colors = colorBlock1;
-
-        //ColorBlock colorBlock2 = _windowButtons[_windowNumber].colors;
-        //colorBlock2.normalColor = _selectColor;
-        //_windowButtons[_windowNumber].colors = colorBlock2;
 
         _windowButtons[_windowNumber].isOn = true;
     }
 
     void OnEnable()
     {
-        if (_mapButton == null)
+        if (_mapButton == null || _abilityButton == null)
         {
-            Debug.Log("Map Button is NULL!");
+            Debug.Log("Map or AbilityTree Toggle is NULL!");
             return;
         }
+
+        //var money = PlayerView.Instance.PlayerModel.MoneyCollected;
+        //var crystal = PlayerView.Instance.PlayerModel.SoulCrystalsCollected;
+        ////_abilityTreeMoneyText.text = money.ToString();
+        ////_abilityTreeCrystalText.text = crystal.ToString();
+        //_mapCrystalText.text = crystal.ToString();
+        //Debug.Log(_mapCrystalText.text);
 
         EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
         _mapButton.isOn = true;

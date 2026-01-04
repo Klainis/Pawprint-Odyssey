@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
 
     public bool InPauseMenu { get { return inGameMenu; }}
     public bool InGameMenu { get { return inGameMenu; }}
+    //public GameObject MapOb { get { return _mapCanvasInstance; } }
+    //public GameObject AbilityTreeOb { get { return _mapCanvasInstance; } }
 
     private GameObject Player
     {
