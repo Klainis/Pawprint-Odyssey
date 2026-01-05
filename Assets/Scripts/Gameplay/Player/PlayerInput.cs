@@ -5,6 +5,9 @@ using GlobalEnums;
 
 public class PlayerInput : MonoBehaviour
 {
+    private static PlayerInput instance;
+    public static PlayerInput Instance {  get { return instance; } }
+
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
@@ -17,6 +20,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference swapToRightGameMenuWindow;
     [SerializeField] private InputActionReference swapToLeftGameMenuWindow;
     [SerializeField] private InputActionReference buyAbility;
+    [SerializeField] private InputActionReference interactAction;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -26,11 +30,18 @@ public class PlayerInput : MonoBehaviour
 
     private float horizontalMove = 0f;
     private float verticalMove = 0f;
+    private bool interactPressed = false;
     private bool attackPressed;
     private bool jump = false;
     private bool dash = false;
     private bool grab = false;
     private bool run = false;
+
+    public bool InteractPressed { get { return interactPressed; } }
+    public bool PlayerMovingEd { get; set; } = false;
+    public bool PlayerAttackingEd { get; set; } = false;
+    public bool PlayerInteractEd { get; set; } = false;
+    public bool PlayerClawEd { get; set; } = false;
 
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
@@ -38,6 +49,13 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
         playerAnimation = GetComponent<PlayerAnimation>();
         playerMove = GetComponent<PlayerMove>();
         playerHeart = GetComponent<PlayerHeart>();
@@ -147,12 +165,29 @@ public class PlayerInput : MonoBehaviour
             //}
         }
 
+        if (IsValidAction(interactAction))
+        {
+            interactPressed = interactAction.action.WasPressedThisFrame();
+        }
+
         if (IsValidAction(attackAction))
+        {
             attackPressed = attackAction.action.WasPressedThisFrame();
+
+            if (attackPressed)
+            {
+                PlayerAttackingEd = true;
+            }
+        }
 
         if (IsValidAction(moveAction))
         {
             var move = moveAction.action.ReadValue<Vector2>();
+
+            if (move != null && move.x > 0)
+            {
+                PlayerMovingEd = true;
+            }
 
             Run(move);
             WallRun(move);

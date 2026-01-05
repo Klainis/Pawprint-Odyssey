@@ -5,6 +5,9 @@ using UnityEngine.UIElements;
 
 public class PlayerMove : MonoBehaviour
 {
+    private static PlayerMove instance;
+    public static PlayerMove Instance {  get { return instance; } }
+
     enum AirState
     {
         Grounded,
@@ -109,11 +112,19 @@ public class PlayerMove : MonoBehaviour
     public bool WallHit { get { return wallHit; } set { wallHit = value; } }
     public bool LimitVelOnWallJump { get { return limitVelOnWallJump; } set { limitVelOnWallJump = value; } }
     public bool IsWallSliding { get; set; }
+    public Rigidbody2D PlayerRigidbody { get { return rigidBody; } }
 
     #endregion
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
         rigidBody = GetComponent<Rigidbody2D>();
         //playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();

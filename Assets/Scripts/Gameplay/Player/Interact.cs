@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 
 public class Interact : MonoBehaviour
 {
-    [SerializeField] private InputActionReference _interactAction;
     [SerializeField] private UnityEvent _interactHealEvent;
 
     [Space(5)]
@@ -18,18 +17,15 @@ public class Interact : MonoBehaviour
 
     private void Update()
     {
-        if (_interactAction != null && _interactAction.action != null)
+        if (PlayerInput.Instance.InteractPressed)
         {
-            if (_interactAction.action.WasPressedThisFrame())
+            if (FullHeal)
             {
-                if (FullHeal)
-                {
-                    _particles = FindAnyObjectByType<InstantiateParticles>();//находится на сейвке
-                    PlayerView.Instance.SetCheckPoint(_particles.transform.position - new Vector3(0, 2, 0)); //смещаю чуть вниз, чтобы на земле был игрок, лень настраивать 
-                    _particles.InstantiatePollen();
+                _particles = FindAnyObjectByType<InstantiateParticles>();//находится на сейвке
+                PlayerView.Instance.SetCheckPoint(_particles.transform.position - new Vector3(0, 2, 0)); //смещаю чуть вниз, чтобы на земле был игрок, лень настраивать 
+                _particles.InstantiatePollen();
 
-                    _interactHealEvent.Invoke(); //PlayerView
-                }
+                _interactHealEvent.Invoke(); //PlayerView
             }
         }
     }

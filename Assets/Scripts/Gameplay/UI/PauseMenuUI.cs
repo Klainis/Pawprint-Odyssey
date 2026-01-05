@@ -30,4 +30,12 @@ public class PauseMenuUI : MonoBehaviour
                 GameManager.Instance.QuitToMainMenu();
         });
     }
+
+    private void OnEnable()
+    {
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+        }
+    }
 }

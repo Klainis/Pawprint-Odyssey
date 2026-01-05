@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using GlobalEnums;
+using Unity.AppUI.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -98,10 +100,10 @@ public class GameManager : MonoBehaviour
         if (isTransitioning) return;
 
         _currentScene = targetScene;
-        //Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene); // Сохранять сцену только при сохранении, а не при переходе!!!
-        Debug.Log($"GameManager: Переход на сцену {targetScene}");
+        //Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!!
+        Debug.Log($"GameManager: пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ {targetScene}");
         SetGameState(GameState.ENTERING_LEVEL);
-        //Вызов сохранения
+        //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         StartCoroutine(DoSceneTransition(targetScene, entryGate));
     }
 
@@ -125,12 +127,12 @@ public class GameManager : MonoBehaviour
 
         if (destination == null)
         {
-            Debug.Log($"GameManager: Нет точки назначения в сцене {targetScene}");
+            Debug.Log($"GameManager: пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ {targetScene}");
             yield return null;
         }
         if (currentPlayer == null)
         {
-            Debug.Log($"GameManager: Игрок не найден в сцене {targetScene}");
+            Debug.Log($"GameManager: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ {targetScene}");
             yield return null;
         }
         currentPlayer.transform.position = destination.transform.position;
@@ -151,7 +153,7 @@ public class GameManager : MonoBehaviour
             if (destinationPoint.destinationTag == tag)
                 return destinationPoint;
         }
-        Debug.Log("GameManager: Точка назначения не найдена ");
+        Debug.Log("GameManager: пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ");
         return null;
     }
 
@@ -185,7 +187,7 @@ public class GameManager : MonoBehaviour
     public void StartGameFromProfile(int profileNumber)
     {
         SaveSystem.CurrentProfileIndex = profileNumber;
-        Debug.Log($"GameManager: Выбран профиль сохранения: {profileNumber}");
+        Debug.Log($"GameManager: пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {profileNumber}");
 
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         SceneManager.LoadScene(entryPointSceneName);
@@ -193,7 +195,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
-        Debug.Log("GameManager: Игра закрылась");
+        Debug.Log("GameManager: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         Application.Quit();
     }
 

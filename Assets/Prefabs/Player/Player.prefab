@@ -277,6 +277,7 @@ MonoBehaviour:
   swapToRightGameMenuWindow: {fileID: -8959414344620423567, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   swapToLeftGameMenuWindow: {fileID: -170651518334182406, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   buyAbility: {fileID: -4373930847085985803, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   runSpeed: 40
   jumpPressed:
     m_PersistentCalls:
@@ -387,7 +388,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f69735ea097b2c4e86040336cdd0829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interact
-  _interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   _interactHealEvent:
     m_PersistentCalls:
       m_Calls:
@@ -404,7 +404,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _fullHeal: 0
-  _abilitiesTree: 0
+  _abilitiesTree: 1
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
