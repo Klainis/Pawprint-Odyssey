@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         if (GameState == GameState.DEAD)
         {
             Destroy(Player);
-            EntryPoint.Instance.InitializeDataFromSave();
+            EntryPoint.Instance.InitializePlayerDataFromSave();
             EntryPoint.Instance.InitializePlayerUI();
             SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CurrentScene);
             SetGameState(GameState.PLAYING);

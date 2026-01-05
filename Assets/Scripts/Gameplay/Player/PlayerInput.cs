@@ -21,6 +21,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference swapToLeftGameMenuWindow;
     [SerializeField] private InputActionReference buyAbility;
     [SerializeField] private InputActionReference interactAction;
+    [SerializeField] private InputActionReference clawAction;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -31,6 +32,7 @@ public class PlayerInput : MonoBehaviour
     private float horizontalMove = 0f;
     private float verticalMove = 0f;
     private bool interactPressed = false;
+    private bool clawPressed;
     private bool attackPressed;
     private bool jump = false;
     private bool dash = false;
@@ -41,7 +43,7 @@ public class PlayerInput : MonoBehaviour
     public bool PlayerMovingEd { get; set; } = false;
     public bool PlayerAttackingEd { get; set; } = false;
     public bool PlayerInteractEd { get; set; } = false;
-    public bool PlayerClawEd { get; set; } = false;
+    public bool PlayerClawEd { get { return clawPressed; } }
 
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
@@ -178,6 +180,11 @@ public class PlayerInput : MonoBehaviour
             {
                 PlayerAttackingEd = true;
             }
+        }
+
+        if (IsValidAction(clawAction))
+        {
+             clawPressed = clawAction.action.WasPressedThisFrame();
         }
 
         if (IsValidAction(moveAction))

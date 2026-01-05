@@ -265,7 +265,7 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_eventSystemInstance);
         }
 
-        InitializeDataFromSave();
+        InitializePlayerDataFromSave();
 
         InitializePlayerUI();
     }
@@ -334,7 +334,7 @@ public class EntryPoint : MonoBehaviour
         InitializeManager.Instance.moneyText = text;
     }
 
-    public void InitializeDataFromSave()
+    public void InitializePlayerDataFromSave()
     {
         if (playerPrefab != null)
         {

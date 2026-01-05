@@ -56,9 +56,9 @@ public class ShowEducation : MonoBehaviour
                 _hasClawOld = true;
                 FadeIn();
             }
-            else if (PlayerView.Instance.PlayerModel.HasClaw && _hasClawOld)
+            else if (PlayerInput.Instance.PlayerClawEd && _hasClawOld)
             {
-
+                FadeOut();
             }
         }
     }
@@ -71,7 +71,6 @@ public class ShowEducation : MonoBehaviour
     public void FadeOut()
     {
         StartFade(0f);
-        gameObject.SetActive(false);
     }
 
     private void StartFade(float targetAlpha)
@@ -98,6 +97,11 @@ public class ShowEducation : MonoBehaviour
             time += Time.unscaledDeltaTime;
             _canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / _fadeDuration);
             yield return null;
+        }
+
+        if (targetAlpha == 0)
+        {
+            gameObject.SetActive(false);
         }
 
         _canvasGroup.alpha = targetAlpha;

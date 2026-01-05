@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    [SerializeField] private Animator slashAnimator;
+
+    private EndSlashAnimation endSlashAnimation;
     private Animator animator;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        endSlashAnimation = slashAnimator.gameObject.GetComponent<EndSlashAnimation>();
     }
 
     public void ApplyRootMotion(bool value)
@@ -66,14 +70,20 @@ public class PlayerAnimation : MonoBehaviour
 
     public void SetTriggerAttack(int attackNum)
     {
+        endSlashAnimation.SetActiveSlashObject();
+
         var triggerName = "Attack" + attackNum;
+        var slashTriggerName = "Slash" + attackNum;
         animator.SetTrigger(triggerName);
+        slashAnimator.SetTrigger(slashTriggerName);
     }
 
     public void ResetTriggerAttack(int attackNum)
     {
         var triggerName = "Attack" + attackNum;
+        var slashTriggerName = "Slash" + attackNum;
         animator.ResetTrigger(triggerName);
+        slashAnimator.ResetTrigger(slashTriggerName);
     }
 
     public void SetTriggerClaw()

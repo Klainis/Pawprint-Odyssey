@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class PiercingClaw : MonoBehaviour
 {
     [SerializeField] private GameObject clawSprite;
-    [SerializeField] private InputActionReference clawAction;
 
     private Vector2 clawSize = new(4f, 0.6f);
 
@@ -45,10 +44,10 @@ public class PiercingClaw : MonoBehaviour
     {
         playerAnimation.ApplyRootMotion(false);
  
-        if (clawAction != null && clawAction.action != null && playerMove.IsGrounded)
-            clawPressed = clawAction.action.WasPressedThisFrame();
+        //if (clawAction != null && clawAction.action != null && playerMove.IsGrounded)
+        //    clawPressed = clawAction.action.WasPressedThisFrame();
 
-        if (clawPressed && canAttack && playerView.PlayerModel.Mana >= 25)
+        if (PlayerInput.Instance.PlayerClawEd && canAttack && playerView.PlayerModel.Mana >= 25)
         {
             clawSprite.SetActive(true);
 
