@@ -153,7 +153,11 @@ public class PlayerInput : MonoBehaviour
             {
                 if (buyAbility.action.WasPressedThisFrame())
                 {
-                    AbilitiesTreeUIManager.Instance.BuyNode();
+                    if (AbilitiesTreeUIManager.Instance.gameObject.activeInHierarchy)
+                    {
+                        AbilitiesTreeUIManager.Instance.BuyNode();
+                        return;
+                    }
                 }
             }
 
