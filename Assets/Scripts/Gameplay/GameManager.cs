@@ -1,7 +1,8 @@
+using GlobalEnums;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using GlobalEnums;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,9 +22,12 @@ public class GameManager : MonoBehaviour
     private GameObject _pauseMenuCanvasInstance;
     private GameObject _optionsMenuCanvasInstance;
     private GameObject _controlsMenuCanvasInstance;
+    private GameObject _controlsGamepadMenuCanvasInstance;
+    private GameObject _controlsKeyboardMenuCanvasInstance;
     private GameObject _mapCanvasInstance;
     private GameObject _gameMenuCanvasInstance;
     private GameObject _abilitiesTreeCanvasInstance;
+
 
     private readonly string mainMenuSceneName = "MainMenu";
     private readonly string savesMenuSceneName = "SavesMenu";
@@ -33,12 +37,12 @@ public class GameManager : MonoBehaviour
     private bool mapOpened = false;
     private bool inPauseMenu = false;
     private bool inGameMenu = false;
-    private bool inOptionsMenu = false;
     private bool gamePaused = false;
 
     public bool InPauseMenu { get { return inPauseMenu; } }
     public bool InGameMenu { get { return inGameMenu; } }
-    public bool InOptionsMenu { get { return inOptionsMenu; } }
+
+    public enum MenuState { None, Pause, Options, Controls, GamepadControls, KeyboardControls }
 
     private GameObject Player
     {
@@ -54,11 +58,6 @@ public class GameManager : MonoBehaviour
             return _playerCached;
         }
     }
-
-    //private void Update()
-    //{
-    //    Debug.Log($"Pause Menu is {inPauseMenu}");
-    //}
 
     private void Awake()
     {
@@ -198,7 +197,7 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void OpenPauseMenu()
+    private void OpenPauseMenu()
     {
         if (inGameMenu)
             return;
@@ -206,44 +205,38 @@ public class GameManager : MonoBehaviour
         inPauseMenu = true;
         SetGameState(GameState.PAUSE_MENU);
         PauseGame();
-        _pauseMenuCanvasInstance.SetActive(true);
     }
 
-    public void ClosePauseMenu()
+    private void ClosePauseMenu()
     {
         if (inGameMenu)
             return;
 
         inPauseMenu = false;
-        _pauseMenuCanvasInstance.SetActive(false);
         UnpauseGame();
         SetGameState(GameState.PLAYING);
     }
 
-    public void OpenOptionsMenu()
+    public void SetMenu(MenuState newState)
     {
-        inOptionsMenu = true;
-        _optionsMenuCanvasInstance.SetActive(true);
-        _pauseMenuCanvasInstance.SetActive(false);
-    }
+        Debug.Log(newState);
 
-    public void CloseOptionsMenu()
-    {
-        inOptionsMenu = false;
-        _pauseMenuCanvasInstance.SetActive(true);
-        _optionsMenuCanvasInstance.SetActive(false);
-    }
+        if (newState == MenuState.Pause)
+        {
+            _pauseMenuCanvasInstance.SetActive(true);
+            OpenPauseMenu();
+        }
+        if (newState == MenuState.None)
+        {
+            _pauseMenuCanvasInstance.SetActive(false);
+            ClosePauseMenu();
+        }
 
-    public void OpenControlsMenu()
-    {
-        _controlsMenuCanvasInstance.SetActive(true);
-        _optionsMenuCanvasInstance.SetActive(false);
-    }
-
-    public void CloseControlsMenu()
-    {
-        _optionsMenuCanvasInstance.SetActive(true);
-        _controlsMenuCanvasInstance.SetActive(false);
+        _pauseMenuCanvasInstance.SetActive(newState == MenuState.Pause);
+        _optionsMenuCanvasInstance.SetActive(newState == MenuState.Options);
+        _controlsMenuCanvasInstance.SetActive(newState == MenuState.Controls);
+        _controlsGamepadMenuCanvasInstance.SetActive(newState == MenuState.GamepadControls);
+        _controlsKeyboardMenuCanvasInstance.SetActive(newState == MenuState.KeyboardControls);
     }
 
     public void SetPauseMenuCanvasInstance(GameObject obj)
@@ -259,6 +252,16 @@ public class GameManager : MonoBehaviour
     public void SetControlsMenuCanvasInstance(GameObject obj)
     {
         _controlsMenuCanvasInstance = obj;
+    }
+
+    public void SetControlsGamepadMenuCanvasInstance(GameObject obj)
+    {
+        _controlsGamepadMenuCanvasInstance = obj;
+    }
+
+    public void SetControlsKeyboardMenuCanvasInstance(GameObject obj)
+    {
+        _controlsKeyboardMenuCanvasInstance = obj;
     }
 
     #endregion

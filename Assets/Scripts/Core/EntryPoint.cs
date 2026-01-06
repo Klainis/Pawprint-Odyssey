@@ -30,6 +30,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject pauseMenuCanvasPrefab;
     [SerializeField] private GameObject optionsMenuCanvasPrefab;
     [SerializeField] private GameObject controlsMenuCanvasPrefab;
+    [SerializeField] private GameObject controlsGamepadMenuCanvasPrefab;
+    [SerializeField] private GameObject controlsKeyboardMenuCanvasPrefab;
     [SerializeField] private GameObject transitionFadePrefab;
     [SerializeField] private InputActionAsset newInputSystem;
     [SerializeField] private EventSystem eventSystemPrefab;
@@ -59,6 +61,8 @@ public class EntryPoint : MonoBehaviour
     private GameObject _pauseMenuCanvasInstance;
     private GameObject _optionsMenuCanvasInstance;
     private GameObject _controlsMenuCanvasInstance;
+    private GameObject _controlsGamepadMenuCanvasInstance;
+    private GameObject _controlsKeyboardMenuCanvasInstance;
     private EventSystem _eventSystemInstance;
     private GameObject _mapCanvasInstance;
     private GameObject _gameMenuCanvasInstance;
@@ -235,6 +239,24 @@ public class EntryPoint : MonoBehaviour
             _controlsMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_controlsMenuCanvasInstance);
             GameManager.Instance.SetControlsMenuCanvasInstance(_controlsMenuCanvasInstance);
+        }
+
+        if (controlsGamepadMenuCanvasPrefab != null)
+        {
+            _controlsGamepadMenuCanvasInstance = Instantiate(controlsGamepadMenuCanvasPrefab);
+            SetCanvasParamets(_controlsGamepadMenuCanvasInstance, 50);
+            _controlsGamepadMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_controlsGamepadMenuCanvasInstance);
+            GameManager.Instance.SetControlsGamepadMenuCanvasInstance(_controlsGamepadMenuCanvasInstance);
+        }
+
+        if (controlsKeyboardMenuCanvasPrefab != null)
+        {
+            _controlsKeyboardMenuCanvasInstance = Instantiate(controlsKeyboardMenuCanvasPrefab);
+            SetCanvasParamets(_controlsKeyboardMenuCanvasInstance, 50);
+            _controlsKeyboardMenuCanvasInstance.SetActive(false);
+            DontDestroyOnLoad(_controlsKeyboardMenuCanvasInstance);
+            GameManager.Instance.SetControlsKeyboardMenuCanvasInstance(_controlsKeyboardMenuCanvasInstance);
         }
 
         if (FindAnyObjectByType<EventSystem>() == null)

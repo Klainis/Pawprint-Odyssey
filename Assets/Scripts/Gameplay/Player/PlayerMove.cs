@@ -145,7 +145,7 @@ public class PlayerMove : MonoBehaviour
     #region Movement
     public void Move(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
     {
-        Debug.Log(_airState);
+        //Debug.Log(_airState);
         if (!canMove) return;
 
         if (!isGrounded &&

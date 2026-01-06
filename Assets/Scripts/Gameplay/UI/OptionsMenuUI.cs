@@ -4,23 +4,23 @@ using UnityEngine.UI;
 
 public class OptionsMenuUI : MonoBehaviour
 {
-    [SerializeField] private Button backButton;
     [SerializeField] private Button controlsButton;
+    [SerializeField] private Button backButton;
 
     private void Start()
     {
         EventSystem.current.SetSelectedGameObject(backButton.gameObject);
 
-        backButton.onClick.AddListener(() =>
-        {
-            if (GameManager.Instance != null)
-                GameManager.Instance.CloseOptionsMenu();
-        });
-
         controlsButton.onClick.AddListener(() =>
         {
             if (GameManager.Instance != null)
-                GameManager.Instance.OpenControlsMenu();
+                GameManager.Instance.SetMenu(GameManager.MenuState.Controls);
+        });
+
+        backButton.onClick.AddListener(() =>
+        {
+            if (GameManager.Instance != null)
+                GameManager.Instance.SetMenu(GameManager.MenuState.Pause);
         });
     }
 }

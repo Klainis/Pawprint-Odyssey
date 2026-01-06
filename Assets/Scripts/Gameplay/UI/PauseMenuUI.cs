@@ -15,13 +15,13 @@ public class PauseMenuUI : MonoBehaviour
         continueButton.onClick.AddListener(() =>
         {
             if (GameManager.Instance != null)
-                GameManager.Instance.ClosePauseMenu();
+                GameManager.Instance.SetMenu(GameManager.MenuState.None);
         });
 
         optionsButton.onClick.AddListener(() =>
         {
             if (GameManager.Instance != null)
-                GameManager.Instance.OpenOptionsMenu();
+                GameManager.Instance.SetMenu(GameManager.MenuState.Options);
         });
 
         quitButton.onClick.AddListener(() =>
