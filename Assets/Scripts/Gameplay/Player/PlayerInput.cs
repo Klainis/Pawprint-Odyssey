@@ -52,7 +52,7 @@ public class PlayerInput : MonoBehaviour
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
                 {
-                    GameManager.Instance.OpenPauseMenu();
+                    GameManager.Instance.SetMenu(GameManager.MenuState.Pause);
                     return;
                 }
             }
@@ -87,7 +87,7 @@ public class PlayerInput : MonoBehaviour
                     }
                     if (GameManager.Instance.GameState == GameState.PAUSE_MENU)
                     {
-                        GameManager.Instance.ClosePauseMenu();
+                        GameManager.Instance.SetMenu(GameManager.MenuState.None);
                         return;
                     }
                 }
@@ -97,7 +97,7 @@ public class PlayerInput : MonoBehaviour
             {
                 if (pauseMenuActionUI.action.WasPressedThisFrame())
                 {
-                    GameManager.Instance.ClosePauseMenu();
+                    GameManager.Instance.SetMenu(GameManager.MenuState.None);
                     return;
                 }
             }
