@@ -208,15 +208,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""MoveUp"",
-                    ""type"": ""Value"",
-                    ""id"": ""863b2637-5cf0-42f0-b350-3fed6e22ba18"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -560,28 +551,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""GameMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""01910560-b8eb-477b-a244-89b25448ce56"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""MoveUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5ec9e0d1-3d35-48cc-ae03-4c85efe8bb24"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveUp"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -728,6 +697,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Buy"",
                     ""type"": ""Button"",
                     ""id"": ""21492963-577e-43cd-a5f8-15f1ac2d108c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""10f32b27-b8f2-4dfa-9be2-5c30777a102f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -1262,6 +1240,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Buy"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71118db5-8978-4833-bb63-e5759d69061b"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8440f738-5fda-4e01-baf1-77d880257977"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MoveUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1344,7 +1344,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Save = m_Player.FindAction("Save", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_GameMenu = m_Player.FindAction("GameMenu", throwIfNotFound: true);
-        m_Player_MoveUp = m_Player.FindAction("MoveUp", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1363,6 +1362,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_LeftSwapGameMenuWindow = m_UI.FindAction("LeftSwapGameMenuWindow", throwIfNotFound: true);
         m_UI_RightSwapGameMenuWindow = m_UI.FindAction("RightSwapGameMenuWindow", throwIfNotFound: true);
         m_UI_Buy = m_UI.FindAction("Buy", throwIfNotFound: true);
+        m_UI_MoveUp = m_UI.FindAction("MoveUp", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1457,7 +1457,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Save;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_GameMenu;
-    private readonly InputAction m_Player_MoveUp;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1521,10 +1520,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/GameMenu".
         /// </summary>
         public InputAction @GameMenu => m_Wrapper.m_Player_GameMenu;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/MoveUp".
-        /// </summary>
-        public InputAction @MoveUp => m_Wrapper.m_Player_MoveUp;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1590,9 +1585,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @GameMenu.started += instance.OnGameMenu;
             @GameMenu.performed += instance.OnGameMenu;
             @GameMenu.canceled += instance.OnGameMenu;
-            @MoveUp.started += instance.OnMoveUp;
-            @MoveUp.performed += instance.OnMoveUp;
-            @MoveUp.canceled += instance.OnMoveUp;
         }
 
         /// <summary>
@@ -1643,9 +1635,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @GameMenu.started -= instance.OnGameMenu;
             @GameMenu.performed -= instance.OnGameMenu;
             @GameMenu.canceled -= instance.OnGameMenu;
-            @MoveUp.started -= instance.OnMoveUp;
-            @MoveUp.performed -= instance.OnMoveUp;
-            @MoveUp.canceled -= instance.OnMoveUp;
         }
 
         /// <summary>
@@ -1699,6 +1688,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_LeftSwapGameMenuWindow;
     private readonly InputAction m_UI_RightSwapGameMenuWindow;
     private readonly InputAction m_UI_Buy;
+    private readonly InputAction m_UI_MoveUp;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1775,6 +1765,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Buy => m_Wrapper.m_UI_Buy;
         /// <summary>
+        /// Provides access to the underlying input action "UI/MoveUp".
+        /// </summary>
+        public InputAction @MoveUp => m_Wrapper.m_UI_MoveUp;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1848,6 +1842,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Buy.started += instance.OnBuy;
             @Buy.performed += instance.OnBuy;
             @Buy.canceled += instance.OnBuy;
+            @MoveUp.started += instance.OnMoveUp;
+            @MoveUp.performed += instance.OnMoveUp;
+            @MoveUp.canceled += instance.OnMoveUp;
         }
 
         /// <summary>
@@ -1907,6 +1904,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Buy.started -= instance.OnBuy;
             @Buy.performed -= instance.OnBuy;
             @Buy.canceled -= instance.OnBuy;
+            @MoveUp.started -= instance.OnMoveUp;
+            @MoveUp.performed -= instance.OnMoveUp;
+            @MoveUp.canceled -= instance.OnMoveUp;
         }
 
         /// <summary>
@@ -2103,13 +2103,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGameMenu(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "MoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMoveUp(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
@@ -2230,5 +2223,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBuy(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMoveUp(InputAction.CallbackContext context);
     }
 }

@@ -122,15 +122,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "MoveUp",
-                    "type": "Value",
-                    "id": "863b2637-5cf0-42f0-b350-3fed6e22ba18",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -474,28 +465,6 @@
                     "action": "GameMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "01910560-b8eb-477b-a244-89b25448ce56",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "MoveUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5ec9e0d1-3d35-48cc-ae03-4c85efe8bb24",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "MoveUp",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -642,6 +611,15 @@
                     "name": "Buy",
                     "type": "Button",
                     "id": "21492963-577e-43cd-a5f8-15f1ac2d108c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveUp",
+                    "type": "Button",
+                    "id": "10f32b27-b8f2-4dfa-9be2-5c30777a102f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1174,6 +1152,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71118db5-8978-4833-bb63-e5759d69061b",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "MoveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8440f738-5fda-4e01-baf1-77d880257977",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
