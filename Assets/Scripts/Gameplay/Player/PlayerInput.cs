@@ -32,8 +32,8 @@ public class PlayerInput : MonoBehaviour
     private float horizontalMove = 0f;
     private float verticalMove = 0f;
     private bool interactPressed = false;
-    private bool clawPressed;
-    private bool attackPressed;
+    private bool clawPressed = false;
+    private bool attackPressed = false;
     private bool jump = false;
     private bool dash = false;
     private bool grab = false;
@@ -41,10 +41,9 @@ public class PlayerInput : MonoBehaviour
 
     public bool InteractPressed { get { return interactPressed; } }
     public bool PlayerMovingEd { get; set; } = false;
-    public bool PlayerAttackingEd { get; set; } = false;
-    public bool PlayerInteractEd { get; set; } = false;
+    public bool PlayerAttackingEd { get { return attackPressed; } }
+    public bool PlayerInteractEd { get { return interactPressed; } }
     public bool PlayerClawEd { get { return clawPressed; } }
-
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
 
     #region Common Methods
@@ -160,15 +159,6 @@ public class PlayerInput : MonoBehaviour
                     }
                 }
             }
-
-            //if (IsValidAction(mapActionUI) || IsValidAction(closeWindowButton))
-            //{
-            //    if (mapActionUI.action.WasPressedThisFrame() || closeWindowButton.action.WasPressedThisFrame())
-            //    {
-            //        GameManager.Instance.CloseMap();
-            //        return;
-            //    }
-            //}
         }
 
         if (IsValidAction(interactAction))
@@ -182,7 +172,7 @@ public class PlayerInput : MonoBehaviour
 
             if (attackPressed)
             {
-                PlayerAttackingEd = true;
+                attackPressed = true;
             }
         }
 

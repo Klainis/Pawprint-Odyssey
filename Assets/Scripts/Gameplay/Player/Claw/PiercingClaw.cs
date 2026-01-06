@@ -51,7 +51,7 @@ public class PiercingClaw : MonoBehaviour
         {
             clawSprite.SetActive(true);
 
-            Debug.Log("Claw");
+            //Debug.Log("Claw");
             if (spendMana != null)
                 spendMana.Invoke();
 

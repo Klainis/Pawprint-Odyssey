@@ -113,6 +113,7 @@ public class PlayerMove : MonoBehaviour
     public bool LimitVelOnWallJump { get { return limitVelOnWallJump; } set { limitVelOnWallJump = value; } }
     public bool IsWallSliding { get; set; }
     public Rigidbody2D PlayerRigidbody { get { return rigidBody; } }
+    public bool PlayerDoubleJumpEd { get; set; } = false;
 
     #endregion
 
@@ -235,7 +236,7 @@ public class PlayerMove : MonoBehaviour
         //    Jump();
         //else if (lastPressedJumpTime > 0 && canAirJump && canJump)
         //    AirJump();
-        //else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
+        //else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJumpOld)
         //    DoubleJump();
 
         // --- WALL RUN ---
@@ -410,7 +411,6 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        Debug.Log("Jump");
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
@@ -433,8 +433,9 @@ public class PlayerMove : MonoBehaviour
 
     private void DoubleJump()
     {
-        Debug.Log("Double Jump");
         if (!canDoubleJump || isWallSliding) return;
+
+        PlayerDoubleJumpEd = true;
 
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
@@ -447,7 +448,6 @@ public class PlayerMove : MonoBehaviour
 
     private void WallJump()
     {
-        Debug.Log("Wall Jump");
         lastOnGroundTime = 0;
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);

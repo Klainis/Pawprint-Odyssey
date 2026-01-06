@@ -18,7 +18,8 @@ public class ShowEducation : MonoBehaviour
 
     private Coroutine _fadeCoroutine;
 
-    public bool _hasClawOld { get; set; } = false;
+    public bool HasClawOld { get; set; } = false;
+    public bool HasDoubleJumpOld { get; set; } = false;
 
     private void Awake()
     {
@@ -51,12 +52,24 @@ public class ShowEducation : MonoBehaviour
         }
         if (isClaw)
         {
-            if (PlayerView.Instance.PlayerModel.HasClaw && !_hasClawOld)
+            if (PlayerView.Instance.PlayerModel.HasClaw && !HasClawOld)
             {
-                _hasClawOld = true;
+                HasClawOld = true;
                 FadeIn();
             }
-            else if (PlayerInput.Instance.PlayerClawEd && _hasClawOld)
+            else if (PlayerInput.Instance.PlayerClawEd)
+            {
+                FadeOut();
+            }
+        }
+        if (isDoubleJump)
+        {
+            if (PlayerView.Instance.PlayerModel.HasDoubleJump && !HasDoubleJumpOld)
+            {
+                HasDoubleJumpOld = true;
+                FadeIn();
+            }
+            else if (PlayerMove.Instance.PlayerDoubleJumpEd)
             {
                 FadeOut();
             }
@@ -89,6 +102,7 @@ public class ShowEducation : MonoBehaviour
 
     private IEnumerator FadeRoutine(float targetAlpha)
     {
+        Debug.Log("FadeRoutine");
         float startAlpha = _canvasGroup.alpha;
         float time = 0f;
 
