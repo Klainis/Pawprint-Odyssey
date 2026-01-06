@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference closeWindowButton;
     [SerializeField] private InputActionReference swapToRightGameMenuWindow;
     [SerializeField] private InputActionReference swapToLeftGameMenuWindow;
+    [SerializeField] private InputActionReference buyAbility;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -51,7 +52,7 @@ public class PlayerInput : MonoBehaviour
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
                 {
-                    GameManager.Instance.SetMenu(GameManager.MenuState.Pause);
+                    GameManager.Instance.OpenPauseMenu();
                     return;
                 }
             }
@@ -75,24 +76,6 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            if (IsValidAction(pauseMenuActionUI))
-            {
-                if (pauseMenuActionUI.action.WasPressedThisFrame())
-                {
-                    GameManager.Instance.SetMenu(GameManager.MenuState.None);
-                    return;
-                }
-            }
-
-            if (IsValidAction(gameMenuActionUI))
-            {
-                if (gameMenuActionUI.action.WasPressedThisFrame())
-                {
-                    GameManager.Instance.CloseGameMenu();
-                    return;
-                }
-            }
-
             if (IsValidAction(closeWindowButton))
             {
                 if (closeWindowButton.action.WasPressedThisFrame())
@@ -104,9 +87,27 @@ public class PlayerInput : MonoBehaviour
                     }
                     if (GameManager.Instance.GameState == GameState.PAUSE_MENU)
                     {
-                        GameManager.Instance.SetMenu(GameManager.MenuState.None);
+                        GameManager.Instance.ClosePauseMenu();
                         return;
                     }
+                }
+            }
+
+            if (IsValidAction(pauseMenuActionUI))
+            {
+                if (pauseMenuActionUI.action.WasPressedThisFrame())
+                {
+                    GameManager.Instance.ClosePauseMenu();
+                    return;
+                }
+            }
+
+            if (IsValidAction(gameMenuActionUI))
+            {
+                if (gameMenuActionUI.action.WasPressedThisFrame())
+                {
+                    GameManager.Instance.CloseGameMenu();
+                    return;
                 }
             }
 
@@ -125,6 +126,14 @@ public class PlayerInput : MonoBehaviour
                 {
                     GameMenuUI.Instance.SwapToLeftWindow();
                     return;
+                }
+            }
+
+            if (IsValidAction(buyAbility))
+            {
+                if (buyAbility.action.WasPressedThisFrame())
+                {
+                    AbilitiesTreeUIManager.Instance.BuyNode();
                 }
             }
 

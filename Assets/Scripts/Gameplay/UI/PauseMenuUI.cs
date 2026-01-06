@@ -8,9 +8,11 @@ public class PauseMenuUI : MonoBehaviour
     [SerializeField] private Button optionsButton;
     [SerializeField] private Button quitButton;
 
+    private EventSystem _eventSystem;
+
     private void Start()
     {
-        EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+        _eventSystem = EventSystem.current;
 
         continueButton.onClick.AddListener(() =>
         {
@@ -29,5 +31,10 @@ public class PauseMenuUI : MonoBehaviour
             if (GameManager.Instance != null)
                 GameManager.Instance.QuitToMainMenu();
         });
+    }
+
+    private void OnEnable()
+    {
+        _eventSystem.SetSelectedGameObject(continueButton.gameObject);
     }
 }
