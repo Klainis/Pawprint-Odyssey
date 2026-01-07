@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 50738830109512580}
   - component: {fileID: 7627346660564273673}
   - component: {fileID: 82701611152381692}
+  - component: {fileID: 2744179684250450763}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -569,17 +570,17 @@ AudioSource:
   m_GameObject: {fileID: 1377240496476148}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -8377009408249381983, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 0.9
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 182
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 7.04459
@@ -657,6 +658,14 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!81 &2744179684250450763
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0
