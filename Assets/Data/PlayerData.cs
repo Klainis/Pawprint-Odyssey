@@ -47,11 +47,4 @@ public class PlayerData : ScriptableObject
     [Header("Killed Bosses")]
     public bool spiritGuideKilled;
     public bool guardianOwlKilled;
-
-    public void Reset()
-    {
-        life = maxLife;
-        mana = manaAfterDeath;
-        isDead = false;
-    }
 }

@@ -8,13 +8,9 @@ using Unity.AppUI.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region Variables
+
     private static GameManager instance;
-    public static GameManager Instance { get { return instance; } }
-    public GameState GameState { get; private set; }
-
-    private string _currentScene;
-
-    public string currentScene { get { return _currentScene; } set { _currentScene = value; } }
 
     private TransitionDestination destination;
     private TransitionDestination[] destinations;
@@ -30,10 +26,10 @@ public class GameManager : MonoBehaviour
     private GameObject _gameMenuCanvasInstance;
     private GameObject _abilitiesTreeCanvasInstance;
 
-
     private readonly string mainMenuSceneName = "MainMenu";
     private readonly string savesMenuSceneName = "SavesMenu";
     private readonly string entryPointSceneName = "EntryPoint";
+    private string _currentScene;
 
     private bool isTransitioning;
     private bool mapOpened = false;
@@ -41,8 +37,18 @@ public class GameManager : MonoBehaviour
     private bool inGameMenu = false;
     private bool gamePaused = false;
 
+    #endregion
+
+    #region Properties
+
+    public static GameManager Instance { get { return instance; } }
+    public GameState GameState { get; private set; }
+
+    public string CurrentScene { get { return _currentScene; } set { _currentScene = value; } }
     public bool InPauseMenu { get { return inPauseMenu; } }
     public bool InGameMenu { get { return inGameMenu; } }
+
+    #endregion
 
     public enum MenuState { None, Pause, Options, Controls, GamepadControls, KeyboardControls }
 
@@ -86,9 +92,16 @@ public class GameManager : MonoBehaviour
         if (GameState == GameState.DEAD)
         {
             Destroy(Player);
-            EntryPoint.Instance.InitializePlayerDataFromSave();
-            EntryPoint.Instance.InitializePlayerUI();
-            SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CurrentScene);
+            _playerCached = null;
+            Destroy(PlayerView.Instance.gameObject);
+
+            EntryPoint.Instance.DestroyAllSessionObjects();
+            StartGameFromProfile(SaveSystem.CurrentProfileIndex);
+
+            //EntryPoint.Instance.InitializePlayerDataFromSave();
+            //EntryPoint.Instance.InitializePlayerUI();
+            //SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
+
             SetGameState(GameState.PLAYING);
         }
     }
@@ -101,7 +114,7 @@ public class GameManager : MonoBehaviour
 
         _currentScene = targetScene;
         //Player.GetComponent<PlayerView>().PlayerModel.SetCurrentScene(targetScene); // ��������� ����� ������ ��� ����������, � �� ��� ��������!!!
-        Debug.Log($"GameManager: ������� �� ����� {targetScene}");
+        Debug.Log($"GameManager: Scene transition to {targetScene}");
         SetGameState(GameState.ENTERING_LEVEL);
         //����� ����������
         StartCoroutine(DoSceneTransition(targetScene, entryGate));
@@ -187,7 +200,7 @@ public class GameManager : MonoBehaviour
     public void StartGameFromProfile(int profileNumber)
     {
         SaveSystem.CurrentProfileIndex = profileNumber;
-        Debug.Log($"GameManager: ������ ������� ����������: {profileNumber}");
+        Debug.Log($"GameManager: Load profile {profileNumber}");
 
         SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
         SceneManager.LoadScene(entryPointSceneName);
@@ -195,7 +208,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitGame()
     {
-        Debug.Log("GameManager: ���� ���������");
+        Debug.Log("GameManager: Quit game...");
         Application.Quit();
     }
 
@@ -221,7 +234,7 @@ public class GameManager : MonoBehaviour
 
     public void SetMenu(MenuState newState)
     {
-        Debug.Log(newState);
+        //Debug.Log(newState);
 
         if (newState == MenuState.Pause)
         {

@@ -182,10 +182,11 @@ public class SaveSystem
     private static void HandleSaveData()
     {
         saveData.BuildVersion = Application.version;
+
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             //Позиция записывается в PlayerModel в скрипте сейвки
-            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.currentScene);
+            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.CurrentScene);
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
             Debug.Log($"{PlayerView.Instance.PlayerModel.CheckPointPosX}, {PlayerView.Instance.PlayerModel.CheckPointPosY}");
         }
@@ -219,7 +220,7 @@ public class SaveSystem
             playerModel.SetCheckPointPosition(playerModel.CurPosX, playerModel.CurPosY);
             
             //Сцена
-            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.currentScene);
+            PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.CurrentScene);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }

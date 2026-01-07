@@ -18,9 +18,8 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private InitializeManager initializeManagerPrefab;
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
-    [SerializeField] private GameObject globalValuePrefab;
+    [SerializeField] private GameObject globalVolumePrefab;
     [SerializeField] private GameObject globalLightPrefab;
-    [SerializeField] private GameObject deadManagerPrefab;
     [SerializeField] private GameObject canvasPrefab;
     [SerializeField] private GameObject heartsPrefab;
     [SerializeField] private GameObject manaBarPrefab;
@@ -48,9 +47,8 @@ public class EntryPoint : MonoBehaviour
     private InitializeManager _initializeManagerInstance;
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;
-    private GameObject _globalValueInstance;
+    private GameObject _globalVolumeInstance;
     private GameObject _globalLightInstance;
-    private GameObject _deadManagerInstance;
     private GameObject _canvasInstance;
     private GameObject _transitionCanvasInstance;
     private GameObject _heartsInstance;
@@ -95,13 +93,14 @@ public class EntryPoint : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
     private async void Start()
     {
         CreateObjects();
         // loadingScreen.Show();
         await Initialize();
 
-        await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CurrentScene);
+        await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
         fadeScript.FadeIn();
 
         //InstallDependencySpiritGuide();
@@ -120,22 +119,16 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_mainCameraInstance);
         }
 
-        if (globalValuePrefab != null)
+        if (globalVolumePrefab != null)
         {
-            _globalValueInstance = Instantiate(globalValuePrefab);
-            DontDestroyOnLoad(_globalValueInstance);
+            _globalVolumeInstance = Instantiate(globalVolumePrefab);
+            DontDestroyOnLoad(_globalVolumeInstance);
         }
 
         if (globalLightPrefab != null)
         {
             _globalLightInstance = Instantiate(globalLightPrefab);
             DontDestroyOnLoad(_globalLightInstance);
-        }
-
-        if (deadManagerPrefab != null)
-        {
-            _deadManagerInstance = Instantiate(deadManagerPrefab);
-            DontDestroyOnLoad(_deadManagerInstance);
         }
 
         if (GameManager.Instance == null)
@@ -272,21 +265,29 @@ public class EntryPoint : MonoBehaviour
 
     public void DestroyAllSessionObjects()
     {
-        if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
-        if (_globalValueInstance != null) Destroy(_globalValueInstance);
-        if (_deadManagerInstance != null) Destroy(_deadManagerInstance);
-        if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance);
-        if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
-        if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance);
-        if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance);
-        if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
+        if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance.gameObject);
+        if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance.gameObject);
+        if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance.gameObject);
         if (_eventSystemInstance != null) Destroy(_eventSystemInstance.gameObject);
-        if (_pauseMenuCanvasInstance != null) Destroy(_pauseMenuCanvasInstance);
-        if (_canvasInstance != null) Destroy(_canvasInstance);
+
+        if (_globalVolumeInstance != null) Destroy(_globalVolumeInstance);
+        if (_globalLightInstance != null) Destroy(_globalLightInstance);
+        if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
+        if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
+
+        if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
+        if (_canvasInstance != null) Destroy(_canvasInstance);
+
         if (_mapCanvasInstance != null) Destroy(_mapCanvasInstance);
         if (_gameMenuCanvasInstance != null) Destroy(_gameMenuCanvasInstance);
         if (_abilitiesTreeCanvasInstance != null) Destroy(_abilitiesTreeCanvasInstance);
+
+        if (_pauseMenuCanvasInstance != null) Destroy(_pauseMenuCanvasInstance);
+        if (_optionsMenuCanvasInstance != null) Destroy(_optionsMenuCanvasInstance);
+        if (_controlsMenuCanvasInstance != null) Destroy(_controlsMenuCanvasInstance);
+        if (_controlsGamepadMenuCanvasInstance != null) Destroy(_controlsGamepadMenuCanvasInstance);
+        if (_controlsKeyboardMenuCanvasInstance != null) Destroy(_controlsKeyboardMenuCanvasInstance);
 
         Destroy(gameObject);
     }
@@ -417,7 +418,7 @@ public class EntryPoint : MonoBehaviour
 
     private void SetInitialScene()
     {
-        GameManager.Instance.currentScene = "F_Room_Tutorial";
+        GameManager.Instance.CurrentScene = "F_Room_Tutorial";
         Debug.Log(PlayerView.Instance.PlayerModel.CurrentScene);
     }
 

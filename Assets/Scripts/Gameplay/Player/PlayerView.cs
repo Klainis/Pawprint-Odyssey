@@ -189,8 +189,10 @@ public class PlayerView : MonoBehaviour
         //var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
         //if (curPos == Vector3.zero)
         //    curPos = gameObject.transform.position;
-        PlayerModel.SetCurrentPosition(checkPointPos.x, checkPointPos.y);
 
+        PlayerModel.SetCurrentScene(GameManager.Instance.CurrentScene);
+        PlayerModel.SetCurrentPosition(checkPointPos.x, checkPointPos.y);
+        
         PlayerModel.SetCheckPointScene(PlayerModel.CurrentScene);
         PlayerModel.SetCheckPointPosition(PlayerModel.CurPosX, PlayerModel.CurPosY);
     }
@@ -289,7 +291,6 @@ public class PlayerView : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
         yield return new WaitForSeconds(1.1f);
-        //SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         GameManager.Instance.SetGameState(GameState.DEAD);
         GameManager.Instance.RevivalPlayer();
     }

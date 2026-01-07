@@ -23,6 +23,7 @@ public class CameraSetOffset : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_playerMove == null) return;
         if (_playerMove.WallCheck.localPosition.x < 0)
         {
             _transposer.m_TrackedObjectOffset.x = -1;

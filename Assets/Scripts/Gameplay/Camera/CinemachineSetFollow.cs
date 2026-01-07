@@ -6,7 +6,7 @@ public class CinemachineSetFollow : MonoBehaviour
     private CinemachineVirtualCamera cinemachine;
     private Transform player;
 
-    void Awake()
+    private void Awake()
     {
         cinemachine = GetComponent<CinemachineVirtualCamera>();
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();

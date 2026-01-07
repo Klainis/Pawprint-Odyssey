@@ -102,7 +102,7 @@ public class ShowEducation : MonoBehaviour
 
     private IEnumerator FadeRoutine(float targetAlpha)
     {
-        Debug.Log("FadeRoutine");
+        //Debug.Log("FadeRoutine");
         float startAlpha = _canvasGroup.alpha;
         float time = 0f;
 
