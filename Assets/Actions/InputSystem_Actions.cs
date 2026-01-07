@@ -102,15 +102,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Look"",
-                    ""type"": ""Value"",
-                    ""id"": ""6b444451-8a00-4d00-a97e-f47457f736a8"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
@@ -265,17 +256,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c1f7a91b-d0fd-4a62-997e-7fb9b69bf235"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
@@ -703,13 +683,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""MoveUp"",
-                    ""type"": ""Button"",
+                    ""name"": ""PlayerMoveUp"",
+                    ""type"": ""Value"",
                     ""id"": ""10f32b27-b8f2-4dfa-9be2-5c30777a102f"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -1244,11 +1224,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""71118db5-8978-4833-bb63-e5759d69061b"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""MoveUp"",
+                    ""action"": ""PlayerMoveUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1259,7 +1239,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""MoveUp"",
+                    ""action"": ""PlayerMoveUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1332,7 +1312,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
@@ -1362,7 +1341,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_LeftSwapGameMenuWindow = m_UI.FindAction("LeftSwapGameMenuWindow", throwIfNotFound: true);
         m_UI_RightSwapGameMenuWindow = m_UI.FindAction("RightSwapGameMenuWindow", throwIfNotFound: true);
         m_UI_Buy = m_UI.FindAction("Buy", throwIfNotFound: true);
-        m_UI_MoveUp = m_UI.FindAction("MoveUp", throwIfNotFound: true);
+        m_UI_PlayerMoveUp = m_UI.FindAction("PlayerMoveUp", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1445,7 +1424,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Jump;
@@ -1472,10 +1450,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Move".
         /// </summary>
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        /// <summary>
-        /// Provides access to the underlying input action "Player/Look".
-        /// </summary>
-        public InputAction @Look => m_Wrapper.m_Player_Look;
         /// <summary>
         /// Provides access to the underlying input action "Player/Attack".
         /// </summary>
@@ -1549,9 +1523,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
-            @Look.started += instance.OnLook;
-            @Look.performed += instance.OnLook;
-            @Look.canceled += instance.OnLook;
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
@@ -1599,9 +1570,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
-            @Look.started -= instance.OnLook;
-            @Look.performed -= instance.OnLook;
-            @Look.canceled -= instance.OnLook;
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
@@ -1688,7 +1656,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_LeftSwapGameMenuWindow;
     private readonly InputAction m_UI_RightSwapGameMenuWindow;
     private readonly InputAction m_UI_Buy;
-    private readonly InputAction m_UI_MoveUp;
+    private readonly InputAction m_UI_PlayerMoveUp;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1765,9 +1733,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Buy => m_Wrapper.m_UI_Buy;
         /// <summary>
-        /// Provides access to the underlying input action "UI/MoveUp".
+        /// Provides access to the underlying input action "UI/PlayerMoveUp".
         /// </summary>
-        public InputAction @MoveUp => m_Wrapper.m_UI_MoveUp;
+        public InputAction @PlayerMoveUp => m_Wrapper.m_UI_PlayerMoveUp;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1842,9 +1810,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Buy.started += instance.OnBuy;
             @Buy.performed += instance.OnBuy;
             @Buy.canceled += instance.OnBuy;
-            @MoveUp.started += instance.OnMoveUp;
-            @MoveUp.performed += instance.OnMoveUp;
-            @MoveUp.canceled += instance.OnMoveUp;
+            @PlayerMoveUp.started += instance.OnPlayerMoveUp;
+            @PlayerMoveUp.performed += instance.OnPlayerMoveUp;
+            @PlayerMoveUp.canceled += instance.OnPlayerMoveUp;
         }
 
         /// <summary>
@@ -1904,9 +1872,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Buy.started -= instance.OnBuy;
             @Buy.performed -= instance.OnBuy;
             @Buy.canceled -= instance.OnBuy;
-            @MoveUp.started -= instance.OnMoveUp;
-            @MoveUp.performed -= instance.OnMoveUp;
-            @MoveUp.canceled -= instance.OnMoveUp;
+            @PlayerMoveUp.started -= instance.OnPlayerMoveUp;
+            @PlayerMoveUp.performed -= instance.OnPlayerMoveUp;
+            @PlayerMoveUp.canceled -= instance.OnPlayerMoveUp;
         }
 
         /// <summary>
@@ -2019,13 +1987,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnLook(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2224,11 +2185,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBuy(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "MoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "PlayerMoveUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMoveUp(InputAction.CallbackContext context);
+        void OnPlayerMoveUp(InputAction.CallbackContext context);
     }
 }

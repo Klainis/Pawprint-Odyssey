@@ -6,7 +6,7 @@ public class SetButtonSelected : MonoBehaviour
 {
     [SerializeField] private Button _firstButton;
 
-    private void Awake()
+    private void OnEnable()
     {
         EventSystem.current.SetSelectedGameObject(_firstButton.gameObject);
     }

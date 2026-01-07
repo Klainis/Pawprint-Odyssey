@@ -16,15 +16,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "6b444451-8a00-4d00-a97e-f47457f736a8",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
@@ -179,17 +170,6 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "c1f7a91b-d0fd-4a62-997e-7fb9b69bf235",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -617,13 +597,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MoveUp",
-                    "type": "Button",
+                    "name": "PlayerMoveUp",
+                    "type": "Value",
                     "id": "10f32b27-b8f2-4dfa-9be2-5c30777a102f",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -1158,11 +1138,11 @@
                 {
                     "name": "",
                     "id": "71118db5-8978-4833-bb63-e5759d69061b",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "MoveUp",
+                    "action": "PlayerMoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1173,7 +1153,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "MoveUp",
+                    "action": "PlayerMoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
