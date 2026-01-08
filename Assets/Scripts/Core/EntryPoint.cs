@@ -192,7 +192,7 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_transitionCanvasInstance);
             InitializeFade();
         }
-
+        //Запутанный порядок инициализации с GameManager, GameMenu и его вкладками
         if (gameMenuCanvasPrefab != null)
         {
             _gameMenuCanvasInstance = Instantiate(gameMenuCanvasPrefab);
@@ -385,6 +385,12 @@ public class EntryPoint : MonoBehaviour
         piercingClaw = _playerInstance.GetComponent<PiercingClaw>();
         if (piercingClaw) piercingClaw.enabled = false;
 
+        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasClaw)
+        {
+            playerMana = _playerInstance.GetComponent<PlayerMana>();
+            playerMana.enabled = true; 
+        }
+
         InitializeManager.Instance.player = _playerInstance;
         playerInitialized = true;
     }
@@ -443,7 +449,7 @@ public class EntryPoint : MonoBehaviour
 
         playerMana = _playerInstance.GetComponent<PlayerMana>();
         playerMana.SetManaBarImage(manaBarImage);
-        playerMana.enabled = false;
+        //playerMana.enabled = false;
 
         if (playerMana.enabled)
             _manaBarInstance.SetActive(true);

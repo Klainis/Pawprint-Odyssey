@@ -124,4 +124,14 @@ public class GameMenuUI : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
         GameManager.Instance.OpenMap();
     }
+
+    //private void OnDisable()
+    //{
+    //    if (PlayerView.Instance.PlayerModel.HasDamageDash)
+    //    {
+    //        var _manaBar = InitializeManager.Instance.manaBar;
+    //        PlayerMana.Instance.enabled = true;
+    //        _manaBar.gameObject.SetActive(true);
+    //    }
+    //}
 }

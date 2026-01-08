@@ -18,6 +18,7 @@ public class PlayerAttack : MonoBehaviour
 
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
+    private PlayerMana playerMana;
 
     private Transform attackCheck;
 
@@ -39,6 +40,7 @@ public class PlayerAttack : MonoBehaviour
         }
         instance = this;
 
+        playerMana = GetComponent<PlayerMana>();
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
@@ -123,7 +125,7 @@ public class PlayerAttack : MonoBehaviour
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 
                 if (!enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
-                    PlayerMana.Instance.GetMana();
+                    playerMana.GetMana();
             }
 
             if (objectEnvironment.CompareTag("Object"))
@@ -133,9 +135,9 @@ public class PlayerAttack : MonoBehaviour
 
     public void AttackDashDamage()
     {
-        if (PlayerMana.Instance.isActiveAndEnabled && PlayerView.Instance.PlayerModel.Mana >= 10)
+        if (playerMana.isActiveAndEnabled && PlayerView.Instance.PlayerModel.Mana >= 10)
         {
-            PlayerMana.Instance.SpendMana("DamageDash");
+            playerMana.SpendMana("DamageDash");
         }
 
         var collidersEnemies = Physics2D.OverlapCircleAll(transform.position, attackCheckRadius);
