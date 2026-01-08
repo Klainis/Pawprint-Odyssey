@@ -24,9 +24,4 @@ public class InitializeManager : MonoBehaviour
 
         instance = this;
     }
-
-    private void Update()
-    {
-        Debug.Log($"Initialize Manager {manaBar}");
-    }
 }

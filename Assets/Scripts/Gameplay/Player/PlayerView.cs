@@ -35,6 +35,8 @@ public class PlayerView : MonoBehaviour
     private Interact playerInteract;
     private BoxCollider2D _playerCollider;
 
+    private GameObject _manaBar;
+
     private bool isInvincible = false;
 
     public PlayerAnimation PlayerAnimation { get { return playerAnimation; } }
@@ -49,6 +51,8 @@ public class PlayerView : MonoBehaviour
             return;
         }
         instance = this;
+
+        _manaBar = InitializeManager.Instance.manaBar;
 
         rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();

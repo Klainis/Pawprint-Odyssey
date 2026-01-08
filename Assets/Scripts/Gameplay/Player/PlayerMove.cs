@@ -553,6 +553,7 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(0.15f); //0.1 
         PlayerAttack.Instance.CanAttack = true;
         isDashing = false;
+        PlayerAttack.Instance.SpendMana = true;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
         //rigidBody.linearVelocity = Vector3.Lerp(Vector3.zero, rigidBody.linearVelocity, 0.01f);

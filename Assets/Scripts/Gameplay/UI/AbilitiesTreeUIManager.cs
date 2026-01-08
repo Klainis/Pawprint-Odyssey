@@ -65,6 +65,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private EventSystem _eventSystem;
 
     private PlayerModel _playerModel;
+    private PlayerMana _playerMana;
 
     private GameObject _manaBar;
 
@@ -78,6 +79,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
             return;
         }
         instance = this;
+
+        _playerMana = FindAnyObjectByType<PlayerMana>();
 
         _eventSystem = EventSystem.current;
         _playerModel = PlayerView.Instance.PlayerModel;
@@ -360,7 +363,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     {
         _manaBar = InitializeManager.Instance.manaBar;
         Debug.Log($"Abilities Tree {_manaBar}");
-        PlayerMana.Instance.enabled = true;
+        _playerMana.enabled = true;
         _manaBar.gameObject.SetActive(true);
 
         _playerModel.SetHasDamageDash();

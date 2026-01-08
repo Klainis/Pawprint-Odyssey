@@ -228,36 +228,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   attackSeriesTimeout: 0.9
   maxAttackSeriesCount: 3
-  getMana:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3512841439597258566}
-        m_TargetAssemblyTypeName: Mana, Assembly-CSharp
-        m_MethodName: GetMana
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  spendMana:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3512841439597258566}
-        m_TargetAssemblyTypeName: PlayerMana, Assembly-CSharp
-        m_MethodName: SpendMana
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &5509107085969195429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,21 +325,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PiercingClaw
   clawSprite: {fileID: 1690002925823045863}
-  spendMana:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3512841439597258566}
-        m_TargetAssemblyTypeName: PlayerMana, Assembly-CSharp
-        m_MethodName: SpendMana
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1383110301925236467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,7 +540,7 @@ AudioSource:
   m_GameObject: {fileID: 1377240496476148}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -8377009408249381983, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  OutputAudioMixerGroup: {fileID: -8902199944854341505, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0

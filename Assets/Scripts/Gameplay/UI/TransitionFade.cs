@@ -34,6 +34,7 @@ public class TransitionFade : MonoBehaviour
     public void StartGameFadeIn()
     {
         StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 0, 2*fadeDuration));
+        MusicHandler.Instance.AudioStartGameFadeIn();
     }
 
     private IEnumerator FadeCanvasGroup (CanvasGroup cg, float startAlpha, float endAlpha, float duration)

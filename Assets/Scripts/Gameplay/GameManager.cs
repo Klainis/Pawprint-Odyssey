@@ -124,7 +124,8 @@ public class GameManager : MonoBehaviour
     {
         isTransitioning = true;
         TransitionFade._instance.FadeOut();
-        AudioListener.pause = true;
+        //AudioListener.pause = true;
+        MusicHandler.Instance.AudioFadeOut();
 
         yield return new WaitForSeconds(1f);
 
@@ -155,7 +156,8 @@ public class GameManager : MonoBehaviour
         SetGameState(GameState.EXITING_LEVEL);
 
         TransitionFade._instance.FadeIn();
-        AudioListener.pause = false;
+        //AudioListener.pause = false;
+        MusicHandler.Instance.AudioFadeIn();
     }
 
     private TransitionDestination FindRoomsEntryPoint(string tag)
@@ -292,6 +294,7 @@ public class GameManager : MonoBehaviour
         //SetGameState(GameState.PAUSED);
 
         Time.timeScale = 0;
+        MusicHandler.Instance.AudioInMenu();
 
         var inputSystem = EntryPoint.Instance.NewInputSystem;
         if (inputSystem != null)
@@ -311,6 +314,7 @@ public class GameManager : MonoBehaviour
         //SetGameState(GameState.PLAYING);
 
         Time.timeScale = 1;
+        MusicHandler.Instance.AudioOutMenu();
 
         var inputSystem = EntryPoint.Instance.NewInputSystem;
         if (inputSystem != null)

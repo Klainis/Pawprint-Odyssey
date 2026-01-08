@@ -32,9 +32,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6525004371613015798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -29.55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 193.4, y: 59.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1891283489858573588
@@ -109,9 +109,9 @@ RectTransform:
   - {fileID: 8105553601379100334}
   m_Father: {fileID: 6525004371613015798}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -329.55}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 373.7487, y: 373.1816}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1460324301763637073
@@ -524,7 +524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3787041874613804011
 RectTransform:
   m_ObjectHideFlags: 0
@@ -682,25 +682,25 @@ MonoBehaviour:
     leftStickPress: {fileID: 21300000, guid: 139b83464b859cd429d0370dc816028c, type: 3}
     rightStickPress: {fileID: 21300000, guid: 9c61f7c9d0b7b8b4f9d2350b73289e23, type: 3}
   ps4:
-    buttonSouth: {fileID: 0}
-    buttonNorth: {fileID: 0}
-    buttonEast: {fileID: 0}
-    buttonWest: {fileID: 0}
-    startButton: {fileID: 0}
-    selectButton: {fileID: 0}
-    leftTrigger: {fileID: 0}
-    rightTrigger: {fileID: 0}
-    leftShoulder: {fileID: 0}
-    rightShoulder: {fileID: 0}
-    dpad: {fileID: 0}
-    dpadUp: {fileID: 0}
-    dpadDown: {fileID: 0}
-    dpadLeft: {fileID: 0}
-    dpadRight: {fileID: 0}
-    leftStick: {fileID: 0}
-    rightStick: {fileID: 0}
-    leftStickPress: {fileID: 0}
-    rightStickPress: {fileID: 0}
+    buttonSouth: {fileID: -1911470392, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    buttonNorth: {fileID: -439177566, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    buttonEast: {fileID: 2126805365, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    buttonWest: {fileID: 2113587449, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    startButton: {fileID: -1697867330, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    selectButton: {fileID: -949343152, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    leftTrigger: {fileID: -1725205839, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    rightTrigger: {fileID: -1865843050, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    leftShoulder: {fileID: -400773087, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    rightShoulder: {fileID: -2032216488, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    dpad: {fileID: 1663583732, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    dpadUp: {fileID: -2065974072, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    dpadDown: {fileID: 1884628584, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    dpadLeft: {fileID: 1201987974, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    dpadRight: {fileID: -1188773092, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    leftStick: {fileID: -1670909053, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    rightStick: {fileID: 1916810357, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    leftStickPress: {fileID: -1858137220, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
+    rightStickPress: {fileID: -1680163056, guid: 84363f10f078f4248a068b47eadf54b0, type: 3}
 --- !u!114 &3254109626987585537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,7 +1297,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: Options
+      value: Start
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -1664,7 +1664,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: Share
+      value: Select
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -1854,7 +1854,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: Hold D-Pad Down
+      value: Hold D-Pad/Down
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -2044,7 +2044,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: R2
+      value: RT
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -2230,7 +2230,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: R1
+      value: RB
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -2416,7 +2416,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: Square
+      value: X
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
@@ -2602,7 +2602,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_text
-      value: Cross
+      value: A
       objectReference: {fileID: 0}
     - target: {fileID: 878345300275335360, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_sharedMaterial
