@@ -31,6 +31,8 @@ public class PlayerAttack : MonoBehaviour
     public int AttackSeriesCount { get { return attackSeriesCount; } private set { attackSeriesCount = value; } }
     public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
 
+    public bool SpendMana { get; set; } = true;
+
     private void Awake()
     {
         if (instance != null)
@@ -53,8 +55,16 @@ public class PlayerAttack : MonoBehaviour
 
         if (attackSeriesCount > 0 && (Time.time - lastAttackTime > attackSeriesTimeout))
             ResetCombo();
-    }
 
+        if (PlayerInput.Instance.DamageDashActive && playerMana.isActiveAndEnabled && PlayerView.Instance.PlayerModel.Mana >= 10)
+        {
+            if (SpendMana == true)
+            {
+                playerMana.SpendMana("DamageDash");
+                SpendMana = false;
+            }
+        }
+    }
     public void Attack()
     {
         if (isAttacking || !canAttack) return;
@@ -137,24 +147,23 @@ public class PlayerAttack : MonoBehaviour
     {
         if (playerMana.isActiveAndEnabled && PlayerView.Instance.PlayerModel.Mana >= 10)
         {
-            playerMana.SpendMana("DamageDash");
-        }
 
-        var collidersEnemies = Physics2D.OverlapCircleAll(transform.position, attackCheckRadius);
-        for (var i = 0; i < collidersEnemies.Length; i++)
-        {
-            var enemy = collidersEnemies[i].gameObject;
-            var objectEnvironment = collidersEnemies[i].gameObject;
-
-            playerView.PlayerModel.SetDamage(1);
-            var damageToApply = playerView.PlayerModel.Damage;
-
-            if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
-                damageToApply = -damageToApply;
-
-            if (enemy.CompareTag("Enemy"))
+            var collidersEnemies = Physics2D.OverlapCircleAll(transform.position, attackCheckRadius);
+            for (var i = 0; i < collidersEnemies.Length; i++)
             {
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                var enemy = collidersEnemies[i].gameObject;
+                var objectEnvironment = collidersEnemies[i].gameObject;
+
+                playerView.PlayerModel.SetDamage(1);
+                var damageToApply = playerView.PlayerModel.Damage;
+
+                if (collidersEnemies[i].transform.position.x - transform.position.x < 0)
+                    damageToApply = -damageToApply;
+
+                if (enemy.CompareTag("Enemy"))
+                {
+                    collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                }
             }
         }
 
