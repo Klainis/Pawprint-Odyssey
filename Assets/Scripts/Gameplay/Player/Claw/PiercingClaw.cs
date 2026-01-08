@@ -18,8 +18,6 @@ public class PiercingClaw : MonoBehaviour
     private bool canAttack = true;
     private bool clawPressed;
 
-    [SerializeField] private UnityEvent spendMana;
-
     private void OnDrawGizmos()
     {
         if (attackCheck != null)
@@ -52,8 +50,7 @@ public class PiercingClaw : MonoBehaviour
             clawSprite.SetActive(true);
 
             //Debug.Log("Claw");
-            if (spendMana != null)
-                spendMana.Invoke();
+            PlayerMana.Instance.SpendMana("Claw");
 
             playerAnimation.SetTriggerClaw();
             canAttack = false;

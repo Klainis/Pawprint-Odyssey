@@ -66,6 +66,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private PlayerModel _playerModel;
 
+    private GameObject _manaBar;
+
     private bool _isTreeActive;
 
     private void Awake()
@@ -356,6 +358,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private void BuyDamageDash()
     {
+        _manaBar = InitializeManager.Instance.manaBar;
+        Debug.Log($"Abilities Tree {_manaBar}");
+        PlayerMana.Instance.enabled = true;
+        _manaBar.gameObject.SetActive(true);
+
         _playerModel.SetHasDamageDash();
         _soulCrystalCounter.SpendCrystal(_damageDashCostCheck.CrystalCost);
         _moneyCounter.SpendMoney(_damageDashCostCheck.MoneyCost);

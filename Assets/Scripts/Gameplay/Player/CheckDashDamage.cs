@@ -7,7 +7,7 @@ public class CheckDashDamage : MonoBehaviour
         //Debug.Log($"Layaer of collision ob: {LayerMask.LayerToName(collision.gameObject.layer)}");
         //Debug.Log($"My layer: {LayerMask.LayerToName(PlayerView.Instance.gameObject.layer)}");
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Enemy" &&
-            LayerMask.LayerToName(PlayerView.Instance.gameObject.layer) == "PlayerDash")
+            LayerMask.LayerToName(PlayerView.Instance.gameObject.layer) == "PlayerDash" && PlayerInput.Instance.DamageDashActive)
         {
             if (PlayerView.Instance.PlayerModel.HasDamageDash)
             {

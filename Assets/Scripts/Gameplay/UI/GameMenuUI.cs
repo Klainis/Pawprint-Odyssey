@@ -119,8 +119,9 @@ public class GameMenuUI : MonoBehaviour
         ////_abilityTreeCrystalText.text = crystal.ToString();
         //_mapCrystalText.text = crystal.ToString();
         //Debug.Log(_mapCrystalText.text);
-
-        EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
         _mapButton.isOn = true;
+        _abilityButton.isOn = false;
+        EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
+        GameManager.Instance.OpenMap();
     }
 }

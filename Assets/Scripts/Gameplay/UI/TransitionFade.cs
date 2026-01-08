@@ -31,6 +31,11 @@ public class TransitionFade : MonoBehaviour
         StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 1, fadeDuration));
     }
 
+    public void StartGameFadeIn()
+    {
+        StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 0, 2*fadeDuration));
+    }
+
     private IEnumerator FadeCanvasGroup (CanvasGroup cg, float startAlpha, float endAlpha, float duration)
     {
         float elapsedTime = 0f;

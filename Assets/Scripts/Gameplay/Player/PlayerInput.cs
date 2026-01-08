@@ -40,11 +40,12 @@ public class PlayerInput : MonoBehaviour
     private bool run = false;
 
     public bool InteractPressed { get { return interactPressed; } }
-    public bool PlayerMovingEd { get; set; } = false;
+    public bool PlayerMovingEd { get; private set; } = false;
     public bool PlayerAttackingEd { get { return attackPressed; } }
     public bool PlayerInteractEd { get { return interactPressed; } }
     public bool PlayerClawEd { get { return clawPressed; } }
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
+    public bool DamageDashActive { get; private set; }
 
     #region Common Methods
 
@@ -219,6 +220,12 @@ public class PlayerInput : MonoBehaviour
         {
             if (dashAction.action.WasPressedThisFrame())
                 dash = true;
+        }
+
+        if (IsValidAction(attackAction) && IsValidAction(dashAction))
+        {
+            DamageDashActive = attackAction.action.IsPressed() && dashAction.action.IsPressed();
+
         }
 
         //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));

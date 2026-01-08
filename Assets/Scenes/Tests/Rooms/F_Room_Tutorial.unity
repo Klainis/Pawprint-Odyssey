@@ -2423,17 +2423,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &471088705 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3465632684227772678, guid: bf248f809f334684bb84ed85e1dfb946, type: 3}
-  m_PrefabInstance: {fileID: 566085541}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &499586705
 GameObject:
   m_ObjectHideFlags: 0
@@ -2897,6 +2886,10 @@ PrefabInstance:
     - target: {fileID: 2548532941879623153, guid: bf248f809f334684bb84ed85e1dfb946, type: 3}
       propertyPath: m_Name
       value: Map
+      objectReference: {fileID: 0}
+    - target: {fileID: 2548532941879623153, guid: bf248f809f334684bb84ed85e1dfb946, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4355374779626105194, guid: bf248f809f334684bb84ed85e1dfb946, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4185,17 +4178,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &729706971 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6541915943386286581, guid: ecddbdbf1fcd9384aa89287a69ebddc3, type: 3}
-  m_PrefabInstance: {fileID: 272026838}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &735806763
 GameObject:
   m_ObjectHideFlags: 0
@@ -6495,17 +6477,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1301672715 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7302345494406714060, guid: ecddbdbf1fcd9384aa89287a69ebddc3, type: 3}
-  m_PrefabInstance: {fileID: 272026838}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1404342803
 GameObject:
   m_ObjectHideFlags: 0
@@ -15176,18 +15147,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3803228816308435943, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: _mapCrystalText
-      value: 
-      objectReference: {fileID: 471088705}
-    - target: {fileID: 3803228816308435943, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: _abilityTreeMoneyText
-      value: 
-      objectReference: {fileID: 1301672715}
-    - target: {fileID: 3803228816308435943, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: _abilityTreeCrystalText
-      value: 
-      objectReference: {fileID: 729706971}
     - target: {fileID: 5778593655768642288, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -15226,18 +15185,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7543308174528717966, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7543308174528717966, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7543308174528717966, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7543308174528717966, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}
-      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7543308174528717966, guid: ba5bcf7f94e6b63489e1a3c971d0c43d, type: 3}

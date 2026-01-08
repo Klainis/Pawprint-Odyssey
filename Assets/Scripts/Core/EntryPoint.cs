@@ -40,8 +40,10 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject gameMenuCanvasPrefab;
     [SerializeField] private GameObject abilitiesTreeCanvasPrefab;
     [SerializeField] private GameObject moneyManagerPrefab;
+    [SerializeField] private GameObject musicHandlerPrefab;
 
     // INSTANCES (Runtime objects)
+    private GameObject _musicHandlerInstance;
     private WallsManager _wallsManagerInstance;
     private CrystalsManager _crystalsManagerInstance;
     private InitializeManager _initializeManagerInstance;
@@ -101,7 +103,7 @@ public class EntryPoint : MonoBehaviour
         await Initialize();
 
         await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
-        fadeScript.FadeIn();
+        fadeScript.StartGameFadeIn();
 
         //InstallDependencySpiritGuide();
     }
@@ -129,6 +131,18 @@ public class EntryPoint : MonoBehaviour
         {
             _globalLightInstance = Instantiate(globalLightPrefab);
             DontDestroyOnLoad(_globalLightInstance);
+        }
+
+        if (eventSystemPrefab != null)
+        {
+            _eventSystemInstance = Instantiate(eventSystemPrefab);
+            DontDestroyOnLoad(_eventSystemInstance);
+        }
+
+        if (musicHandlerPrefab != null)
+        {
+            _musicHandlerInstance = Instantiate(musicHandlerPrefab);
+            DontDestroyOnLoad(_musicHandlerInstance);
         }
 
         if (GameManager.Instance == null)
@@ -252,12 +266,6 @@ public class EntryPoint : MonoBehaviour
             GameManager.Instance.SetControlsKeyboardMenuCanvasInstance(_controlsKeyboardMenuCanvasInstance);
         }
 
-        if (FindAnyObjectByType<EventSystem>() == null)
-        {
-            _eventSystemInstance = Instantiate(eventSystemPrefab);
-            DontDestroyOnLoad(_eventSystemInstance);
-        }
-
         InitializePlayerDataFromSave();
 
         InitializePlayerUI();
@@ -275,6 +283,7 @@ public class EntryPoint : MonoBehaviour
         if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
         if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
+        if (_musicHandlerInstance != null) Destroy(_musicHandlerInstance);
 
         if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
         if (_canvasInstance != null) Destroy(_canvasInstance);
@@ -392,6 +401,7 @@ public class EntryPoint : MonoBehaviour
             {
                 _manaBarInstance = Instantiate(manaBarPrefab, _canvasInstance.transform);
                 DontDestroyOnLoad(_manaBarInstance);
+                Debug.Log($"Entry point{_manaBarInstance}");
                 InitializeManager.Instance.manaBar = _manaBarInstance;
                 EnableMana();
             }

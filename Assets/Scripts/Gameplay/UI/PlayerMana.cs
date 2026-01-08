@@ -4,15 +4,26 @@ using UnityEngine.UI;
 
 public class PlayerMana : MonoBehaviour
 {
+    private static PlayerMana instance;
+    public static PlayerMana Instance { get; set; }
+
     private PlayerView playerView;
     private EntryPoint entryPoint;
     private Image manaBar;
 
     private readonly int manaToSpend = 25;
+    private readonly int manaToSpendDamageDash = 10;
     private readonly int manaToGet = 4;
 
     private void Awake()
     {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+
         playerView = GetComponent<PlayerView>();
     }
 
@@ -26,10 +37,20 @@ public class PlayerMana : MonoBehaviour
         manaBar = img;
     }
 
-    public void SpendMana()
+    public void SpendMana(string ability)
     {
-        playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - manaToSpend);
-        manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+        Debug.Log("Вызван Спенд Мана");
+        switch (ability)
+        {
+            case "Claw":
+                playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - manaToSpend);
+                manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+                break;
+            case "DamageDash":
+                playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - manaToSpendDamageDash);
+                manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+                break;
+        }
     }
 
     public void GetMana()

@@ -542,6 +542,7 @@ public class PlayerMove : MonoBehaviour
 
         gameObject.layer = LayerMask.NameToLayer("PlayerDash");
         playerAnimation.SetBoolIsDashing(true);
+        PlayerAttack.Instance.CanAttack = false;
         isDashing = true;
         canDash = false;
         canJump = false;
@@ -550,6 +551,7 @@ public class PlayerMove : MonoBehaviour
             rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
         yield return new WaitForSeconds(0.15f); //0.1 
+        PlayerAttack.Instance.CanAttack = true;
         isDashing = false;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");

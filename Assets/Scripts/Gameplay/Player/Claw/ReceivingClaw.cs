@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class ReceivingClaw : MonoBehaviour
 {
-    private PlayerMana playerMana;
     private PiercingClaw piercingClaw;
     private GameObject manaBar;
 
@@ -11,7 +10,6 @@ public class ReceivingClaw : MonoBehaviour
 
     private void Awake()
     {
-        playerMana = GetComponent<PlayerMana>();
         piercingClaw = GetComponent<PiercingClaw>();
     }
 
@@ -35,7 +33,7 @@ public class ReceivingClaw : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasClaw)
         {
-            playerMana.enabled = true;
+            PlayerMana.Instance.enabled = true;
             piercingClaw.enabled = true;
             manaBar.SetActive(true);
         }
@@ -43,7 +41,7 @@ public class ReceivingClaw : MonoBehaviour
 
     public void EnableClaw()
     {
-        playerMana.enabled = true;
+        PlayerMana.Instance.enabled = true;
         piercingClaw.enabled = true;
         manaBar.SetActive(true);
         PlayerView.Instance.PlayerModel.SetHasClaw();

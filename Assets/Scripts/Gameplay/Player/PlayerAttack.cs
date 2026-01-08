@@ -14,8 +14,6 @@ public class PlayerAttack : MonoBehaviour
     //[Header("Particles")]
     //[SerializeField] private ParticleSystem _attackParticle;
 
-    [SerializeField] private UnityEvent<GameObject> getMana;
-
     const float attackCheckRadius = 1.1f;
 
     private PlayerView playerView;
@@ -30,6 +28,7 @@ public class PlayerAttack : MonoBehaviour
     private bool canAttack = true;
 
     public int AttackSeriesCount { get { return attackSeriesCount; } private set { attackSeriesCount = value; } }
+    public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
 
     private void Awake()
     {
@@ -123,8 +122,8 @@ public class PlayerAttack : MonoBehaviour
             {
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
 
-                if (getMana != null && !enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
-                    getMana.Invoke(enemy);
+                if (!enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
+                    PlayerMana.Instance.GetMana();
             }
 
             if (objectEnvironment.CompareTag("Object"))
@@ -134,6 +133,11 @@ public class PlayerAttack : MonoBehaviour
 
     public void AttackDashDamage()
     {
+        if (PlayerMana.Instance.isActiveAndEnabled && PlayerView.Instance.PlayerModel.Mana >= 10)
+        {
+            PlayerMana.Instance.SpendMana("DamageDash");
+        }
+
         var collidersEnemies = Physics2D.OverlapCircleAll(transform.position, attackCheckRadius);
         for (var i = 0; i < collidersEnemies.Length; i++)
         {

@@ -23,6 +23,10 @@ public class InitializeManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Update()
+    {
+        Debug.Log($"Initialize Manager {manaBar}");
     }
 }
