@@ -39,7 +39,7 @@ public class MusicHandler : MonoBehaviour
     private void Update()
     {
         audioMaster.GetFloat("MasterVolume", out float currentDB);
-        Debug.Log(currentDB);
+        //Debug.Log(currentDB);
     }
 
     public void AudioFadeOut()
