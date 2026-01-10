@@ -39,7 +39,6 @@ public class PlayerMana : MonoBehaviour
 
     public void SpendMana(string ability)
     {
-        Debug.Log("Вызван Спенд Мана");
         switch (ability)
         {
             case "Claw":

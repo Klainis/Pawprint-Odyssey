@@ -8,8 +8,8 @@ public class MoneyPickup : MonoBehaviour
     [SerializeField] private float followDelay = 0.5f;
     [SerializeField] private float followSpeed = 8f;
 
-    [Header("Pickup")]
-    [SerializeField] private float pickupDistance = 0.2f;
+    //[Header("Pickup")]
+    //[SerializeField] private float pickupDistance = 0.2f;
 
     private MoneyCounter _moneyCounter;
 

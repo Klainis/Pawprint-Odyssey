@@ -43,7 +43,7 @@ public class PlayerMove : MonoBehaviour
 
     [Header("")]
     [SerializeField][Range(0, 0.3f)] private float movementSmoothing;
-    [SerializeField] private bool airControl = true;
+    //[SerializeField] private bool airControl = true;
 
     #endregion
 
@@ -82,7 +82,6 @@ public class PlayerMove : MonoBehaviour
     private bool canCheck = false;
     private bool canDash = true;
     private bool limitVelOnWallJump = false;
-    private bool canAirJump = false;
     private bool canJump = true;
     private bool wallHit = false;
     private bool isKnockBack = false;
@@ -231,13 +230,6 @@ public class PlayerMove : MonoBehaviour
                 }
                 break;
         }
-
-        //if (lastPressedJumpTime > 0 && CanJump && canJump)
-        //    Jump();
-        //else if (lastPressedJumpTime > 0 && canAirJump && canJump)
-        //    AirJump();
-        //else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJumpOld)
-        //    DoubleJump();
 
         // --- WALL RUN ---
         if (PlayerView.Instance.PlayerModel.HasWallRun)
@@ -465,7 +457,6 @@ public class PlayerMove : MonoBehaviour
         rigidBody.AddForce(force, ForceMode2D.Impulse);
 
         limitVelOnWallJump = true;
-        canAirJump = true;
         canDoubleJump = false;
 
         isWallSliding = false;
@@ -494,7 +485,6 @@ public class PlayerMove : MonoBehaviour
         StartCoroutine(WaitToMove(0.3f));
 
         limitVelOnWallJump = true;
-        canAirJump = true;
         canDoubleJump = false;
 
         isWallRunning = false;

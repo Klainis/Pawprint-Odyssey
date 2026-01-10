@@ -53,6 +53,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("Hit", value);
     }
 
+    public void SetBoolClaw(bool value)
+    {
+        animator.SetBool("Claw", value);
+    }
+
     public void SetBoolIsDead(bool value)
     {
         animator.SetBool("IsDead", value);
@@ -84,10 +89,5 @@ public class PlayerAnimation : MonoBehaviour
         var slashTriggerName = "Slash" + attackNum;
         animator.ResetTrigger(triggerName);
         slashAnimator.ResetTrigger(slashTriggerName);
-    }
-
-    public void SetTriggerClaw()
-    {
-        animator.SetTrigger("Claw");
     }
 }

@@ -9,7 +9,7 @@ public class CollapsingPlatform : MonoBehaviour
     [SerializeField] private float _timeToReveal = 1.5f;
 
     [Header("Shake parameters")]
-    [SerializeField] private float _initialShakeDuration = 0.1f;
+    //[SerializeField] private float _initialShakeDuration = 0.1f;
     [SerializeField] private float _shakeMagnitude = 0.25f;
 
     [Header("Particles")]
