@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1139487818724482}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.025, y: -1.05, z: 0}
+  m_LocalPosition: {x: -0.025, y: -0.99, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -201,18 +201,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d453f89e4745e44967d8a13a2ec422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
-  jumpForce: 14
-  doubleJumpForce: 13.5
+  jumpForce: 15
+  doubleJumpForce: 14
   dashForce: 18
-  speedRunModifier: 1.8
-  wallJumpForce: {x: 20, y: 12}
+  speedRunModifier: 2
+  wallJumpForce: {x: 8, y: 13}
   dashCoolDown: 0.3
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   coyoteTime: 0.175
-  jumpInputBufferTime: 0.3
+  jumpInputBufferTime: 0.45
   particleJumpUp: {fileID: 198584872278178884}
   particleJumpDown: {fileID: 198967111524372206}
-  movementSmoothing: 0.05
+  movementSmoothing: 0.2
+  gravityFallScale: 6
+  timeToWaitAfterWallJump: 0.075
 --- !u!114 &1729494090702783638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f50e42d0452b4f4696c481ff7f822a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  attackSeriesTimeout: 0.9
+  attackSeriesTimeout: 0.85
   maxAttackSeriesCount: 3
 --- !u!114 &5509107085969195429
 MonoBehaviour:
@@ -266,7 +268,7 @@ MonoBehaviour:
   buyAbility: {fileID: -2622659179359259248, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   interactAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   clawAction: {fileID: 2030105166474525711, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  runSpeed: 40
+  runSpeed: 36
   jumpPressed:
     m_PersistentCalls:
       m_Calls:
@@ -376,7 +378,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _fullHeal: 0
-  _abilitiesTree: 0
+  _abilitiesTree: 1
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0

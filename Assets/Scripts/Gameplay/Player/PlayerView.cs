@@ -95,7 +95,10 @@ public class PlayerView : MonoBehaviour
             playerMove.IsGrounded = true;
             //playerMove.SetGroundedAirState();
             playerMove.ResetDashCounter();
-            playerMove.IsJumping = false;
+            if (playerMove.IsJumping && playerMove.PlayerRigidbody.linearVelocity.y <= 0)
+            {
+                playerMove.IsJumping = false;
+            }
             playerMove.LastOnGroundTime = playerMove.CoyoteTime;
 
             if (!wasGrounded)
@@ -148,37 +151,34 @@ public class PlayerView : MonoBehaviour
                 playerMove.IsDashing = false;
             }
 
-            //if (!playerMove.IsWallSliding)
-            //    playerMove.SetFallingAirState();
-
-            playerMove.PrevVelocityX = rigidBody.linearVelocity.x;
+            //playerMove.PrevVelocityX = rigidBody.linearVelocity.x;
         }
 
-        if (playerMove.LimitVelOnWallJump)
-        {
-            if (rigidBody.linearVelocity.y < -0.5f)
-                playerMove.LimitVelOnWallJump = false;
+        //if (playerMove.LimitVelOnWallJump)
+        //{
+        //    if (rigidBody.linearVelocity.y < -0.5f)
+        //        playerMove.LimitVelOnWallJump = false;
 
-            playerMove.JumpWallDistX = (playerMove.JumpWallDistX - transform.position.x) * playerMove.TurnCoefficient;
+        //    playerMove.JumpWallDistX = (playerMove.JumpWallDistX - transform.position.x) * playerMove.TurnCoefficient;
 
-            if (playerMove.JumpWallDistX < -0.5f && playerMove.JumpWallDistX > -1f)
-                playerMove.CanMove = true;
-            else if (playerMove.JumpWallDistX < -1f && playerMove.JumpWallDistX >= -2f)
-            {
-                playerMove.CanMove = true;
-                rigidBody.linearVelocity = new Vector2(10f * playerMove.TurnCoefficient, rigidBody.linearVelocity.y);
-            }
-            else if (playerMove.JumpWallDistX < -2f)
-            {
-                playerMove.LimitVelOnWallJump = false;
-                rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-            }
-            else if (playerMove.JumpWallDistX > 0)
-            {
-                playerMove.LimitVelOnWallJump = false;
-                rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-            }
-        }
+        //    if (playerMove.JumpWallDistX < -0.5f && playerMove.JumpWallDistX > -1f)
+        //        playerMove.CanMove = true;
+        //    else if (playerMove.JumpWallDistX < -1f && playerMove.JumpWallDistX >= -2f)
+        //    {
+        //        playerMove.CanMove = true;
+        //        rigidBody.linearVelocity = new Vector2(10f * playerMove.TurnCoefficient, rigidBody.linearVelocity.y);
+        //    }
+        //    else if (playerMove.JumpWallDistX < -2f)
+        //    {
+        //        playerMove.LimitVelOnWallJump = false;
+        //        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        //    }
+        //    else if (playerMove.JumpWallDistX > 0)
+        //    {
+        //        playerMove.LimitVelOnWallJump = false;
+        //        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        //    }
+        //}
 
         playerMove.ScaleJump();
     }
