@@ -10,7 +10,7 @@ public class SafeGroundSaver : MonoBehaviour
 
     [SerializeField] private float saveFrequency = 1f;
 
-    public Vector3 SafeGroundLocation { get; private set; } = Vector2.zero;
+    public Vector2 SafeGroundLocation { get; private set; } = Vector2.zero;
 
     private Coroutine _safeGroundCoroutine;
     private string _sceneName;

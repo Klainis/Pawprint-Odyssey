@@ -386,8 +386,7 @@ public class GameManager : MonoBehaviour
 
         inGameMenu = false;
         _gameMenuCanvasInstance.SetActive(false);
-        CloseMap();
-        CloseAbilitiesTree();
+        GameMenuUI.Instance.ResetWindowNumber();
         UnpauseGame();
         SetGameState(GameState.PLAYING);
     }

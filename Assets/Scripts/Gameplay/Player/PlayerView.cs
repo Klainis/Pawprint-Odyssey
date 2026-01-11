@@ -7,10 +7,7 @@ using UnityEngine.UIElements;
 
 public class PlayerView : MonoBehaviour
 {
-    private static PlayerView instance;
-    public static PlayerView Instance { get { return instance; } }
-
-    public PlayerModel PlayerModel { get; set; }
+    #region SerializeFields
 
     [Header("Layers")]
     [SerializeField] private LayerMask whatIsGround;
@@ -24,6 +21,10 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private UnityEvent OnFallEvent;
     [SerializeField] private UnityEvent OnLandEvent;
 
+    #endregion
+
+    #region Variables
+
     private Rigidbody2D rigidBody;
     private SpriteRenderer _spriteRenderer;
     private PlayerAnimation playerAnimation;
@@ -35,11 +36,20 @@ public class PlayerView : MonoBehaviour
     private Interact playerInteract;
     private BoxCollider2D _playerCollider;
 
+    private static PlayerView instance;
     private GameObject _manaBar;
 
     private bool isInvincible = false;
 
+    #endregion
+
+    #region Properties
+
+    public static PlayerView Instance { get { return instance; } }
+    public PlayerModel PlayerModel { get; set; }
     public PlayerAnimation PlayerAnimation { get { return playerAnimation; } }
+
+    #endregion
 
     #region Common Methods
 
@@ -295,6 +305,7 @@ public class PlayerView : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
         yield return new WaitForSeconds(1.1f);
+        SaveSystem.AutoSaveBeforePlayerDeath();
         GameManager.Instance.SetGameState(GameState.DEAD);
         GameManager.Instance.RevivalPlayer();
     }

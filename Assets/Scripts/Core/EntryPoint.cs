@@ -438,9 +438,9 @@ public class EntryPoint : MonoBehaviour
         Debug.Log(PlayerView.Instance.PlayerModel.CurrentScene);
     }
 
-    public void SetPositionFromSave(Vector3 pos)
+    public void SetPositionFromSave(Vector2 pos)
     {
-        _playerInstance.transform.position = pos;
+        _playerInstance.transform.position = new Vector3(pos.x, pos.y, 0);
     }
 
     private void EnableMana()

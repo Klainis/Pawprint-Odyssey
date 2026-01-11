@@ -77,6 +77,11 @@ public class GameMenuUI : MonoBehaviour
         _windowButtons.Add(_abilityButton);
     }
 
+    public void ResetWindowNumber()
+    {
+        _windowNumber = 0;
+    }
+
     public void SwapToRightWindow()
     {
         _windowNumber++;

@@ -80,7 +80,7 @@ public class PlayerModel
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
     {
         return new PlayerModel(
-            data.Life,
+            data.MaxLife,
             data.MaxLife,
             data.Mana,
             data.MaxMana,

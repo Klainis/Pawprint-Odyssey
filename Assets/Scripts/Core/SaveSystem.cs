@@ -19,7 +19,7 @@ public class SaveSystem
         public MapRoomsSaveData MapRoomsSaveData;
     }
 
-    public static string SaveFileName()
+    private static string SaveFileName()
     {
         var saveFile = $"{Application.persistentDataPath}/Saves/Profile_{CurrentProfileIndex}/save_{CurrentProfileIndex}.dat";
         return saveFile;
@@ -32,10 +32,8 @@ public class SaveSystem
         return File.Exists(path);
     }
 
-    public static void Save()
+    private static void SaveDataToFile()
     {
-        HandleSaveData();
-
         var json = JsonUtility.ToJson(saveData, true);
 
         var fullPath = SaveFileName();
@@ -44,24 +42,28 @@ public class SaveSystem
             Directory.CreateDirectory(directoryPath);
 
         File.WriteAllText(SaveFileName(), json);
+    }
 
-        Debug.Log($"SaveSystem.Save: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+    public static void Save()
+    {
+        HandleSaveData();
+        SaveDataToFile();
+        Debug.Log($"SaveSystem.Save: Game saved to the profile {CurrentProfileIndex}: {CurrentProfileIndex}");
     }
 
     public static void AutoSave()
     {
         HandleAutoSaveData();
+        SaveDataToFile();
+        Debug.Log($"SaveSystem.AutoSave: Game saved to the profile {CurrentProfileIndex}: {CurrentProfileIndex}");
+    }
 
-        var json = JsonUtility.ToJson(saveData, true);
-
-        var fullPath = SaveFileName();
-        var directoryPath = Path.GetDirectoryName(fullPath);
-        if (!Directory.Exists(directoryPath))
-            Directory.CreateDirectory(directoryPath);
-
-        File.WriteAllText(SaveFileName(), json);
-
-        Debug.Log($"SaveSystem.AutoSave: Игра сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+    // Сохранение для того, чтобы сохранились сломанные стены и кристаллы, а также карта
+    public static void AutoSaveBeforePlayerDeath()
+    {
+        HandleAutoSaveDataWithoutPlayerPos();
+        SaveDataToFile();
+        Debug.Log($"SaveSystem.AutoSaveWithoutPlayerPos: Game saved to the profile {CurrentProfileIndex}: {CurrentProfileIndex}");
     }
 
     public static void CrystalSave()
@@ -136,12 +138,12 @@ public class SaveSystem
         if (PlayerView.Instance != null)
         {
             PlayerView.Instance.PlayerModel = PlayerModel.CreateFromSave(ref data);
+            GameManager.Instance.CurrentScene = PlayerView.Instance.PlayerModel.CurrentScene;
 
-            var checkPointPosFromSave = new Vector3(data.CheckPointPosX, data.CheckPointPosY + increasePosYFromSave, 0);
+            var checkPointPosFromSave = new Vector2(data.CheckPointPosX, data.CheckPointPosY + increasePosYFromSave);
             EntryPoint.Instance.SetPositionFromSave(checkPointPosFromSave);
 
             MapManager.Instance.SetMapIcon(PlayerView.Instance.PlayerModel.CurrentScene);
-
             return true;
         }
         return false;
@@ -212,19 +214,38 @@ public class SaveSystem
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             //Позиция
-            var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
-            if (curPos == Vector3.zero)
-                curPos = PlayerView.Instance.gameObject.transform.position;
-            var playerModel = PlayerView.Instance.PlayerModel;
-            playerModel.SetCurrentPosition(curPos.x, curPos.y);
-            playerModel.SetCheckPointPosition(playerModel.CurPosX, playerModel.CurPosY);
+            var curPos = PlayerView.Instance.gameObject.transform.position;
+            //var curPos = SafeGroundSaver.Instance.SafeGroundLocation;
+            //if (curPos == Vector2.zero)
+            //    curPos = PlayerView.Instance.gameObject.transform.position;
+            PlayerView.Instance.PlayerModel.SetCurrentPosition(curPos.x, curPos.y);
+            PlayerView.Instance.PlayerModel.SetCheckPointPosition(curPos.x, curPos.y);
             
             //Сцена
             PlayerView.Instance.PlayerModel.SetCurrentScene(GameManager.Instance.CurrentScene);
+            PlayerView.Instance.PlayerModel.SetCheckPointScene(GameManager.Instance.CurrentScene);
 
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
 
+        if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
+        {
+            WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
+        }
+
+        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        {
+            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+        }
+
+        if (MapManager.Instance != null)
+        {
+            MapManager.Instance.Save(ref saveData.MapRoomsSaveData);
+        }
+    }
+
+    private static void HandleAutoSaveDataWithoutPlayerPos()
+    {
         if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
         {
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
