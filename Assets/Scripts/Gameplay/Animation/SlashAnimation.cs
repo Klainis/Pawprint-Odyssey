@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EndSlashAnimation : MonoBehaviour
+public class SlashAnimation : MonoBehaviour
 {
     private Quaternion _slashRotationInitial;
     private Vector3 _slashScaleInitial;
@@ -20,5 +20,10 @@ public class EndSlashAnimation : MonoBehaviour
     public void SetActiveSlashObject()
     {
         gameObject.SetActive(true);
+    }
+
+    public void SlashAttack()
+    {
+        PlayerAttack.Instance.AttackDamage();
     }
 }

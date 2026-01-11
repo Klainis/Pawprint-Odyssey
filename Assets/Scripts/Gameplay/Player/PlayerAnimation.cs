@@ -4,13 +4,13 @@ public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] private Animator slashAnimator;
 
-    private EndSlashAnimation endSlashAnimation;
+    private SlashAnimation endSlashAnimation;
     private Animator animator;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        endSlashAnimation = slashAnimator.gameObject.GetComponent<EndSlashAnimation>();
+        endSlashAnimation = slashAnimator.gameObject.GetComponent<SlashAnimation>();
     }
 
     public void ApplyRootMotion(bool value)

@@ -85,6 +85,7 @@ public class PlayerMove : MonoBehaviour
     private bool canJump = true;
     private bool wallHit = false;
     private bool isKnockBack = false;
+    private bool isTurnOld = false;
 
     #endregion
 
@@ -283,7 +284,9 @@ public class PlayerMove : MonoBehaviour
 
         if (!isWallSliding)
         {
-            if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
+            if (isTurnOld)
+                Turn();
+            else if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
                 Turn();
             else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
                 Turn();
@@ -292,6 +295,12 @@ public class PlayerMove : MonoBehaviour
 
     private void Turn()
     {
+        if (PlayerAttack.Instance.IsAttacking)
+        {
+            isTurnOld = true;
+            return;
+        }
+
         Vector3 rotator;
         if (PlayerView.Instance.PlayerModel.FacingRight)
         {
@@ -303,6 +312,7 @@ public class PlayerMove : MonoBehaviour
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
         }
+        isTurnOld = false;
         PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
         transform.rotation = Quaternion.Euler(rotator);
     }

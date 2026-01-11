@@ -30,6 +30,7 @@ public class PlayerAttack : MonoBehaviour
 
     public int AttackSeriesCount { get { return attackSeriesCount; } private set { attackSeriesCount = value; } }
     public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
+    public bool IsAttacking { get { return isAttacking; } }
 
     public bool SpendMana { get; set; } = true;
 
