@@ -277,29 +277,6 @@ public class PlayerMove : MonoBehaviour
             ref velocity,
             movementSmoothing);
 
-        //if (_airState==AirState.Grounded || _airState == AirState.Jumping || _airState == AirState.Falling)
-        //{
-        //    var targetVelocity = new Vector2(move * 10f, rigidBody.linearVelocity.y);
-        //    rigidBody.linearVelocity = Vector3.SmoothDamp(
-        //        rigidBody.linearVelocity, 
-        //        targetVelocity, 
-        //        ref velocity, 
-        //        movementSmoothing);
-        //}
-        //else if (isWallRunning || isWallSliding)
-        //{
-        //    if(Mathf.Abs(move) > 0.01)
-        //    {
-        //        airVelocityX = move * 10f;
-        //    }
-        //    var targetVelocity = new Vector2(airVelocityX, rigidBody.linearVelocity.y);
-        //    rigidBody.linearVelocity = Vector3.SmoothDamp(
-        //        rigidBody.linearVelocity,
-        //        targetVelocity,
-        //        ref velocity,
-        //        movementSmoothing);
-        //}
-
         if (!isWallSliding)
         {
             if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
