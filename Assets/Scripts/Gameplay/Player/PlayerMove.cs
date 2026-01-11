@@ -224,7 +224,11 @@ public class PlayerMove : MonoBehaviour
                 break;
 
             case AirState.Falling:
-                if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
+                if (lastPressedJumpTime > 0 && CanJump && canJump)
+                {
+                    Jump();
+                }
+                else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
                 {
                     DoubleJump();
                 }
