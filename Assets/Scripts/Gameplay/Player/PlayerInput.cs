@@ -68,6 +68,10 @@ public class PlayerInput : MonoBehaviour
         var isGameActive = Time.timeScale > 0;
         if (isGameActive)
         {
+            if (GameManager.Instance.GameState == GameState.CUTSCENE)
+                return;
+
+
             if (IsValidAction(pauseMenuAction))
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
@@ -77,14 +81,6 @@ public class PlayerInput : MonoBehaviour
                 }
             }
 
-            //if (IsValidAction(mapAction))
-            //{
-            //    if (mapAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
-            //    {
-            //        GameManager.Instance.OpenMap();
-            //        return;
-            //    }
-            //}
             if (IsValidAction(gameMenuAction))
             {
                 if (gameMenuAction.action.WasPressedThisFrame() && playerMove.IsGrounded)

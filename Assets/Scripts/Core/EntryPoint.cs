@@ -1,10 +1,12 @@
 using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using GlobalEnums;
 //using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class EntryPoint : MonoBehaviour
@@ -84,6 +86,7 @@ public class EntryPoint : MonoBehaviour
     public InputActionAsset NewInputSystem { get { return newInputSystem; } }
 
     private bool playerInitialized = false;
+    private bool newGame = false;
 
     private void Awake()
     {
@@ -102,7 +105,16 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
+        if (newGame)
+        {
+            await SceneManager.LoadSceneAsync("StartCutScene", LoadSceneMode.Single);
+            GameManager.Instance.SetCutsceneState();
+            await Task.Delay(14000);
+        }
+
         await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
+        _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+        GameManager.Instance.SetGameState(GameState.PLAYING);
         fadeScript.StartGameFadeIn();
 
         //InstallDependencySpiritGuide();
@@ -357,11 +369,14 @@ public class EntryPoint : MonoBehaviour
 
         if (isLoaded)
         {
+            newGame = false;
             Debug.Log($"EntryPoint: Игра загружена из профиля {SaveSystem.CurrentProfileIndex}.");
         }
         else
         {
             Debug.Log($"EntryPoint: Сохранение из профиля {SaveSystem.CurrentProfileIndex} не найдено. Новая игра.");
+
+            newGame = true;
 
             if (playerData != null)
             {
@@ -375,6 +390,7 @@ public class EntryPoint : MonoBehaviour
             SetInitialPosition();
             SaveSystem.Save();
             SaveSystem.AutoSave();
+            _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static; // Ниебический костыль, надо будет как то потом поправить
         }
 
         var receivingClawScript = _playerInstance.GetComponent<ReceivingClaw>();

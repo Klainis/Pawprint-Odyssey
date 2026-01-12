@@ -215,6 +215,7 @@ public class WanderingSpiritView : MonoBehaviour
         if (faceRight != facingRight)
             facingRight = wsMove.Turn(facingRight);
 
+        wsAnimation.SetBoolMove(true);
         _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
         isAccelerated = true;
     }

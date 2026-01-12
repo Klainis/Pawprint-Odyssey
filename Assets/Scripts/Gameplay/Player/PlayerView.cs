@@ -123,16 +123,10 @@ public class PlayerView : MonoBehaviour
             var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
             playerMove.WallHit = leftHit || rightHit;
 
-            //if (playerMove.WallHit)
-            //{
-            //    playerMove.IsSpeedRunning = false;
-
-            //    var damageDir = Vector3.Normalize(new Vector3(-playerMove.TurnCoefficient, 0, 0)) * 40f;
-            //    rigidBody.linearVelocity = Vector2.zero;
-            //    rigidBody.AddForce(damageDir * 15);
-
-            //    StartCoroutine(Stun(0.25f));
-            //}
+            if (playerMove.WallHit)
+            {
+                playerMove.StopRunAfterHit();
+            }
         }
 
         playerMove.IsWall = false;
@@ -278,7 +272,7 @@ public class PlayerView : MonoBehaviour
         isInvincible = false;
     }
 
-    private IEnumerator FlashWhileInvicible(float flashSpeed, float flashTime)
+    public IEnumerator FlashWhileInvicible(float flashSpeed, float flashTime)
     {
         float currentFlashAmount = 0f;
         float elapsedTime = 0f;

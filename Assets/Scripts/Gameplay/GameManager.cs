@@ -85,6 +85,11 @@ public class GameManager : MonoBehaviour
         GameState = newState;
     }
 
+    public void SetCutsceneState()
+    {
+        GameState = GameState.CUTSCENE;
+    }
+
     public void RevivalPlayer()
     {
         if (GameState == GameState.DEAD)

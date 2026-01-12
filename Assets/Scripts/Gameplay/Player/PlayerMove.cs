@@ -43,7 +43,6 @@ public class PlayerMove : MonoBehaviour
 
     [Header("")]
     [SerializeField][Range(0, 0.3f)] private float movementSmoothing;
-    [SerializeField] private float gravityFallScale = 4;
     [SerializeField] private float timeToWaitAfterWallJump = 1;
     //[SerializeField] private bool airControl = true;
 
@@ -64,7 +63,6 @@ public class PlayerMove : MonoBehaviour
     private float lastOnGroundTime;
     private float lastPressedJumpTime;
     private float prevVelocityX = 0f;
-    private float airVelocityX = 30f;
     private float jumpWallDistX = 0;
     private float limitFallSpeed = 23f;
     private int dashCounter = 0;
@@ -119,6 +117,7 @@ public class PlayerMove : MonoBehaviour
     public bool IsWallSliding { get; set; }
     public Rigidbody2D PlayerRigidbody { get { return rigidBody; } }
     public bool PlayerDoubleJumpEd { get; set; } = false;
+    public bool IsWallJumping { get { return isWallJumping; } }
 
     #endregion
 
@@ -239,15 +238,22 @@ public class PlayerMove : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasRun)
         {
-            //Отталкивание от стены во View
-            if (!isDashing/* && isGrounded*/ && speedRun && canMove)
+            if (!isDashing && isGrounded && speedRun && canMove)
             {
-                MoveHorizontal(moveX * speedRunModifier);
                 isSpeedRunning = true;
             }
             else
             {
                 isSpeedRunning = false;
+            }
+
+            if (isSpeedRunning)
+            {
+                MoveHorizontal(moveX * speedRunModifier);
+                //var targetRunVelocity = new Vector2(turnCoefficient * 18 * speedRunModifier, rigidBody.linearVelocity.y);
+                //rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetRunVelocity, movementSmoothing);
+
+                //playerAnimation.SetFloatSpeed(Mathf.Abs(targetRunVelocity.x));
             }
         }
     }
@@ -390,18 +396,25 @@ public class PlayerMove : MonoBehaviour
     #endregion
 
     #region Run
-    //public void StopRunAfterHit()
-    //{
-    //    Debug.Log("Вызов стопа");
-    //    isSpeedRunning = false;
-    //    isKnockBack = true;
+    public void StopRunAfterHit()
+    {
+        Debug.Log("Вызов стопа");
+        isSpeedRunning = false;
+        //isKnockBack = true;
 
-    //    var damageDir = Vector2.right * (-turnCoefficient);
-    //    rigidBody.linearVelocity = Vector2.zero;
-    //    rigidBody.AddForce(damageDir * 4, ForceMode2D.Impulse);
-    //    StartCoroutine(WaitToMove(1f));
-    //    //isKnockBack = false;
-    //}
+        var damageDir = Vector2.right * (-turnCoefficient);
+        rigidBody.linearVelocity = Vector2.zero;
+        rigidBody.AddForce(damageDir * 15, ForceMode2D.Impulse);
+        StartCoroutine(WaintAndResetForce(0.05f));
+        StartCoroutine(WaitToMove(0.8f));
+        //isKnockBack = false;
+    }
+
+    private IEnumerator WaintAndResetForce(float time)
+    {
+        yield return new WaitForSeconds(time);
+        rigidBody.linearVelocity = Vector2.zero;
+    }
     #endregion
 
     #region Wall Sliding & Runnig

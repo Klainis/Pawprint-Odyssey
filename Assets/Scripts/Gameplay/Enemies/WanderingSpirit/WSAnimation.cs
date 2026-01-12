@@ -18,4 +18,9 @@ public class WSAnimation : MonoBehaviour
     {
         animator.SetTrigger("Dead");
     }
+
+    public void SetBoolMove(bool value)
+    {
+        animator.SetBool("Move", value);
+    }
 }

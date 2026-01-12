@@ -209,12 +209,11 @@ MonoBehaviour:
   dashCoolDown: 0.3
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   coyoteTime: 0.175
-  jumpInputBufferTime: 0.45
+  jumpInputBufferTime: 0.3
   particleJumpUp: {fileID: 198584872278178884}
   particleJumpDown: {fileID: 198967111524372206}
   movementSmoothing: 0.2
-  gravityFallScale: 6
-  timeToWaitAfterWallJump: 0.075
+  timeToWaitAfterWallJump: 0.05
 --- !u!114 &1729494090702783638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,7 +377,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _fullHeal: 0
-  _abilitiesTree: 1
+  _abilitiesTree: 0
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -520,7 +519,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00024719536, y: -0.30731308}
+  m_Offset: {x: 0.0061196983, y: -0.30731308}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -530,7 +529,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.19357267, y: 1.4948862}
+  m_Size: {x: 0.6901869, y: 1.4948862}
   m_EdgeRadius: 0
 --- !u!82 &82701611152381692
 AudioSource:
