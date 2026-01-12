@@ -74,6 +74,7 @@ public class PlayerMove : MonoBehaviour
     private bool isGrounded;
     private bool isJumping;
     private bool isWallJumping = false;
+    private bool isWallRunJumping = false;
     private bool isSpeedRunning;
     private bool isDashing = false;
     private bool isWallRunning;
@@ -89,6 +90,7 @@ public class PlayerMove : MonoBehaviour
     private bool wallHit = false;
     private bool isKnockBack = false;
     private bool isTurnOld = false;
+    private bool canWallRun = true;
 
     #endregion
 
@@ -158,7 +160,7 @@ public class PlayerMove : MonoBehaviour
     #endregion
 
     #region Movement
-    public void Move(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
+    public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
     {
         if (!canMove) return;
 
@@ -168,7 +170,7 @@ public class PlayerMove : MonoBehaviour
         {
             SetPlayerAirState(AirState.Falling);
 
-            if (isJumping && rigidBody.linearVelocity.y < 0)
+            if ((isJumping || isWallJumping || isWallRunJumping) && rigidBody.linearVelocity.y < 0)
             {
                 rigidBody.linearVelocityY -= 0.13f;
             }
@@ -180,8 +182,6 @@ public class PlayerMove : MonoBehaviour
             {
                 rigidBody.gravityScale = 3f;
             }
-
-            Debug.Log(rigidBody.gravityScale);
         }
         else if (isWallSliding || isWallRunning)
         {
@@ -191,6 +191,7 @@ public class PlayerMove : MonoBehaviour
         {
             SetPlayerAirState(AirState.Grounded);
             isWallJumping = false;
+            isWallRunJumping = false;
             rigidBody.gravityScale = 3f;
         }
 
@@ -199,6 +200,32 @@ public class PlayerMove : MonoBehaviour
 
 
         // --- DASH ---
+        DoDash(dash);
+
+        // --- RUN ---
+        DoRun(speedRun, moveX);
+
+        // --- MOVE ---
+        DoMove(moveX);
+
+        // --- JUMP ---
+        DoJump(jump);
+        Debug.Log(_airState);
+        //Debug.Log(lastPressedJumpTime);
+
+        // --- WALL RUN ---
+        if (canWallRun)
+        {
+            DoWallRun(grab, moveX, moveY);
+        }
+
+        // --- WALL SLIDING ---
+        DoWallSlide(grab, moveX);
+    }
+
+    #region Movement Methods
+    private void DoDash(bool dash)
+    {
         if (PlayerView.Instance.PlayerModel.HasDash)
         {
             if (dash && canDash && !isWallSliding && isGrounded)
@@ -206,9 +233,10 @@ public class PlayerMove : MonoBehaviour
             else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
                 StartCoroutine(DashCooldown());
         }
+    }
 
-
-        // --- RUN ---
+    private void DoRun(bool speedRun, float moveX)
+    {
         if (PlayerView.Instance.PlayerModel.HasRun)
         {
             //Отталкивание от стены во View
@@ -219,28 +247,30 @@ public class PlayerMove : MonoBehaviour
             }
             else
             {
-                isSpeedRunning= false;
+                isSpeedRunning = false;
             }
         }
+    }
 
-
-        // --- MOVE ---
+    private void DoMove(float moveX)
+    {
         if (!isDashing && canMove)
             MoveHorizontal(moveX);
+    }
 
-
-        // --- JUMP ---
+    private void DoJump(bool jump)
+    {
         switch (_airState)
         {
             case AirState.WallSliding:
-                if (jump && isWallSliding)
+                if (jump && isWallSliding && isWall)
                 {
                     WallJump();
                 }
                 break;
 
             case AirState.WallRunning:
-                if (jump && isWallRunning)
+                if (jump && isWallRunning && isWall)
                 {
                     WallRunningJump();
                 }
@@ -259,42 +289,43 @@ public class PlayerMove : MonoBehaviour
                 {
                     Jump();
                 }
-                else if (lastPressedJumpTime > 0 && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
+                else if (jump && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
                 {
                     DoubleJump();
                 }
                 break;
         }
-        //Debug.Log(_airState);
-        //Debug.Log(lastPressedJumpTime);
+    }
 
-        // --- WALL RUN ---
+    private void DoWallRun(bool grab, float moveX, float moveY)
+    {
         if (PlayerView.Instance.PlayerModel.HasWallRun)
         {
             if (grab)
-                WallRunnig(moveY, moveX, jump, dash);
+                WallRunnig(moveY, moveX);
             else if (isWallRunning && !grab)
             {
                 isWallRunning = false;
                 oldWallRunning = false;
-                HandleWallSliding(moveY, moveX, false, false);
+                HandleWallSliding(moveX);
                 playerAnimation.SetBoolIsWallRunning(false);
             }
         }
+    }
 
-
-        // --- WALL SLIDING ---
+    private void DoWallSlide(bool grab, float moveX)
+    {
         if (isWall && !isGrounded && !grab)
-            HandleWallSliding(moveY, moveX, jump, dash);
+            HandleWallSliding(moveX);
         else if (isWallSliding && !isWall && canCheck)
         {
             isWallSliding = false;
             playerAnimation.SetBoolIsWallSliding(false);
             oldWallSliding = false;
             wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
-            canDoubleJump = true;
         }
     }
+    #endregion
 
     private void MoveHorizontal(float move)
     {
@@ -304,7 +335,7 @@ public class PlayerMove : MonoBehaviour
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(move));
 
-        if (isWallJumping && move == 0)
+        if ((isWallJumping || isWallRunJumping) && move == 0)
         {
             var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x, rigidBody.linearVelocity.y);
 
@@ -375,7 +406,7 @@ public class PlayerMove : MonoBehaviour
 
     #region Wall Sliding & Runnig
 
-    private void HandleWallSliding(float moveY, float moveX, bool jump, bool dash)
+    private void HandleWallSliding(float moveX)
     {
         SetPlayerAirState(AirState.WallSliding);
         if (!oldWallSliding && rigidBody.linearVelocity.y < 0 && (!isWallRunning || isDashing))
@@ -386,7 +417,6 @@ public class PlayerMove : MonoBehaviour
             wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
             Turn();
             StartCoroutine(WaitToCheck(0.1f));
-            canDoubleJump = true;
 
             playerAnimation.SetBoolIsJumping(false);
             playerAnimation.SetBoolIsWallRunning(false);
@@ -407,13 +437,18 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void WallRunnig(float moveY, float moveX, bool jump, bool dash)
+    private void WallRunnig(float moveY, float moveX)
     {
-        if (!isWall) return;
+        if (!isWall)
+        {
+            SetPlayerAirState(AirState.Falling);
+            return;
+        }
 
         if (!oldWallRunning && moveY > 0)
         {
             isWallRunning = true;
+            isWallRunJumping = false;
             SetPlayerAirState(AirState.WallRunning);
             Turn();
 
@@ -481,7 +516,13 @@ public class PlayerMove : MonoBehaviour
         lastPressedJumpTime = -1;
         SetPlayerAirState(AirState.Jumping);
 
+        isWallSliding = false;
+        playerAnimation.SetBoolIsWallSliding(false);
+        oldWallSliding = false;
+        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+
         isWallJumping = true;
+
 
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
@@ -498,12 +539,7 @@ public class PlayerMove : MonoBehaviour
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
-        canDoubleJump = false;
-
-        isWallSliding = false;
-        playerAnimation.SetBoolIsWallSliding(false);
-        oldWallSliding = false;
-        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        canDoubleJump = true;
     }
 
     private void WallRunningJump()
@@ -512,24 +548,32 @@ public class PlayerMove : MonoBehaviour
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
 
-        IsJumping = true;
-
-        playerAnimation.SetBoolIsJumping(true);
-        playerAnimation.SetBoolJumpUp(true);
-
-        rigidBody.linearVelocity = Vector2.zero;
-
-        var force = new Vector2(-turnCoefficient * wallJumpForce.x, wallJumpForce.y);
-
-        rigidBody.AddForce(force, ForceMode2D.Impulse);
-
-        limitVelocityOnWallJump = true;
-        canDoubleJump = false;
-
         isWallRunning = false;
         playerAnimation.SetBoolIsWallRunning(false);
         oldWallRunning = false;
         wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+
+        canWallRun = false;
+        StartCoroutine(WaitAfterWallRun());
+
+        isWallRunJumping = true;
+
+        playerAnimation.SetBoolIsJumping(true);
+        playerAnimation.SetBoolJumpUp(true);
+
+        var force = new Vector2(-turnCoefficient * wallJumpForce.x, wallJumpForce.y * 1.3f);
+
+        if (Mathf.Sign(rigidBody.linearVelocity.x) != Mathf.Sign(force.x))
+            force.x -= rigidBody.linearVelocity.x;
+
+        if (rigidBody.linearVelocity.y < 0)
+            force.y -= rigidBody.linearVelocity.y;
+
+        rigidBody.AddForce(force, ForceMode2D.Impulse);
+
+        limitVelocityOnWallJump = true;
+        StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
+        canDoubleJump = true;   
     }
 
     public void ScaleJump()
@@ -602,6 +646,12 @@ public class PlayerMove : MonoBehaviour
         limitVelocityOnWallJump = false;
     }
 
+    private IEnumerator WaitAfterWallRun()
+    {
+        yield return new WaitForSeconds(0.1f);
+        canWallRun = true;
+    }
+
     private IEnumerator WaitToCheck(float time)
     {
         canCheck = false;
@@ -612,7 +662,6 @@ public class PlayerMove : MonoBehaviour
     private IEnumerator WaitToEndSliding()
     {
         yield return new WaitForSeconds(0.1f);
-        canDoubleJump = true;
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;

@@ -233,7 +233,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
+        playerMove.Movement(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
 
         if (jump)
             jumpPressed.Invoke();
