@@ -29,6 +29,7 @@ public class PlayerModel
     public bool IsDead { get { return Life <= 0; } }
     public bool SpiritGuideKilled { get; private set; }
     public bool GuardianOwlKilled { get; private set; }
+    public bool StartCutSceneShowed { get; private set; }
 
     #endregion
 
@@ -43,7 +44,8 @@ public class PlayerModel
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
                         bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash,
                         bool facingRight,
-                        bool spiritGuideKilled, bool guardianOwlKilled)
+                        bool spiritGuideKilled, bool guardianOwlKilled,
+                        bool startCutSceneShowed)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -75,6 +77,7 @@ public class PlayerModel
         FacingRight = facingRight;
         SpiritGuideKilled = spiritGuideKilled;
         GuardianOwlKilled = guardianOwlKilled;
+        StartCutSceneShowed = startCutSceneShowed;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -103,7 +106,8 @@ public class PlayerModel
             data.HasDamageDash,
             data.FacingRight,
             data.SpiritGuideKilled,
-            data.GuardianOwlKilled
+            data.GuardianOwlKilled,
+            data.StartCutSceneShowed
         );
     }
 
@@ -133,7 +137,8 @@ public class PlayerModel
             playerData.hasDamageDash,
             playerData.facingRight,
             playerData.spiritGuideKilled,
-            playerData.guardianOwlKilled
+            playerData.guardianOwlKilled,
+            playerData.startSutSceneShowed
         );
     }
 
@@ -293,6 +298,12 @@ public class PlayerModel
         return GuardianOwlKilled;
     }
 
+    public bool SetStartCutSceneShowed()
+    {
+        StartCutSceneShowed = true;
+        return StartCutSceneShowed;
+    }
+
     #endregion
 
     #region Save & Load
@@ -323,6 +334,7 @@ public class PlayerModel
         data.FacingRight = true;
         data.SpiritGuideKilled = SpiritGuideKilled;
         data.GuardianOwlKilled = GuardianOwlKilled;
+        data.StartCutSceneShowed = StartCutSceneShowed;
     }
 
     public void Load(PlayerSaveData data)
@@ -351,6 +363,7 @@ public class PlayerModel
         FacingRight = data.FacingRight;
         SpiritGuideKilled = data.SpiritGuideKilled;
         GuardianOwlKilled = data.GuardianOwlKilled;
+        StartCutSceneShowed = data.StartCutSceneShowed;
     }
 
     #endregion
@@ -383,4 +396,5 @@ public struct PlayerSaveData
     public bool FacingRight;
     public bool SpiritGuideKilled;
     public bool GuardianOwlKilled;
+    public bool StartCutSceneShowed;
 }

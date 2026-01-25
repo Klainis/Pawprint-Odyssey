@@ -86,7 +86,6 @@ public class EntryPoint : MonoBehaviour
     public InputActionAsset NewInputSystem { get { return newInputSystem; } }
 
     private bool playerInitialized = false;
-    private bool newGame = false;
 
     private void Awake()
     {
@@ -105,7 +104,7 @@ public class EntryPoint : MonoBehaviour
         // loadingScreen.Show();
         await Initialize();
 
-        if (newGame)
+        if (!PlayerView.Instance.PlayerModel.StartCutSceneShowed)
         {
             await SceneManager.LoadSceneAsync("StartCutScene", LoadSceneMode.Single);
             GameManager.Instance.SetCutsceneState();
@@ -115,6 +114,10 @@ public class EntryPoint : MonoBehaviour
         await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
         _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         GameManager.Instance.SetGameState(GameState.PLAYING);
+
+        SaveSystem.Save();
+        SaveSystem.AutoSave();
+
         fadeScript.StartGameFadeIn();
 
         //InstallDependencySpiritGuide();
@@ -369,14 +372,11 @@ public class EntryPoint : MonoBehaviour
 
         if (isLoaded)
         {
-            newGame = false;
             Debug.Log($"EntryPoint: Игра загружена из профиля {SaveSystem.CurrentProfileIndex}.");
         }
         else
         {
             Debug.Log($"EntryPoint: Сохранение из профиля {SaveSystem.CurrentProfileIndex} не найдено. Новая игра.");
-
-            newGame = true;
 
             if (playerData != null)
             {
@@ -388,8 +388,8 @@ public class EntryPoint : MonoBehaviour
 
             SetInitialScene();
             SetInitialPosition();
-            SaveSystem.Save();
-            SaveSystem.AutoSave();
+            //SaveSystem.Save();
+            //SaveSystem.AutoSave();
             _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static; // Ниебический костыль, надо будет как то потом поправить
         }
 

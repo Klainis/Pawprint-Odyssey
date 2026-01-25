@@ -47,4 +47,7 @@ public class PlayerData : ScriptableObject
     [Header("Killed Bosses")]
     public bool spiritGuideKilled;
     public bool guardianOwlKilled;
+
+    [Header("CutScenes")]
+    public bool startSutSceneShowed;
 }

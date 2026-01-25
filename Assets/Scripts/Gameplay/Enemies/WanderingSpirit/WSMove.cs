@@ -36,7 +36,7 @@ public class WSMove : MonoBehaviour
         if (wsView.IsHitted || Mathf.Abs(wsView.RigidBody.linearVelocity.y) > 0.5f)
             return;
 
-        var moveSpeed = isAccelerated ? acceleratedSpeed : wsView.Model.Speed;
+        var moveSpeed = isAccelerated ? acceleratedSpeed: wsView.Model.Speed;
         var moveDirection = wsView.FacingRight ? -1 : 1;
 
         if (!wsView.IsHitted)
