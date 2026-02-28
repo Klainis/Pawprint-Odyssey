@@ -209,7 +209,6 @@ public class PlayerMove : MonoBehaviour
 
         // --- JUMP ---
         DoJump(jump);
-        Debug.Log(_airState);
         //Debug.Log(lastPressedJumpTime);
 
         // --- WALL RUN ---

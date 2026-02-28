@@ -169,9 +169,9 @@ public class GuardianOwlView : MonoBehaviour
 
     private IEnumerator OnEnteringBoss()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
         StartCoroutine(_guraduianOwlMove.MoveUp());
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
         StartCoroutine(BehaviourLoop());
     }
 

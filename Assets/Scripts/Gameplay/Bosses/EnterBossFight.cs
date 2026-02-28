@@ -1,5 +1,7 @@
 using UnityEngine;
 using GlobalEnums;
+using Cinemachine;
+using System.Collections;
 
 public class EnterBossFight : MonoBehaviour
 {
@@ -10,6 +12,9 @@ public class EnterBossFight : MonoBehaviour
 
     private SpiritGuideView _guideView;
     private GuardianOwlView _guardianOwlView;
+
+    private CinemachineVirtualCamera _followCamera;
+    private Transform _initialFollowTarget;
 
     private void Start()
     {
@@ -26,18 +31,30 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            _followCamera = GameObject.FindGameObjectWithTag("CinemachineFollowCamera").GetComponent<CinemachineVirtualCamera>();
+            //_initialFollowTarget = _followCamera.Follow;
+
             if (_door != null && _spiritGuide != null)
             {
                 _spiritGuide.SetActive(true);
                 _guideView = _spiritGuide.GetComponent<SpiritGuideView>();
                 _guideView.enabled = true;
+                _guideView.MoveDisabled = true;
 
                 if (!_guideView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
+                    PlayerMove.Instance.CanMove = false;
+                    //_followCamera.Follow = _spiritGuide.transform;
+                    _followCamera.Priority = 0;
                     GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                     _door.CloseDoor(true);
                 }
+
+                StartCoroutine(WaitForShowBoss(1f));
+                PlayerMove.Instance.CanMove = true;
+                _guideView.MoveDisabled = false;
+                //Debug.Log(_followCamera.Follow);
             }
             else
             {
@@ -52,9 +69,14 @@ public class EnterBossFight : MonoBehaviour
 
                 if (!_guardianOwlView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
+                    PlayerMove.Instance.CanMove = false;
+                    _followCamera.Follow = _guardianOwl.transform;
                     GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                 }
+
+                StartCoroutine(WaitForShowBoss(1.5f));
+                PlayerMove.Instance.CanMove = true;
             }
             else
             {
@@ -72,6 +94,24 @@ public class EnterBossFight : MonoBehaviour
     }
 
     #endregion
+
+    private IEnumerator WaitForShowBoss(float time)
+    {
+        yield return new WaitForSeconds(time);
+        //_followCamera.Follow = _initialFollowTarget;
+        _followCamera.Priority = 10;
+    }
+
+    //private IEnumerator SetFollowTarget(Transform initial, Transform target)
+    //{
+    //    var flexTarget = target;
+
+    //    while (flexTarget != target)
+    //    {
+    //        flexTarget = Vector3.Lerp(initial, target, 2f);
+    //        yield return;
+    //    }
+    //}
 
     private bool CheckAndInitSpiritGuide()
     {
