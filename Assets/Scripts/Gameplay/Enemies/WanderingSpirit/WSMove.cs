@@ -25,10 +25,14 @@ public class WSMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
-        isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
-        if (!isPlat || isObstacle)
-            OnWallHit?.Invoke();
+        if (Mathf.Abs(wsView.RigidBody.linearVelocity.y) < 0.1f)
+        {
+            isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
+            isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
+
+            if (!isPlat || isObstacle)
+                OnWallHit?.Invoke();
+        }
     }
 
     public void Move(bool isAccelerated = false, float acceleratedSpeed = 0f)
