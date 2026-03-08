@@ -36,13 +36,19 @@ public class PlayerMove : MonoBehaviour
     [Header("Assists")]
     [SerializeField][Range(0.01f, 0.5f)] private float coyoteTime;
     [SerializeField][Range(0.01f, 10f)] private float jumpInputBufferTime;
-    
+    [SerializeField] private float _jumpFallVelocityModifier = 1f;
+    [SerializeField] private float _gravityOnJumpApexModifier = 0.7f;
+    [SerializeField] private float _velocityModifierForJumpScale = 0.3f;
+    [SerializeField] private float _gravityFallJumpModifier = 1f;
+    [SerializeField] private float _gravityUpJumpModifier = 0.8f;
+    [SerializeField] private float _jumpHorizantalVelocityModifier = 0.5f;
+
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
     [SerializeField] private ParticleSystem particleJumpDown;
 
     [Header("")]
-    [SerializeField][Range(0, 0.3f)] private float movementSmoothing;
+    [SerializeField][Range(0, 1f)] private float movementSmoothing;
     [SerializeField] private float timeToWaitAfterWallJump = 1;
     //[SerializeField] private bool airControl = true;
 
@@ -64,7 +70,8 @@ public class PlayerMove : MonoBehaviour
     private float lastPressedJumpTime;
     private float prevVelocityX = 0f;
     private float jumpWallDistX = 0;
-    private float limitFallSpeed = 23f;
+    private float limitFallSpeed = 28f;
+    private float _initialGravityScale;
     private int dashCounter = 0;
     private int turnCoefficient = 1;
 
@@ -138,6 +145,22 @@ public class PlayerMove : MonoBehaviour
         wallCheck = transform.Find("WallCheck");
     }
 
+    private void Start()
+    {
+        _initialGravityScale = rigidBody.gravityScale;
+    }
+
+    private void Update()
+    {
+        lastOnGroundTime -= Time.deltaTime;
+        lastPressedJumpTime -= Time.deltaTime;
+
+        if (isGrounded)
+        {
+            lastOnGroundTime = coyoteTime;
+        }
+    }
+
     public void ResetDashCounter()
     {
         dashCounter = 0;
@@ -159,44 +182,9 @@ public class PlayerMove : MonoBehaviour
     #endregion
 
     #region Movement
-    public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в Update в PlayerInput
+    public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в FixedUpdate в PlayerInput
     {
         if (!canMove) return;
-
-        if (!isGrounded &&
-            !isWallSliding &&
-            !isWallRunning)
-        {
-            SetPlayerAirState(AirState.Falling);
-
-            if ((isJumping || isWallJumping || isWallRunJumping) && rigidBody.linearVelocity.y < 0)
-            {
-                rigidBody.linearVelocityY -= 0.13f;
-            }
-            if (isJumping && Mathf.Abs(rigidBody.linearVelocity.y) < 0.3)
-            {
-                rigidBody.gravityScale = rigidBody.gravityScale * 0.7f;
-            }
-            else if (isJumping && Mathf.Abs(rigidBody.linearVelocity.y) >= 0.3)
-            {
-                rigidBody.gravityScale = 3f;
-            }
-        }
-        else if (isWallSliding || isWallRunning)
-        {
-            rigidBody.gravityScale = 3f;
-        }
-        else if (isGrounded)
-        {
-            SetPlayerAirState(AirState.Grounded);
-            isWallJumping = false;
-            isWallRunJumping = false;
-            rigidBody.gravityScale = 3f;
-        }
-
-        if (rigidBody.linearVelocity.y < -limitFallSpeed)
-            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, -limitFallSpeed);
-
 
         // --- DASH ---
         DoDash(dash);
@@ -206,6 +194,59 @@ public class PlayerMove : MonoBehaviour
 
         // --- MOVE ---
         DoMove(moveX);
+
+        Debug.Log(rigidBody.gravityScale);
+        if (!isGrounded &&
+            !isWallSliding &&
+            !isWallRunning)
+        {
+            SetPlayerAirState(AirState.Falling);
+
+            if ((isJumping || isWallJumping || isWallRunJumping))
+            {
+                if (rigidBody.linearVelocity.y < 0)
+                {
+                    //rigidBody.linearVelocityY -= _jumpFallVelocityModifier;
+                    rigidBody.gravityScale = _initialGravityScale * _gravityFallJumpModifier;
+                }
+                if (Mathf.Abs(rigidBody.linearVelocity.y) <= 0.3)
+                {
+                    rigidBody.gravityScale = _initialGravityScale * _gravityOnJumpApexModifier;
+                }
+                //else if (isJumping && Mathf.Abs(rigidBody.linearVelocity.y) > 0.3)
+                //{
+                //    //rigidBody.gravityScale = _initialGravityScale;
+                //    rigidBody.gravityScale = _initialGravityScale * _gravityJumpModifier;
+                //}
+                else if (rigidBody.linearVelocity.y > 0.3)
+                {
+                    //rigidBody.gravityScale = _initialGravityScale;
+                    rigidBody.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
+                }
+
+                if (!isWallJumping || !isWallRunJumping)
+                {
+                    rigidBody.linearVelocity = new Vector2(
+                                                Mathf.Lerp(rigidBody.linearVelocity.x, rigidBody.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
+                                                rigidBody.linearVelocity.y);
+                }
+            }
+        }
+        else if (isWallSliding || isWallRunning)
+        {
+            rigidBody.gravityScale = _initialGravityScale;
+        }
+        else if (isGrounded)
+        {
+            SetPlayerAirState(AirState.Grounded);
+            isJumping = false;
+            isWallJumping = false;
+            isWallRunJumping = false;
+            rigidBody.gravityScale = _initialGravityScale;
+        }
+
+        if (rigidBody.linearVelocity.y < -limitFallSpeed)
+            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, -limitFallSpeed);
 
         // --- JUMP ---
         DoJump(jump);
@@ -354,7 +395,7 @@ public class PlayerMove : MonoBehaviour
         }
         else if (_airState == AirState.Falling)
         {
-            rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetVelocity, movementSmoothing * 0.6f);
+            rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetVelocity, /*0.35*/1f);
         }
 
         if (!isWallSliding)
@@ -487,7 +528,7 @@ public class PlayerMove : MonoBehaviour
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
 
-        IsJumping = true;
+        isJumping = true;
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
         isGrounded = false;
@@ -497,6 +538,7 @@ public class PlayerMove : MonoBehaviour
             force -= rigidBody.linearVelocity.y;
 
         rigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        //rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, jumpForce);
 
         canDoubleJump = true;
         PlayParticleJumpDown();
@@ -593,7 +635,7 @@ public class PlayerMove : MonoBehaviour
         if (rigidBody.linearVelocity.y > 0)
         {
             if (!jumpAction.action.IsPressed() && !isWallRunning)
-                rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, 0);
+                rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, rigidBody.linearVelocity.y * _velocityModifierForJumpScale);
         }
     }
 
