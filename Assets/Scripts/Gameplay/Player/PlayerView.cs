@@ -9,17 +9,17 @@ public class PlayerView : MonoBehaviour
 {
     #region SerializeFields
 
-    [Header("Layers")]
-    [SerializeField] private LayerMask whatIsGround;
+    //[Header("Layers")]
+    //[SerializeField] private LayerMask whatIsGround;
 
     [Header("Parameters")]
     [SerializeField] private float _invisibleTime = 1.3f;
     [SerializeField] private float _damageFlashSpeed = 5.5f;
 
-    [Header("Events")]
-    [Space]
-    [SerializeField] private UnityEvent OnFallEvent;
-    [SerializeField] private UnityEvent OnLandEvent;
+    //[Header("Events")]
+    //[Space]
+    //[SerializeField] private UnityEvent OnFallEvent;
+    //[SerializeField] private UnityEvent OnLandEvent;
 
     #endregion
 
@@ -74,9 +74,6 @@ public class PlayerView : MonoBehaviour
         playerHeart = GetComponent<PlayerHeart>();
         playerInteract = GetComponent<Interact>();
         playerMana = GetComponent<PlayerMana>();
-
-        if (OnFallEvent == null) OnFallEvent = new UnityEvent();
-        if (OnLandEvent == null) OnLandEvent = new UnityEvent();
     }
 
     private void Update()
@@ -84,66 +81,65 @@ public class PlayerView : MonoBehaviour
         if (playerInput.AttackPressed)
             playerAttack.Attack();
 
-        var wasGrounded = playerMove.IsGrounded;
-        playerMove.IsGrounded = false;
+        //var wasGrounded = playerMove.IsGrounded;
+        //playerMove.IsGrounded = false;
 
-        if (Physics2D.Raycast(playerMove.GroundCheck.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
-        {
-            playerMove.IsGrounded = true;
-            //playerMove.SetGroundedAirState();
-            playerMove.ResetDashCounter();
+        //if (Physics2D.Raycast(playerMove.GroundCheck.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
+        //{
+        //    playerMove.IsGrounded = true;
+        //    playerMove.ResetDashCounter();
 
-            if (playerMove.IsJumping && playerMove.PlayerRigidbody.linearVelocity.y <= 0)
-            {
-                playerMove.IsJumping = false;
-            }
+        //    if (playerMove.IsJumping && playerMove.PlayerRigidbody.linearVelocity.y <= 0)
+        //    {
+        //        playerMove.IsJumping = false;
+        //    }
 
-            if (!wasGrounded)
-            {
-                OnLandEvent.Invoke();
+        //    if (!wasGrounded)
+        //    {
+        //        playerAnimation.SetBoolIsJumping(false);//
 
-                if (!playerMove.IsWall && !playerMove.IsDashing)
-                    playerMove.PlayParticleJumpDown();
+        //        if (!playerMove.IsWall && !playerMove.IsDashing)
+        //            playerMove.PlayParticleJumpDown();
 
-                playerMove.CanDoubleJump = true;
+        //        playerMove.CanDoubleJump = true;
 
-                if (rigidBody.linearVelocity.y < 0f)
-                    playerMove.LimitVelOnWallJump = false;
-            }
-        }
+        //        if (rb.linearVelocity.y < 0f)
+        //            playerMove.LimitVelOnWallJump = false;
+        //    }
+        //}
 
-        playerMove.WallHit = false;
+        //playerMove.WallHit = false;
 
-        if (playerMove.IsSpeedRunning)
-        {
-            var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-            var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
-            playerMove.WallHit = leftHit || rightHit;
+        //if (playerMove.IsSpeedRunning)
+        //{
+        //    var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+        //    var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+        //    playerMove.WallHit = leftHit || rightHit;
 
-            if (playerMove.WallHit)
-            {
-                playerMove.StopRunAfterHit();
-            }
-        }
+        //    if (playerMove.WallHit)
+        //    {
+        //        playerMove.StopRunAfterHit();
+        //    }
+        //}
 
-        playerMove.IsWall = false;
+        //playerMove.IsWall = false;
 
-        if (!playerMove.IsGrounded)
-        {
-            OnFallEvent.Invoke();
+        //if (!playerMove.IsGrounded)
+        //{
+        //    playerAnimation.SetBoolIsJumping(true);
 
-            var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-            var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
-            playerMove.IsWall = leftHit || rightHit;
+        //    var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+        //    var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+        //    playerMove.IsWall = leftHit || rightHit;
 
-            if (playerMove.IsWall)
-            {
-                playerMove.ResetDashCounter();
-                playerMove.IsDashing = false;
-            }
-        }
+        //    if (playerMove.IsWall)
+        //    {
+        //        playerMove.ResetDashCounter();
+        //        playerMove.IsDashing = false;
+        //    }
+        //}
 
-        playerMove.ScaleJump();
+        //playerMove.ScaleJump();
     }
 
     #endregion

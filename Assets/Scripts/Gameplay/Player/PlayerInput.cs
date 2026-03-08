@@ -269,13 +269,13 @@ public class PlayerInput : MonoBehaviour
             horizontalMove = 0f;
     }
 
-    public void OnFall()
-    {
-        playerAnimation.SetBoolIsJumping(true);
-    }
+    //public void OnFall()
+    //{
+    //    playerAnimation.SetBoolIsJumping(true);
+    //}
 
-    public void OnLanding()
-    {
-        playerAnimation.SetBoolIsJumping(false);
-    }
+    //public void OnLanding()
+    //{
+    //    playerAnimation.SetBoolIsJumping(false);
+    //}
 }

@@ -19,6 +19,8 @@ public class PlayerMove : MonoBehaviour
     private AirState _airState = AirState.Grounded;
 
     #region SerializeFields
+    [Header("Layers")]
+    [SerializeField] private LayerMask whatIsGround;
 
     [Header("Forces")]
     [SerializeField] private float jumpForce;
@@ -50,7 +52,11 @@ public class PlayerMove : MonoBehaviour
     [Header("")]
     [SerializeField][Range(0, 1f)] private float movementSmoothing;
     [SerializeField] private float timeToWaitAfterWallJump = 1;
-    //[SerializeField] private bool airControl = true;
+
+    [Header("Check")]
+    [SerializeField] private Transform groundCheck1;
+    [SerializeField] private Transform groundCheck2;
+    [SerializeField] private Transform groundCheck3;
 
     #endregion
 
@@ -58,11 +64,10 @@ public class PlayerMove : MonoBehaviour
 
     public const float groundCheckRadius = 0.2f;
     
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D rb;
     //private PlayerView playerView;
     private PlayerAnimation playerAnimation;
 
-    private Transform groundCheck;
     private Transform wallCheck;
 
     private Vector3 velocity = Vector3.zero;
@@ -104,25 +109,25 @@ public class PlayerMove : MonoBehaviour
     private bool CanJump { get { return (lastOnGroundTime > 0 && !isJumping); } }
     private bool CanAirDash { get { return dashCounter < 1; } }
 
-    public Transform GroundCheck { get { return groundCheck; } }
+    //public Transform GroundCheck { get { return groundCheck; } }
     public Transform WallCheck { get { return wallCheck; } }
-    public float CoyoteTime { get { return coyoteTime; } }
-    public float LastOnGroundTime { get { return lastOnGroundTime; } set { lastOnGroundTime = value; } }
-    public float LastPressedJumpTime { get { return lastPressedJumpTime; } set { lastPressedJumpTime = value; } }
-    public float PrevVelocityX { get { return prevVelocityX; } set { prevVelocityX = value; } }
-    public float JumpWallDistX { get { return jumpWallDistX; } set { jumpWallDistX = value; } }
+    //public float CoyoteTime { get { return coyoteTime; } }
+    //public float LastOnGroundTime { get { return lastOnGroundTime; } set { lastOnGroundTime = value; } }
+    //public float LastPressedJumpTime { get { return lastPressedJumpTime; } set { lastPressedJumpTime = value; } }
+    //public float PrevVelocityX { get { return prevVelocityX; } set { prevVelocityX = value; } }
+    //public float JumpWallDistX { get { return jumpWallDistX; } set { jumpWallDistX = value; } }
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
-    public bool CanDoubleJump { get { return canDoubleJump; } set { canDoubleJump = value; } }
-    public bool IsWall { get { return isWall; } set { isWall = value; } }
+    //public bool CanDoubleJump { get { return canDoubleJump; } set { canDoubleJump = value; } }
+    //public bool IsWall { get { return isWall; } set { isWall = value; } }
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
     public bool IsDashing { get { return isDashing; } set { isDashing = value; } }
-    public bool IsSpeedRunning { get { return isSpeedRunning; } set { isSpeedRunning = value; } }
-    public bool WallHit { get { return wallHit; } set { wallHit = value; } }
-    public bool LimitVelOnWallJump { get { return limitVelocityOnWallJump; } set { limitVelocityOnWallJump = value; } }
-    public bool IsWallSliding { get; set; }
-    public Rigidbody2D PlayerRigidbody { get { return rigidBody; } }
+    //public bool IsSpeedRunning { get { return isSpeedRunning; } set { isSpeedRunning = value; } }
+    //public bool WallHit { get { return wallHit; } set { wallHit = value; } }
+    //public bool LimitVelOnWallJump { get { return limitVelocityOnWallJump; } set { limitVelocityOnWallJump = value; } }
+    //public bool IsWallSliding { get; set; }
+    //public Rigidbody2D PlayerRigidbody { get { return rb; } }
     public bool PlayerDoubleJumpEd { get; set; } = false;
     public bool IsWallJumping { get { return isWallJumping; } }
 
@@ -137,17 +142,17 @@ public class PlayerMove : MonoBehaviour
         }
         instance = this;
 
-        rigidBody = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         //playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
-        groundCheck = transform.Find("GroundCheck");
+        //groundCheck = transform.Find("GroundCheck");
         wallCheck = transform.Find("WallCheck");
     }
 
     private void Start()
     {
-        _initialGravityScale = rigidBody.gravityScale;
+        _initialGravityScale = rb.gravityScale;
     }
 
     private void Update()
@@ -155,10 +160,69 @@ public class PlayerMove : MonoBehaviour
         lastOnGroundTime -= Time.deltaTime;
         lastPressedJumpTime -= Time.deltaTime;
 
-        if (isGrounded)
+        var wasGrounded = isGrounded;
+        isGrounded = false;
+
+        if (Physics2D.Raycast(groundCheck1.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
+            Physics2D.Raycast(groundCheck2.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
+            Physics2D.Raycast(groundCheck3.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
         {
+            isGrounded = true;
             lastOnGroundTime = coyoteTime;
+
+            ResetDashCounter();
+
+            if (isJumping && rb.linearVelocity.y <= 0)
+            {
+                isJumping = false;
+            }
+
+            if (!wasGrounded)
+            {
+                playerAnimation.SetBoolIsJumping(false);//
+
+                if (!isWall && !isDashing)
+                    PlayParticleJumpDown();
+
+                canDoubleJump = true;
+
+                if (rb.linearVelocity.y < 0f)
+                    limitVelocityOnWallJump = false;
+            }
         }
+
+        wallHit = false;
+
+        if (isSpeedRunning)
+        {
+            var leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            wallHit = leftHit || rightHit;
+
+            if (wallHit)
+            {
+                StopRunAfterHit();
+            }
+        }
+
+        isWall = false;
+
+        if (!isGrounded)
+        {
+            playerAnimation.SetBoolIsJumping(true);
+
+            var leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            isWall = leftHit || rightHit;
+
+            if (isWall)
+            {
+                ResetDashCounter();
+                isDashing = false;
+            }
+        }
+
+        ScaleJump();
     }
 
     public void ResetDashCounter()
@@ -182,7 +246,7 @@ public class PlayerMove : MonoBehaviour
     #endregion
 
     #region Movement
-    public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //Обрабатывается в FixedUpdate в PlayerInput
+    public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ FixedUpdate пїЅ PlayerInput
     {
         if (!canMove) return;
 
@@ -195,7 +259,7 @@ public class PlayerMove : MonoBehaviour
         // --- MOVE ---
         DoMove(moveX);
 
-        Debug.Log(rigidBody.gravityScale);
+        Debug.Log(rb.gravityScale);
         if (!isGrounded &&
             !isWallSliding &&
             !isWallRunning)
@@ -204,37 +268,37 @@ public class PlayerMove : MonoBehaviour
 
             if ((isJumping || isWallJumping || isWallRunJumping))
             {
-                if (rigidBody.linearVelocity.y < 0)
+                if (rb.linearVelocity.y < 0)
                 {
-                    //rigidBody.linearVelocityY -= _jumpFallVelocityModifier;
-                    rigidBody.gravityScale = _initialGravityScale * _gravityFallJumpModifier;
+                    //rb.linearVelocityY -= _jumpFallVelocityModifier;
+                    rb.gravityScale = _initialGravityScale * _gravityFallJumpModifier;
                 }
-                if (Mathf.Abs(rigidBody.linearVelocity.y) <= 0.3)
+                if (Mathf.Abs(rb.linearVelocity.y) <= 0.3)
                 {
-                    rigidBody.gravityScale = _initialGravityScale * _gravityOnJumpApexModifier;
+                    rb.gravityScale = _initialGravityScale * _gravityOnJumpApexModifier;
                 }
-                //else if (isJumping && Mathf.Abs(rigidBody.linearVelocity.y) > 0.3)
+                //else if (isJumping && Mathf.Abs(rb.linearVelocity.y) > 0.3)
                 //{
-                //    //rigidBody.gravityScale = _initialGravityScale;
-                //    rigidBody.gravityScale = _initialGravityScale * _gravityJumpModifier;
+                //    //rb.gravityScale = _initialGravityScale;
+                //    rb.gravityScale = _initialGravityScale * _gravityJumpModifier;
                 //}
-                else if (rigidBody.linearVelocity.y > 0.3)
+                else if (rb.linearVelocity.y > 0.3)
                 {
-                    //rigidBody.gravityScale = _initialGravityScale;
-                    rigidBody.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
+                    //rb.gravityScale = _initialGravityScale;
+                    rb.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
                 }
 
-                if (!isWallJumping || !isWallRunJumping)
-                {
-                    rigidBody.linearVelocity = new Vector2(
-                                                Mathf.Lerp(rigidBody.linearVelocity.x, rigidBody.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
-                                                rigidBody.linearVelocity.y);
-                }
+                //if (!isWallJumping || !isWallRunJumping)
+                //{
+                //    rb.linearVelocity = new Vector2(
+                //                                Mathf.Lerp(rb.linearVelocity.x, rb.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
+                //                                rb.linearVelocity.y);
+                //}
             }
         }
         else if (isWallSliding || isWallRunning)
         {
-            rigidBody.gravityScale = _initialGravityScale;
+            rb.gravityScale = _initialGravityScale;
         }
         else if (isGrounded)
         {
@@ -242,11 +306,11 @@ public class PlayerMove : MonoBehaviour
             isJumping = false;
             isWallJumping = false;
             isWallRunJumping = false;
-            rigidBody.gravityScale = _initialGravityScale;
+            rb.gravityScale = _initialGravityScale;
         }
 
-        if (rigidBody.linearVelocity.y < -limitFallSpeed)
-            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, -limitFallSpeed);
+        if (rb.linearVelocity.y < -limitFallSpeed)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, -limitFallSpeed);
 
         // --- JUMP ---
         DoJump(jump);
@@ -290,8 +354,8 @@ public class PlayerMove : MonoBehaviour
             if (isSpeedRunning)
             {
                 MoveHorizontal(moveX * speedRunModifier);
-                //var targetRunVelocity = new Vector2(turnCoefficient * 18 * speedRunModifier, rigidBody.linearVelocity.y);
-                //rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetRunVelocity, movementSmoothing);
+                //var targetRunVelocity = new Vector2(turnCoefficient * 18 * speedRunModifier, rb.linearVelocity.y);
+                //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetRunVelocity, movementSmoothing);
 
                 //playerAnimation.SetFloatSpeed(Mathf.Abs(targetRunVelocity.x));
             }
@@ -323,7 +387,7 @@ public class PlayerMove : MonoBehaviour
                 break;
 
             case AirState.Grounded:
-                if (lastPressedJumpTime > 0 && CanJump && canJump) //LastPressedTime время с последнего нажатия прыжка выполняет роль флага jump
+                if (lastPressedJumpTime > 0 && CanJump && canJump) //LastPressedTime пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ jump
                 {
                     //Debug.Log("Grounded Jump");
                     Jump();
@@ -383,19 +447,19 @@ public class PlayerMove : MonoBehaviour
 
         if ((isWallJumping || isWallRunJumping) && move == 0)
         {
-            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x, rigidBody.linearVelocity.y);
+            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x, rb.linearVelocity.y);
 
-            rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetWallJumpVelocity, movementSmoothing);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, movementSmoothing);
         }
 
-        var targetVelocity = new Vector2(move * 10f, rigidBody.linearVelocity.y);
+        var targetVelocity = new Vector2(move * 10f, rb.linearVelocity.y);
         if (_airState == AirState.Grounded)
         {
-            rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetVelocity, movementSmoothing);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, movementSmoothing);
         }
         else if (_airState == AirState.Falling)
         {
-            rigidBody.linearVelocity = Vector3.Lerp(rigidBody.linearVelocity, targetVelocity, /*0.35*/1f);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 0.35f);
         }
 
         if (!isWallSliding)
@@ -438,13 +502,13 @@ public class PlayerMove : MonoBehaviour
     #region Run
     public void StopRunAfterHit()
     {
-        Debug.Log("Вызов стопа");
+        Debug.Log("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
         isSpeedRunning = false;
         //isKnockBack = true;
 
         var damageDir = Vector2.right * (-turnCoefficient);
-        rigidBody.linearVelocity = Vector2.zero;
-        rigidBody.AddForce(damageDir * 15, ForceMode2D.Impulse);
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(damageDir * 15, ForceMode2D.Impulse);
         StartCoroutine(WaintAndResetForce(0.05f));
         StartCoroutine(WaitToMove(0.8f));
         //isKnockBack = false;
@@ -453,7 +517,7 @@ public class PlayerMove : MonoBehaviour
     private IEnumerator WaintAndResetForce(float time)
     {
         yield return new WaitForSeconds(time);
-        rigidBody.linearVelocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
     #endregion
 
@@ -462,7 +526,7 @@ public class PlayerMove : MonoBehaviour
     private void HandleWallSliding(float moveX)
     {
         SetPlayerAirState(AirState.WallSliding);
-        if (!oldWallSliding && rigidBody.linearVelocity.y < 0 && (!isWallRunning || isDashing))
+        if (!oldWallSliding && rb.linearVelocity.y < 0 && (!isWallRunning || isDashing))
         {
             isWallSliding = true;
             isJumping = false;
@@ -485,7 +549,7 @@ public class PlayerMove : MonoBehaviour
             else
             {
                 oldWallSliding = true;
-                rigidBody.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
+                rb.linearVelocity = new Vector2(-turnCoefficient * 2, -5);
             }
         }
     }
@@ -513,7 +577,7 @@ public class PlayerMove : MonoBehaviour
         if (isWallRunning)
         {
             isJumping = false;
-            rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, moveY * 10f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 10f);
             oldWallRunning = true;
         }
     }
@@ -534,11 +598,11 @@ public class PlayerMove : MonoBehaviour
         isGrounded = false;
 
         var force = jumpForce;
-        if (rigidBody.linearVelocity.y < 0)
-            force -= rigidBody.linearVelocity.y;
+        if (rb.linearVelocity.y < 0)
+            force -= rb.linearVelocity.y;
 
-        rigidBody.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        //rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, jumpForce);
+        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        //rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
         canDoubleJump = true;
         PlayParticleJumpDown();
@@ -559,8 +623,8 @@ public class PlayerMove : MonoBehaviour
         SetPlayerAirState(AirState.Jumping);
 
         canDoubleJump = false;
-        rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, 0f);
-        rigidBody.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
         playerAnimation.SetBoolIsDoubleJumping(true);
     }
 
@@ -583,13 +647,13 @@ public class PlayerMove : MonoBehaviour
 
         var force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
 
-        if (Mathf.Sign(rigidBody.linearVelocity.x) != Mathf.Sign(force.x))
-            force.x -= rigidBody.linearVelocity.x;
+        if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
+            force.x -= rb.linearVelocity.x;
 
-        if (rigidBody.linearVelocity.y < 0)
-            force.y -= rigidBody.linearVelocity.y;
+        if (rb.linearVelocity.y < 0)
+            force.y -= rb.linearVelocity.y;
 
-        rigidBody.AddForce(force, ForceMode2D.Impulse);
+        rb.AddForce(force, ForceMode2D.Impulse);
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
@@ -617,13 +681,13 @@ public class PlayerMove : MonoBehaviour
 
         var force = new Vector2(-turnCoefficient * wallJumpForce.x, wallJumpForce.y * 1.3f);
 
-        if (Mathf.Sign(rigidBody.linearVelocity.x) != Mathf.Sign(force.x))
-            force.x -= rigidBody.linearVelocity.x;
+        if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
+            force.x -= rb.linearVelocity.x;
 
-        if (rigidBody.linearVelocity.y < 0)
-            force.y -= rigidBody.linearVelocity.y;
+        if (rb.linearVelocity.y < 0)
+            force.y -= rb.linearVelocity.y;
 
-        rigidBody.AddForce(force, ForceMode2D.Impulse);
+        rb.AddForce(force, ForceMode2D.Impulse);
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
@@ -632,10 +696,10 @@ public class PlayerMove : MonoBehaviour
 
     public void ScaleJump()
     {
-        if (rigidBody.linearVelocity.y > 0)
+        if (rb.linearVelocity.y > 0)
         {
             if (!jumpAction.action.IsPressed() && !isWallRunning)
-                rigidBody.linearVelocity = new Vector2(rigidBody.linearVelocity.x, rigidBody.linearVelocity.y * _velocityModifierForJumpScale);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * _velocityModifierForJumpScale);
         }
     }
 
@@ -675,7 +739,7 @@ public class PlayerMove : MonoBehaviour
         canJump = false;
 
         if (isDashing)
-            rigidBody.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+            rb.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
 
         yield return new WaitForSeconds(0.15f); //0.1 
         PlayerAttack.Instance.CanAttack = true;
