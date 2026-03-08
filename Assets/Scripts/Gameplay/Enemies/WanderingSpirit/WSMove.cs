@@ -12,12 +12,15 @@ public class WSMove : MonoBehaviour
     private Transform fallCheck;
     private Transform wallCheck;
 
+    private Rigidbody2D rb;
+
     private bool isPlat;
     private bool isObstacle;
 
     private void Awake()
     {
         wsView = GetComponent<WanderingSpiritView>();
+        rb = GetComponent<Rigidbody2D>();
 
         fallCheck = transform.Find("FallCheck");
         wallCheck = transform.Find("WallCheck");
@@ -25,7 +28,7 @@ public class WSMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Mathf.Abs(wsView.RigidBody.linearVelocity.y) < 0.1f)
+        if (Mathf.Abs(rb.linearVelocity.y) < 0.1f)
         {
             isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
             isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
