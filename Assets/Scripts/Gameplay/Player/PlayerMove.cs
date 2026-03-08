@@ -266,11 +266,15 @@ public class PlayerMove : MonoBehaviour
         {
             SetPlayerAirState(AirState.Falling);
 
+            if (isDashing)
+            {
+                return;
+            }
+
             if ((isJumping || isWallJumping || isWallRunJumping))
             {
                 if (rb.linearVelocity.y < 0)
                 {
-                    //rb.linearVelocityY -= _jumpFallVelocityModifier;
                     rb.gravityScale = _initialGravityScale * _gravityFallJumpModifier;
                 }
                 if (Mathf.Abs(rb.linearVelocity.y) <= 0.3)
@@ -284,16 +288,15 @@ public class PlayerMove : MonoBehaviour
                 //}
                 else if (rb.linearVelocity.y > 0.3)
                 {
-                    //rb.gravityScale = _initialGravityScale;
                     rb.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
                 }
 
-                //if (!isWallJumping || !isWallRunJumping)
-                //{
-                //    rb.linearVelocity = new Vector2(
-                //                                Mathf.Lerp(rb.linearVelocity.x, rb.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
-                //                                rb.linearVelocity.y);
-                //}
+                if (!isWallJumping || !isWallRunJumping || !isDashing)
+                {
+                    rb.linearVelocity = new Vector2(
+                                                Mathf.Lerp(rb.linearVelocity.x, rb.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
+                                                rb.linearVelocity.y);
+                }
             }
         }
         else if (isWallSliding || isWallRunning)
@@ -656,7 +659,7 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);
 
         limitVelocityOnWallJump = true;
-        StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
+        StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
         canDoubleJump = true;
     }
 
@@ -690,7 +693,7 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);
 
         limitVelocityOnWallJump = true;
-        StartCoroutine(WaitAfterWallJump(timeToWaitAfterWallJump));
+        StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
         canDoubleJump = true;   
     }
 
@@ -739,11 +742,15 @@ public class PlayerMove : MonoBehaviour
         canJump = false;
 
         if (isDashing)
+        {
+            rb.gravityScale = 0f;
             rb.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+        }
 
         yield return new WaitForSeconds(0.15f); //0.1 
         PlayerAttack.Instance.CanAttack = true;
         isDashing = false;
+        rb.gravityScale = _initialGravityScale;
         PlayerAttack.Instance.SpendMana = true;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
@@ -758,7 +765,7 @@ public class PlayerMove : MonoBehaviour
         canMove = true;
     }
 
-    private IEnumerator WaitAfterWallJump(float time)
+    private IEnumerator WaitToMoveAfterWallJump(float time)
     {
         yield return new WaitForSeconds(time);
         limitVelocityOnWallJump = false;
