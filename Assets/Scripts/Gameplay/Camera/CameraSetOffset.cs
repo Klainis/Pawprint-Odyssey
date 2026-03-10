@@ -10,6 +10,8 @@ public class CameraSetOffset : MonoBehaviour
 
     private Transform _player;
 
+    private float _initialOffsetX;
+
     private void Awake()
     {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
@@ -18,7 +20,9 @@ public class CameraSetOffset : MonoBehaviour
     private void Start()
     {
         _player = _virtualCamera.Follow;
-        _playerMove = _player.gameObject.GetComponent<PlayerMove>();  
+        _playerMove = _player.gameObject.GetComponent<PlayerMove>();
+
+        _initialOffsetX = _transposer.m_TrackedObjectOffset.x;
     }
 
     private void FixedUpdate()
@@ -26,11 +30,11 @@ public class CameraSetOffset : MonoBehaviour
         if (_playerMove == null) return;
         if (_playerMove.WallCheck.localPosition.x < 0)
         {
-            _transposer.m_TrackedObjectOffset.x = -1;
+            _transposer.m_TrackedObjectOffset.x = -_initialOffsetX;
         }
         else
         {
-            _transposer.m_TrackedObjectOffset.x = 1;
+            _transposer.m_TrackedObjectOffset.x = _initialOffsetX;
         }
         
     }

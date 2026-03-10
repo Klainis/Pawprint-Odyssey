@@ -14,8 +14,18 @@ public class WSAnimation : MonoBehaviour
         animator.SetBool("Hit", value);
     }
 
+    public void SetBoolAttack(bool value)
+    {
+        animator.SetBool("Attack", value);
+    }
+
     public void SetTriggerDead()
     {
         animator.SetTrigger("Dead");
+    }
+
+    public void SetBoolMove(bool value)
+    {
+        animator.SetBool("Move", value);
     }
 }

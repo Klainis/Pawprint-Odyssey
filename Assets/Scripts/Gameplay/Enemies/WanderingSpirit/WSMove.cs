@@ -12,12 +12,15 @@ public class WSMove : MonoBehaviour
     private Transform fallCheck;
     private Transform wallCheck;
 
+    private Rigidbody2D rb;
+
     private bool isPlat;
     private bool isObstacle;
 
     private void Awake()
     {
         wsView = GetComponent<WanderingSpiritView>();
+        rb = GetComponent<Rigidbody2D>();
 
         fallCheck = transform.Find("FallCheck");
         wallCheck = transform.Find("WallCheck");
@@ -25,10 +28,14 @@ public class WSMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
-        isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
-        if (!isPlat || isObstacle)
-            OnWallHit?.Invoke();
+        if (Mathf.Abs(rb.linearVelocity.y) < 0.1f)
+        {
+            isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
+            isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
+
+            if (!isPlat || isObstacle)
+                OnWallHit?.Invoke();
+        }
     }
 
     public void Move(bool isAccelerated = false, float acceleratedSpeed = 0f)
@@ -36,7 +43,7 @@ public class WSMove : MonoBehaviour
         if (wsView.IsHitted || Mathf.Abs(wsView.RigidBody.linearVelocity.y) > 0.5f)
             return;
 
-        var moveSpeed = isAccelerated ? acceleratedSpeed : wsView.Model.Speed;
+        var moveSpeed = isAccelerated ? acceleratedSpeed: wsView.Model.Speed;
         var moveDirection = wsView.FacingRight ? -1 : 1;
 
         if (!wsView.IsHitted)

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using GlobalEnums;
 using Unity.AppUI.UI;
 
 public class GameManager : MonoBehaviour
@@ -32,7 +31,6 @@ public class GameManager : MonoBehaviour
     private string _currentScene;
 
     private bool isTransitioning;
-    private bool mapOpened = false;
     private bool inPauseMenu = false;
     private bool inGameMenu = false;
     private bool gamePaused = false;
@@ -85,6 +83,11 @@ public class GameManager : MonoBehaviour
     public void SetGameState(GameState newState)
     {
         GameState = newState;
+    }
+
+    public void SetCutsceneState()
+    {
+        GameState = GameState.CUTSCENE;
     }
 
     public void RevivalPlayer()
@@ -388,8 +391,7 @@ public class GameManager : MonoBehaviour
 
         inGameMenu = false;
         _gameMenuCanvasInstance.SetActive(false);
-        CloseMap();
-        CloseAbilitiesTree();
+        GameMenuUI.Instance.ResetWindowNumber();
         UnpauseGame();
         SetGameState(GameState.PLAYING);
     }

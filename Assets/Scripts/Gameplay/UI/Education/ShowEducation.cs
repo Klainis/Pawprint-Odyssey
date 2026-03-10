@@ -5,6 +5,7 @@ public class ShowEducation : MonoBehaviour
 {
     [Header("What education")]
     [SerializeField] private bool isMove;
+    [SerializeField] private bool isWallJump;
     [SerializeField] private bool isAttack;
     [SerializeField] private bool isInteract;
     [SerializeField] private bool isClaw;
@@ -32,6 +33,13 @@ public class ShowEducation : MonoBehaviour
         if(isMove)
         {
             if(PlayerInput.Instance.PlayerMovingEd)
+            {
+                FadeOut();
+            }
+        }
+        if (isWallJump)
+        {
+            if (PlayerMove.Instance.IsWallJumping)
             {
                 FadeOut();
             }

@@ -9,6 +9,8 @@ public class MusicHandler : MonoBehaviour
 
     [Header("Music")]
     [SerializeField] private AudioClip _mainMusicClip;
+    [SerializeField] private AudioClip _spiritGuideMusicClip;
+    [SerializeField] private AudioClip _GuardianOwlMusicClip;
 
     [Header("Parameters")]
     [SerializeField][Range(-40f, 0f)] private float _musicVolumeInMenu = -20f;
@@ -39,7 +41,7 @@ public class MusicHandler : MonoBehaviour
     private void Update()
     {
         audioMaster.GetFloat("MasterVolume", out float currentDB);
-        Debug.Log(currentDB);
+        //Debug.Log(currentDB);
     }
 
     public void AudioFadeOut()
@@ -75,6 +77,8 @@ public class MusicHandler : MonoBehaviour
         audioMaster.GetFloat("MasterVolume", out float currentDB);
         StartCoroutine(FadeAudio(currentDB, 0f, 0.7f * fadeDuration));
     }
+
+
 
     private IEnumerator FadeAudio(float startVolume, float endVolume, float duration)
     {

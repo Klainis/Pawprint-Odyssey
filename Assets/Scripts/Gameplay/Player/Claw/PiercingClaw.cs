@@ -52,7 +52,7 @@ public class PiercingClaw : MonoBehaviour
             //Debug.Log("Claw");
             playerMana.SpendMana("Claw");
 
-            playerAnimation.SetTriggerClaw();
+            playerAnimation.SetBoolClaw(true);
             canAttack = false;
             StartCoroutine(AttackCooldown(1f));
         }
@@ -76,8 +76,11 @@ public class PiercingClaw : MonoBehaviour
 
     private IEnumerator AttackCooldown(float durationAfterSeries)
     {
-        yield return new WaitForSeconds(durationAfterSeries);
+        var clawEnd = 0.4f;
+        yield return new WaitForSeconds(clawEnd);
+        playerAnimation.SetBoolClaw(false);
         clawSprite.SetActive(false);
+        yield return new WaitForSeconds(durationAfterSeries - clawEnd);
         canAttack = true;
     }
 }

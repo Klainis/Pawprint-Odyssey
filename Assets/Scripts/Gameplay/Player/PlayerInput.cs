@@ -68,6 +68,10 @@ public class PlayerInput : MonoBehaviour
         var isGameActive = Time.timeScale > 0;
         if (isGameActive)
         {
+            if (GameManager.Instance.GameState == GameState.CUTSCENE)
+                return;
+
+
             if (IsValidAction(pauseMenuAction))
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())
@@ -77,14 +81,6 @@ public class PlayerInput : MonoBehaviour
                 }
             }
 
-            //if (IsValidAction(mapAction))
-            //{
-            //    if (mapAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
-            //    {
-            //        GameManager.Instance.OpenMap();
-            //        return;
-            //    }
-            //}
             if (IsValidAction(gameMenuAction))
             {
                 if (gameMenuAction.action.WasPressedThisFrame() && playerMove.IsGrounded)
@@ -233,7 +229,7 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerMove.Move(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
+        playerMove.Movement(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
 
         if (jump)
             jumpPressed.Invoke();
@@ -273,13 +269,13 @@ public class PlayerInput : MonoBehaviour
             horizontalMove = 0f;
     }
 
-    public void OnFall()
-    {
-        playerAnimation.SetBoolIsJumping(true);
-    }
+    //public void OnFall()
+    //{
+    //    playerAnimation.SetBoolIsJumping(true);
+    //}
 
-    public void OnLanding()
-    {
-        playerAnimation.SetBoolIsJumping(false);
-    }
+    //public void OnLanding()
+    //{
+    //    playerAnimation.SetBoolIsJumping(false);
+    //}
 }

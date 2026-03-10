@@ -107,12 +107,10 @@ public class ArmoredBugView : MonoBehaviour
         if ((direction > 0 && !_facingRight) ||
             (direction < 0 && _facingRight))
         {
-            Debug.Log("”дар по жопе");
             damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         }
         else
         {
-            Debug.Log("”дар по броне");
             damageApplied = false;
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);

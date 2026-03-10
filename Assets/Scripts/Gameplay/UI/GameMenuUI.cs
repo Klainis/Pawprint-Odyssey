@@ -77,6 +77,11 @@ public class GameMenuUI : MonoBehaviour
         _windowButtons.Add(_abilityButton);
     }
 
+    public void ResetWindowNumber()
+    {
+        _windowNumber = 0;
+    }
+
     public void SwapToRightWindow()
     {
         _windowNumber++;
@@ -105,7 +110,7 @@ public class GameMenuUI : MonoBehaviour
         _windowButtons[_windowNumber].isOn = true;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         if (_mapButton == null || _abilityButton == null)
         {
@@ -122,7 +127,7 @@ public class GameMenuUI : MonoBehaviour
         _mapButton.isOn = true;
         _abilityButton.isOn = false;
         EventSystem.current.SetSelectedGameObject(_mapButton.gameObject);
-        GameManager.Instance.OpenMap();
+        //GameManager.Instance.OpenMap();
     }
 
     //private void OnDisable()

@@ -18,7 +18,6 @@ public class ReceivingClaw : MonoBehaviour
     {
         playerMana = GetComponent<PlayerMana>();
         manaBar = InitializeManager.Instance.manaBar;
-        //Debug.Log(manaBar != null);
         SetActiveManaBar();
     }
 
@@ -36,7 +35,7 @@ public class ReceivingClaw : MonoBehaviour
         if (PlayerView.Instance.PlayerModel.HasClaw)
         {
             piercingClaw.enabled = true;
-            PlayerMana.Instance.enabled = true;
+            playerMana.enabled = true;
             manaBar.SetActive(true);
         }
     }

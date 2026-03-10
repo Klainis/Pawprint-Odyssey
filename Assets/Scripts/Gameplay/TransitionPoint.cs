@@ -88,7 +88,7 @@ public class TransitionPoint : MonoBehaviour
 
             if (gatePosition == GatePosition.top)
             {
-                Vector2 targetPosition = new Vector2(playerPosition.x, gateBounds.max.y);
+                Vector2 targetPosition = new Vector2(playerPosition.x, gateBounds.max.y/*playerPosition.y + 200*/);
 
                 while (Vector2.Distance(playerPosition, targetPosition) > 0.01f)
                 {
@@ -114,7 +114,7 @@ public class TransitionPoint : MonoBehaviour
         }
     }
 
-    private IEnumerator WalkOutGate(Collider2D playerCollider, /*Vector2 targetPosotion,*/ float speed)
+    private IEnumerator WalkOutGate(Collider2D playerCollider, float speed)
     {
         GatePosition gatePosition = GetGatePosition();
 
