@@ -450,7 +450,7 @@ public class PlayerMove : MonoBehaviour
 
         if ((isWallJumping || isWallRunJumping) && move == 0)
         {
-            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x, rb.linearVelocity.y);
+            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
 
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, movementSmoothing);
         }

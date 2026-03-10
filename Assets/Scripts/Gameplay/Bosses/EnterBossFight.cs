@@ -16,6 +16,11 @@ public class EnterBossFight : MonoBehaviour
     private CinemachineVirtualCamera _followCamera;
     private Transform _initialFollowTarget;
 
+    private void Awake()
+    {
+        _followCamera = GameObject.FindGameObjectWithTag("CinemachineFollowCamera").GetComponent<CinemachineVirtualCamera>();
+    }
+
     private void Start()
     {
         var guideIsDeadOrMissing = CheckAndInitSpiritGuide();
@@ -31,7 +36,6 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _followCamera = GameObject.FindGameObjectWithTag("CinemachineFollowCamera").GetComponent<CinemachineVirtualCamera>();
             //_initialFollowTarget = _followCamera.Follow;
 
             if (_door != null && _spiritGuide != null)
@@ -51,7 +55,7 @@ public class EnterBossFight : MonoBehaviour
                     _door.CloseDoor(true);
                 }
 
-                StartCoroutine(WaitForShowBoss(1f));
+                //StartCoroutine(WaitForShowBoss(1f));
                 PlayerMove.Instance.CanMove = true;
                 _guideView.MoveDisabled = false;
                 //Debug.Log(_followCamera.Follow);
@@ -90,6 +94,7 @@ public class EnterBossFight : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") && GameManager.Instance.GameState != GameState.IN_FIGHT_ROOM)
         {
             _health.DestroyBossHealthSlider();
+            _followCamera.Priority = 10;
         }
     }
 
