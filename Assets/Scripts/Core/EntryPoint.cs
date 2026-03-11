@@ -24,6 +24,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject globalLightPrefab;
     [SerializeField] private GameObject canvasPrefab;
     [SerializeField] private GameObject heartsPrefab;
+    [SerializeField] private GameObject mapEducationUIPrefab;
     [SerializeField] private GameObject manaBarPrefab;
     [SerializeField] private GameObject crystalCounterPrefab;
     [SerializeField] private GameObject moneyCounterPrefab;
@@ -55,6 +56,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _globalLightInstance;
     private GameObject _canvasInstance;
     private GameObject _transitionCanvasInstance;
+    private GameObject _mapEducationUIInstance;
     private GameObject _heartsInstance;
     private GameObject _manaBarInstance;
     private GameObject _crystalCounterInstance;
@@ -437,6 +439,12 @@ public class EntryPoint : MonoBehaviour
                 DontDestroyOnLoad(_heartsInstance);
                 if (playerInitialized)
                     StartHearts();
+            }
+
+            if (mapEducationUIPrefab != null)
+            {
+                _mapEducationUIInstance = Instantiate(mapEducationUIPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad (_mapEducationUIInstance);
             }
         }
     }

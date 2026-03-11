@@ -259,7 +259,11 @@ public class PlayerMove : MonoBehaviour
         // --- MOVE ---
         DoMove(moveX);
 
-        Debug.Log(rb.gravityScale);
+        // --- JUMP ---
+        DoJump(jump);
+        //Debug.Log(lastPressedJumpTime);
+
+        //Debug.Log(rb.gravityScale);
         if (!isGrounded &&
             !isWallSliding &&
             !isWallRunning)
@@ -291,7 +295,7 @@ public class PlayerMove : MonoBehaviour
                     rb.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
                 }
 
-                if (!isWallJumping || !isWallRunJumping || !isDashing)
+                if (!isWallJumping && !isWallRunJumping && !isDashing)
                 {
                     rb.linearVelocity = new Vector2(
                                                 Mathf.Lerp(rb.linearVelocity.x, rb.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
@@ -314,10 +318,6 @@ public class PlayerMove : MonoBehaviour
 
         if (rb.linearVelocity.y < -limitFallSpeed)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, -limitFallSpeed);
-
-        // --- JUMP ---
-        DoJump(jump);
-        //Debug.Log(lastPressedJumpTime);
 
         // --- WALL RUN ---
         if (canWallRun)
@@ -450,15 +450,16 @@ public class PlayerMove : MonoBehaviour
 
         if ((isWallJumping || isWallRunJumping) && move == 0)
         {
-            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
+            //var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
 
-            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, movementSmoothing);
+            //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, 0.35f);
+            return;
         }
 
         var targetVelocity = new Vector2(move * 10f, rb.linearVelocity.y);
         if (_airState == AirState.Grounded)
         {
-            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, movementSmoothing);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 1);
         }
         else if (_airState == AirState.Falling)
         {

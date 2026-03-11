@@ -36,7 +36,7 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //_initialFollowTarget = _followCamera.Follow;
+            _initialFollowTarget = _followCamera.Follow;
 
             if (_door != null && _spiritGuide != null)
             {
@@ -49,7 +49,7 @@ public class EnterBossFight : MonoBehaviour
                 {
                     PlayerMove.Instance.CanMove = false;
                     //_followCamera.Follow = _spiritGuide.transform;
-                    _followCamera.Priority = 0;
+                    //_followCamera.Priority = 0;
                     GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                     _door.CloseDoor(true);
@@ -74,12 +74,12 @@ public class EnterBossFight : MonoBehaviour
                 if (!_guardianOwlView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
                     PlayerMove.Instance.CanMove = false;
-                    _followCamera.Follow = _guardianOwl.transform;
+                    //_followCamera.Follow = _guardianOwl.transform;
                     GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
                     _health.InstantiateBossHealth();
                 }
 
-                StartCoroutine(WaitForShowBoss(1.5f));
+                //StartCoroutine(WaitForShowBoss(1.5f));
                 PlayerMove.Instance.CanMove = true;
             }
             else
@@ -103,8 +103,8 @@ public class EnterBossFight : MonoBehaviour
     private IEnumerator WaitForShowBoss(float time)
     {
         yield return new WaitForSeconds(time);
-        //_followCamera.Follow = _initialFollowTarget;
-        _followCamera.Priority = 10;
+        _followCamera.Follow = _initialFollowTarget;
+        _followCamera.Priority = 0;
     }
 
     //private IEnumerator SetFollowTarget(Transform initial, Transform target)

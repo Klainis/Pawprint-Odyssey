@@ -11,5 +11,6 @@ public class CinemachineSetFollow : MonoBehaviour
         cinemachine = GetComponent<CinemachineVirtualCamera>();
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         cinemachine.Follow = player;
+        cinemachine.LookAt = player;
     }
 }
