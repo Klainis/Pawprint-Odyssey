@@ -14,6 +14,7 @@ public class MusicHandler : MonoBehaviour
 
     [Header("Parameters")]
     [SerializeField][Range(-40f, 0f)] private float _musicVolumeInMenu = -20f;
+    [SerializeField][Range(-40f, 0f)] private float _globalVolume = 0f;
 
     [SerializeField] private AudioMixer audioMaster;
     [SerializeField] private float fadeDuration = 1f;
@@ -42,6 +43,10 @@ public class MusicHandler : MonoBehaviour
     {
         audioMaster.GetFloat("MasterVolume", out float currentDB);
         //Debug.Log(currentDB);
+        if (currentDB != _globalVolume)
+        {
+            SetGlobalVolume();
+        }
     }
 
     public void AudioFadeOut()
@@ -78,6 +83,11 @@ public class MusicHandler : MonoBehaviour
         StartCoroutine(FadeAudio(currentDB, 0f, 0.7f * fadeDuration));
     }
 
+    public void SetGlobalVolume()
+    {
+        audioMaster.GetFloat("MasterVolume", out float currentDB);
+        StartCoroutine(FadeAudio(currentDB, _globalVolume, fadeDuration));
+    }
 
 
     private IEnumerator FadeAudio(float startVolume, float endVolume, float duration)

@@ -22,6 +22,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference buyAbility;
     [SerializeField] private InputActionReference interactAction;
     [SerializeField] private InputActionReference clawAction;
+    [SerializeField] private InputActionReference lookAction;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -38,6 +39,7 @@ public class PlayerInput : MonoBehaviour
     private bool dash = false;
     private bool grab = false;
     private bool run = false;
+    private Vector2 look = Vector2.zero;
 
     public bool InteractPressed { get { return interactPressed; } }
     public bool PlayerMovingEd { get; private set; } = false;
@@ -46,6 +48,7 @@ public class PlayerInput : MonoBehaviour
     public bool PlayerClawEd { get { return clawPressed; } }
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
     public bool DamageDashActive { get; private set; }
+    public Vector2 VectorLookAction { get { return look; } }
 
     #region Common Methods
 
@@ -225,6 +228,15 @@ public class PlayerInput : MonoBehaviour
         }
 
         //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
+        if (IsValidAction(lookAction))
+        {
+            //Debug.Log(playerMove.IsGrounded);
+            if (playerMove.IsGrounded)
+            {
+                look = lookAction.action.ReadValue<Vector2>();
+                //Debug.Log(look);
+            }
+        }
     }
 
     private void FixedUpdate()
