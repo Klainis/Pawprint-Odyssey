@@ -15,11 +15,11 @@ public class WanderingSpiritView : MonoBehaviour
     [SerializeField] private bool isInvincible = false;
 
     [Header("Attack")]
-    [SerializeField] private float jumpHeight = 1.75f;
-    [SerializeField] private float attackCooldown = 2f;
-    [SerializeField] private float stayAfterAttackDelay = 1.0f;
-    [SerializeField] private float playerDetectDist = 5f;
-    [SerializeField] private float telegraphTime = 0.25f;
+    [SerializeField] private float _jumpHeight = 1.75f;
+    [SerializeField] private float _attackCooldown = 2f;
+    [SerializeField] private float _stayAfterAttackDelay = 1.0f;
+    [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _telegraphTime = 0.25f;
 
     [Header("Not used")]
     [SerializeField] private float acceleratedSpeed = 5f;
@@ -47,7 +47,6 @@ public class WanderingSpiritView : MonoBehaviour
     private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
-    private float _lastAttackTime;
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool facingRight = true;
@@ -56,7 +55,7 @@ public class WanderingSpiritView : MonoBehaviour
 
     #region Properties
 
-    public float PlayerDetectDist { get { return playerDetectDist; } }
+    public float PlayerDetectDist { get { return _playerDetectDist; } }
     public Rigidbody2D RigidBody { get { return rigidBody; } }
     public bool IsHitted { get { return isHitted; } }
     public bool IsAccelerated { get { return isAccelerated; } set { isAccelerated = value; } }
@@ -214,13 +213,11 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (Time.time < _lastAttackTime + attackCooldown || wsAttack.IsAttacking)
+        if (!wsAttack.CanAttack(_attackCooldown))
             return;
 
-        if (!wsAttack.CanJumpUp(jumpHeight))
+        if (!wsAttack.CanJumpUp(_jumpHeight))
             return;
-
-        wsAttack.SetIsAttacking(true);
 
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
@@ -228,15 +225,14 @@ public class WanderingSpiritView : MonoBehaviour
         if (faceRight != facingRight)
             facingRight = wsMove.Turn(facingRight);
 
-        wsAnimation.SetBoolMove(true);
-        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine(faceRight));
+        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
     }
 
     #endregion
 
     #region IEnumerators
 
-    private IEnumerator AttackTelegraphRoutine(bool faceRight)
+    private IEnumerator AttackTelegraphRoutine()
     {
         var playerPos = playerAttack.transform.position;
         wsAttack.SetIsAttacking(true);
@@ -246,22 +242,19 @@ public class WanderingSpiritView : MonoBehaviour
         renderer.color = Color.red;
         rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        yield return new WaitForSeconds(telegraphTime);
+        yield return new WaitForSeconds(_telegraphTime);
 
         renderer.color = _defaultColor;
         rigidBody.constraints = _defaultConstraints;
 
         if (playerAttack != null)
-        {
-            wsAttack.JumpToPoint(playerPos, jumpHeight);
-        }
+            wsAttack.JumpToPoint(playerPos, _jumpHeight);
 
         yield return new WaitUntil(() => rigidBody.linearVelocity.y < 0);
         yield return new WaitUntil(() => Mathf.Abs(rigidBody.linearVelocity.y) < 0.1f);
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(stayAfterAttackDelay);
 
-        _lastAttackTime = Time.time;
+        wsAttack.UpdateLastAttackTime();
         wsAttack.SetIsAttacking(false);
         wsAnimation.SetBoolAttack(false);
         _telegraphCoroutine = null;

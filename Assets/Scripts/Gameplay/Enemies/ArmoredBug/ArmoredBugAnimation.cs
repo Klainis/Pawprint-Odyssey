@@ -23,4 +23,9 @@ public class ArmoredBugAnimation : MonoBehaviour
     {
         _animator.SetTrigger("Dead");
     }
+
+    public void SetBoolAttack(bool value)
+    {
+        _animator.SetBool("Attack", value);
+    }
 }
