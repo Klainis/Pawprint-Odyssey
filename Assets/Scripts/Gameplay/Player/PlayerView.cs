@@ -15,6 +15,7 @@ public class PlayerView : MonoBehaviour
     [Header("Parameters")]
     [SerializeField] private float _invisibleTime = 1.3f;
     [SerializeField] private float _damageFlashSpeed = 5.5f;
+    [SerializeField] private float _knockbackForce = 10f;
 
     //[Header("Events")]
     //[Space]
@@ -80,66 +81,6 @@ public class PlayerView : MonoBehaviour
     {
         if (playerInput.AttackPressed)
             playerAttack.Attack();
-
-        //var wasGrounded = playerMove.IsGrounded;
-        //playerMove.IsGrounded = false;
-
-        //if (Physics2D.Raycast(playerMove.GroundCheck.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
-        //{
-        //    playerMove.IsGrounded = true;
-        //    playerMove.ResetDashCounter();
-
-        //    if (playerMove.IsJumping && playerMove.PlayerRigidbody.linearVelocity.y <= 0)
-        //    {
-        //        playerMove.IsJumping = false;
-        //    }
-
-        //    if (!wasGrounded)
-        //    {
-        //        playerAnimation.SetBoolIsJumping(false);//
-
-        //        if (!playerMove.IsWall && !playerMove.IsDashing)
-        //            playerMove.PlayParticleJumpDown();
-
-        //        playerMove.CanDoubleJump = true;
-
-        //        if (rb.linearVelocity.y < 0f)
-        //            playerMove.LimitVelOnWallJump = false;
-        //    }
-        //}
-
-        //playerMove.WallHit = false;
-
-        //if (playerMove.IsSpeedRunning)
-        //{
-        //    var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-        //    var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
-        //    playerMove.WallHit = leftHit || rightHit;
-
-        //    if (playerMove.WallHit)
-        //    {
-        //        playerMove.StopRunAfterHit();
-        //    }
-        //}
-
-        //playerMove.IsWall = false;
-
-        //if (!playerMove.IsGrounded)
-        //{
-        //    playerAnimation.SetBoolIsJumping(true);
-
-        //    var leftHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-        //    var rightHit = Physics2D.Raycast(playerMove.WallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
-        //    playerMove.IsWall = leftHit || rightHit;
-
-        //    if (playerMove.IsWall)
-        //    {
-        //        playerMove.ResetDashCounter();
-        //        playerMove.IsDashing = false;
-        //    }
-        //}
-
-        //playerMove.ScaleJump();
     }
 
     #endregion
@@ -184,7 +125,7 @@ public class PlayerView : MonoBehaviour
 
         var damageDir = Vector3.Normalize(transform.position - position) * 40f;
         rigidBody.linearVelocity = Vector2.zero;
-        rigidBody.AddForce(damageDir * 15);
+        rigidBody.AddForce(damageDir * _knockbackForce);
 
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());
