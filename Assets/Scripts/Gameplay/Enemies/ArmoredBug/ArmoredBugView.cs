@@ -130,7 +130,7 @@ public class ArmoredBugView : MonoBehaviour
             _damageFlash.CallDamageFlash();
 
             _bugAnimation.SetBoolHit(true);
-            StartCoroutine(HitTime(1f));
+            //StartCoroutine(HitTime(1f));
             _rigidBody.linearVelocity = Vector2.zero;
 
             _screenShaker.Shake();
@@ -138,14 +138,12 @@ public class ArmoredBugView : MonoBehaviour
 
             if (_playerAttack.AttackSeriesCount == 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _lastPlayerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
-                KnockBack(direction, _lastPlayerAttackForce);
+                //KnockBack(direction, _lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
             else if (_playerAttack.AttackSeriesCount < 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _playerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
-                KnockBack(direction, _playerAttackForce);
+                //KnockBack(direction, _playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }

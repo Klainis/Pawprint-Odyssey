@@ -115,7 +115,7 @@ public class WanderingSpiritView : MonoBehaviour
             _damageFlash.CallDamageFlash();
 
             wsAnimation.SetBoolHit(true);
-            StartCoroutine(HitTime(1f));
+            //StartCoroutine(HitTime(1f));
             rigidBody.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);
@@ -124,12 +124,12 @@ public class WanderingSpiritView : MonoBehaviour
 
             if (playerAttack.AttackSeriesCount == 3)
             {
-                KnockBack(direction, lastPlayerAttackForce);
+                //KnockBack(direction, lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
             else if (playerAttack.AttackSeriesCount < 3)
             {
-                KnockBack(direction, playerAttackForce);
+                //KnockBack(direction, playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }
