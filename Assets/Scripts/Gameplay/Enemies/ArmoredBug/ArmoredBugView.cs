@@ -116,7 +116,7 @@ public class ArmoredBugView : MonoBehaviour
             damageApplied = false;
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);
-            //«вук удара по броне
+            _bugAnimation.SetBoolBlockHit(true);
         }
 
         if (Model.IsDead)
