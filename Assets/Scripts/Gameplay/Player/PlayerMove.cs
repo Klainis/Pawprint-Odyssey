@@ -44,6 +44,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _gravityFallJumpModifier = 1f;
     [SerializeField] private float _gravityUpJumpModifier = 0.8f;
     [SerializeField] private float _jumpHorizantalVelocityModifier = 0.5f;
+    [Space(5)]
+    [SerializeField] private float limitFallSpeed = 25f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
@@ -75,7 +77,6 @@ public class PlayerMove : MonoBehaviour
     private float lastPressedJumpTime;
     private float prevVelocityX = 0f;
     private float jumpWallDistX = 0;
-    private float limitFallSpeed = 28f;
     private float _initialGravityScale;
     private int dashCounter = 0;
     private int turnCoefficient = 1;
@@ -102,6 +103,8 @@ public class PlayerMove : MonoBehaviour
     private bool isTurnOld = false;
     private bool canWallRun = true;
 
+    //private float _fallSpeedYDampingChangeThreshold;
+
     #endregion
 
     #region Properties
@@ -111,23 +114,14 @@ public class PlayerMove : MonoBehaviour
 
     //public Transform GroundCheck { get { return groundCheck; } }
     public Transform WallCheck { get { return wallCheck; } }
-    //public float CoyoteTime { get { return coyoteTime; } }
-    //public float LastOnGroundTime { get { return lastOnGroundTime; } set { lastOnGroundTime = value; } }
-    //public float LastPressedJumpTime { get { return lastPressedJumpTime; } set { lastPressedJumpTime = value; } }
-    //public float PrevVelocityX { get { return prevVelocityX; } set { prevVelocityX = value; } }
-    //public float JumpWallDistX { get { return jumpWallDistX; } set { jumpWallDistX = value; } }
+
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
-    //public bool CanDoubleJump { get { return canDoubleJump; } set { canDoubleJump = value; } }
-    //public bool IsWall { get { return isWall; } set { isWall = value; } }
+
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
     public bool IsDashing { get { return isDashing; } set { isDashing = value; } }
-    //public bool IsSpeedRunning { get { return isSpeedRunning; } set { isSpeedRunning = value; } }
-    //public bool WallHit { get { return wallHit; } set { wallHit = value; } }
-    //public bool LimitVelOnWallJump { get { return limitVelocityOnWallJump; } set { limitVelocityOnWallJump = value; } }
-    //public bool IsWallSliding { get; set; }
-    //public Rigidbody2D PlayerRigidbody { get { return rb; } }
+
     public bool PlayerDoubleJumpEd { get; set; } = false;
     public bool IsWallJumping { get { return isWallJumping; } }
 
@@ -143,11 +137,11 @@ public class PlayerMove : MonoBehaviour
         instance = this;
 
         rb = GetComponent<Rigidbody2D>();
-        //playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
-        //groundCheck = transform.Find("GroundCheck");
         wallCheck = transform.Find("WallCheck");
+
+        //_fallSpeedYDampingChangeThreshold = CameraManager.Instance.FallSpeedYDampingChangeTreshold;
     }
 
     private void Start()
@@ -318,6 +312,19 @@ public class PlayerMove : MonoBehaviour
 
         if (rb.linearVelocity.y < -limitFallSpeed)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, -limitFallSpeed);
+
+        //--- Camera Y Damping ---
+        if (rb.linearVelocity.y < CameraManager.Instance.FallSpeedYDampingChangeTreshold && !CameraManager.Instance.IsLerpingYDamping && !CameraManager.Instance.LerpedFromPlayerFalling)
+        {
+            Debug.Log("Падаем и может дампфировать камеру!!!!!");
+            CameraManager.Instance.LerpYDamping(true);
+        }
+        if(rb.linearVelocity.y >= 0 && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.Instance.LerpedFromPlayerFalling = false;
+            
+            CameraManager.Instance.LerpYDamping(false);
+        }
 
         // --- WALL RUN ---
         if (canWallRun)

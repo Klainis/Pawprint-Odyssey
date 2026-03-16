@@ -20,6 +20,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private InitializeManager initializeManagerPrefab;
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
+    [SerializeField] private GameObject cameraManagerPrefab;
     [SerializeField] private GameObject globalVolumePrefab;
     [SerializeField] private GameObject globalLightPrefab;
     [SerializeField] private GameObject canvasPrefab;
@@ -52,6 +53,7 @@ public class EntryPoint : MonoBehaviour
     private InitializeManager _initializeManagerInstance;
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;
+    private GameObject _cameraManagerInstance;
     private GameObject _globalVolumeInstance;
     private GameObject _globalLightInstance;
     private GameObject _canvasInstance;
@@ -132,9 +134,15 @@ public class EntryPoint : MonoBehaviour
 
     private void CreateObjects()
     {
+        if (cameraManagerPrefab != null)
+        {
+            _cameraManagerInstance = Instantiate(cameraManagerPrefab);
+            DontDestroyOnLoad(_cameraManagerInstance);
+        }
+
         if (mainCameraPrefab != null)
         {
-            _mainCameraInstance = Instantiate(mainCameraPrefab);
+            _mainCameraInstance = Instantiate(mainCameraPrefab, _cameraManagerInstance.transform);
             DontDestroyOnLoad(_mainCameraInstance);
         }
 
