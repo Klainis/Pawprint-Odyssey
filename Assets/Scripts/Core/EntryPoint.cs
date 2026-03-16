@@ -142,7 +142,7 @@ public class EntryPoint : MonoBehaviour
 
         if (mainCameraPrefab != null)
         {
-            _mainCameraInstance = Instantiate(mainCameraPrefab, _cameraManagerInstance.transform);
+            _mainCameraInstance = Instantiate(mainCameraPrefab/*, _cameraManagerInstance.transform*/);
             DontDestroyOnLoad(_mainCameraInstance);
         }
 

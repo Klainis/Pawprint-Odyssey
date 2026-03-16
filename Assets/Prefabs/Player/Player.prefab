@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerView
   _invisibleTime: 1.3
   _damageFlashSpeed: 5.5
+  _knockbackForce: 10
 --- !u!114 &3721457989882947448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +190,7 @@ MonoBehaviour:
   _gravityFallJumpModifier: 1.25
   _gravityUpJumpModifier: 0.85
   _jumpHorizantalVelocityModifier: 0.9
+  limitFallSpeed: 20
   particleJumpUp: {fileID: 198584872278178884}
   particleJumpDown: {fileID: 198967111524372206}
   movementSmoothing: 1

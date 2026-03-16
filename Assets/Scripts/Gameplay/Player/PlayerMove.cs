@@ -316,10 +316,9 @@ public class PlayerMove : MonoBehaviour
         //--- Camera Y Damping ---
         if (rb.linearVelocity.y < CameraManager.Instance.FallSpeedYDampingChangeTreshold && !CameraManager.Instance.IsLerpingYDamping && !CameraManager.Instance.LerpedFromPlayerFalling)
         {
-            Debug.Log("Падаем и может дампфировать камеру!!!!!");
             CameraManager.Instance.LerpYDamping(true);
         }
-        if(rb.linearVelocity.y >= 0 && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
+        if(rb.linearVelocity.y >= -0.01f && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
         {
             CameraManager.Instance.LerpedFromPlayerFalling = false;
             
