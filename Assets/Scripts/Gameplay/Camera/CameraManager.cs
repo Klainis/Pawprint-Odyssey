@@ -24,6 +24,7 @@ public class CameraManager : MonoBehaviour
     private CinemachineFramingTransposer _cinemachineTransposer;
 
     public CinemachineVirtualCamera CinemachineCamera { get { return _currentCamera; } set { _currentCamera = value; } }
+    public bool PanStarting { get; set; } = false;
 
     private float _normYPanAmount;
 
@@ -74,6 +75,7 @@ public class CameraManager : MonoBehaviour
         {
             Debug.Log(cam.gameObject.name);
             _currentCamera = cam;
+            CameraFollowObject.Instance.SetFollowCamera(cam);
 
             _cinemachineTransposer = _currentCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
             _normYPanAmount = _cinemachineTransposer.m_YDamping;

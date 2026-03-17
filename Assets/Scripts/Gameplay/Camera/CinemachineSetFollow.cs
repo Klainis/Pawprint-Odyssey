@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class CinemachineSetFollow : MonoBehaviour
 {
-    private CinemachineVirtualCamera cinemachine;
-    private Transform player;
+    private CinemachineVirtualCamera _cinemachine;
+    private Transform _folowObjectPlayer;
 
     private void Awake()
     {
-        cinemachine = GetComponent<CinemachineVirtualCamera>();
-        player = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        cinemachine.Follow = player;
-        cinemachine.LookAt = player;
+        _cinemachine = GetComponent<CinemachineVirtualCamera>();
+        _folowObjectPlayer = GameObject.FindWithTag("FollowObjectPlayer").GetComponent<Transform>();
+        _cinemachine.Follow = _folowObjectPlayer;
+        //_cinemachine.LookAt = _folowObjectPlayer;
     }
 }

@@ -234,7 +234,7 @@ public class PlayerInput : MonoBehaviour
             if (playerMove.IsGrounded)
             {
                 look = lookAction.action.ReadValue<Vector2>();
-                //Debug.Log(look);
+                //Debug.Log(lookVector);
             }
         }
     }

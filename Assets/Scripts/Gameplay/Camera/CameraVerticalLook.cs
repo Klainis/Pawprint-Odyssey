@@ -12,7 +12,7 @@ public class CameraVerticalLook : MonoBehaviour
 
     private CinemachineFramingTransposer transposer;
     private Vector3 targetOffset = Vector3.zero;
-    private Vector2 look;
+    private Vector2 lookVector;
 
     private void Awake()
     {
@@ -48,12 +48,12 @@ public class CameraVerticalLook : MonoBehaviour
 
     private void Update()
     {
-        look = PlayerInput.Instance.VectorLookAction;
+        lookVector = PlayerInput.Instance.VectorLookAction;
 
-        float desiredY = look.y > 0? verticalRange : look.y < 0 ? -verticalRange: 0f;
+        float desiredY = lookVector.y > 0? verticalRange : lookVector.y < 0 ? -verticalRange: 0;
 
         targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, desiredY, 0f);
-        if (targetOffset != transposer.m_TrackedObjectOffset)
+        if (targetOffset != transposer.m_TrackedObjectOffset && !CameraManager.Instance.PanStarting)
         {
             transposer.m_TrackedObjectOffset = Vector3.MoveTowards(transposer.m_TrackedObjectOffset, targetOffset, 16 * Time.deltaTime);
         }

@@ -30,15 +30,18 @@ public class CameraFollowObject : MonoBehaviour
 
         _playerTransfom = GameObject.FindGameObjectWithTag("Player").transform;
         _isFacingRight = PlayerView.Instance.PlayerModel.FacingRight;
-
-        _followCamera = CameraManager.Instance.CinemachineCamera;
-        _transpoer = _followCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        _initialOffsetX = _transpoer.m_TrackedObjectOffset.x;
     }
 
     private void Update()
     {
         transform.position = _playerTransfom.position;
+    }
+
+    public void SetFollowCamera(CinemachineVirtualCamera followCamera)
+    {
+        _followCamera = followCamera;
+        _transpoer = _followCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        _initialOffsetX = _transpoer.m_TrackedObjectOffset.x;
     }
 
     public void CallTurn()

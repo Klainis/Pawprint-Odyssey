@@ -20,6 +20,7 @@ public class CameraControlTrigger : MonoBehaviour
         {
             if(customInspectorObjects.panCameraOnContact)
             {
+                CameraManager.Instance.PanStarting = true;
                 CameraManager.Instance.PanCameraOnContact(customInspectorObjects.panDistance, customInspectorObjects.panTime, customInspectorObjects.panDirection, false);
             }
         }
@@ -31,6 +32,7 @@ public class CameraControlTrigger : MonoBehaviour
         {
             if (customInspectorObjects.panCameraOnContact)
             {
+                CameraManager.Instance.PanStarting = false;
                 CameraManager.Instance.PanCameraOnContact(customInspectorObjects.panDistance, customInspectorObjects.panTime, customInspectorObjects.panDirection, true);
             }
         }
