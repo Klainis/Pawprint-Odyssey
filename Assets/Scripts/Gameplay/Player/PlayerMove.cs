@@ -175,8 +175,8 @@ public class PlayerMove : MonoBehaviour
             {
                 playerAnimation.SetBoolIsJumping(false);//
 
-                if (!isWall && !isDashing)
-                    PlayParticleJumpDown();
+                //if (!isWall && !isDashing)
+                //    PlayParticleJumpDown();
 
                 canDoubleJump = true;
 
@@ -318,7 +318,7 @@ public class PlayerMove : MonoBehaviour
         {
             CameraManager.Instance.LerpYDamping(true);
         }
-        if(rb.linearVelocity.y >= -0.01f && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
+        if(rb.linearVelocity.y >= 0f && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
         {
             CameraManager.Instance.LerpedFromPlayerFalling = false;
             
@@ -496,12 +496,17 @@ public class PlayerMove : MonoBehaviour
         {
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
+
+            CameraFollowObject.Instance.CallTurn();
         }
         else
         {
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
+
+            CameraFollowObject.Instance.CallTurn();
         }
+
         isTurnOld = false;
         PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
         transform.rotation = Quaternion.Euler(rotator);
@@ -612,7 +617,6 @@ public class PlayerMove : MonoBehaviour
             force -= rb.linearVelocity.y;
 
         rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        //rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
         canDoubleJump = true;
         PlayParticleJumpDown();

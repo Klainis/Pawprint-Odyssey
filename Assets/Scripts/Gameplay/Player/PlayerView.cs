@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class PlayerView : MonoBehaviour
 {
+    private static PlayerView instance;
+    public static PlayerView Instance { get { return instance; } }
     #region SerializeFields
 
     //[Header("Layers")]
@@ -37,7 +39,6 @@ public class PlayerView : MonoBehaviour
     private Interact playerInteract;
     private BoxCollider2D _playerCollider;
 
-    private static PlayerView instance;
     private GameObject _manaBar;
 
     private bool isInvincible = false;
@@ -45,8 +46,6 @@ public class PlayerView : MonoBehaviour
     #endregion
 
     #region Properties
-
-    public static PlayerView Instance { get { return instance; } }
     public PlayerModel PlayerModel { get; set; }
     public PlayerAnimation PlayerAnimation { get { return playerAnimation; } }
 

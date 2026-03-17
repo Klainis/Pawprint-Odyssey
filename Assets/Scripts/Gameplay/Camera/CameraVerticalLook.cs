@@ -53,7 +53,10 @@ public class CameraVerticalLook : MonoBehaviour
         float desiredY = look.y > 0? verticalRange : look.y < 0 ? -verticalRange: 0f;
 
         targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, desiredY, 0f);
-        transposer.m_TrackedObjectOffset = Vector3.MoveTowards(transposer.m_TrackedObjectOffset, targetOffset, 16 * Time.deltaTime);
+        if (targetOffset != transposer.m_TrackedObjectOffset)
+        {
+            transposer.m_TrackedObjectOffset = Vector3.MoveTowards(transposer.m_TrackedObjectOffset, targetOffset, 16 * Time.deltaTime);
+        }
         //Debug.Log(transposer.m_TrackedObjectOffset);
         //Debug.Log(targetOffset);
     }
