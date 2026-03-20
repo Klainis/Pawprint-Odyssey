@@ -9,14 +9,14 @@ public class ArmoredBugAnimation : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetBoolHit(bool value)
+    public void SetTriggerHit()
     {
-        _animator.SetBool("Hit", value);
+        _animator.SetTrigger("Hit");
     }
 
-    public void SetBoolBlockHit(bool value)
+    public void SetTriggerBlockHit()
     {
-        _animator.SetBool("BlockHit", value);
+        _animator.SetTrigger("BlockHit");
     }
 
     public void SetBoolMove(bool value)

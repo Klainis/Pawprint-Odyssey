@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class ArmoredBugView : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class ArmoredBugView : MonoBehaviour
     [SerializeField] private float _lastPlayerAttackForce = 12f;
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private AudioClip _hitClip;
+    [SerializeField] private AudioClip _shieldHitClip;
 
     [Header("Dash attack")]
     [SerializeField] private float _dashDist = 1.5f;
@@ -35,6 +38,7 @@ public class ArmoredBugView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
     private ParticleSystem _playerWeaponSliceParticleInstance;
 
+    private AudioSource _audioSource;
     private Rigidbody2D _rigidBody;
     private ArmoredBugAnimation _bugAnimation;
     private ArmoredBugAttack _bugAttack;
@@ -72,6 +76,7 @@ public class ArmoredBugView : MonoBehaviour
 
         _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
 
+        _audioSource = GetComponent<AudioSource>();
         _rigidBody = GetComponent<Rigidbody2D>();
         _bugAnimation = GetComponent<ArmoredBugAnimation>();
         _bugAttack = GetComponent<ArmoredBugAttack>();
@@ -114,9 +119,10 @@ public class ArmoredBugView : MonoBehaviour
         else
         {
             damageApplied = false;
+            _bugAnimation.SetTriggerBlockHit();
+            PlayHitSound(_shieldHitClip);
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);
-            _bugAnimation.SetBoolBlockHit(true);
         }
 
         if (Model.IsDead)
@@ -127,10 +133,10 @@ public class ArmoredBugView : MonoBehaviour
 
         if (damageApplied)
         {
+            PlayHitSound(_hitClip);
             _damageFlash.CallDamageFlash();
 
-            _bugAnimation.SetBoolHit(true);
-            //StartCoroutine(HitTime(1f));
+            _bugAnimation.SetTriggerHit();
             _rigidBody.linearVelocity = Vector2.zero;
 
             _screenShaker.Shake();
@@ -146,6 +152,14 @@ public class ArmoredBugView : MonoBehaviour
                 //KnockBack(direction, _playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
+        }
+    }
+
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
         }
     }
 
