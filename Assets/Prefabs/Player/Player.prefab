@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 1383110301925236467}
   - component: {fileID: 3252264936728192778}
   - component: {fileID: 2135096380476152226}
+  - component: {fileID: 192467079099043298}
   - component: {fileID: 212971026275759962}
   - component: {fileID: 95975118031919256}
   - component: {fileID: 50738830109512580}
@@ -367,6 +368,20 @@ MonoBehaviour:
         m_CallState: 2
   _fullHeal: 0
   _abilitiesTree: 0
+--- !u!114 &192467079099043298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4591d0c8fe57d14288f52361bb45b31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGhostTrail
+  _ghostPrefab: {fileID: 802342170502589317, guid: 60544208bd4e11b488e2786c3ac46421, type: 3}
+  _delay: 0.5
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
