@@ -34,7 +34,14 @@ public class CameraFollowObject : MonoBehaviour
 
     private void Update()
     {
-        transform.position = _playerTransfom.position;
+        if (_playerTransfom != null)
+        {
+            transform.position = _playerTransfom.position;
+        }
+        else
+        {
+            Debug.Log("Не удалось получить Transform Player для Follow Camera Object");
+        }
     }
 
     public void SetFollowCamera(CinemachineVirtualCamera followCamera)

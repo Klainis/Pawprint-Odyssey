@@ -311,11 +311,13 @@ public class EntryPoint : MonoBehaviour
         if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance.gameObject);
         if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance.gameObject);
         if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance.gameObject);
+        if (_cameraManagerInstance != null) Destroy(_cameraManagerInstance.gameObject);
         if (_eventSystemInstance != null) Destroy(_eventSystemInstance.gameObject);
 
         if (_globalVolumeInstance != null) Destroy(_globalVolumeInstance);
         if (_globalLightInstance != null) Destroy(_globalLightInstance);
         if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
+        if (_cameraFollowObjectInstance != null) Destroy(_cameraFollowObjectInstance.gameObject);
         if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
         if (_musicHandlerInstance != null) Destroy(_musicHandlerInstance);
