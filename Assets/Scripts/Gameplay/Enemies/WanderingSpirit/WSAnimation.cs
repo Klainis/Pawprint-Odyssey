@@ -2,30 +2,30 @@ using UnityEngine;
 
 public class WSAnimation : MonoBehaviour
 {
-    private Animator animator;
+    private Animator _animator;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
 
-    public void SetBoolHit(bool value)
+    public void SetTriggerHit()
     {
-        animator.SetBool("Hit", value);
+        _animator.SetTrigger("Hit");
     }
 
     public void SetBoolAttack(bool value)
     {
-        animator.SetBool("Attack", value);
+        _animator.SetBool("Attack", value);
     }
 
     public void SetTriggerDead()
     {
-        animator.SetTrigger("Dead");
+        _animator.SetTrigger("Dead");
     }
 
     public void SetBoolMove(bool value)
     {
-        animator.SetBool("Move", value);
+        _animator.SetBool("Move", value);
     }
 }
