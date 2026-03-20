@@ -90,6 +90,8 @@ public class EntryPoint : MonoBehaviour
     private static EntryPoint instance;
     public static EntryPoint Instance { get { return instance; } }
     public InputActionAsset NewInputSystem { get { return newInputSystem; } }
+    public GameObject GlobalVolumeInstance { get { return _globalVolumeInstance; } }
+    public GameObject MusicHandlerInstance { get { return _musicHandlerInstance; } }
 
     private bool playerInitialized = false;
 
