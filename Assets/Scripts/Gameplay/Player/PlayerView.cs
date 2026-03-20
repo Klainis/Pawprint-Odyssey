@@ -3,12 +3,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerView : MonoBehaviour
 {
     private static PlayerView instance;
     public static PlayerView Instance { get { return instance; } }
+
     #region SerializeFields
 
     //[Header("Layers")]
@@ -18,6 +22,9 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private float _invisibleTime = 1.3f;
     [SerializeField] private float _damageFlashSpeed = 5.5f;
     [SerializeField] private float _knockbackForce = 10f;
+    [SerializeField] private float _vignetteSpeed = 0.8f;
+    [SerializeField] private float _vignetteMinValue = 0f;
+    [SerializeField] private float _vignetteMaxValue = 0.7f;
 
     //[Header("Events")]
     //[Space]
@@ -28,26 +35,29 @@ public class PlayerView : MonoBehaviour
 
     #region Variables
 
-    private Rigidbody2D rigidBody;
+    private Rigidbody2D _rigidBody;
     private SpriteRenderer _spriteRenderer;
-    private PlayerAnimation playerAnimation;
-    private PlayerAttack playerAttack;
-    private PlayerMove playerMove;
-    private PlayerInput playerInput;
-    private PlayerHeart playerHeart;
-    private PlayerMana playerMana;
-    private Interact playerInteract;
     private BoxCollider2D _playerCollider;
-
+    private Vignette _vignette;
+    private GameObject _globalVolumeInstance;
     private GameObject _manaBar;
+    private Coroutine _vignetteCoroutine;
 
-    private bool isInvincible = false;
+    private PlayerAnimation _playerAnimation;
+    private PlayerAttack _playerAttack;
+    private PlayerMove _playerMove;
+    private PlayerInput _playerInput;
+    private PlayerHeart _playerHeart;
+    private PlayerMana _playerMana;
+    private Interact _playerInteract;
+
+    private bool _isInvincible = false;
 
     #endregion
 
     #region Properties
     public PlayerModel PlayerModel { get; set; }
-    public PlayerAnimation PlayerAnimation { get { return playerAnimation; } }
+    public PlayerAnimation PlayerAnimation { get { return _playerAnimation; } }
 
     #endregion
 
@@ -64,22 +74,22 @@ public class PlayerView : MonoBehaviour
 
         _manaBar = InitializeManager.Instance.manaBar;
 
-        rigidBody = GetComponent<Rigidbody2D>();
+        _rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _playerCollider = GetComponent<BoxCollider2D>();
-        playerAnimation = GetComponent<PlayerAnimation>();
-        playerAttack = GetComponent<PlayerAttack>();
-        playerMove = GetComponent<PlayerMove>();
-        playerInput = GetComponent<PlayerInput>();
-        playerHeart = GetComponent<PlayerHeart>();
-        playerInteract = GetComponent<Interact>();
-        playerMana = GetComponent<PlayerMana>();
+        _playerAnimation = GetComponent<PlayerAnimation>();
+        _playerAttack = GetComponent<PlayerAttack>();
+        _playerMove = GetComponent<PlayerMove>();
+        _playerInput = GetComponent<PlayerInput>();
+        _playerHeart = GetComponent<PlayerHeart>();
+        _playerInteract = GetComponent<Interact>();
+        _playerMana = GetComponent<PlayerMana>();
     }
 
     private void Update()
     {
-        if (playerInput.AttackPressed)
-            playerAttack.Attack();
+        if (_playerInput.AttackPressed)
+            _playerAttack.Attack();
     }
 
     #endregion
@@ -91,8 +101,8 @@ public class PlayerView : MonoBehaviour
         //SetCheckPoint();
         MapManager.Instance.ShowAllOpenedRoomsAndWalls();
         PlayerModel.FullHeal();
-        playerHeart.AddHearts();
-        playerMana.FullMana();
+        _playerHeart.AddHearts();
+        _playerMana.FullMana();
 
         SaveSystem.Save();
     }
@@ -116,20 +126,21 @@ public class PlayerView : MonoBehaviour
 
     public void ApplyDamage(int damage, Vector3 position)
     {
-        if (isInvincible) return;
+        if (_isInvincible) return;
 
-        playerAnimation.SetBoolHit(true);
+        _playerAnimation.SetBoolHit(true);
         PlayerModel.TakeDamage(damage);
-        playerHeart.RemoveHearts();
+        _playerHeart.RemoveHearts();
 
         var damageDir = Vector3.Normalize(transform.position - position) * 40f;
-        rigidBody.linearVelocity = Vector2.zero;
-        rigidBody.AddForce(damageDir * _knockbackForce);
+        _rigidBody.linearVelocity = Vector2.zero;
+        _rigidBody.AddForce(damageDir * _knockbackForce);
 
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());
         else
         {
+            ChangeVignette();
             StartCoroutine(Stun(0.25f));
             StartCoroutine(MakeInvincible(_invisibleTime));
         }
@@ -137,16 +148,17 @@ public class PlayerView : MonoBehaviour
 
     public void ApplyObjectDamage(int damage)
     {
-        if (isInvincible) return;
+        if (_isInvincible) return;
 
-        playerAnimation.SetBoolHit(true);
+        _playerAnimation.SetBoolHit(true);
         PlayerModel.TakeDamage(damage);
-        playerHeart.RemoveHearts();
+        _playerHeart.RemoveHearts();
 
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());
         else
         {
+            ChangeVignette();
             StartCoroutine(Stun(0.25f));
             StartCoroutine(MakeInvincible(_invisibleTime));
         }
@@ -156,25 +168,69 @@ public class PlayerView : MonoBehaviour
     {
         _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount); // когда появится нормальный арт героя, скоррекировать
     }
+
+    private void ChangeVignette()
+    {
+        if (_vignette == null)
+        {
+            var globalVolume = EntryPoint.Instance.GlobalVolumeInstance.GetComponent<Volume>();
+            if (globalVolume != null)
+            {
+                globalVolume.profile.TryGet<Vignette>(out _vignette);
+            }
+        }
+        if (_vignette == null) return;
+
+        if (_vignetteCoroutine != null)
+            StopCoroutine(_vignetteCoroutine);
+
+        _vignetteCoroutine = StartCoroutine(ChangeVignetteRoutine());
+    }
+
     #endregion
 
     #region IEnumerators
 
+    private IEnumerator ChangeVignetteRoutine()
+    {
+        _vignette.active = true;
+
+        var elapsedTime = 0f;
+        while (elapsedTime < _vignetteSpeed)
+        {
+            elapsedTime += Time.deltaTime;
+            _vignette.intensity.value = Mathf.Lerp(_vignetteMinValue, _vignetteMaxValue, elapsedTime / _vignetteSpeed);
+            yield return null;
+        }
+
+        elapsedTime = 0f;
+        while (elapsedTime < _vignetteSpeed)
+        {
+            elapsedTime += Time.deltaTime;
+            _vignette.intensity.value = Mathf.Lerp(_vignetteMaxValue, _vignetteMinValue, elapsedTime / _vignetteSpeed);
+            yield return null;
+        }
+
+        _vignette.intensity.value = 0f;
+        _vignette.active = false;
+        _vignetteCoroutine = null;
+    }
+
     private IEnumerator Stun(float time)
     {
-        playerMove.CanMove = false;
+        _playerMove.CanMove = false;
         yield return new WaitForSeconds(time);
-        playerMove.CanMove = true;
+        _playerMove.CanMove = true;
     }
 
     private IEnumerator MakeInvincible(float time)
     {
-        isInvincible = true;
+        _isInvincible = true;
         gameObject.layer = LayerMask.NameToLayer("Invincible");
         StartCoroutine(FlashWhileInvicible(_damageFlashSpeed, time));
         yield return new WaitForSeconds(time);
         gameObject.layer = LayerMask.NameToLayer("Player");
-        isInvincible = false;
+        _isInvincible = false;
     }
 
     public IEnumerator FlashWhileInvicible(float flashSpeed, float flashTime)
@@ -197,12 +253,12 @@ public class PlayerView : MonoBehaviour
 
     private IEnumerator WaitToDead()
     {
-        playerAnimation.SetBoolIsDead(true);
-        playerMove.CanMove = false;
-        isInvincible = true;
-        playerAttack.enabled = false;
+        _playerAnimation.SetBoolIsDead(true);
+        _playerMove.CanMove = false;
+        _isInvincible = true;
+        _playerAttack.enabled = false;
         yield return new WaitForSeconds(0.4f);
-        rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
+        _rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
         yield return new WaitForSeconds(1.1f);
         SaveSystem.AutoSaveBeforePlayerDeath();
         GameManager.Instance.SetGameState(GameState.DEAD);
