@@ -23,6 +23,9 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private float _muffleSoundSpeed = 1.0f;
     [SerializeField] private float _muffleSoundMinValue = 0.3f;
 
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem _damageParticle;
+
     //[Header("Events")]
     //[Space]
     //[SerializeField] private UnityEvent OnFallEvent;
@@ -137,6 +140,8 @@ public class PlayerView : MonoBehaviour
         _rigidBody.linearVelocity = Vector2.zero;
         _rigidBody.AddForce(damageDir * _knockbackForce);
 
+        SpawnDamageParticles(damageDir.x);
+
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());
         else
@@ -168,6 +173,20 @@ public class PlayerView : MonoBehaviour
     private void SetFlashAmount(float flashAmount)
     {
         _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount); // когда появится нормальный арт героя, скоррекировать
+    }
+
+    #endregion
+
+    #region Particles
+
+    private void SpawnDamageParticles(float direction)
+    {
+        var vectorDirection = Vector2.zero;
+        vectorDirection.x = direction >= 0 ? 1 : -1;
+        
+        var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+
+        Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
     #endregion
