@@ -50,7 +50,7 @@ public class PiercingClaw : MonoBehaviour
             clawSprite.SetActive(true);
 
             //Debug.Log("Claw");
-            playerMana.SpendMana("Claw");
+            playerMana.SpendMana("Claw", 1);
 
             playerAnimation.SetBoolClaw(true);
             canAttack = false;

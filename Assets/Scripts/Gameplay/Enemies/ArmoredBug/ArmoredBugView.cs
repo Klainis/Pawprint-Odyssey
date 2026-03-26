@@ -12,7 +12,7 @@ public class ArmoredBugView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
     [SerializeField] private PlayerAttack _playerAttack;
-    [SerializeField] private float _lastPlayerAttackForce = 12f;
+    [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private bool _isInvincible = false;
     [SerializeField] private AudioClip _hitClip;
@@ -55,7 +55,8 @@ public class ArmoredBugView : MonoBehaviour
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool damageApplied = false;
-    
+    private bool _isKnockback = false;
+
     #endregion
 
     #region Properties
@@ -155,6 +156,31 @@ public class ArmoredBugView : MonoBehaviour
         }
     }
 
+    public void ApplyChargeDamage(int damage)
+    {
+        if (_isInvincible) return;
+
+        damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+
+        if (Model.IsDead)
+        {
+            _money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position);
+        }
+
+        if (damageApplied)
+        {
+            var direction = damage / Mathf.Abs(damage);
+            _damageFlash.CallDamageFlash();
+            _bugAnimation.SetTriggerHit();
+            _rigidBody.linearVelocity = Vector2.zero;
+            _screenShaker.Shake();
+            SpawnDamageParticles(direction);
+            KnockBack(direction, _lastPlayerAttackForce);
+            SpawnPlayerLastAttackParticles();
+        }
+    }
+
     private void PlayHitSound(AudioClip clip)
     {
         if (clip != null)
@@ -165,10 +191,11 @@ public class ArmoredBugView : MonoBehaviour
 
     private void KnockBack(int direction, float forceAttack)
     {
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        var directionVector = new Vector2(direction, _rigidBody.linearVelocity.y);
+        if (_isKnockback)
+            StopCoroutine(WaitForKnockBack());
 
-        _rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
+        _rigidBody.linearVelocity = new Vector2(direction * forceAttack, _rigidBody.linearVelocity.y);
+        StartCoroutine(WaitForKnockBack());
     }
 
     #region Particles
@@ -264,6 +291,13 @@ public class ArmoredBugView : MonoBehaviour
     #endregion
 
     #region IEnumerators
+
+    private IEnumerator WaitForKnockBack()
+    {
+        _isKnockback = true;
+        yield return new WaitForSeconds(0.2f);
+        _isKnockback = false;
+    }
 
     private IEnumerator AttackTelegraphRoutine()
     {

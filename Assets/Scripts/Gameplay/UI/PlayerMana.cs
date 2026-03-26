@@ -8,7 +8,6 @@ public class PlayerMana : MonoBehaviour
     public static PlayerMana Instance { get; set; }
 
     private PlayerView playerView;
-    private EntryPoint entryPoint;
     private Image manaBar;
 
     private readonly int manaToSpend = 25;
@@ -37,7 +36,7 @@ public class PlayerMana : MonoBehaviour
         manaBar = img;
     }
 
-    public void SpendMana(string ability)
+    public void SpendMana(string ability, int amount)
     {
         switch (ability)
         {
@@ -47,6 +46,10 @@ public class PlayerMana : MonoBehaviour
                 break;
             case "DamageDash":
                 playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - manaToSpendDamageDash);
+                manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+                break;
+            case "ChargeAttack":
+                playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - amount);
                 manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
                 break;
         }
