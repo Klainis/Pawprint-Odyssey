@@ -10,7 +10,7 @@ public class WanderingSpiritView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
     [SerializeField] private PlayerAttack _playerAttack;
-    [SerializeField] private float _lastPlayerAttackForce = 12f;
+    [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private bool _isInvincible = false;
     [SerializeField] private AudioClip _hitClip;
@@ -52,6 +52,7 @@ public class WanderingSpiritView : MonoBehaviour
     private bool _isHitted = false;
     private bool _isAccelerated = false;
     private bool _facingRight = true;
+    private bool _isKnockback = false;
 
     #endregion
 
@@ -93,7 +94,10 @@ public class WanderingSpiritView : MonoBehaviour
             StartCoroutine(DestroySelf());
             return;
         }
-        else if (!_wsAttack.IsAttacking)
+        
+        if (_isKnockback) return;
+
+        if (!_wsAttack.IsAttacking)
         {
             _wsMove.Move(_isAccelerated, _acceleratedSpeed);
         }
@@ -138,6 +142,13 @@ public class WanderingSpiritView : MonoBehaviour
         }
     }
 
+    public void ApplyChargeDamage(int damage)
+    {
+        ApplyDamage(damage);
+        var direction = damage / Mathf.Abs(damage);
+        KnockBack(direction, _lastPlayerAttackForce);
+    }
+
     private void PlayHitSound(AudioClip clip)
     {
         if (clip != null)
@@ -148,10 +159,11 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void KnockBack(int direction, float forceAttack)
     {
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        var directionVector = new Vector2(direction, _rigidBody.linearVelocity.y);
+        if (_isKnockback)
+            StopCoroutine(WaitForKnockBack());
 
-        _rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
+        _rigidBody.linearVelocity = new Vector2(direction * forceAttack, _rigidBody.linearVelocity.y);
+        StartCoroutine(WaitForKnockBack());
     }
 
     #region Particles
@@ -242,6 +254,13 @@ public class WanderingSpiritView : MonoBehaviour
     #endregion
 
     #region IEnumerators
+
+    private IEnumerator WaitForKnockBack()
+    {
+        _isKnockback = true;
+        yield return new WaitForSeconds(0.2f);
+        _isKnockback = false;
+    }
 
     private IEnumerator AttackTelegraphRoutine()
     {

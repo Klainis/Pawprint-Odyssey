@@ -49,6 +49,7 @@ public class PlayerView : MonoBehaviour
 
     private PlayerAnimation _playerAnimation;
     private PlayerAttack _playerAttack;
+    private PlayerChargeAttack _playerChargeAttack;
     private PlayerMove _playerMove;
     private PlayerInput _playerInput;
     private PlayerHeart _playerHeart;
@@ -83,6 +84,7 @@ public class PlayerView : MonoBehaviour
         _playerCollider = GetComponent<BoxCollider2D>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         _playerAttack = GetComponent<PlayerAttack>();
+        _playerChargeAttack = GetComponent<PlayerChargeAttack>();
         _playerMove = GetComponent<PlayerMove>();
         _playerInput = GetComponent<PlayerInput>();
         _playerHeart = GetComponent<PlayerHeart>();

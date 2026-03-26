@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference chargeAttackAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private InputActionReference gameMenuAction;
@@ -41,6 +42,8 @@ public class PlayerInput : MonoBehaviour
     private bool run = false;
     private Vector2 look = Vector2.zero;
 
+    #region Properties
+
     public bool InteractPressed { get { return interactPressed; } }
     public bool PlayerMovingEd { get; private set; } = false;
     public bool PlayerAttackingEd { get { return attackPressed; } }
@@ -49,6 +52,10 @@ public class PlayerInput : MonoBehaviour
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
     public bool DamageDashActive { get; private set; }
     public Vector2 VectorLookAction { get { return look; } }
+    public bool ChargeAttackHeld { get; private set; }
+    public bool ChargeAttackReleased { get; private set; }
+
+    #endregion
 
     #region Common Methods
 
@@ -73,7 +80,6 @@ public class PlayerInput : MonoBehaviour
         {
             if (GameManager.Instance.GameState == GameState.CUTSCENE)
                 return;
-
 
             if (IsValidAction(pauseMenuAction))
             {
@@ -174,6 +180,12 @@ public class PlayerInput : MonoBehaviour
             {
                 attackPressed = true;
             }
+        }
+
+        if (IsValidAction(chargeAttackAction))
+        {
+            ChargeAttackHeld = chargeAttackAction.action.IsPressed();
+            ChargeAttackReleased = chargeAttackAction.action.WasReleasedThisFrame();
         }
 
         if (IsValidAction(clawAction))

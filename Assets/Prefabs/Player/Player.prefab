@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 6772023754791648629}
   - component: {fileID: 3721457989882947448}
   - component: {fileID: 1729494090702783638}
+  - component: {fileID: 5751135247305401636}
   - component: {fileID: 5509107085969195429}
   - component: {fileID: 114145887554720856}
   - component: {fileID: 2163805515310522865}
@@ -218,6 +219,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   attackSeriesTimeout: 0.85
   maxAttackSeriesCount: 3
+--- !u!114 &5751135247305401636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58460d3cca7cf74badca9ef9a11203b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeAttack
+  _chargeTime: 1
+  _manaCost: 15
+  _attackChargedClip: {fileID: 8300000, guid: ca6f74de2f3d2b14e9dbafe93930f9fd, type: 3}
 --- !u!114 &5509107085969195429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +263,7 @@ MonoBehaviour:
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   dashAction: {fileID: -657975949706170437, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   attackAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  chargeAttackAction: {fileID: -1123365041170500214, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pauseMenuAction: {fileID: 954110573549900416, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pauseMenuActionUI: {fileID: 3072407570729947297, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   gameMenuAction: {fileID: -801707137575025450, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
