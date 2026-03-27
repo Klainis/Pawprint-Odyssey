@@ -12,7 +12,6 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
-    [SerializeField] private InputActionReference chargeAttackAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private InputActionReference gameMenuAction;
@@ -52,8 +51,8 @@ public class PlayerInput : MonoBehaviour
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
     public bool DamageDashActive { get; private set; }
     public Vector2 VectorLookAction { get { return look; } }
-    public bool ChargeAttackHeld { get; private set; }
-    public bool ChargeAttackReleased { get; private set; }
+    public bool AttackHeld { get; private set; }
+    public bool AttackReleased { get; private set; }
 
     #endregion
 
@@ -176,16 +175,8 @@ public class PlayerInput : MonoBehaviour
         {
             attackPressed = attackAction.action.WasPressedThisFrame();
 
-            if (attackPressed)
-            {
-                attackPressed = true;
-            }
-        }
-
-        if (IsValidAction(chargeAttackAction))
-        {
-            ChargeAttackHeld = chargeAttackAction.action.IsPressed();
-            ChargeAttackReleased = chargeAttackAction.action.WasReleasedThisFrame();
+            AttackHeld = attackAction.action.IsPressed();
+            AttackReleased = attackAction.action.WasReleasedThisFrame();
         }
 
         if (IsValidAction(clawAction))

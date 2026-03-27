@@ -9,6 +9,7 @@ public class PlayerChargeAttack : MonoBehaviour
     [SerializeField] private AudioClip _attackChargedClip;
 
     private AudioSource _audioSource;
+    private Rigidbody2D _rigidBody;
     private PlayerView _playerView;
     private PlayerAnimation _playerAnimation;
     private PlayerMana _playerMana;
@@ -23,6 +24,7 @@ public class PlayerChargeAttack : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _rigidBody = GetComponent<Rigidbody2D>();
         _playerView = GetComponent<PlayerView>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         _playerMana = GetComponent<PlayerMana>();
@@ -39,15 +41,22 @@ public class PlayerChargeAttack : MonoBehaviour
         HandleChargeInput();
     }
 
-    private void HandleChargeInput()
+    public void HandleChargeInput()
     {
-        var isHeld = PlayerInput.Instance.ChargeAttackHeld;
-        var isReleased = PlayerInput.Instance.ChargeAttackReleased;
+        var isHeld = PlayerInput.Instance.AttackHeld;
+        var isReleased = PlayerInput.Instance.AttackReleased;
+
+        if (!PlayerMove.Instance.IsGrounded) return;
 
         if (isHeld && !_isCharging && _playerView.PlayerModel.Mana >= _manaCost)
         {
             _isCharging = true;
             _currentChargeTimer = 0f;
+
+            PlayerMove.Instance.CanMove = false;
+            _rigidBody.linearVelocity = Vector2.zero;
+
+            _playerAnimation.SetFloatSpeed(0);
             _playerAnimation.SetBoolIsChargingAttack(true);
         }
 
@@ -60,6 +69,7 @@ public class PlayerChargeAttack : MonoBehaviour
 
         if (_isCharging && isReleased)
         {
+            PlayerMove.Instance.CanMove = true;
             if (_currentChargeTimer < _chargeTime) return;
 
             _playerAnimation.SetBoolIsChargingAttack(false);
