@@ -2,7 +2,7 @@
 
 public class BulletHandler : MonoBehaviour
 {
-	private int damage;
+	private int damage = 1;
 
     void Start()
     {
@@ -13,7 +13,7 @@ public class BulletHandler : MonoBehaviour
 	{
         if (collision.gameObject.CompareTag("Player"))
 		{
-            collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position);
+            collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position, gameObject);
 			Destroy(gameObject);
 		}
 		else if (!collision.gameObject.CompareTag("Player"))

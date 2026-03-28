@@ -37,7 +37,7 @@ public class WSAttack : MonoBehaviour
             if (!_wsView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_wsView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_wsView.Model.Damage, transform.position, gameObject);
             }
         }
     }

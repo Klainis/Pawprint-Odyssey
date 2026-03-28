@@ -61,8 +61,10 @@ public class PlayerView : MonoBehaviour
     #endregion
 
     #region Properties
+
     public PlayerModel PlayerModel { get; set; }
     public PlayerAnimation PlayerAnimation { get { return _playerAnimation; } }
+    public bool IsInvincible { get { return _isInvincible; } set { _isInvincible = value; } }
 
     #endregion
 
@@ -130,9 +132,15 @@ public class PlayerView : MonoBehaviour
 
     #region ApplyDamage
 
-    public void ApplyDamage(int damage, Vector3 position)
+    public void ApplyDamage(int damage, Vector3 position, GameObject enemy)
     {
-        if (_isInvincible) return;
+
+        if (_isInvincible)
+        {
+            var direction = damage / Mathf.Abs(damage);
+            PlayerParrying.Instance.HandleParrying(damage, direction, enemy);
+            return;
+        }
 
         _playerAnimation.SetBoolHit(true);
         PlayerModel.TakeDamage(damage);

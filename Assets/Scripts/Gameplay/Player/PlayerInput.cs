@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference parryingAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private InputActionReference gameMenuAction;
@@ -49,10 +50,12 @@ public class PlayerInput : MonoBehaviour
     public bool PlayerInteractEd { get { return interactPressed; } }
     public bool PlayerClawEd { get { return clawPressed; } }
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
-    public bool DamageDashActive { get; private set; }
-    public Vector2 VectorLookAction { get { return look; } }
     public bool AttackHeld { get; private set; }
     public bool AttackReleased { get; private set; }
+    public bool ParryingHeld { get; private set; }
+    public bool ParryingReleased { get; private set; }
+    public bool DamageDashActive { get; private set; }
+    public Vector2 VectorLookAction { get { return look; } }
 
     #endregion
 
@@ -177,6 +180,12 @@ public class PlayerInput : MonoBehaviour
 
             AttackHeld = attackAction.action.IsPressed();
             AttackReleased = attackAction.action.WasReleasedThisFrame();
+        }
+
+        if (IsValidAction(parryingAction))
+        {
+            ParryingHeld = parryingAction.action.IsPressed();
+            ParryingReleased = parryingAction.action.WasReleasedThisFrame();
         }
 
         if (IsValidAction(clawAction))

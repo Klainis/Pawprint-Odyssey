@@ -108,7 +108,7 @@ public class SGAttack : MonoBehaviour
             if (!sgView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
+                playerView.ApplyDamage(sgView.Model.Damage, transform.position, gameObject);
             }
         }
     }
@@ -120,7 +120,7 @@ public class SGAttack : MonoBehaviour
             if (!sgView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(sgView.Model.Damage, transform.position);
+                playerView.ApplyDamage(sgView.Model.Damage, transform.position, gameObject);
             }
         }
     }

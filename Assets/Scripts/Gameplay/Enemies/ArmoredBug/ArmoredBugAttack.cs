@@ -34,7 +34,7 @@ public class ArmoredBugAttack : MonoBehaviour
             if (!_bugView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_bugView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_bugView.Model.Damage, transform.position, gameObject);
             }
         }
     }

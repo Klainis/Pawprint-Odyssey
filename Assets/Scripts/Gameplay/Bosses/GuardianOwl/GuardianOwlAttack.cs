@@ -226,7 +226,7 @@ public class GuardianOwlAttack : MonoBehaviour
             if (!_guardianOwlView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position, gameObject);
             }
         }
     }
@@ -238,7 +238,7 @@ public class GuardianOwlAttack : MonoBehaviour
             if (!_guardianOwlView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_guardianOwlView.Model.Damage, transform.position, gameObject);
             }
         }
     }

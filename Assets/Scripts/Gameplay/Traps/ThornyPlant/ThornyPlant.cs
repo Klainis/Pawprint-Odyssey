@@ -91,7 +91,7 @@ public class ThornyPlant : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Player"))
             if (_life > 0)
-                collision.gameObject.GetComponent<PlayerView>().ApplyDamage(_damage, transform.position);
+                collision.gameObject.GetComponent<PlayerView>().ApplyDamage(_damage, transform.position, gameObject);
     }
 
     #endregion

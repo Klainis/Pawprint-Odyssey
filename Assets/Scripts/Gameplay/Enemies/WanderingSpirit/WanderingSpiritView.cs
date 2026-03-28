@@ -292,11 +292,10 @@ public class WanderingSpiritView : MonoBehaviour
 
     private IEnumerator HitTime(float time)
     {
-        _isHitted = true;
-        //_isInvincible = true;
+        var constraintsBefore = _rigidBody.constraints;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
         yield return new WaitForSeconds(time);
-        _isHitted = false;
-        //_isInvincible = false;
+        _rigidBody.constraints = constraintsBefore;
     }
 
     private IEnumerator DestroySelf()
