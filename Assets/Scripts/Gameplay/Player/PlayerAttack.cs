@@ -7,7 +7,7 @@ public class PlayerAttack : MonoBehaviour
     private static PlayerAttack instance;
     public static PlayerAttack Instance { get { return instance; } }
 
-    [Header("Main Attack Params")]
+    [Header("Parameters")]
     [SerializeField] private float attackSeriesTimeout = 0.9f;
     [SerializeField] private int maxAttackSeriesCount = 3;
 
@@ -61,7 +61,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (SpendMana == true)
             {
-                playerMana.SpendMana("DamageDash");
+                playerMana.SpendMana("DamageDash", 1);
                 SpendMana = false;
             }
         }

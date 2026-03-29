@@ -7,13 +7,12 @@ public class CameraVerticalLook : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera vcam;
     [SerializeField] private InputActionReference lookAction;
 
-    [SerializeField] private float verticalRange = 2f;    
-    //[SerializeField] private float smoothTime = 0.12f;    
+    [SerializeField] private float verticalRange = 2f;
+    [SerializeField] private float maxDistancedelta = 16f; 
 
     private CinemachineFramingTransposer transposer;
-    private Vector3 velocity = Vector3.zero;
     private Vector3 targetOffset = Vector3.zero;
-    private float targetCameraY;
+    private Vector2 lookVector;
 
     private void Awake()
     {
@@ -38,7 +37,6 @@ public class CameraVerticalLook : MonoBehaviour
         if (lookAction != null && lookAction.action != null)
         {
             lookAction.action.Enable();
-            //Debug.Log("Look enabled");
         }
     }
 
@@ -50,25 +48,16 @@ public class CameraVerticalLook : MonoBehaviour
 
     private void Update()
     {
-        if (lookAction == null || lookAction.action == null) return;
+        lookVector = PlayerInput.Instance.VectorLookAction;
 
-        Vector2 look = lookAction.action.ReadValue<Vector2>();
-        //Debug.Log(look);
+        float desiredY = lookVector.y > 0? verticalRange : lookVector.y < 0 ? -verticalRange: 0;
 
-        float desiredY = look.y * verticalRange;
-        targetCameraY = desiredY > 0f ? verticalRange : desiredY < 0f ? -verticalRange : 0;
-        targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, targetCameraY, 0f);
-
-        float distance = Mathf.Abs(transposer.m_TrackedObjectOffset.y - targetOffset.y);
-        float dynamicSmooth = Mathf.Lerp(0.05f, 0.2f, distance / verticalRange);
-
-        //transposer.m_TrackedObjectOffset = Vector3.SmoothDamp(
-        //    transposer.m_TrackedObjectOffset,
-        //    targetOffset,
-        //    ref velocity,
-        //    dynamicSmooth
-        //);
-
+        targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, desiredY, 0f);
+        if (targetOffset != transposer.m_TrackedObjectOffset && !CameraManager.Instance.PanStarting)
+        {
+            transposer.m_TrackedObjectOffset = Vector3.MoveTowards(transposer.m_TrackedObjectOffset, targetOffset, 16 * Time.deltaTime);
+        }
         //Debug.Log(transposer.m_TrackedObjectOffset);
+        //Debug.Log(targetOffset);
     }
 }

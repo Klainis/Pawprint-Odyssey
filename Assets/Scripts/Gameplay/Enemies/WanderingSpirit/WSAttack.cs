@@ -10,20 +10,22 @@ public class WSAttack : MonoBehaviour
     public event Action OnPlayerLeftDetected;
     public event Action OnPlayerRightDetected;
 
-    private WanderingSpiritView wsView;
+    private WanderingSpiritView _wsView;
 
-    private bool isAttacking = false;
+    private float _lastAttackTime;
+    private bool _isAttacking = false;
 
-    public bool IsAttacking { get { return isAttacking; } }
+    public float LastAttackTime { get { return _lastAttackTime; } }
+    public bool IsAttacking { get { return _isAttacking; } }
 
     private void Awake()
     {
-        wsView = GetComponent<WanderingSpiritView>();
+        _wsView = GetComponent<WanderingSpiritView>();
     }
 
     private void FixedUpdate()
     {
-        if (isAttacking) return;
+        if (_isAttacking) return;
         CheckPlayerHits();
     }
 
@@ -31,18 +33,28 @@ public class WSAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            wsView.IsAccelerated = false;
-            if (!wsView.Model.IsDead)
+            _wsView.IsAccelerated = false;
+            if (!_wsView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(wsView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_wsView.Model.Damage, transform.position, gameObject);
             }
         }
     }
 
+    public bool CanAttack(float attackCooldown)
+    {
+        return !((Time.time < _lastAttackTime + attackCooldown) || _isAttacking);
+    }
+
     public void SetIsAttacking(bool flag)
     {
-        isAttacking = flag;
+        _isAttacking = flag;
+    }
+
+    public void UpdateLastAttackTime()
+    {
+        _lastAttackTime = Time.time;
     }
 
     public bool CanJumpUp(float requiredHeight)
@@ -54,7 +66,7 @@ public class WSAttack : MonoBehaviour
 
     public void JumpToPoint(Vector3 targetPos, float jumpHeight)
     {
-        var rb = wsView.RigidBody;
+        var rb = _wsView.RigidBody;
         var gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
 
         var deltaX = targetPos.x - transform.position.x;
@@ -74,8 +86,8 @@ public class WSAttack : MonoBehaviour
 
     private void CheckPlayerHits()
     {
-        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, wsView.PlayerDetectDist, playerLayer);
-        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, wsView.PlayerDetectDist, playerLayer);
+        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, _wsView.PlayerDetectDist, playerLayer);
+        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, _wsView.PlayerDetectDist, playerLayer);
 
         if (playerHitLeft.collider != null)
             OnPlayerLeftDetected?.Invoke();

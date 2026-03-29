@@ -117,7 +117,7 @@ public class ShowEducation : MonoBehaviour
         while (time < _fadeDuration)
         {
             time += Time.unscaledDeltaTime;
-            _canvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / _fadeDuration);
+            _canvasGroup.alpha = Mathf.MoveTowards(startAlpha, targetAlpha, time / _fadeDuration);
             yield return null;
         }
 

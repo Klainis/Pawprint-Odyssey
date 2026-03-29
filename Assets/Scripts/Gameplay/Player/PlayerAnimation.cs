@@ -73,6 +73,16 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("IsAttacking", value);
     }
 
+    public void SetBoolIsChargingAttack(bool value)
+    {
+        animator.SetBool("IsChargingAttack", value);
+    }
+
+    public void SetBoolIsParrying(bool value)
+    {
+        animator.SetBool("IsParrying", value);
+    }
+
     public void SetTriggerAttack(int attackNum)
     {
         endSlashAnimation.SetActiveSlashObject();

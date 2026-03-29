@@ -25,7 +25,7 @@ public class ThrowableProjectile : MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Player"))
 		{
-			collision.gameObject.GetComponent<PlayerView>().ApplyDamage(2, transform.position);
+			collision.gameObject.GetComponent<PlayerView>().ApplyDamage(2, transform.position, gameObject);
 			Destroy(gameObject);
 		}
 		else if (owner != null && collision.gameObject != owner && collision.gameObject.tag == "Enemy")

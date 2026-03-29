@@ -44,6 +44,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _gravityFallJumpModifier = 1f;
     [SerializeField] private float _gravityUpJumpModifier = 0.8f;
     [SerializeField] private float _jumpHorizantalVelocityModifier = 0.5f;
+    [Space(5)]
+    [SerializeField] private float limitFallSpeed = 25f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
@@ -75,7 +77,6 @@ public class PlayerMove : MonoBehaviour
     private float lastPressedJumpTime;
     private float prevVelocityX = 0f;
     private float jumpWallDistX = 0;
-    private float limitFallSpeed = 28f;
     private float _initialGravityScale;
     private int dashCounter = 0;
     private int turnCoefficient = 1;
@@ -102,6 +103,8 @@ public class PlayerMove : MonoBehaviour
     private bool isTurnOld = false;
     private bool canWallRun = true;
 
+    //private float _fallSpeedYDampingChangeThreshold;
+
     #endregion
 
     #region Properties
@@ -111,23 +114,14 @@ public class PlayerMove : MonoBehaviour
 
     //public Transform GroundCheck { get { return groundCheck; } }
     public Transform WallCheck { get { return wallCheck; } }
-    //public float CoyoteTime { get { return coyoteTime; } }
-    //public float LastOnGroundTime { get { return lastOnGroundTime; } set { lastOnGroundTime = value; } }
-    //public float LastPressedJumpTime { get { return lastPressedJumpTime; } set { lastPressedJumpTime = value; } }
-    //public float PrevVelocityX { get { return prevVelocityX; } set { prevVelocityX = value; } }
-    //public float JumpWallDistX { get { return jumpWallDistX; } set { jumpWallDistX = value; } }
+
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
-    //public bool CanDoubleJump { get { return canDoubleJump; } set { canDoubleJump = value; } }
-    //public bool IsWall { get { return isWall; } set { isWall = value; } }
+
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
     public bool IsDashing { get { return isDashing; } set { isDashing = value; } }
-    //public bool IsSpeedRunning { get { return isSpeedRunning; } set { isSpeedRunning = value; } }
-    //public bool WallHit { get { return wallHit; } set { wallHit = value; } }
-    //public bool LimitVelOnWallJump { get { return limitVelocityOnWallJump; } set { limitVelocityOnWallJump = value; } }
-    //public bool IsWallSliding { get; set; }
-    //public Rigidbody2D PlayerRigidbody { get { return rb; } }
+
     public bool PlayerDoubleJumpEd { get; set; } = false;
     public bool IsWallJumping { get { return isWallJumping; } }
 
@@ -143,11 +137,11 @@ public class PlayerMove : MonoBehaviour
         instance = this;
 
         rb = GetComponent<Rigidbody2D>();
-        //playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
 
-        //groundCheck = transform.Find("GroundCheck");
         wallCheck = transform.Find("WallCheck");
+
+        //_fallSpeedYDampingChangeThreshold = CameraManager.Instance.FallSpeedYDampingChangeTreshold;
     }
 
     private void Start()
@@ -181,8 +175,8 @@ public class PlayerMove : MonoBehaviour
             {
                 playerAnimation.SetBoolIsJumping(false);//
 
-                if (!isWall && !isDashing)
-                    PlayParticleJumpDown();
+                //if (!isWall && !isDashing)
+                //    PlayParticleJumpDown();
 
                 canDoubleJump = true;
 
@@ -259,7 +253,11 @@ public class PlayerMove : MonoBehaviour
         // --- MOVE ---
         DoMove(moveX);
 
-        Debug.Log(rb.gravityScale);
+        // --- JUMP ---
+        DoJump(jump);
+        //Debug.Log(lastPressedJumpTime);
+
+        //Debug.Log(rb.gravityScale);
         if (!isGrounded &&
             !isWallSliding &&
             !isWallRunning)
@@ -291,7 +289,7 @@ public class PlayerMove : MonoBehaviour
                     rb.gravityScale = _initialGravityScale * _gravityUpJumpModifier;
                 }
 
-                if (!isWallJumping || !isWallRunJumping || !isDashing)
+                if (!isWallJumping && !isWallRunJumping && !isDashing)
                 {
                     rb.linearVelocity = new Vector2(
                                                 Mathf.Lerp(rb.linearVelocity.x, rb.linearVelocity.x * _jumpHorizantalVelocityModifier, Time.fixedDeltaTime * 10f),
@@ -315,9 +313,17 @@ public class PlayerMove : MonoBehaviour
         if (rb.linearVelocity.y < -limitFallSpeed)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, -limitFallSpeed);
 
-        // --- JUMP ---
-        DoJump(jump);
-        //Debug.Log(lastPressedJumpTime);
+        //--- Camera Y Damping ---
+        if (rb.linearVelocity.y < CameraManager.Instance.FallSpeedYDampingChangeTreshold && !CameraManager.Instance.IsLerpingYDamping && !CameraManager.Instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.Instance.LerpYDamping(true);
+        }
+        if(rb.linearVelocity.y >= 0f && !CameraManager.Instance.IsLerpingYDamping && CameraManager.Instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.Instance.LerpedFromPlayerFalling = false;
+            
+            CameraManager.Instance.LerpYDamping(false);
+        }
 
         // --- WALL RUN ---
         if (canWallRun)
@@ -450,15 +456,16 @@ public class PlayerMove : MonoBehaviour
 
         if ((isWallJumping || isWallRunJumping) && move == 0)
         {
-            var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
+            //var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
 
-            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, movementSmoothing);
+            //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, 0.35f);
+            return;
         }
 
         var targetVelocity = new Vector2(move * 10f, rb.linearVelocity.y);
         if (_airState == AirState.Grounded)
         {
-            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, movementSmoothing);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 1);
         }
         else if (_airState == AirState.Falling)
         {
@@ -489,12 +496,17 @@ public class PlayerMove : MonoBehaviour
         {
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
+
+            CameraFollowObject.Instance.CallTurn();
         }
         else
         {
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
+
+            CameraFollowObject.Instance.CallTurn();
         }
+
         isTurnOld = false;
         PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
         transform.rotation = Quaternion.Euler(rotator);
@@ -605,7 +617,6 @@ public class PlayerMove : MonoBehaviour
             force -= rb.linearVelocity.y;
 
         rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-        //rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
         canDoubleJump = true;
         PlayParticleJumpDown();

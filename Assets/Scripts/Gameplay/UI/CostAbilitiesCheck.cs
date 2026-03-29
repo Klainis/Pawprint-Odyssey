@@ -9,6 +9,9 @@ public class CostAbilitiesCheck : MonoBehaviour, ISelectHandler
 
     private PlayerModel _playerModel;
 
+    private bool _moneyTrue;
+    private bool _crystalTrue;
+
     public bool canBuy {  get; private set; } = false;
     public int MoneyCost { get { return GetCostfromText(_moneyCost); } }
     public int CrystalCost { get { return GetCostfromText(_crystalCost); } }
@@ -23,25 +26,34 @@ public class CostAbilitiesCheck : MonoBehaviour, ISelectHandler
         if (_playerModel.SoulCrystalsCollected < GetCostfromText(_crystalCost))
         {
             _crystalCost.color = Color.red;
-            canBuy = false;
+            _crystalTrue = false;
             //Debug.Log($"Не хватает кристаллов{GetCostfromText(_crystalCost) - _playerModel.SoulCrystalsCollected}");
         }
         else
         {
             _crystalCost.color = Color.white;
-            canBuy = true;
+            _crystalTrue = true;
         }
 
         if (_playerModel.MoneyCollected < GetCostfromText(_moneyCost))
         {
             _moneyCost.color = Color.red;
-            canBuy = false;
+            _moneyTrue = false;
             //Debug.Log($"Не хватает денег{GetCostfromText(_moneyCost) - _playerModel.MoneyCollected}");
         }
         else
         {
             _moneyCost.color = Color.white;
+            _moneyTrue = true;
+        }
+
+        if (_moneyTrue && _crystalTrue)
+        {
             canBuy = true;
+        }
+        else
+        {
+            canBuy = false;
         }
     }
 

@@ -47,7 +47,7 @@ public class MoneyPickup : MonoBehaviour
 
     private IEnumerator WaitFollowing()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         _isFollowing = true;
     }
 

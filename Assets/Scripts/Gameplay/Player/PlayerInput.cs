@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference parryingAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
     [SerializeField] private InputActionReference gameMenuAction;
@@ -22,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference buyAbility;
     [SerializeField] private InputActionReference interactAction;
     [SerializeField] private InputActionReference clawAction;
+    [SerializeField] private InputActionReference lookAction;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -38,6 +40,9 @@ public class PlayerInput : MonoBehaviour
     private bool dash = false;
     private bool grab = false;
     private bool run = false;
+    private Vector2 look = Vector2.zero;
+
+    #region Properties
 
     public bool InteractPressed { get { return interactPressed; } }
     public bool PlayerMovingEd { get; private set; } = false;
@@ -45,7 +50,14 @@ public class PlayerInput : MonoBehaviour
     public bool PlayerInteractEd { get { return interactPressed; } }
     public bool PlayerClawEd { get { return clawPressed; } }
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
+    public bool AttackHeld { get; private set; }
+    public bool AttackReleased { get; private set; }
+    public bool ParryingHeld { get; private set; }
+    public bool ParryingReleased { get; private set; }
     public bool DamageDashActive { get; private set; }
+    public Vector2 VectorLookAction { get { return look; } }
+
+    #endregion
 
     #region Common Methods
 
@@ -70,7 +82,6 @@ public class PlayerInput : MonoBehaviour
         {
             if (GameManager.Instance.GameState == GameState.CUTSCENE)
                 return;
-
 
             if (IsValidAction(pauseMenuAction))
             {
@@ -167,10 +178,14 @@ public class PlayerInput : MonoBehaviour
         {
             attackPressed = attackAction.action.WasPressedThisFrame();
 
-            if (attackPressed)
-            {
-                attackPressed = true;
-            }
+            AttackHeld = attackAction.action.IsPressed();
+            AttackReleased = attackAction.action.WasReleasedThisFrame();
+        }
+
+        if (IsValidAction(parryingAction))
+        {
+            ParryingHeld = parryingAction.action.IsPressed();
+            ParryingReleased = parryingAction.action.WasReleasedThisFrame();
         }
 
         if (IsValidAction(clawAction))
@@ -225,6 +240,15 @@ public class PlayerInput : MonoBehaviour
         }
 
         //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
+        if (IsValidAction(lookAction))
+        {
+            //Debug.Log(playerMove.IsGrounded);
+            if (playerMove.IsGrounded)
+            {
+                look = lookAction.action.ReadValue<Vector2>();
+                //Debug.Log(lookVector);
+            }
+        }
     }
 
     private void FixedUpdate()

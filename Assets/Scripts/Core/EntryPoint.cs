@@ -20,10 +20,13 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private InitializeManager initializeManagerPrefab;
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
+    [SerializeField] private GameObject cameraManagerPrefab;
+    [SerializeField] private GameObject cameraFollowObjectPrefab;
     [SerializeField] private GameObject globalVolumePrefab;
     [SerializeField] private GameObject globalLightPrefab;
     [SerializeField] private GameObject canvasPrefab;
     [SerializeField] private GameObject heartsPrefab;
+    [SerializeField] private GameObject mapEducationUIPrefab;
     [SerializeField] private GameObject manaBarPrefab;
     [SerializeField] private GameObject crystalCounterPrefab;
     [SerializeField] private GameObject moneyCounterPrefab;
@@ -51,10 +54,13 @@ public class EntryPoint : MonoBehaviour
     private InitializeManager _initializeManagerInstance;
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;
+    private GameObject _cameraManagerInstance;
+    private GameObject _cameraFollowObjectInstance;
     private GameObject _globalVolumeInstance;
     private GameObject _globalLightInstance;
     private GameObject _canvasInstance;
     private GameObject _transitionCanvasInstance;
+    private GameObject _mapEducationUIInstance;
     private GameObject _heartsInstance;
     private GameObject _manaBarInstance;
     private GameObject _crystalCounterInstance;
@@ -84,6 +90,8 @@ public class EntryPoint : MonoBehaviour
     private static EntryPoint instance;
     public static EntryPoint Instance { get { return instance; } }
     public InputActionAsset NewInputSystem { get { return newInputSystem; } }
+    public GameObject GlobalVolumeInstance { get { return _globalVolumeInstance; } }
+    public GameObject MusicHandlerInstance { get { return _musicHandlerInstance; } }
 
     private bool playerInitialized = false;
 
@@ -130,9 +138,15 @@ public class EntryPoint : MonoBehaviour
 
     private void CreateObjects()
     {
+        if (cameraManagerPrefab != null)
+        {
+            _cameraManagerInstance = Instantiate(cameraManagerPrefab);
+            DontDestroyOnLoad(_cameraManagerInstance);
+        }
+
         if (mainCameraPrefab != null)
         {
-            _mainCameraInstance = Instantiate(mainCameraPrefab);
+            _mainCameraInstance = Instantiate(mainCameraPrefab/*, _cameraManagerInstance.transform*/);
             DontDestroyOnLoad(_mainCameraInstance);
         }
 
@@ -283,6 +297,12 @@ public class EntryPoint : MonoBehaviour
 
         InitializePlayerDataFromSave();
 
+        if (cameraFollowObjectPrefab != null)
+        {
+            _cameraFollowObjectInstance = Instantiate(cameraFollowObjectPrefab);
+            DontDestroyOnLoad(_cameraFollowObjectInstance);
+        }
+
         InitializePlayerUI();
     }
 
@@ -291,11 +311,13 @@ public class EntryPoint : MonoBehaviour
         if (_wallsManagerInstance != null) Destroy(_wallsManagerInstance.gameObject);
         if (_crystalsManagerInstance != null) Destroy(_crystalsManagerInstance.gameObject);
         if (_initializeManagerInstance != null) Destroy(_initializeManagerInstance.gameObject);
+        if (_cameraManagerInstance != null) Destroy(_cameraManagerInstance.gameObject);
         if (_eventSystemInstance != null) Destroy(_eventSystemInstance.gameObject);
 
         if (_globalVolumeInstance != null) Destroy(_globalVolumeInstance);
         if (_globalLightInstance != null) Destroy(_globalLightInstance);
         if (_mainCameraInstance != null) Destroy(_mainCameraInstance);
+        if (_cameraFollowObjectInstance != null) Destroy(_cameraFollowObjectInstance.gameObject);
         if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
         if (_musicHandlerInstance != null) Destroy(_musicHandlerInstance);
@@ -437,6 +459,12 @@ public class EntryPoint : MonoBehaviour
                 DontDestroyOnLoad(_heartsInstance);
                 if (playerInitialized)
                     StartHearts();
+            }
+
+            if (mapEducationUIPrefab != null)
+            {
+                _mapEducationUIInstance = Instantiate(mapEducationUIPrefab, _canvasInstance.transform);
+                DontDestroyOnLoad (_mapEducationUIInstance);
             }
         }
     }

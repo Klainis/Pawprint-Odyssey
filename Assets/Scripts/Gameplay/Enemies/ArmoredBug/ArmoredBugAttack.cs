@@ -10,6 +10,12 @@ public class ArmoredBugAttack : MonoBehaviour
 
     private ArmoredBugView _bugView;
 
+    private float _lastAttackTime;
+    private bool _isAttacking = false;
+
+    public float LastAttackTime { get { return _lastAttackTime; } }
+    public bool IsAttacking { get { return _isAttacking; } }
+
     private void Awake()
     {
         _bugView = GetComponent<ArmoredBugView>();
@@ -28,9 +34,33 @@ public class ArmoredBugAttack : MonoBehaviour
             if (!_bugView.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_bugView.Model.Damage, transform.position);
+                playerView.ApplyDamage(_bugView.Model.Damage, transform.position, gameObject);
             }
         }
+    }
+
+    public bool CanAttack(float attackCooldown)
+    {
+        return !((Time.time < _lastAttackTime + attackCooldown) || _isAttacking);
+    }
+
+    public void SetIsAttacking(bool flag)
+    {
+        _isAttacking = flag;
+    }
+
+    public void UpdateLastAttackTime()
+    {
+        _lastAttackTime = Time.time;
+    }
+
+    public float DashAttack(bool facingRight, float distance)
+    {
+        var rb = _bugView.RigidBody;
+        var direction = facingRight ? -1 : 1;
+        var dashSpeed = 20f;
+        rb.linearVelocity = new Vector2(direction * dashSpeed, 0);
+        return distance / dashSpeed;
     }
 
     private void CheckPlayerHits()

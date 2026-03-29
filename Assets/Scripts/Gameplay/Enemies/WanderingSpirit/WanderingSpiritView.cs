@@ -8,21 +8,22 @@ public class WanderingSpiritView : MonoBehaviour
     public EnemyModel Model { get; private set; }
 
     [Header("Main params")]
-    [SerializeField] private EnemyData data;
-    [SerializeField] private PlayerAttack playerAttack;
-    [SerializeField] private float lastPlayerAttackForce = 12f;
-    [SerializeField] private float playerAttackForce = 7f;
-    [SerializeField] private bool isInvincible = false;
+    [SerializeField] private EnemyData _data;
+    [SerializeField] private PlayerAttack _playerAttack;
+    [SerializeField] private float _lastPlayerAttackForce = 20f;
+    [SerializeField] private float _playerAttackForce = 7f;
+    [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private AudioClip _hitClip;
 
     [Header("Attack")]
-    [SerializeField] private float jumpHeight = 1.75f;
-    [SerializeField] private float attackCooldown = 2f;
-    [SerializeField] private float stayAfterAttackDelay = 1.0f;
-    [SerializeField] private float playerDetectDist = 5f;
-    [SerializeField] private float telegraphTime = 0.25f;
+    [SerializeField] private float _jumpHeight = 1.75f;
+    [SerializeField] private float _attackCooldown = 2f;
+    [SerializeField] private float _stayAfterAttackDelay = 1.0f;
+    [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _telegraphTime = 0.25f;
 
     [Header("Not used")]
-    [SerializeField] private float acceleratedSpeed = 5f;
+    [SerializeField] private float _acceleratedSpeed = 5f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -35,10 +36,11 @@ public class WanderingSpiritView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
     private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
-    private Rigidbody2D rigidBody;
-    private WSAnimation wsAnimation;
-    private WSAttack wsAttack;
-    private WSMove wsMove;
+    private AudioSource _audioSource;
+    private Rigidbody2D _rigidBody;
+    private WSAnimation _wsAnimation;
+    private WSAttack _wsAttack;
+    private WSMove _wsMove;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
@@ -47,20 +49,20 @@ public class WanderingSpiritView : MonoBehaviour
     private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
-    private float _lastAttackTime;
-    private bool isHitted = false;
-    private bool isAccelerated = false;
-    private bool facingRight = true;
+    private bool _isHitted = false;
+    private bool _isAccelerated = false;
+    private bool _facingRight = true;
+    private bool _isKnockback = false;
 
     #endregion
 
     #region Properties
 
-    public float PlayerDetectDist { get { return playerDetectDist; } }
-    public Rigidbody2D RigidBody { get { return rigidBody; } }
-    public bool IsHitted { get { return isHitted; } }
-    public bool IsAccelerated { get { return isAccelerated; } set { isAccelerated = value; } }
-    public bool FacingRight { get { return facingRight; } set { facingRight = value; } }
+    public float PlayerDetectDist { get { return _playerDetectDist; } }
+    public Rigidbody2D RigidBody { get { return _rigidBody; } }
+    public bool IsHitted { get { return _isHitted; } }
+    public bool IsAccelerated { get { return _isAccelerated; } set { _isAccelerated = value; } }
+    public bool FacingRight { get { return _facingRight; } set { _facingRight = value; } }
 
     #endregion
 
@@ -68,20 +70,21 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void Awake()
     {
-        Model = new EnemyModel(data.Life, data.Speed, data.Damage, data.Reward);
+        Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
-        playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
-        rigidBody = GetComponent<Rigidbody2D>();
-        wsAnimation = GetComponent<WSAnimation>();
-        wsAttack = GetComponent<WSAttack>();
-        wsMove = GetComponent<WSMove>();
+        _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
+        _audioSource = GetComponent<AudioSource>();
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _wsAnimation = GetComponent<WSAnimation>();
+        _wsAttack = GetComponent<WSAttack>();
+        _wsMove = GetComponent<WSMove>();
         _money = FindAnyObjectByType<InstantiateMoney>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
         var renderer = GetComponent<SpriteRenderer>();
         _defaultColor = renderer.color;
-        _defaultConstraints = rigidBody.constraints;
+        _defaultConstraints = _rigidBody.constraints;
     }
 
     private void FixedUpdate()
@@ -91,9 +94,12 @@ public class WanderingSpiritView : MonoBehaviour
             StartCoroutine(DestroySelf());
             return;
         }
-        else if (!wsAttack.IsAttacking)
+        
+        if (_isKnockback) return;
+
+        if (!_wsAttack.IsAttacking)
         {
-            wsMove.Move(isAccelerated, acceleratedSpeed);
+            _wsMove.Move(_isAccelerated, _acceleratedSpeed);
         }
     }
 
@@ -101,7 +107,7 @@ public class WanderingSpiritView : MonoBehaviour
 
     public void ApplyDamage(int damage)
     {
-        if (isInvincible) return;
+        if (_isInvincible) return;
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
@@ -113,35 +119,51 @@ public class WanderingSpiritView : MonoBehaviour
 
         if (damageApplied)
         {
+            PlayHitSound(_hitClip);
             _damageFlash.CallDamageFlash();
 
-            wsAnimation.SetBoolHit(true);
-            StartCoroutine(HitTime(1f));
-            rigidBody.linearVelocity = Vector2.zero;
+            _wsAnimation.SetTriggerHit();
+            _rigidBody.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
 
-            if (playerAttack.AttackSeriesCount == 3)
+            if (_playerAttack.AttackSeriesCount == 3)
             {
-                KnockBack(direction, lastPlayerAttackForce);
+                //KnockBack(direction, lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
-            else if (playerAttack.AttackSeriesCount < 3)
+            else if (_playerAttack.AttackSeriesCount < 3)
             {
-                KnockBack(direction, playerAttackForce);
+                //KnockBack(direction, playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }
     }
 
+    public void ApplyChargeDamage(int damage)
+    {
+        ApplyDamage(damage);
+        var direction = damage / Mathf.Abs(damage);
+        KnockBack(direction, _lastPlayerAttackForce);
+    }
+
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+    }
+
     private void KnockBack(int direction, float forceAttack)
     {
-        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        var directionVector = new Vector2(direction, rigidBody.linearVelocity.y);
+        if (_isKnockback)
+            StopCoroutine(WaitForKnockBack());
 
-        rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
+        _rigidBody.linearVelocity = new Vector2(direction * forceAttack, _rigidBody.linearVelocity.y);
+        StartCoroutine(WaitForKnockBack());
     }
 
     #region Particles
@@ -189,24 +211,24 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void OnEnable()
     {
-        wsMove.OnWallHit += HandleWallHit;
+        _wsMove.OnWallHit += HandleWallHit;
      
-        wsAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
-        wsAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
+        _wsAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
+        _wsAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
     }
 
     private void OnDisable()
     {
-        wsMove.OnWallHit -= HandleWallHit;
+        _wsMove.OnWallHit -= HandleWallHit;
 
-        wsAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
-        wsAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
+        _wsAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
+        _wsAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
     }
 
     private void HandleWallHit()
     {
-        isAccelerated = false;
-        facingRight = wsMove.Turn(facingRight);
+        _isAccelerated = false;
+        _facingRight = _wsMove.Turn(_facingRight);
     }
 
     private void HandlePlayerLeftDetected() => StartTelegraph(false);
@@ -214,79 +236,79 @@ public class WanderingSpiritView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (Time.time < _lastAttackTime + attackCooldown || wsAttack.IsAttacking)
+        if (!_wsAttack.CanAttack(_attackCooldown))
             return;
 
-        if (!wsAttack.CanJumpUp(jumpHeight))
+        if (!_wsAttack.CanJumpUp(_jumpHeight))
             return;
-
-        wsAttack.SetIsAttacking(true);
 
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
 
-        if (faceRight != facingRight)
-            facingRight = wsMove.Turn(facingRight);
+        if (faceRight != _facingRight)
+            _facingRight = _wsMove.Turn(_facingRight);
 
-        wsAnimation.SetBoolMove(true);
-        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine(faceRight));
+        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
     }
 
     #endregion
 
     #region IEnumerators
 
-    private IEnumerator AttackTelegraphRoutine(bool faceRight)
+    private IEnumerator WaitForKnockBack()
     {
-        var playerPos = playerAttack.transform.position;
-        wsAttack.SetIsAttacking(true);
-        wsAnimation.SetBoolAttack(true);
+        _isKnockback = true;
+        yield return new WaitForSeconds(0.2f);
+        _isKnockback = false;
+    }
+
+    private IEnumerator AttackTelegraphRoutine()
+    {
+        var playerPos = _playerAttack.transform.position;
+        _wsAttack.SetIsAttacking(true);
+        _wsAnimation.SetBoolAttack(true);
 
         var renderer = GetComponent<SpriteRenderer>();
         renderer.color = Color.red;
-        rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        yield return new WaitForSeconds(telegraphTime);
+        yield return new WaitForSeconds(_telegraphTime);
 
         renderer.color = _defaultColor;
-        rigidBody.constraints = _defaultConstraints;
+        _rigidBody.constraints = _defaultConstraints;
 
-        if (playerAttack != null)
-        {
-            wsAttack.JumpToPoint(playerPos, jumpHeight);
-        }
+        if (_playerAttack != null)
+            _wsAttack.JumpToPoint(playerPos, _jumpHeight);
 
-        yield return new WaitUntil(() => rigidBody.linearVelocity.y < 0);
-        yield return new WaitUntil(() => Mathf.Abs(rigidBody.linearVelocity.y) < 0.1f);
-        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(stayAfterAttackDelay);
+        yield return new WaitUntil(() => _rigidBody.linearVelocity.y < 0);
+        yield return new WaitUntil(() => Mathf.Abs(_rigidBody.linearVelocity.y) < 0.1f);
+        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
 
-        _lastAttackTime = Time.time;
-        wsAttack.SetIsAttacking(false);
-        wsAnimation.SetBoolAttack(false);
+        _wsAttack.UpdateLastAttackTime();
+        _wsAttack.SetIsAttacking(false);
+        _wsAnimation.SetBoolAttack(false);
         _telegraphCoroutine = null;
     }
 
     private IEnumerator HitTime(float time)
     {
-        isHitted = true;
-        //_isInvincible = true;
+        var constraintsBefore = _rigidBody.constraints;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
         yield return new WaitForSeconds(time);
-        isHitted = false;
-        //_isInvincible = false;
+        _rigidBody.constraints = constraintsBefore;
     }
 
     private IEnumerator DestroySelf()
     {
-        isInvincible = true;
+        _isInvincible = true;
         ChangeLayer("DeadEnemy");
         ChangeTag("isDead");
 
-        wsAnimation.SetTriggerDead();
+        _wsAnimation.SetTriggerDead();
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
-        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
         Destroy(gameObject);

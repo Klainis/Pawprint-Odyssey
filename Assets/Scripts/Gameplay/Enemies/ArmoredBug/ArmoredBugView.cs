@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class ArmoredBugView : MonoBehaviour
 {
@@ -11,14 +12,20 @@ public class ArmoredBugView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
     [SerializeField] private PlayerAttack _playerAttack;
-    [SerializeField] private float _lastPlayerAttackForce = 12f;
+    [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private AudioClip _hitClip;
+    [SerializeField] private AudioClip _shieldHitClip;
 
-    [Header("Acceleration")]
-    [SerializeField] private float _acceleratedSpeed = 5f;
+    [Header("Dash attack")]
+    [SerializeField] private float _dashDist = 1.5f;
     [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
+
+    [Header("Not used")]
+    [SerializeField] private float _acceleratedSpeed = 5f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -31,6 +38,7 @@ public class ArmoredBugView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
     private ParticleSystem _playerWeaponSliceParticleInstance;
 
+    private AudioSource _audioSource;
     private Rigidbody2D _rigidBody;
     private ArmoredBugAnimation _bugAnimation;
     private ArmoredBugAttack _bugAttack;
@@ -47,7 +55,8 @@ public class ArmoredBugView : MonoBehaviour
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool damageApplied = false;
-    
+    private bool _isKnockback = false;
+
     #endregion
 
     #region Properties
@@ -66,9 +75,9 @@ public class ArmoredBugView : MonoBehaviour
     {
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
-        //_playerAttack = GameObject.Find("Player").GetComponent<Attack>();
         _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
 
+        _audioSource = GetComponent<AudioSource>();
         _rigidBody = GetComponent<Rigidbody2D>();
         _bugAnimation = GetComponent<ArmoredBugAnimation>();
         _bugAttack = GetComponent<ArmoredBugAttack>();
@@ -89,11 +98,10 @@ public class ArmoredBugView : MonoBehaviour
             StartCoroutine(DestroySelf());
             return;
         }
-        else
+        else if (!_bugAttack.IsAttacking)
+        {
             _bugMove.Move(_isAccelerated, _acceleratedSpeed);
-
-        //Debug.Log(_facingRight);
-        //Debug.Log(damageApplied);
+        }
     }
 
     #endregion
@@ -112,9 +120,10 @@ public class ArmoredBugView : MonoBehaviour
         else
         {
             damageApplied = false;
+            _bugAnimation.SetTriggerBlockHit();
+            PlayHitSound(_shieldHitClip);
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);
-            //«вук удара по броне
         }
 
         if (Model.IsDead)
@@ -125,10 +134,10 @@ public class ArmoredBugView : MonoBehaviour
 
         if (damageApplied)
         {
+            PlayHitSound(_hitClip);
             _damageFlash.CallDamageFlash();
 
-            _bugAnimation.SetBoolHit(true);
-            StartCoroutine(HitTime(1f));
+            _bugAnimation.SetTriggerHit();
             _rigidBody.linearVelocity = Vector2.zero;
 
             _screenShaker.Shake();
@@ -136,25 +145,57 @@ public class ArmoredBugView : MonoBehaviour
 
             if (_playerAttack.AttackSeriesCount == 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _lastPlayerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
-                KnockBack(direction, _lastPlayerAttackForce);
+                //KnockBack(direction, _lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
             else if (_playerAttack.AttackSeriesCount < 3)
             {
-                //_rigidBody.AddForce(new Vector2(direction * _playerAttackForce, _rigidBody.linearVelocity.y), ForceMode2D.Impulse);
-                KnockBack(direction, _playerAttackForce);
+                //KnockBack(direction, _playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }
     }
 
+    public void ApplyChargeDamage(int damage)
+    {
+        if (_isInvincible) return;
+
+        damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+
+        if (Model.IsDead)
+        {
+            _money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position);
+        }
+
+        if (damageApplied)
+        {
+            var direction = damage / Mathf.Abs(damage);
+            _damageFlash.CallDamageFlash();
+            _bugAnimation.SetTriggerHit();
+            _rigidBody.linearVelocity = Vector2.zero;
+            _screenShaker.Shake();
+            SpawnDamageParticles(direction);
+            KnockBack(direction, _lastPlayerAttackForce);
+            SpawnPlayerLastAttackParticles();
+        }
+    }
+
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+    }
+
     private void KnockBack(int direction, float forceAttack)
     {
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        var directionVector = new Vector2(direction, _rigidBody.linearVelocity.y);
+        if (_isKnockback)
+            StopCoroutine(WaitForKnockBack());
 
-        _rigidBody.AddForce(directionVector * forceAttack, ForceMode2D.Impulse);
+        _rigidBody.linearVelocity = new Vector2(direction * forceAttack, _rigidBody.linearVelocity.y);
+        StartCoroutine(WaitForKnockBack());
     }
 
     #region Particles
@@ -235,7 +276,8 @@ public class ArmoredBugView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (_isAccelerated) return;
+        if (!_bugAttack.CanAttack(_attackCooldown))
+            return;
 
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
@@ -244,17 +286,25 @@ public class ArmoredBugView : MonoBehaviour
             _facingRight = _bugMove.Turn(_facingRight);
 
         _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
-        _isAccelerated = true;
     }
 
     #endregion
 
     #region IEnumerators
 
+    private IEnumerator WaitForKnockBack()
+    {
+        _isKnockback = true;
+        yield return new WaitForSeconds(0.2f);
+        _isKnockback = false;
+    }
+
     private IEnumerator AttackTelegraphRoutine()
     {
-        var renderer = GetComponent<SpriteRenderer>();
+        _bugAttack.SetIsAttacking(true);
+        _bugAnimation.SetBoolAttack(true);
 
+        var renderer = GetComponent<SpriteRenderer>();
         renderer.color = Color.red;
         _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
@@ -263,6 +313,19 @@ public class ArmoredBugView : MonoBehaviour
         renderer.color = _defaultColor;
         _rigidBody.constraints = _defaultConstraints;
 
+        _telegraphCoroutine = null;
+
+        if (_playerAttack != null)
+        {
+            var dashTime = _bugAttack.DashAttack(_facingRight, _dashDist);
+            yield return new WaitForSeconds(dashTime);
+        }
+
+        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
+
+        _bugAttack.UpdateLastAttackTime();
+        _bugAttack.SetIsAttacking(false);
+        _bugAnimation.SetBoolAttack(false);
         _telegraphCoroutine = null;
     }
 
