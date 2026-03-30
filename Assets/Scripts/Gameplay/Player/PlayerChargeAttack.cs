@@ -4,12 +4,17 @@ using UnityEngine;
 public class PlayerChargeAttack : MonoBehaviour
 {
     [Header("Parameters")]
-    [SerializeField] float _chargeTime = 1.0f;
-    [SerializeField] int _manaCost = 15;
+    [SerializeField] private float _chargeTime = 2.0f;
+    [SerializeField] private float _startChargeTime = 1.0f;
+    [SerializeField] private int _manaCost = 15;
     [SerializeField] private AudioClip _attackChargedClip;
 
+    [Header("Particles")]
+    [SerializeField] private Transform _particleSpawnPoint;
+    [SerializeField] private ParticleSystem _attackChargingParticle;
+    [SerializeField] private ParticleSystem _attackChargedParticle;
+
     private AudioSource _audioSource;
-    private Rigidbody2D _rigidBody;
     private PlayerView _playerView;
     private PlayerAnimation _playerAnimation;
     private PlayerMana _playerMana;
@@ -17,6 +22,8 @@ public class PlayerChargeAttack : MonoBehaviour
 
     const float _attackCheckRadius = 1.3f;
 
+    private ParticleSystem _attackChargingParticleInstance;
+    private ParticleSystem _attackChargedParticleInstance;
     private int _damage;
     private float _currentChargeTimer = 0f;
     private bool _isCharging = false;
@@ -24,7 +31,6 @@ public class PlayerChargeAttack : MonoBehaviour
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _rigidBody = GetComponent<Rigidbody2D>();
         _playerView = GetComponent<PlayerView>();
         _playerAnimation = GetComponent<PlayerAnimation>();
         _playerMana = GetComponent<PlayerMana>();
@@ -46,31 +52,43 @@ public class PlayerChargeAttack : MonoBehaviour
         var isHeld = PlayerInput.Instance.AttackHeld;
         var isReleased = PlayerInput.Instance.AttackReleased;
 
-        if (!PlayerMove.Instance.IsGrounded) return;
-
         if (isHeld && !_isCharging && _playerView.PlayerModel.Mana >= _manaCost)
         {
             _isCharging = true;
             _currentChargeTimer = 0f;
 
-            PlayerMove.Instance.CanMove = false;
-            _rigidBody.linearVelocity = Vector2.zero;
-
-            _playerAnimation.SetFloatSpeed(0);
             _playerAnimation.SetBoolIsChargingAttack(true);
         }
 
         if (_isCharging && isHeld)
         {
             _currentChargeTimer += Time.deltaTime;
-            if (_currentChargeTimer >= _chargeTime)
+            var isCharged = _currentChargeTimer >= _chargeTime + _startChargeTime;
+            var startedCharging = _currentChargeTimer >= _startChargeTime;
+            if (!isCharged && startedCharging)
+            {
+                ResetParticleInstance(true);
+                SpawnParticle(false);
+            }
+            if (isCharged)
+            {
                 PlayChargeAttackSound(_attackChargedClip);
+                ResetParticleInstance(false);
+                SpawnParticle(true);
+            }
         }
 
         if (_isCharging && isReleased)
         {
             PlayerMove.Instance.CanMove = true;
-            if (_currentChargeTimer < _chargeTime) return;
+            ResetParticleInstance(true);
+            ResetParticleInstance(false);
+
+            if (_currentChargeTimer < _chargeTime)
+            {
+                _isCharging = false;
+                return;
+            }
 
             _playerAnimation.SetBoolIsChargingAttack(false);
             ReleaseAttack();
@@ -108,4 +126,43 @@ public class PlayerChargeAttack : MonoBehaviour
             _audioSource.PlayOneShot(clip);
         }
     }
+
+    #region Particles
+
+    private void SpawnParticle(bool isCharged)
+    {
+        if (isCharged && _attackChargedParticleInstance == null)
+            _attackChargedParticleInstance = InstantiateParticle(_attackChargedParticle);
+        else if (!isCharged && _attackChargingParticleInstance == null)
+            _attackChargingParticleInstance = InstantiateParticle(_attackChargingParticle);
+    }
+
+    private ParticleSystem InstantiateParticle(ParticleSystem particlePrefab)
+    {
+        var position = _particleSpawnPoint.position;
+        var rotation = _particleSpawnPoint.rotation;
+        return Instantiate(particlePrefab, position, rotation, _particleSpawnPoint);
+    }
+
+    private void ResetParticleInstance(bool chargedInstance)
+    {
+        if (chargedInstance)
+        {
+            if (_attackChargedParticleInstance != null)
+            {
+                Destroy(_attackChargedParticleInstance.gameObject);
+                _attackChargedParticleInstance = null;
+            }
+        }
+        else
+        {
+            if (_attackChargingParticleInstance != null)
+            {
+                Destroy(_attackChargingParticleInstance.gameObject);
+                _attackChargingParticleInstance = null;
+            }
+        }
+    }
+
+    #endregion
 }
