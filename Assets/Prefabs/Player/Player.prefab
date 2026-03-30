@@ -98,6 +98,7 @@ Transform:
   - {fileID: 6329066297177611368}
   - {fileID: 6759321833485914984}
   - {fileID: 8942503404954801381}
+  - {fileID: 7424431734900674398}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3512841439597258566
@@ -233,9 +234,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58460d3cca7cf74badca9ef9a11203b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerChargeAttack
-  _chargeTime: 1
+  _chargeTime: 2
+  _startChargeTime: 1
   _manaCost: 15
   _attackChargedClip: {fileID: 0}
+  _particleSpawnPoint: {fileID: 7424431734900674398}
+  _attackChargingParticle: {fileID: 4796147680731650212, guid: 8bd345b9dce3e6243af63809fd0667f8, type: 3}
+  _attackChargedParticle: {fileID: 4796147680731650212, guid: 3f06dfc922d13d543a2a0171cf5ff551, type: 3}
 --- !u!114 &2137189229087958467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15780,6 +15785,37 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &6792468171209085952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7424431734900674398}
+  m_Layer: 3
+  m_Name: ChargeParticlePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7424431734900674398
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6792468171209085952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4660076192433278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8675654279660521172
 GameObject:
   m_ObjectHideFlags: 0
