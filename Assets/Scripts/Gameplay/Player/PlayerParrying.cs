@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class PlayerParrying : MonoBehaviour
 {
+    #region SerializeFields
+
     [Header("Paramaters")]
     [SerializeField] private float _parryingTime = 0.5f;
     [SerializeField] private float _parryingCooldown = 1.0f;
+    [SerializeField] private float _stopTime = 0.15f;
     [SerializeField] private int _knockBackForce = 15;
     [SerializeField] private AudioClip _successfullParryingClip;
     [SerializeField] private GameObject _parryingShield;
+
+    #endregion
+
+    #region Variables
 
     private AudioSource _audioSource;
     private Rigidbody2D _rigidBody;
@@ -17,13 +24,18 @@ public class PlayerParrying : MonoBehaviour
     private static PlayerParrying instance;
 
     private RigidbodyConstraints2D _rigidbodyConstraints;
+    private Coroutine _smoothStopCoroutine;
     private float _currentParryingTimer;
     private float _parryingCooldownTimer;
     private bool _isParrying;
     private bool _hasReflected;
     private bool _canStartNewParrying = true;
 
+    #endregion
+
     public static PlayerParrying Instance { get { return instance; } }
+
+    #region Common Methods
 
     private void Awake()
     {
@@ -41,64 +53,75 @@ public class PlayerParrying : MonoBehaviour
         _playerMana = GetComponent<PlayerMana>();
     }
 
-    void Update()
+    private void Update()
     {
         HandleParryingInput();
     }
+
+    #endregion
+
+    #region Parrying
 
     private void HandleParryingInput()
     {
         var isHeld = PlayerInput.Instance.ParryingHeld;
         var isReleased = PlayerInput.Instance.ParryingReleased;
 
-        if (!PlayerMove.Instance.IsGrounded) return;
-
         if (isReleased)
             _canStartNewParrying = true;
 
-        if (_parryingCooldownTimer < _parryingCooldown)
+        if (_isParrying)
         {
-            _parryingCooldownTimer += Time.deltaTime;
+            _currentParryingTimer += Time.deltaTime;
+            if (_currentParryingTimer >= _parryingTime || isReleased)
+                StopParrying();
             return;
         }
 
-        if (isHeld && !_isParrying && _canStartNewParrying)
-            StartParrying();
-        if (isHeld && _isParrying)
+        if (_parryingCooldownTimer < _parryingCooldown)
+            _parryingCooldownTimer += Time.deltaTime;
+        if (PlayerMove.Instance.IsGrounded && _parryingCooldownTimer >= _parryingCooldown)
         {
-            _currentParryingTimer += Time.deltaTime;
-
-            if (_currentParryingTimer >= _parryingTime)
-                StopParrying();
+            if (isHeld && _canStartNewParrying)
+                StartParrying();
         }
-        if (isReleased && _isParrying)
-            StopParrying();
     }
 
     private void StartParrying()
     {
         _parryingShield.SetActive(true);
-
         _isParrying = true;
         _hasReflected = false;
         _currentParryingTimer = 0;
+
         PlayerView.Instance.IsInvincible = true;
         PlayerMove.Instance.CanMove = false;
-        _rigidBody.linearVelocity = Vector2.zero;
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        if (_smoothStopCoroutine != null)
+            StopCoroutine(_smoothStopCoroutine);
+        _smoothStopCoroutine = StartCoroutine(SmoothStop(_stopTime));
+        
         _playerAnimation.SetFloatSpeed(0);
         _playerAnimation.SetBoolIsParrying(true);
     }
 
     private void StopParrying()
     {
-        _parryingShield.SetActive(false);
+        if (_smoothStopCoroutine != null)
+        {
+            StopCoroutine(_smoothStopCoroutine);
+            _smoothStopCoroutine = null;
+        }
 
+        _parryingShield.SetActive(false);
         _isParrying = false;
         _canStartNewParrying = false;
-        PlayerMove.Instance.CanMove = true;
-        _rigidBody.constraints = _rigidbodyConstraints;
+        _parryingCooldownTimer = 0f;
+
         _playerAnimation.SetBoolIsParrying(false);
+
+        _rigidBody.constraints = _rigidbodyConstraints;
+        PlayerMove.Instance.CanMove = true;
 
         StartCoroutine(StayInvincible());
     }
@@ -109,7 +132,6 @@ public class PlayerParrying : MonoBehaviour
         if (_hasReflected) return;
         if (!PlayerView.Instance.IsInvincible) return;
 
-        Debug.Log("ASDADSAD");
         _hasReflected = true;
 
         _playerMana.GetMana();
@@ -124,6 +146,8 @@ public class PlayerParrying : MonoBehaviour
         StopParrying();
     }
 
+    #endregion
+
     private void PlaySound(AudioClip clip)
     {
         if (clip != null)
@@ -136,5 +160,21 @@ public class PlayerParrying : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         PlayerView.Instance.IsInvincible = false;
+    }
+
+    private IEnumerator SmoothStop(float duration)
+    {
+        var initialVelocity = _rigidBody.linearVelocity;
+        var elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            _rigidBody.linearVelocity = Vector2.Lerp(initialVelocity, Vector2.zero, elapsedTime / duration);
+            yield return null;
+        }
+
+        _rigidBody.linearVelocity = Vector2.zero;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 }
