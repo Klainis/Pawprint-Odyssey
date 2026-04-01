@@ -69,12 +69,13 @@ public class TransitionPoint : MonoBehaviour
             {
                 //Отделить анимации игрока и добавить сюда анимацию бега к двери
                 playerPosition = Vector2.MoveTowards(playerPosition, targetPosition, speed * Time.deltaTime);
-                //playerCollider.transform.position = playerPosition;
+                playerCollider.transform.position = playerPosition;
                 yield return null;
             }
 
             //playerCollider.transform.position = playerPosition;
             //playerRB1.position = playerPosition;
+
             PlayerMove.Instance.CanMove = false;
             playerRB1.linearVelocity = Vector2.zero;
 
@@ -99,8 +100,11 @@ public class TransitionPoint : MonoBehaviour
                     yield return null;
                 }
 
-                playerCollider.transform.position = playerPosition;
-                playerRB1.position = playerPosition;
+                //playerCollider.transform.position = playerPosition;
+                //playerRB1.position = playerPosition;
+
+                PlayerMove.Instance.CanMove = false;
+                playerRB1.linearVelocity = Vector2.zero;
                 activated = true;
             }
             else if (gatePosition == GatePosition.bottom)
