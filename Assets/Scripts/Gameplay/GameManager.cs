@@ -153,6 +153,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         currentPlayer.transform.position = destination.transform.position;
+        CameraFollowObject.Instance.transform.position = destination.transform.position;
 
         //yield return screenFader.FadeIn();
         isTransitioning = false;

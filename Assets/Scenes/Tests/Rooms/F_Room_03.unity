@@ -5123,7 +5123,7 @@ Transform:
   m_GameObject: {fileID: 501173943}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.16, y: -6.69, z: 0}
+  m_LocalPosition: {x: 6.09, y: -7.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5798,7 +5798,7 @@ Transform:
   m_GameObject: {fileID: 617127119}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 19.85, y: -3.21, z: 0}
+  m_LocalPosition: {x: 19.23, y: -3.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10491,6 +10491,79 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &1326354998
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1216841753546717826, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_Name
+      value: CameraControlTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378998845175697192, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_Size.x
+      value: 2.218895
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378998845175697192, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_Size.y
+      value: 3.3768263
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378998845175697192, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.32465744
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378998845175697192, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.7643194
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 65.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8957130976751873645, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7e755dcaf70d38b4d86da47d78adc2cd, type: 3}
 --- !u!1 &1339242837
 GameObject:
   m_ObjectHideFlags: 0
@@ -15427,7 +15500,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.025829911}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -15437,7 +15510,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.7, y: 4.7758884}
+  m_Size: {x: 1.7, y: 4.207629}
   m_EdgeRadius: 0
 --- !u!114 &1758363925
 MonoBehaviour:
@@ -23301,3 +23374,4 @@ SceneRoots:
   - {fileID: 297694443}
   - {fileID: 45012242}
   - {fileID: 2079714341}
+  - {fileID: 1326354998}

@@ -39,15 +39,15 @@ public class MusicHandler : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _audioSource.clip = _mainMusicClip;
     }
-    private void Update()
-    {
-        audioMaster.GetFloat("MasterVolume", out float currentDB);
-        //Debug.Log(currentDB);
-        if (currentDB != _globalVolume)
-        {
-            SetGlobalVolume();
-        }
-    }
+    //private void Update()
+    //{
+    //    audioMaster.GetFloat("MasterVolume", out float currentDB);
+    //    //Debug.Log(currentDB);
+    //    if (currentDB != _globalVolume)
+    //    {
+    //        SetGlobalVolume();
+    //    }
+    //}
 
     public void AudioFadeOut()
     {
@@ -97,7 +97,7 @@ public class MusicHandler : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.unscaledDeltaTime;
-            float dB = Mathf.Lerp(startVolume, endVolume, elapsedTime / duration);
+            float dB = Mathf.MoveTowards(startVolume, endVolume, elapsedTime / duration);
             audioMaster.SetFloat("MasterVolume", dB);
             yield return null;
         }
