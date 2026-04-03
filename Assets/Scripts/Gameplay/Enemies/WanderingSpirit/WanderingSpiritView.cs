@@ -129,14 +129,13 @@ public class WanderingSpiritView : MonoBehaviour
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
 
-            if (_playerAttack.AttackSeriesCount == 3)
+            if (_playerAttack.AttackSeriesCount == 4)
             {
-                //KnockBack(direction, lastPlayerAttackForce);
+                KnockBack(direction, _lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
-            else if (_playerAttack.AttackSeriesCount < 3)
+            else if (_playerAttack.AttackSeriesCount < 4)
             {
-                //KnockBack(direction, playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }

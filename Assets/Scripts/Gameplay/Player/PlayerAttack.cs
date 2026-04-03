@@ -4,8 +4,7 @@ using UnityEngine.Events;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private static PlayerAttack instance;
-    public static PlayerAttack Instance { get { return instance; } }
+    #region SerializeFields
 
     [Header("Parameters")]
     [SerializeField] private float attackSeriesTimeout = 0.9f;
@@ -14,25 +13,35 @@ public class PlayerAttack : MonoBehaviour
     //[Header("Particles")]
     //[SerializeField] private ParticleSystem _attackParticle;
 
-    const float attackCheckRadius = 1.1f;
+    #endregion
 
+    #region Variables
+
+    private static PlayerAttack instance;
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
     private PlayerMana playerMana;
-
     private Transform attackCheck;
 
+    const float attackCheckRadius = 1.1f;
     private float lastAttackTime;
     private int attackSeriesCount = 0;
-
     private bool isAttacking = false;
     private bool canAttack = true;
 
+    #endregion
+
+    #region Properties
+
+    public static PlayerAttack Instance { get { return instance; } }
     public int AttackSeriesCount { get { return attackSeriesCount; } private set { attackSeriesCount = value; } }
     public bool CanAttack { get { return canAttack; } set { canAttack = value; } }
     public bool IsAttacking { get { return isAttacking; } }
-
     public bool SpendMana { get; set; } = true;
+
+    #endregion
+
+    #region Common Methods
 
     private void Awake()
     {
@@ -66,6 +75,9 @@ public class PlayerAttack : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
     public void Attack()
     {
         if (isAttacking || !canAttack) return;
@@ -94,6 +106,37 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = true;
     }
 
+    public void Attack4()
+    {
+        if (isAttacking || !canAttack) return;
+
+        lastAttackTime = Time.time;
+        attackSeriesCount++;
+        maxAttackSeriesCount = 4;
+
+        playerAnimation.SetBoolIsAttacking(true);
+
+        switch (attackSeriesCount)
+        {
+            case 1:
+                playerView.PlayerModel.SetDamage(1);
+                break;
+            case 2:
+                playerView.PlayerModel.SetDamage(1);
+                break;
+            case 3:
+                playerView.PlayerModel.SetDamage(3);
+                break;
+            case 4:
+                playerView.PlayerModel.SetDamage(4);
+                break;
+        }
+        if (attackSeriesCount > 0 && attackSeriesCount <= maxAttackSeriesCount)
+            playerAnimation.SetTriggerAttack(attackSeriesCount);
+
+        isAttacking = true;
+    }
+
     public void OnAttackAnimationEnd()
     {
         isAttacking = false;
@@ -113,9 +156,8 @@ public class PlayerAttack : MonoBehaviour
     {
         attackSeriesCount = 0;
         isAttacking = false;
-        playerAnimation.ResetTriggerAttack(1);
-        playerAnimation.ResetTriggerAttack(2);
-        playerAnimation.ResetTriggerAttack(3);
+        for (var i = 1; i < maxAttackSeriesCount + 1; i++)
+            playerAnimation.ResetTriggerAttack(i);
     }
 
     public void AttackDamage() //Вызывается в середние анимаци атаки

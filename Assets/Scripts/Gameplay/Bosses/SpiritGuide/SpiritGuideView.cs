@@ -126,6 +126,11 @@ public class SpiritGuideView : MonoBehaviour
         }
     }
 
+    public void ApplyChargeDamage(int damage)
+    {
+        ApplyDamage(damage);
+    }
+
     private void SpawnDamageParticles(int direction)
     {
         var vectorDirection = new Vector2(direction, 0);
