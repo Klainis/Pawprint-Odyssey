@@ -141,16 +141,21 @@ public class ThornyPlant : MonoBehaviour {
 
             SpawnDamageParticles(direction);
 
-            if (_playerAttack.AttackSeriesCount == 3)
+            if (_playerAttack.AttackSeriesCount == 4)
             {
                 SpawnPlayerLastAttackParticles();
             }
-            else if (_playerAttack.AttackSeriesCount < 3)
+            else if (_playerAttack.AttackSeriesCount < 4)
             {
                 SpawnPlayerAttakParticles(direction);
             }
         }
 	}
+
+    public void ApplyChargeDamage(int damage)
+    {
+        ApplyDamage(damage);
+    }
 
     private void PlayHitSound(AudioClip clip)
     {

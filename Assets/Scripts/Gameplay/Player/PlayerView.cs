@@ -23,6 +23,9 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private float _muffleSoundSpeed = 1.0f;
     [SerializeField] private float _muffleSoundMinValue = 0.3f;
 
+    [Header("Abilities")]
+    [SerializeField] private bool _has4Paws = false;
+
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
 
@@ -97,7 +100,12 @@ public class PlayerView : MonoBehaviour
     private void Update()
     {
         if (_playerInput.AttackPressed)
-            _playerAttack.Attack();
+        {
+            if (_has4Paws)
+                _playerAttack.Attack4();
+            else
+                _playerAttack.Attack();
+        }
     }
 
     #endregion

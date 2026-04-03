@@ -143,14 +143,13 @@ public class ArmoredBugView : MonoBehaviour
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
 
-            if (_playerAttack.AttackSeriesCount == 3)
+            if (_playerAttack.AttackSeriesCount == 4)
             {
-                //KnockBack(direction, _lastPlayerAttackForce);
+                KnockBack(direction, _lastPlayerAttackForce);
                 SpawnPlayerLastAttackParticles();
             }
-            else if (_playerAttack.AttackSeriesCount < 3)
+            else if (_playerAttack.AttackSeriesCount < 4)
             {
-                //KnockBack(direction, _playerAttackForce);
                 SpawnPlayerAttakParticles(direction);
             }
         }
