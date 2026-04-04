@@ -11,6 +11,9 @@ public class ShowEducation : MonoBehaviour
     [SerializeField] private bool isClaw;
     [SerializeField] private bool isDoubleJump;
 
+    [Header("If Claw Education")]
+    [SerializeField] private InstantiateClawWallForEducation __clawWallForEd;
+
     [Header("Duration")]
     [SerializeField] private float _fadeDuration = 0.5f;
     [SerializeField] private float _waitBeforeShow = 1.5f;
@@ -63,6 +66,7 @@ public class ShowEducation : MonoBehaviour
             if (PlayerView.Instance.PlayerModel.HasClaw && !HasClawOld)
             {
                 HasClawOld = true;
+                __clawWallForEd.EnableClawWallEd();
                 FadeIn();
             }
             else if (PlayerInput.Instance.PlayerClawEd)
