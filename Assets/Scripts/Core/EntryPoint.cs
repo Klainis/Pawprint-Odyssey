@@ -512,9 +512,10 @@ public class EntryPoint : MonoBehaviour
     private void SetTransitionCanvasParamets()
     {
         componentTransitionCanvas = _transitionCanvasInstance.GetComponent<Canvas>();
-        componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        componentTransitionCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
-        componentTransitionCanvas.sortingOrder = 100;
+        //componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        //componentTransitionCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+        componentCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        componentTransitionCanvas.sortingOrder = 1000;
     }
 
     private void StartHearts()

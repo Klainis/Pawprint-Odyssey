@@ -65,8 +65,10 @@ public class ShowEducation : MonoBehaviour
         {
             if (PlayerView.Instance.PlayerModel.HasClaw && !HasClawOld)
             {
+                Debug.Log("Получили коготь");
                 HasClawOld = true;
                 __clawWallForEd.EnableClawWallEd();
+                gameObject.SetActive(true);
                 FadeIn();
             }
             else if (PlayerInput.Instance.PlayerClawEd)
