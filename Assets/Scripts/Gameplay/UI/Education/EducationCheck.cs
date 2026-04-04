@@ -8,6 +8,7 @@ public class EducationCheck : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            _showEducation.gameObject.SetActive(true);
             _showEducation.FadeIn();
             gameObject.SetActive(false);
         }

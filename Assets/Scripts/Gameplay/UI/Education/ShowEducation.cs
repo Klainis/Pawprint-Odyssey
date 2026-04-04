@@ -121,11 +121,11 @@ public class ShowEducation : MonoBehaviour
             yield return null;
         }
 
+        _canvasGroup.alpha = targetAlpha;
+
         if (targetAlpha == 0)
         {
             gameObject.SetActive(false);
         }
-
-        _canvasGroup.alpha = targetAlpha;
     }
 }

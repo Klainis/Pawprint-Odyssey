@@ -504,8 +504,8 @@ public class EntryPoint : MonoBehaviour
     private void SetCanvasParamets(GameObject canvasInstance, int sortOrder)
     {
         componentCanvas = canvasInstance.GetComponent<Canvas>();
-        componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+        componentCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        //componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
         componentCanvas.sortingOrder = sortOrder;
     }
 
