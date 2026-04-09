@@ -52,6 +52,10 @@ public class PlayerMana : MonoBehaviour
                 playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - amount);
                 manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
                 break;
+            case "SoulRelease":
+                playerView.PlayerModel.SetMana(playerView.PlayerModel.Mana - amount);
+                manaBar.fillAmount = (float)playerView.PlayerModel.Mana / playerView.PlayerModel.MaxMana;
+                break;
         }
     }
 

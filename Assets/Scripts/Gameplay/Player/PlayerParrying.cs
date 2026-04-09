@@ -33,7 +33,12 @@ public class PlayerParrying : MonoBehaviour
 
     #endregion
 
+    #region Properties
+
     public static PlayerParrying Instance { get { return instance; } }
+    public bool IsParrying { get { return _isParrying; } }
+
+    #endregion
 
     #region Common Methods
 

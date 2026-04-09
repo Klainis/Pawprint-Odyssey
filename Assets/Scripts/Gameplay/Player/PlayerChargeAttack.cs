@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerChargeAttack : MonoBehaviour
 {
+    #region SerializeFields
+
     [Header("Parameters")]
     [SerializeField] private float _chargeTime = 2.0f;
     [SerializeField] private float _startChargeTime = 1.0f;
@@ -14,6 +16,11 @@ public class PlayerChargeAttack : MonoBehaviour
     [SerializeField] private ParticleSystem _attackChargingParticle;
     [SerializeField] private ParticleSystem _attackChargedParticle;
 
+    #endregion
+
+    #region Variables
+
+    private static PlayerChargeAttack _instance;
     private AudioSource _audioSource;
     private PlayerView _playerView;
     private PlayerAnimation _playerAnimation;
@@ -28,8 +35,24 @@ public class PlayerChargeAttack : MonoBehaviour
     private float _currentChargeTimer = 0f;
     private bool _isCharging = false;
 
+    #endregion
+
+    #region Properties
+
+    public static PlayerChargeAttack Instance { get { return _instance; } }
+    public bool IsCharging { get { return _isCharging; } }
+
+    #endregion
+
     private void Awake()
     {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+
         _audioSource = GetComponent<AudioSource>();
         _playerView = GetComponent<PlayerView>();
         _playerAnimation = GetComponent<PlayerAnimation>();
