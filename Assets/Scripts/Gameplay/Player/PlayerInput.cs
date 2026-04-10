@@ -59,7 +59,7 @@ public class PlayerInput : MonoBehaviour
     public bool ParryingReleased { get; private set; }
     public bool DamageDashActive { get; private set; }
     public Vector2 VectorLookAction { get { return look; } }
-    public Vector2 ShootDirection { get; private set; } = Vector2.right;
+    public Vector2 ShootDirection { get; private set; } = Vector2.zero;
 
     #endregion
 
@@ -215,7 +215,10 @@ public class PlayerInput : MonoBehaviour
                     ShootDirection = new Vector2(0, Mathf.Sign(move.y));
                 _lastFourWayDirection = ShootDirection;
             }
-            else ShootDirection = _lastFourWayDirection;
+            else
+            {
+                ShootDirection = Vector2.zero/*_lastFourWayDirection*/;
+            }
 
             Run(move);
             WallRun(move);

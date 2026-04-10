@@ -67,12 +67,12 @@ public class PlayerSoulRelease : MonoBehaviour
     private void HandleShootInput()
     {
         var shootPressed = PlayerInput.Instance.ShootPressed;
-        if (!shootPressed) return;
+        var direction = PlayerInput.Instance.ShootDirection;
+        if (!shootPressed || direction == Vector2.zero) return;
 
         if (!IsCooldownOver()) return;
         if (!CanShoot()) return;
 
-        var direction = PlayerInput.Instance.ShootDirection;
         StartCoroutine(ShootRoutine(direction));
     }
 
@@ -117,6 +117,7 @@ public class PlayerSoulRelease : MonoBehaviour
         _playerAnimation.SetBoolSoulRelease(false);
         yield return new WaitForSeconds(0.25f);
         _isStop = false;
+        _rigidbody.gravityScale = _startGravityScale;
         PlayerMove.Instance.CanMove = true;
     }
 
