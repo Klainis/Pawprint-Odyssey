@@ -58,6 +58,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("Claw", value);
     }
 
+    public void SetBoolSoulRelease(bool value)
+    {
+        animator.SetBool("SoulRelease", value);
+    }
+
     public void SetBoolIsDead(bool value)
     {
         animator.SetBool("IsDead", value);
