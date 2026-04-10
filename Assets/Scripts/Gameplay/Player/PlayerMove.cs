@@ -69,6 +69,7 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     //private PlayerView playerView;
     private PlayerAnimation playerAnimation;
+    private PlayerSoulRelease playerSoulRelease;
 
     private Transform wallCheck;
 
@@ -138,6 +139,7 @@ public class PlayerMove : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         playerAnimation = GetComponent<PlayerAnimation>();
+        playerSoulRelease = GetComponent<PlayerSoulRelease>();
 
         wallCheck = transform.Find("WallCheck");
 

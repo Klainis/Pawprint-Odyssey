@@ -29,6 +29,9 @@ public class PlayerSoulRelease : MonoBehaviour
     private PlayerAnimation _playerAnimation;
     private PlayerMana _playerMana;
     private float _lastShootTime = 0f;
+    private float _startGravityScale;
+
+    public bool _isStop { get; set; } = false;
 
     #endregion
 
@@ -41,8 +44,19 @@ public class PlayerSoulRelease : MonoBehaviour
         _playerMana = GetComponent<PlayerMana>();
     }
 
+    private void Start()
+    {
+        _startGravityScale = _rigidbody.gravityScale;
+    }
+
     private void Update()
     {
+        if (_isStop)
+        {
+            _rigidbody.linearVelocity = Vector2.zero;
+            _rigidbody.gravityScale = 0f;
+        }
+
         HandleShootInput();
     }
 
@@ -99,14 +113,20 @@ public class PlayerSoulRelease : MonoBehaviour
 
         SpawnProjectile(direction);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         _playerAnimation.SetBoolSoulRelease(false);
         yield return new WaitForSeconds(0.25f);
+        _isStop = false;
         PlayerMove.Instance.CanMove = true;
     }
 
     private IEnumerator SmoothStopRoutine(float duration)
     {
+        if (PlayerMove.Instance.IsJumping)
+        {
+            duration = 0;
+        }
+
         var velocityX = _rigidbody.linearVelocity.x;
         var currentVelocity = 0f;
         
@@ -119,7 +139,10 @@ public class PlayerSoulRelease : MonoBehaviour
             yield return null;
         }
 
-        _rigidbody.linearVelocity = new Vector2(0, _rigidbody.linearVelocity.y);
+        _isStop = true;
+        _rigidbody.linearVelocity = new Vector2(0, 0);
+        _rigidbody.gravityScale = 0;
+
     }
 
     #endregion
