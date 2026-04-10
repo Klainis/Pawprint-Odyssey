@@ -7,6 +7,8 @@ public class PiercingClaw : MonoBehaviour
 {
     [SerializeField] private GameObject clawSprite;
 
+    private static PiercingClaw _instance;
+
     private Vector2 clawSize = new(4f, 0.6f);
 
     private PlayerView playerView;
@@ -16,7 +18,11 @@ public class PiercingClaw : MonoBehaviour
     private Transform attackCheck;
 
     private bool canAttack = true;
+    private bool isAttacking = false;
     private bool clawPressed;
+
+    public static PiercingClaw Instance { get { return _instance; } }
+    public bool IsAttacking { get { return isAttacking; } }
 
     private void OnDrawGizmos()
     {
@@ -29,6 +35,13 @@ public class PiercingClaw : MonoBehaviour
 
     private void Awake()
     {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
         playerMana = GetComponent<PlayerMana>();
@@ -48,6 +61,7 @@ public class PiercingClaw : MonoBehaviour
         if (PlayerInput.Instance.PlayerClawEd && canAttack && playerView.PlayerModel.Mana >= 25)
         {
             clawSprite.SetActive(true);
+            isAttacking = true;
 
             //Debug.Log("Claw");
             playerMana.SpendMana("Claw", 1);
@@ -82,5 +96,6 @@ public class PiercingClaw : MonoBehaviour
         clawSprite.SetActive(false);
         yield return new WaitForSeconds(durationAfterSeries - clawEnd);
         canAttack = true;
+        isAttacking = false;
     }
 }

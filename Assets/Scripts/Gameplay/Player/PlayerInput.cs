@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference dashAction;
     [SerializeField] private InputActionReference attackAction;
+    [SerializeField] private InputActionReference shootAction;
     [SerializeField] private InputActionReference parryingAction;
     [SerializeField] private InputActionReference pauseMenuAction;
     [SerializeField] private InputActionReference pauseMenuActionUI;
@@ -41,6 +42,7 @@ public class PlayerInput : MonoBehaviour
     private bool grab = false;
     private bool run = false;
     private Vector2 look = Vector2.zero;
+    private Vector2 _lastFourWayDirection = Vector2.right;
 
     #region Properties
 
@@ -50,12 +52,14 @@ public class PlayerInput : MonoBehaviour
     public bool PlayerInteractEd { get { return interactPressed; } }
     public bool PlayerClawEd { get { return clawPressed; } }
     public bool AttackPressed { get { return attackPressed; } private set { attackPressed = value; } }
+    public bool ShootPressed { get; private set; }
     public bool AttackHeld { get; private set; }
     public bool AttackReleased { get; private set; }
     public bool ParryingHeld { get; private set; }
     public bool ParryingReleased { get; private set; }
     public bool DamageDashActive { get; private set; }
     public Vector2 VectorLookAction { get { return look; } }
+    public Vector2 ShootDirection { get; private set; } = Vector2.right;
 
     #endregion
 
@@ -182,6 +186,11 @@ public class PlayerInput : MonoBehaviour
             AttackReleased = attackAction.action.WasReleasedThisFrame();
         }
 
+        if (IsValidAction(shootAction))
+        {
+            ShootPressed = shootAction.action.WasPressedThisFrame();
+        }
+
         if (IsValidAction(parryingAction))
         {
             ParryingHeld = parryingAction.action.IsPressed();
@@ -197,10 +206,16 @@ public class PlayerInput : MonoBehaviour
         {
             var move = moveAction.action.ReadValue<Vector2>();
 
-            if (move != null && move.x > 0)
+            if (move.sqrMagnitude > 0.01f)
             {
                 PlayerMovingEd = true;
+                if (Mathf.Abs(move.x) > Mathf.Abs(move.y))
+                    ShootDirection = new Vector2(Mathf.Sign(move.x), 0);
+                else
+                    ShootDirection = new Vector2(0, Mathf.Sign(move.y));
+                _lastFourWayDirection = ShootDirection;
             }
+            else ShootDirection = _lastFourWayDirection;
 
             Run(move);
             WallRun(move);
