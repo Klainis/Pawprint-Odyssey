@@ -28,6 +28,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("IsJumping", value);
     }
 
+    public void SetBoolIsFall(bool value)
+    {
+        animator.SetBool("IsFall", value);
+    }
+
     public void SetBoolIsDoubleJumping(bool value)
     {
         animator.SetBool("IsDoubleJumping", value);

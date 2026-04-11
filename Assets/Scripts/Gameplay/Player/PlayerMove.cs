@@ -176,6 +176,7 @@ public class PlayerMove : MonoBehaviour
             if (!wasGrounded)
             {
                 playerAnimation.SetBoolIsJumping(false);//
+                playerAnimation.SetBoolIsFall(false);
 
                 //if (!isWall && !isDashing)
                 //    PlayParticleJumpDown();
@@ -206,6 +207,10 @@ public class PlayerMove : MonoBehaviour
         if (!isGrounded)
         {
             playerAnimation.SetBoolIsJumping(true);
+            if (rb.linearVelocity.y < 0)
+            {
+                playerAnimation.SetBoolIsFall(true);
+            }
 
             var leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
             var rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
@@ -612,6 +617,7 @@ public class PlayerMove : MonoBehaviour
         isJumping = true;
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
+        playerAnimation.SetBoolIsFall(false);
         isGrounded = false;
 
         var force = jumpForce;
@@ -642,6 +648,7 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
         playerAnimation.SetBoolIsDoubleJumping(true);
+        playerAnimation.SetBoolIsFall(false);
     }
 
     private void WallJump()
@@ -660,6 +667,7 @@ public class PlayerMove : MonoBehaviour
 
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
+        playerAnimation.SetBoolIsFall(false);
 
         var force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
 
@@ -694,6 +702,7 @@ public class PlayerMove : MonoBehaviour
 
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
+        playerAnimation.SetBoolIsFall(false);
 
         var force = new Vector2(-turnCoefficient * wallJumpForce.x, wallJumpForce.y * 1.3f);
 
