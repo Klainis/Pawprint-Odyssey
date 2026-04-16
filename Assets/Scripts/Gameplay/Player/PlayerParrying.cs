@@ -6,11 +6,12 @@ public class PlayerParrying : MonoBehaviour
     #region SerializeFields
 
     [Header("Paramaters")]
+    [SerializeField] private float _successParryInvincibleTime = 1.0f;
     [SerializeField] private float _parryingTime = 0.5f;
     [SerializeField] private float _parryingCooldown = 1.0f;
     [SerializeField] private float _stopTime = 0.15f;
     [SerializeField] private int _knockBackForce = 15;
-    [SerializeField] private AudioClip _successfullParryingClip;
+    [SerializeField] private AudioClip _successParryClip;
     [SerializeField] private GameObject _parryingShield;
 
     #endregion
@@ -128,7 +129,10 @@ public class PlayerParrying : MonoBehaviour
         _rigidBody.constraints = _rigidbodyConstraints;
         PlayerMove.Instance.CanMove = true;
 
-        StartCoroutine(StayInvincible());
+        if (_hasReflected)
+            StartCoroutine(SuccessParryInvincibleRoutine());
+
+        PlayerView.Instance.IsInvincible = false;
     }
 
     public void HandleParrying(int damage, int direction, GameObject enemy)
@@ -143,8 +147,8 @@ public class PlayerParrying : MonoBehaviour
         var playerDamage = PlayerView.Instance.PlayerModel.Damage;
         var reflectedDamage = damage >= playerDamage ? playerDamage : damage;
 
-        if (_successfullParryingClip != null)
-            PlaySound(_successfullParryingClip);
+        if (_successParryClip != null)
+            PlaySound(_successParryClip);
 
         enemy.SendMessage("ApplyDamage", reflectedDamage);
 
@@ -161,10 +165,31 @@ public class PlayerParrying : MonoBehaviour
         }
     }
 
-    private IEnumerator StayInvincible()
+    private IEnumerator SuccessParryInvincibleRoutine()
     {
-        yield return new WaitForSeconds(0.5f);
-        PlayerView.Instance.IsInvincible = false;
+        var playerLayer = gameObject.layer;
+        var enemyLayer = LayerMask.NameToLayer("Enemy");
+
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
+
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            var color = spriteRenderer.color;
+            color.a = 0.5f;
+            spriteRenderer.color = color;
+        }
+
+        yield return new WaitForSeconds(_successParryInvincibleTime);
+
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+
+        if (spriteRenderer != null)
+        {
+            var color = spriteRenderer.color;
+            color.a = 1.0f;
+            spriteRenderer.color = color;
+        }
     }
 
     private IEnumerator SmoothStop(float duration)
