@@ -12,7 +12,6 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [Header("Tree Nodes Buttons")]
     [SerializeField] private Button _dashButton;
     [SerializeField] private Button _wallRunButton;
-    //[SerializeField] private Button _runButton;
     [SerializeField] private Button _damageDashButton;
     [SerializeField] private Button _chargedAttackButton;
     [SerializeField] private Button _fourPawsButton;
@@ -24,7 +23,6 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [Header("Buy Buttons")]
     [SerializeField] private Button _dashBuyButton;
     [SerializeField] private Button _wallRunBuyButton;
-    //[SerializeField] private Button _runBuyButton;
     [SerializeField] private Button _damageDashBuyButton;
     [SerializeField] private Button _chargedAttackBuyButton;
     [SerializeField] private Button _fourPawsBuyButton;
@@ -89,8 +87,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private CostAbilitiesCheck _dashCostCheck;
     private CostAbilitiesCheck _wallRunCostCheck;
-    private CostAbilitiesCheck _runCostCheck;
     private CostAbilitiesCheck _damageDashCostCheck;
+    private CostAbilitiesCheck _chargedAttackCostCheck;
+    private CostAbilitiesCheck _fourPawsCostCheck;
+    private CostAbilitiesCheck _soulReleaseCostCheck;
+    private CostAbilitiesCheck _parryingCostCheck;
 
     private EventSystem _eventSystem;
 
@@ -123,6 +124,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _dashCostCheck = _dashButton.GetComponent<CostAbilitiesCheck>();
         _wallRunCostCheck = _wallRunButton.GetComponent<CostAbilitiesCheck>();
         _damageDashCostCheck = _damageDashButton.GetComponent<CostAbilitiesCheck>();
+        _chargedAttackCostCheck = _chargedAttackButton.GetComponent<CostAbilitiesCheck>();
+        _fourPawsCostCheck = _fourPawsButton.GetComponent<CostAbilitiesCheck>();
+        _soulReleaseCostCheck = _soulReleaseButton.GetComponent<CostAbilitiesCheck>();
+        _parryingCostCheck = _parryingButton.GetComponent<CostAbilitiesCheck>();
 
 
         //_dashAbilityImage = (Image)_dashButton.targetGraphic;
@@ -139,6 +144,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 if (_dashCostCheck.canBuy && !_playerModel.HasDash)
                 {
                     BuyDash();
+                    Debug.Log($"Купили {_dashButton.gameObject.name}");
                 }
             }
         });
@@ -150,6 +156,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                                         && _playerModel.HasDash)
                 {
                     BuyWallRun();
+                    Debug.Log($"Купили {_wallRunButton.gameObject.name}");
                 }
             }
         });
@@ -158,10 +165,55 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         {
             if (_canInteract.AbilitiesTree)
             {
-                if (_damageDashCostCheck.canBuy && !_playerModel.HasDamageDash
-                                            && _playerModel.HasRun)
+                if (_damageDashCostCheck.canBuy && !_playerModel.HasDamageDash && _playerModel.HasWallRun) //посмотри cost check
                 {
                     BuyDamageDash();
+                    Debug.Log($"Купили {_damageDashButton.gameObject.name}");
+                }
+            }
+        });
+
+        _chargedAttackBuyButton.onClick.AddListener(() =>
+        {
+            if (_canInteract.AbilitiesTree)
+            {
+                if (_chargedAttackCostCheck.canBuy && !_playerModel.HasChargedAttack)
+                {
+                    BuyChargedAttack();
+                    Debug.Log($"Купили {_chargedAttackButton.gameObject.name}");
+                }
+            }
+        });
+
+        _fourPawsBuyButton.onClick.AddListener(() =>
+        {
+            if (_canInteract.AbilitiesTree)
+            {
+                if (_fourPawsCostCheck.canBuy && !_playerModel.HasFourPaws && _playerModel.HasChargedAttack)
+                {
+                    BuyFourPaws();
+                }
+            }
+        });
+
+        _soulReleaseBuyButton.onClick.AddListener(() =>
+        {
+            if (_canInteract.AbilitiesTree)
+            {
+                if (_soulReleaseCostCheck.canBuy && !_playerModel.HasSoulRelease && _playerModel.HasFourPaws)
+                {
+                    BuySoulRelease();
+                }
+            }
+        });
+
+        _parryingBuyButton.onClick.AddListener(() =>
+        {
+            if (_canInteract.AbilitiesTree)
+            {
+                if (_parryingCostCheck.canBuy && !_playerModel.HasParrying)
+                {
+                    BuyParrying();
                 }
             }
         });
@@ -180,11 +232,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         SetActiveAbilityText(_parryingAbilityTextCard, IsSelected(_parryingButton));
         SetActiveAbilityText(_piercingClawAbilityTextCard, IsSelected(_piercingClawButton));
         SetActiveAbilityText(_doubleJumpAbilityTextCard, IsSelected(_doubleJumpButton));
-
     }
 
     public void BuyNode()
     {
+        Debug.Log($"Нажали на кнопку");
         if (IsSelected(_dashButton))
         {
             _dashBuyButton.onClick.Invoke();
@@ -196,6 +248,22 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         else if (IsSelected(_damageDashButton))
         {
             _damageDashBuyButton.onClick.Invoke();
+        }
+        else if (IsSelected(_chargedAttackButton))
+        {
+            _chargedAttackBuyButton.onClick.Invoke();
+        }
+        else if (IsSelected(_fourPawsButton))
+        {
+            _fourPawsBuyButton.onClick.Invoke();
+        }
+        else if (IsSelected(_soulReleaseButton))
+        {
+            _soulReleaseBuyButton.onClick.Invoke();
+        }
+        else if (IsSelected(_parryingButton))
+        {
+            _parryingBuyButton.onClick.Invoke();
         }
     }
 
@@ -250,34 +318,38 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         {
             GetDashTreeState();
         }
-        //else
-        //{
-        //    DontGetDashTreeState();
-        //}
         if (_playerModel.HasWallRun)
         { 
             GetWallRunTreeState();
         }
-        //else
-        //{
-        //    DontGetWallRunTreeState();
-        //}
-        //if (_playerModel.HasRun)
-        //{
-        //    //GetRunTreeState();
-        //}
-        //else
-        //{
-        //    DontGetRunTreeState();
-        //}
-        if( _playerModel.HasDamageDash)
+        if ( _playerModel.HasDamageDash)
         {
             GetDamageDashTreeState();
         }
-        //else
-        //{
-        //    DontGetDamageDashTreeState();
-        //}
+        if (_playerModel.HasChargedAttack)
+        {
+            GetChargedAttackTreeState();
+        }
+        if (_playerModel.HasFourPaws)
+        {
+            GetFourPawsTreeState();
+        }
+        if (_playerModel.HasSoulRelease)
+        {
+            GetSoulReleaseTreeState();
+        }
+        if (_playerModel.HasParrying)
+        {
+            GetParryingTreeState();
+        }
+        if (_playerModel.HasClaw)
+        {
+            GetPiercingClawTreeState();
+        }
+        if (_playerModel.HasDoubleJump)
+        {
+            GetDoubleJumpTreeState();
+        }
     }
 
     public void EnableAreaErrorText(bool enabled)
@@ -345,10 +417,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _wallRunBuyButton.gameObject.SetActive(false);
 
         _wallRunAbilityImage.color = _getColor;
-        _runAbilityImage.color = _canGetColor;
+        _damageDashAbilityImage.color = _canGetColor;
 
         _wallRunNodeFrameImage.color = _getFrameColor;
-        _runNodeFrameImage.color = _canGetFrameColor;
+        _damageDashNodeFrameImage.color = _canGetFrameColor;
     }
 
     //private void DontGetWallRunTreeState()
@@ -360,33 +432,6 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     //    _wallRunNodeFrameImage.color = _getFrameColor;
     //    _runNodeFrameImage.color = _canGetFrameColor;
-    //}
-
-    //private void BuyRun()
-    //{
-    //    _playerModel.SetHasRun();
-    //    //_soulCrystalCounter.SpendCrystal(_runCostCheck.CrystalCost);
-    //    _moneyCounter.SpendMoney(_runCostCheck.MoneyCost);
-    //    UpdateCurrencyText();
-
-    //    GetRunTreeState();
-    //    _instantiateParticles.InstantiateNodePollen(_runButton.transform.position);
-    //    _eventSystem.SetSelectedGameObject(_damageDashButton.gameObject);
-
-    //    SaveSystem.CrystalSave();
-    //    SaveSystem.MoneySave();
-    //}
-
-    //private void GetRunTreeState()
-    //{
-    //    _runCostCheck.HideCost();
-    //    _runBuyButton.gameObject.SetActive(false);
-
-    //    _runAbilityImage.color = _getColor;
-    //    _damageDashAbilityImage.color = _canGetColor;
-
-    //    _runNodeFrameImage.color= _getFrameColor;
-    //    _damageDashNodeFrameImage.color = _canGetFrameColor;
     //}
 
     //private void DontGetRunTreeState()
@@ -402,13 +447,12 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private void BuyDamageDash()
     {
-        if (_playerMana.isActiveAndEnabled)
-        {
-            _manaBar = InitializeManager.Instance.manaBar;
-            Debug.Log($"Abilities Tree {_manaBar}");
-            _playerMana.enabled = true;
-            _manaBar.gameObject.SetActive(true);
-        }
+     
+        _manaBar = InitializeManager.Instance.manaBar;
+        Debug.Log($"Abilities Tree {_manaBar}");
+        _playerMana.enabled = true;
+        _manaBar.gameObject.SetActive(true);
+     
 
         _playerModel.SetHasDamageDash();
         //_soulCrystalCounter.SpendCrystal(_damageDashCostCheck.CrystalCost);
@@ -441,6 +485,144 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     //    _damageDashNodeFrameImage.color = _getFrameColor;
     //}
+
+    private void BuyChargedAttack()
+    {
+        _manaBar = InitializeManager.Instance.manaBar;
+        Debug.Log($"Abilities Tree {_manaBar}");
+        _playerMana.enabled = true;
+        _manaBar.gameObject.SetActive(true);
+
+        var charged = FindAnyObjectByType<PlayerChargeAttack>();
+        charged.enabled = true;
+
+        _playerModel.SetHasChargedAttack();
+        //_soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
+        _moneyCounter.SpendMoney(_chargedAttackCostCheck.MoneyCost);
+        UpdateCurrencyText();
+
+        GetChargedAttackTreeState();
+        _instantiateParticles.InstantiateNodePollen(_chargedAttackButton.transform.position);
+        //_eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+
+        SaveSystem.CrystalSave();
+        SaveSystem.MoneySave();
+    }
+
+    private void GetChargedAttackTreeState()
+    {
+        _chargedAttackCostCheck.HideCost();
+        _chargedAttackBuyButton.gameObject.SetActive(false);
+
+        _chargedAttackAbilityImage.color = _getColor;
+        _fourPawsAbilityImage.color = _canGetColor;
+
+        _chargedAttackNodeFrameImage.color = _getFrameColor;
+        _fourPawsNodeFrameImage.color = _canGetFrameColor;
+    }
+
+    private void BuyFourPaws()
+    {
+        _playerModel.SetHasFourPaws();
+        //_soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
+        _moneyCounter.SpendMoney(_fourPawsCostCheck.MoneyCost);
+        UpdateCurrencyText();
+
+        GetFourPawsTreeState();
+        _instantiateParticles.InstantiateNodePollen(_fourPawsButton.transform.position);
+        //_eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+
+        SaveSystem.CrystalSave();
+        SaveSystem.MoneySave();
+    }
+
+    private void GetFourPawsTreeState()
+    {
+        _fourPawsCostCheck.HideCost();
+        _fourPawsBuyButton.gameObject.SetActive(false);
+
+        _fourPawsAbilityImage.color = _getColor;
+        _soulReleaseAbilityImage.color = _canGetColor;
+
+        _fourPawsNodeFrameImage.color = _getFrameColor;
+        _soulReleaseNodeFrameImage.color = _canGetFrameColor;
+    }
+
+    private void BuySoulRelease()
+    {
+        _manaBar = InitializeManager.Instance.manaBar;
+        Debug.Log($"Abilities Tree {_manaBar}");
+        _playerMana.enabled = true;
+        _manaBar.gameObject.SetActive(true);
+
+        var soul = FindAnyObjectByType<PlayerSoulRelease>();
+        soul.enabled = true;
+
+        _playerModel.SetHasSoulRelease();
+        //_soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
+        _moneyCounter.SpendMoney(_soulReleaseCostCheck.MoneyCost);
+        UpdateCurrencyText();
+
+        GetSoulReleaseTreeState();
+        _instantiateParticles.InstantiateNodePollen(_soulReleaseButton.transform.position);
+        //_eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+
+        SaveSystem.CrystalSave();
+        SaveSystem.MoneySave();
+    }
+
+    private void GetSoulReleaseTreeState()
+    {
+        _soulReleaseCostCheck.HideCost();
+        _soulReleaseBuyButton.gameObject.SetActive(false);
+
+        _soulReleaseAbilityImage.color = _getColor;
+
+        _soulReleaseNodeFrameImage.color = _getFrameColor;
+    }
+
+    private void BuyParrying()
+    {
+        var parrying = FindAnyObjectByType<PlayerParrying>();
+        parrying.enabled = true;
+
+        _playerModel.SetHasParrying();
+        //_soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
+        _moneyCounter.SpendMoney(_parryingCostCheck.MoneyCost);
+        UpdateCurrencyText();
+
+        GetParryingTreeState();
+        _instantiateParticles.InstantiateNodePollen(_parryingButton.transform.position);
+        //_eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+
+        SaveSystem.CrystalSave();
+        SaveSystem.MoneySave();
+    }
+
+    private void GetParryingTreeState()
+    {
+        _parryingCostCheck.HideCost();
+        _parryingBuyButton.gameObject.SetActive(false);
+
+        _parryingAbilityImage.color = _getColor;
+
+        _parryingNodeFrameImage.color = _getFrameColor;
+    }
+
+    private void GetDoubleJumpTreeState()
+    {
+        _doubleJumpAbilityImage.color = _getColor;
+
+        _doubleJumpNodeFrameImage.color = _getFrameColor;
+    }
+
+    private void GetPiercingClawTreeState()
+    {
+        _piercingClawAbilityImage.color = _getColor;
+
+        _piercingClawNodeFrameImage.color = _getFrameColor;
+    }
+
     #endregion
 
     public void SetSelectedAfterOpenWindow()
