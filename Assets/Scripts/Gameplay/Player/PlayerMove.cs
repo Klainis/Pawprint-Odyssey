@@ -50,6 +50,8 @@ public class PlayerMove : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
     [SerializeField] private ParticleSystem particleJumpDown;
+    [SerializeField] private GameObject particleDoubleJump;
+    [SerializeField] private Transform particlePositionTransform;
 
     [Header("")]
     [SerializeField][Range(0, 1f)] private float movementSmoothing;
@@ -647,6 +649,9 @@ public class PlayerMove : MonoBehaviour
         canDoubleJump = false;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
+
+        PlatParticleDoubleJump();
+
         playerAnimation.SetBoolIsDoubleJumping(true);
         playerAnimation.SetBoolIsFall(false);
     }
@@ -745,6 +750,11 @@ public class PlayerMove : MonoBehaviour
     public void PlayParticleJumpDown()
     {
         particleJumpDown.Play();
+    }
+
+    public void PlatParticleDoubleJump()
+    {
+        Instantiate(particleDoubleJump, particlePositionTransform.position, particleDoubleJump.transform.rotation);
     }
 
     #endregion

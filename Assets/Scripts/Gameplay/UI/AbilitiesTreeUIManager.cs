@@ -9,27 +9,51 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private static AbilitiesTreeUIManager instance;
     public static AbilitiesTreeUIManager Instance {  get { return instance; } }
 
-    [Header("Tree Nodes")]
+    [Header("Tree Nodes Buttons")]
     [SerializeField] private Button _dashButton;
     [SerializeField] private Button _wallRunButton;
-    [SerializeField] private Button _runButton;
+    //[SerializeField] private Button _runButton;
     [SerializeField] private Button _damageDashButton;
+    [SerializeField] private Button _chargedAttackButton;
+    [SerializeField] private Button _fourPawsButton;
+    [SerializeField] private Button _soulReleaseButton;
+    [SerializeField] private Button _parryingButton;
+    [SerializeField] private Button _piercingClawButton;
+    [SerializeField] private Button _doubleJumpButton;
+
+    [Header("Buy Buttons")]
     [SerializeField] private Button _dashBuyButton;
     [SerializeField] private Button _wallRunBuyButton;
-    [SerializeField] private Button _runBuyButton;
+    //[SerializeField] private Button _runBuyButton;
     [SerializeField] private Button _damageDashBuyButton;
+    [SerializeField] private Button _chargedAttackBuyButton;
+    [SerializeField] private Button _fourPawsBuyButton;
+    [SerializeField] private Button _soulReleaseBuyButton;
+    [SerializeField] private Button _parryingBuyButton;
 
     [Header("Nodes Frames")]
     [SerializeField] private Image _dashNodeFrameImage;
     [SerializeField] private Image _wallRunNodeFrameImage;
     [SerializeField] private Image _runNodeFrameImage;
     [SerializeField] private Image _damageDashNodeFrameImage;
+    [SerializeField] private Image _chargedAttackNodeFrameImage;
+    [SerializeField] private Image _fourPawsNodeFrameImage;
+    [SerializeField] private Image _soulReleaseNodeFrameImage;
+    [SerializeField] private Image _parryingNodeFrameImage;
+    [SerializeField] private Image _piercingClawNodeFrameImage;
+    [SerializeField] private Image _doubleJumpNodeFrameImage;
 
     [Header("Nodes Images")]
     [SerializeField] private Image _dashAbilityImage;
     [SerializeField] private Image _wallRunAbilityImage;
     [SerializeField] private Image _runAbilityImage;
     [SerializeField] private Image _damageDashAbilityImage;
+    [SerializeField] private Image _chargedAttackAbilityImage;
+    [SerializeField] private Image _fourPawsAbilityImage;
+    [SerializeField] private Image _soulReleaseAbilityImage;
+    [SerializeField] private Image _parryingAbilityImage;
+    [SerializeField] private Image _piercingClawAbilityImage;
+    [SerializeField] private Image _doubleJumpAbilityImage;
 
     [Header("Color Of Node State")]
     [SerializeField] private Color _getColor;
@@ -40,10 +64,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [SerializeField] private Color _canNotGetFrameColor;
 
     [Header("Ability Card")]
-    [SerializeField] private GameObject _dashAbilityText;
-    [SerializeField] private GameObject _wallRunAbilityText;
-    [SerializeField] private GameObject _runAbilityText;
-    [SerializeField] private GameObject _damageDashAbilityText;
+    [SerializeField] private GameObject _dashAbilityTextCard;
+    [SerializeField] private GameObject _wallRunAbilityTextCard;
+    [SerializeField] private GameObject _runAbilityTextCard;
+    [SerializeField] private GameObject _damageDashAbilityTextCard;
+    [SerializeField] private GameObject _chargedAttackAbilityTextCard;
+    [SerializeField] private GameObject _fourPawsAbilityTextCard;
+    [SerializeField] private GameObject _soulReleaseAbilityTextCard;
+    [SerializeField] private GameObject _parryingAbilityTextCard;
+    [SerializeField] private GameObject _piercingClawAbilityTextCard;
+    [SerializeField] private GameObject _doubleJumpAbilityTextCard;
 
     [Header("Currency Text")]
     [SerializeField] private TMP_Text _moneyText;
@@ -54,7 +84,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private MoneyCounter _moneyCounter;
     private SoulCrystalCounter _soulCrystalCounter;
-    private Interact _interact;
+    private Interact _canInteract;
     private InstantiateParticles _instantiateParticles;
 
     private CostAbilitiesCheck _dashCostCheck;
@@ -88,11 +118,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _moneyCounter = GameObject.FindAnyObjectByType<MoneyCounter>();
         _soulCrystalCounter = GameObject.FindAnyObjectByType<SoulCrystalCounter>();
-        _interact = GameObject.FindAnyObjectByType<Interact>();
+        _canInteract = GameObject.FindAnyObjectByType<Interact>();
 
         _dashCostCheck = _dashButton.GetComponent<CostAbilitiesCheck>();
         _wallRunCostCheck = _wallRunButton.GetComponent<CostAbilitiesCheck>();
-        _runCostCheck = _runButton.GetComponent<CostAbilitiesCheck>();
         _damageDashCostCheck = _damageDashButton.GetComponent<CostAbilitiesCheck>();
 
 
@@ -105,7 +134,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         _dashBuyButton.onClick.AddListener(() =>
         {
-            if (_interact.AbilitiesTree)
+            if (_canInteract.AbilitiesTree)
             {
                 if (_dashCostCheck.canBuy && !_playerModel.HasDash)
                 {
@@ -115,7 +144,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         });
         _wallRunBuyButton.onClick.AddListener(() =>
         {
-            if (_interact.AbilitiesTree)
+            if (_canInteract.AbilitiesTree)
             {
                 if (_wallRunCostCheck.canBuy && !_playerModel.HasWallRun
                                         && _playerModel.HasDash)
@@ -124,20 +153,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 }
             }
         });
-        _runBuyButton.onClick.AddListener(() =>
-        {
-            if (_interact.AbilitiesTree)
-            {
-                if (_runCostCheck.canBuy && !_playerModel.HasRun
-                                    && _playerModel.HasWallRun)
-                {
-                    BuyRun();
-                }
-            }
-        });
+
         _damageDashBuyButton.onClick.AddListener(() =>
         {
-            if (_interact.AbilitiesTree)
+            if (_canInteract.AbilitiesTree)
             {
                 if (_damageDashCostCheck.canBuy && !_playerModel.HasDamageDash
                                             && _playerModel.HasRun)
@@ -150,51 +169,73 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private void Update()
     {
-        EnableAreaErrorText(!_interact.AbilitiesTree);
+        EnableAreaErrorText(!_canInteract.AbilitiesTree);
 
-        SetActiveAbilityText(_dashAbilityText, IsSelectedDash());
-        SetActiveAbilityText(_wallRunAbilityText, IsSelectedWallRun());
-        SetActiveAbilityText(_runAbilityText, IsSelectedRun());
-        SetActiveAbilityText(_damageDashAbilityText, IsSelectedDamageDash());
+        SetActiveAbilityText(_dashAbilityTextCard, IsSelected(_dashButton));
+        SetActiveAbilityText(_wallRunAbilityTextCard, IsSelected(_wallRunButton));
+        SetActiveAbilityText(_damageDashAbilityTextCard, IsSelected(_damageDashButton));
+        SetActiveAbilityText(_chargedAttackAbilityTextCard, IsSelected(_chargedAttackButton));
+        SetActiveAbilityText(_fourPawsAbilityTextCard, IsSelected(_fourPawsButton));
+        SetActiveAbilityText(_soulReleaseAbilityTextCard, IsSelected(_soulReleaseButton));
+        SetActiveAbilityText(_parryingAbilityTextCard, IsSelected(_parryingButton));
+        SetActiveAbilityText(_piercingClawAbilityTextCard, IsSelected(_piercingClawButton));
+        SetActiveAbilityText(_doubleJumpAbilityTextCard, IsSelected(_doubleJumpButton));
+
     }
 
     public void BuyNode()
     {
-        if (IsSelectedDash())
+        if (IsSelected(_dashButton))
         {
             _dashBuyButton.onClick.Invoke();
         }
-        else if (IsSelectedWallRun())
+        else if (IsSelected(_wallRunButton))
         {
             _wallRunBuyButton.onClick.Invoke();
         }
-        else if (IsSelectedRun())
-        {
-            _runBuyButton.onClick.Invoke();
-        }
-        else if (IsSelectedDamageDash())
+        else if (IsSelected(_damageDashButton))
         {
             _damageDashBuyButton.onClick.Invoke();
         }
     }
 
     #region Is Selected Node
-    private bool IsSelectedDash()
-    {
-        return IsSelected(_dashButton) || IsSelected(_dashBuyButton);
-    }
-    private bool IsSelectedWallRun()
-    {
-        return IsSelected(_wallRunButton) || IsSelected(_wallRunBuyButton);
-    }
-    private bool IsSelectedRun()
-    {
-        return IsSelected(_runButton) || IsSelected(_runBuyButton);
-    }
-    private bool IsSelectedDamageDash()
-    {
-        return IsSelected(_damageDashButton) || IsSelected(_damageDashBuyButton);
-    }
+    //private bool IsSelectedDash()
+    //{
+    //    return IsSelected(_dashButton) || IsSelected(_dashBuyButton);
+    //}
+    //private bool IsSelectedWallRun()
+    //{
+    //    return IsSelected(_wallRunButton) || IsSelected(_wallRunBuyButton);
+    //}
+    //private bool IsSelectedDamageDash()
+    //{
+    //    return IsSelected(_damageDashButton) || IsSelected(_damageDashBuyButton);
+    //}
+    //private bool IsSelectedChargedAttack()
+    //{
+    //    return IsSelected(_chargedAttackButton) || IsSelected(_chargedAttackBuyButton);
+    //}
+    //private bool IsSelectedFourPaws()
+    //{
+    //    return IsSelected(_fourPawsButton) || IsSelected(_fourPawsBuyButton);
+    //}
+    //private bool IsSelectedSoulReleased()
+    //{
+    //    return IsSelected(_soulReleaseButton) || IsSelected(_soulReleaseBuyButton);
+    //}
+    //private bool IsSelectedParrying()
+    //{
+    //    return IsSelected(_parryingButton) || IsSelected(_parryingBuyButton);
+    //}
+    //private bool IsSelectedPiercingClaw()
+    //{
+    //    return IsSelected(_piercingClawButton) || IsSelected(_damageDashBuyButton);
+    //}
+    //private bool IsSelectedDamageDash()
+    //{
+    //    return IsSelected(_damageDashButton) || IsSelected(_damageDashBuyButton);
+    //}
     #endregion
 
     private void SetActiveAbilityText(GameObject abilityTextOb, bool visible)
@@ -221,10 +262,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         //{
         //    DontGetWallRunTreeState();
         //}
-        if (_playerModel.HasRun)
-        {
-            GetRunTreeState();
-        }
+        //if (_playerModel.HasRun)
+        //{
+        //    //GetRunTreeState();
+        //}
         //else
         //{
         //    DontGetRunTreeState();
@@ -249,7 +290,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void BuyDash()
     {
         _playerModel.SetHasDash();
-        _soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
+        //_soulCrystalCounter.SpendCrystal(_dashCostCheck.CrystalCost);
         _moneyCounter.SpendMoney(_dashCostCheck.MoneyCost);
         UpdateCurrencyText();
 
@@ -286,13 +327,13 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void BuyWallRun()
     {
         _playerModel.SetHasWallRun();
-        _soulCrystalCounter.SpendCrystal(_wallRunCostCheck.CrystalCost);
+        //_soulCrystalCounter.SpendCrystal(_wallRunCostCheck.CrystalCost);
         _moneyCounter.SpendMoney(_wallRunCostCheck.MoneyCost);
         UpdateCurrencyText();
 
         GetWallRunTreeState();
         _instantiateParticles.InstantiateNodePollen(_wallRunButton.transform.position);
-        _eventSystem.SetSelectedGameObject(_runButton.gameObject);
+        //_eventSystem.SetSelectedGameObject(_runButton.gameObject);
 
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();
@@ -321,32 +362,32 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     //    _runNodeFrameImage.color = _canGetFrameColor;
     //}
 
-    private void BuyRun()
-    {
-        _playerModel.SetHasRun();
-        _soulCrystalCounter.SpendCrystal(_runCostCheck.CrystalCost);
-        _moneyCounter.SpendMoney(_runCostCheck.MoneyCost);
-        UpdateCurrencyText();
+    //private void BuyRun()
+    //{
+    //    _playerModel.SetHasRun();
+    //    //_soulCrystalCounter.SpendCrystal(_runCostCheck.CrystalCost);
+    //    _moneyCounter.SpendMoney(_runCostCheck.MoneyCost);
+    //    UpdateCurrencyText();
 
-        GetRunTreeState();
-        _instantiateParticles.InstantiateNodePollen(_runButton.transform.position);
-        _eventSystem.SetSelectedGameObject(_damageDashButton.gameObject);
+    //    GetRunTreeState();
+    //    _instantiateParticles.InstantiateNodePollen(_runButton.transform.position);
+    //    _eventSystem.SetSelectedGameObject(_damageDashButton.gameObject);
 
-        SaveSystem.CrystalSave();
-        SaveSystem.MoneySave();
-    }
+    //    SaveSystem.CrystalSave();
+    //    SaveSystem.MoneySave();
+    //}
 
-    private void GetRunTreeState()
-    {
-        _runCostCheck.HideCost();
-        _runBuyButton.gameObject.SetActive(false);
+    //private void GetRunTreeState()
+    //{
+    //    _runCostCheck.HideCost();
+    //    _runBuyButton.gameObject.SetActive(false);
 
-        _runAbilityImage.color = _getColor;
-        _damageDashAbilityImage.color = _canGetColor;
+    //    _runAbilityImage.color = _getColor;
+    //    _damageDashAbilityImage.color = _canGetColor;
 
-        _runNodeFrameImage.color= _getFrameColor;
-        _damageDashNodeFrameImage.color = _canGetFrameColor;
-    }
+    //    _runNodeFrameImage.color= _getFrameColor;
+    //    _damageDashNodeFrameImage.color = _canGetFrameColor;
+    //}
 
     //private void DontGetRunTreeState()
     //{
@@ -361,13 +402,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
     private void BuyDamageDash()
     {
-        _manaBar = InitializeManager.Instance.manaBar;
-        Debug.Log($"Abilities Tree {_manaBar}");
-        _playerMana.enabled = true;
-        _manaBar.gameObject.SetActive(true);
+        if (_playerMana.isActiveAndEnabled)
+        {
+            _manaBar = InitializeManager.Instance.manaBar;
+            Debug.Log($"Abilities Tree {_manaBar}");
+            _playerMana.enabled = true;
+            _manaBar.gameObject.SetActive(true);
+        }
 
         _playerModel.SetHasDamageDash();
-        _soulCrystalCounter.SpendCrystal(_damageDashCostCheck.CrystalCost);
+        //_soulCrystalCounter.SpendCrystal(_damageDashCostCheck.CrystalCost);
         _moneyCounter.SpendMoney(_damageDashCostCheck.MoneyCost);
         UpdateCurrencyText();
 

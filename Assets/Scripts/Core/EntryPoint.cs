@@ -420,13 +420,24 @@ public class EntryPoint : MonoBehaviour
         var collider = _playerInstance.GetComponent<BoxCollider2D>();
         collider.enabled = true;
 
+        _playerInstance.GetComponent<PlayerChargeAttack>().enabled = playerView.PlayerModel.HasChargedAttack;
+
+        _playerInstance.GetComponent<PlayerSoulRelease>().enabled = playerView.PlayerModel.HasSoulRelease;
+
+        _playerInstance.GetComponent<PlayerParrying>().enabled = playerView.PlayerModel.HasParrying;
+
+
         piercingClaw = _playerInstance.GetComponent<PiercingClaw>();
         if (piercingClaw) piercingClaw.enabled = false;
 
-        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasClaw)
+        playerMana = _playerInstance.GetComponent<PlayerMana>();
+        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasChargedAttack || playerView.PlayerModel.HasClaw)
         {
-            playerMana = _playerInstance.GetComponent<PlayerMana>();
             playerMana.enabled = true; 
+        }
+        else
+        {
+            playerMana.enabled = false;
         }
 
         InitializeManager.Instance.player = _playerInstance;
