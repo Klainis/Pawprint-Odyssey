@@ -95,7 +95,10 @@ public class PlayerParrying : MonoBehaviour
 
     private void StartParrying()
     {
-        _parryingShield.SetActive(true);
+        if (_parryingShield != null)
+        {
+            _parryingShield.SetActive(true);
+        }
         _isParrying = true;
         _hasReflected = false;
         _currentParryingTimer = 0;
@@ -119,7 +122,10 @@ public class PlayerParrying : MonoBehaviour
             _smoothStopCoroutine = null;
         }
 
-        _parryingShield.SetActive(false);
+        if (_parryingShield != null)
+        {
+            _parryingShield.SetActive(false);
+        }
         _isParrying = false;
         _canStartNewParrying = false;
         _parryingCooldownTimer = 0f;
