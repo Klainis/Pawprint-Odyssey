@@ -247,7 +247,7 @@ public class RootGuardianView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (!_attack.CanAttack(_attackCooldown) || _attack.IsAttacking || _telegraphCoroutine != null)
+        if (_isRetreating || !_attack.CanAttack(_attackCooldown) || _telegraphCoroutine != null)
             return;
 
         if (faceRight != FacingRight)
@@ -309,7 +309,7 @@ public class RootGuardianView : MonoBehaviour
             var xDiff = _centerPosition.x - transform.position.x;
             var shouldFaceRight = xDiff > 0;
 
-            if (Mathf.Abs(xDiff) > 0.6f && shouldFaceRight != FacingRight)
+            if (shouldFaceRight != FacingRight)
                 FacingRight = _move.Turn(FacingRight);
 
             distanceToCenter = Mathf.Abs(transform.position.x - _centerPosition.x);

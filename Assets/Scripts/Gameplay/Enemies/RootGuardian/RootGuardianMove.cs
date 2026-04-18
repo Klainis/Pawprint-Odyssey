@@ -36,12 +36,24 @@ public class RootGuardianMove : MonoBehaviour
             var isPlat = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
             var isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
 
+            if (!isPlat || isObstacle)
+            {
+                OnWallHit?.Invoke();
+                return;
+            }
+
             var isInsideZone = true;
             if (_patrolBounds != null)
                 isInsideZone = _patrolBounds.OverlapPoint(_wallCheck.position);
 
-            if (!isPlat || isObstacle || !isInsideZone)
-                OnWallHit?.Invoke();
+            if (!isInsideZone)
+            {
+                var directionToCenter = _patrolBounds.bounds.center.x - transform.position.x;
+                var moveDirection = _rb.linearVelocity.x;
+
+                if ((directionToCenter > 0 && moveDirection < 0) || (directionToCenter < 0 && moveDirection > 0))
+                    OnWallHit?.Invoke();
+            }
         }
     }
 
