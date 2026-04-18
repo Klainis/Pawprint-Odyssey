@@ -34,6 +34,10 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             SetObjectsActive(true);
+
+            var isPlayerToTheRight = collision.transform.position.x > transform.position.x;
+            _view.FacePlayerOnSpawn(isPlayerToTheRight);
+
             StartCoroutine(RevealRoutine());
             _view.StopRetreatSequence();
         }

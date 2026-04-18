@@ -96,6 +96,12 @@ public class RootGuardianView : MonoBehaviour
         StartCoroutine(WaitForKnockBack());
     }
 
+    public void FacePlayerOnSpawn(bool playerIsRight)
+    {
+        if (playerIsRight != FacingRight)
+            FacingRight = _move.Turn(FacingRight);
+    }
+
     public void StartRetreatSequence(Vector3 center)
     {
         _centerPosition = center;
