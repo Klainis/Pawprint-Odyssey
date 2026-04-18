@@ -9,11 +9,19 @@ public class RootGuardianView : MonoBehaviour
     [SerializeField] private EnemyData _data;
     [SerializeField] private PlayerAttack _playerAttack;
     [SerializeField] private float _patrolTimeWithoutPlayer = 2.5f;
+    [SerializeField] private float _lastPlayerAttackForce = 20f;
+    [SerializeField] private AudioClip _hitClip;
 
     [Header("Attack")]
     [SerializeField] private float _playerDetectDist;
     [SerializeField] private float _attackCooldown;
     [SerializeField] private float _telegraphTime;
+
+    [Header("Particles")]
+    [SerializeField] private ParticleSystem _damageParticle;
+    [SerializeField] private ParticleSystem _playerWeaponParticle;
+    [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
 
     #endregion
 
@@ -24,11 +32,20 @@ public class RootGuardianView : MonoBehaviour
     private RootGuardianMove _move;
     private RootGuardianTargetZoneHandler _targetZoneHandler;
     private Rigidbody2D _rb;
+    private AudioSource _audioSource;
+    private InstantiateMoney _money;
+    private DamageFlash _damageFlash;
+    private ScreenShaker _screenShaker;
 
     private Coroutine _telegraphCoroutine;
 
     private Coroutine _retreatCoroutine;
     private Vector3 _centerPosition;
+
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
+    private ParticleSystem _damageParticleInstance;
+    private ParticleSystem _playerWeaponParticleInstance;
+    private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
     private bool _isKnockback = false;
     private bool _isInvincible = false;
@@ -55,6 +72,10 @@ public class RootGuardianView : MonoBehaviour
         _move = GetComponent<RootGuardianMove>();
         _targetZoneHandler = transform.parent.Find("TargetZone").GetComponent<RootGuardianTargetZoneHandler>();
         _rb = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
+        _money = FindAnyObjectByType<InstantiateMoney>();
+        _damageFlash = GetComponent<DamageFlash>();
+        _screenShaker = GetComponent<ScreenShaker>();
 
         _attack.PlayerDetectDist = _playerDetectDist;
     }
@@ -86,6 +107,57 @@ public class RootGuardianView : MonoBehaviour
     }
 
     #endregion
+
+    public void ApplyDamage(int damage)
+    {
+        if (_isInvincible) return;
+
+        var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+
+        if (Model.IsDead)
+        {
+            _money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position);
+        }
+
+        if (damageApplied)
+        {
+            PlayHitSound(_hitClip);
+            _damageFlash.CallDamageFlash();
+
+            _animation.SetTriggerHit();
+            _rb.linearVelocity = Vector2.zero;
+
+            var direction = damage / Mathf.Abs(damage);
+            _screenShaker.Shake();
+            SpawnDamageParticles(direction);
+
+            if (_playerAttack.AttackSeriesCount == 4)
+            {
+                KnockBack(direction, _lastPlayerAttackForce);
+                SpawnPlayerLastAttackParticles();
+            }
+            else if (_playerAttack.AttackSeriesCount < 4)
+            {
+                SpawnPlayerAttakParticles(direction);
+            }
+        }
+    }
+
+    public void ApplyChargeDamage(int damage)
+    {
+        ApplyDamage(damage);
+        var direction = damage / Mathf.Abs(damage);
+        KnockBack(direction, _lastPlayerAttackForce);
+    }
+
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+    }
 
     private void KnockBack(int direction, float forceAttack)
     {
@@ -119,6 +191,33 @@ public class RootGuardianView : MonoBehaviour
         }
         _isRetreating = false;
     }
+
+    #region Particles
+
+    private void SpawnDamageParticles(int direction)
+    {
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
+        _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+    }
+
+    private void SpawnPlayerAttakParticles(int direction)
+    {
+        var vectorDirection = new Vector2(direction, 0);
+        var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
+
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    #endregion
 
     #region Events
 
@@ -188,7 +287,7 @@ public class RootGuardianView : MonoBehaviour
         _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
-        Destroy(gameObject);
+        Destroy(transform.parent.gameObject);
     }
 
     private IEnumerator WaitForKnockBack()
