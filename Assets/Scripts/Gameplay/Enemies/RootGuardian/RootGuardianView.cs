@@ -247,7 +247,7 @@ public class RootGuardianView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (_isRetreating || !_attack.CanAttack(_attackCooldown) || _telegraphCoroutine != null)
+        if (!_attack.CanAttack(_attackCooldown) || _isRetreating || _telegraphCoroutine != null)
             return;
 
         if (faceRight != FacingRight)
