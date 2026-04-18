@@ -19,6 +19,16 @@ public class RootGuardianAnimation : MonoBehaviour
         _animator.SetBool("Move", value);
     }
 
+    public void SetBoolRevealing(bool value)
+    {
+        _animator.SetBool("Reveal", value);
+    }
+
+    public void SetBoolHiding(bool value)
+    {
+        _animator.SetBool("Hide", value);
+    }
+
     public void SetTriggerHit()
     {
         _animator.SetTrigger("Hit");

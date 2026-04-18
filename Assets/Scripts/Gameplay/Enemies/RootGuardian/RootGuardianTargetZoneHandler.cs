@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +14,8 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     #region Variables
 
+    private RootGuardianView _view;
+    private RootGuardianAnimation _animation;
 
     #endregion
 
@@ -21,16 +24,25 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
     private void Awake()
     {
         SetObjectsActive(false);
+
+        _view = _rootGuardianObj.GetComponent<RootGuardianView>();
+        _animation = _rootGuardianObj.GetComponent<RootGuardianAnimation>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
+        {
             SetObjectsActive(true);
+            StartCoroutine(RevealRoutine());
+            _view.StopRetreatSequence();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision.CompareTag("Player"))
+            _view.StartRetreatSequence(transform.position);
     }
 
     #endregion
@@ -41,8 +53,15 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
         _rootGuardianObj.SetActive(enemyReveal);
     }
 
-    private void OnTriggerExitTimerStart()
+    public void HideEnemy()
     {
+        SetObjectsActive(false);
+    }
 
+    private IEnumerator RevealRoutine()
+    {
+        _animation.SetBoolRevealing(true);
+        yield return new WaitForSeconds(0.2f);
+        _animation.SetBoolRevealing(false);
     }
 }

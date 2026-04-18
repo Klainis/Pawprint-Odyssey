@@ -5,14 +5,13 @@ public class RootGuardianMove : MonoBehaviour
 {
     [Header("Main params")]
     [SerializeField] private LayerMask _turnLayerMask;
+    [SerializeField] private Collider2D _patrolBounds;
 
     #region Variables
 
     private Transform _fallCheck;
     private Transform _wallCheck;
     private Rigidbody2D _rb;
-    private bool _isPlat;
-    private bool _isObstacle;
 
     #endregion
 
@@ -32,10 +31,14 @@ public class RootGuardianMove : MonoBehaviour
     {
         if (Mathf.Abs(_rb.linearVelocity.y) < 0.1f)
         {
-            _isPlat = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
-            _isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
+            var isPlat = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
+            var isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
 
-            if (!_isPlat || _isObstacle)
+            var isInsideZone = true;
+            if (_patrolBounds != null)
+                isInsideZone = _patrolBounds.OverlapPoint(_wallCheck.position);
+
+            if (!isPlat || isObstacle || !isInsideZone)
                 OnWallHit?.Invoke();
         }
     }

@@ -8,6 +8,7 @@ public class RootGuardianView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
     [SerializeField] private PlayerAttack _playerAttack;
+    [SerializeField] private float _patrolTimeWithoutPlayer = 2.5f;
 
     [Header("Attack")]
     [SerializeField] private float _playerDetectDist;
@@ -28,8 +29,12 @@ public class RootGuardianView : MonoBehaviour
     private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
+    private Coroutine _retreatCoroutine;
+    private Vector3 _centerPosition;
+
     private bool _isKnockback = false;
     private bool _isInvincible = false;
+    private bool _isRetreating = false;
 
     #endregion
 
@@ -70,7 +75,7 @@ public class RootGuardianView : MonoBehaviour
 
         if (_isKnockback) return;
 
-        if (!_attack.IsAttacking)
+        if (_isRetreating || !_attack.IsAttacking)
             _move.Move(Model.Speed, FacingRight);
     }
 
@@ -83,6 +88,24 @@ public class RootGuardianView : MonoBehaviour
 
         _rb.linearVelocity = new Vector2(direction * forceAttack, _rb.linearVelocity.y);
         StartCoroutine(WaitForKnockBack());
+    }
+
+    public void StartRetreatSequence(Vector3 center)
+    {
+        _centerPosition = center;
+        if (_retreatCoroutine != null)
+            StopCoroutine(_retreatCoroutine);
+        _retreatCoroutine = StartCoroutine(RetreatRoutine());
+    }
+
+    public void StopRetreatSequence()
+    {
+        if (_retreatCoroutine != null)
+        {
+            StopCoroutine(_retreatCoroutine);
+            _retreatCoroutine = null;
+        }
+        _isRetreating = false;
     }
 
     #region Events
@@ -191,6 +214,36 @@ public class RootGuardianView : MonoBehaviour
         _attack.IsAttacking = false;
         _animation.SetBoolAttack(false);
         _telegraphCoroutine = null;
+    }
+
+    private IEnumerator RetreatRoutine()
+    {
+        yield return new WaitForSeconds(_patrolTimeWithoutPlayer);
+
+        _isRetreating = true;
+
+        var distanceToCenter = Mathf.Abs(transform.position.x - _centerPosition.x);
+        while (distanceToCenter > 0.5f)
+        {
+            var xDiff = _centerPosition.x - transform.position.x;
+            var shouldFaceRight = xDiff > 0;
+
+            if (Mathf.Abs(xDiff) > 0.6f && shouldFaceRight != FacingRight)
+                FacingRight = _move.Turn(FacingRight);
+
+            distanceToCenter = Mathf.Abs(transform.position.x - _centerPosition.x);
+            yield return null;
+        }
+
+        _isRetreating = false;
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+
+        _animation.SetBoolHiding(true);
+        yield return new WaitForSeconds(0.2f);
+        _animation.SetBoolHiding(false);
+
+        _retreatCoroutine = null;
+        _targetZoneHandler.HideEnemy();
     }
 
     #endregion
