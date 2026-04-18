@@ -42,10 +42,8 @@ public class ReceivingClaw : MonoBehaviour
 
     public void EnableClaw()
     {
-        playerMana.enabled = true;
-        piercingClaw.enabled = true;
-        manaBar.SetActive(true);
         PlayerView.Instance.PlayerModel.SetHasClaw();
+        SetActiveManaBar();
         SaveSystem.AutoSave();
     }
 

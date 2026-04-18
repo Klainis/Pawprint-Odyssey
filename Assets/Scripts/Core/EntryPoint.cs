@@ -225,7 +225,8 @@ public class EntryPoint : MonoBehaviour
         if (gameMenuCanvasPrefab != null)
         {
             _gameMenuCanvasInstance = Instantiate(gameMenuCanvasPrefab);
-            SetCanvasParamets(_gameMenuCanvasInstance, 30);
+            //SetCanvasParamets(_gameMenuCanvasInstance, 30);
+            //SetCanvasCameraParamets(_gameMenuCanvasInstance, 100);
             _gameMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_gameMenuCanvasInstance);
             GameManager.Instance.SetGameMenuCanvasInstance(_gameMenuCanvasInstance);
@@ -235,6 +236,7 @@ public class EntryPoint : MonoBehaviour
         {
             _abilitiesTreeCanvasInstance = Instantiate(abilitiesTreeCanvasPrefab, _gameMenuCanvasInstance.transform);
             //SetCanvasParamets(_abilitiesTreeCanvasInstance, 50);
+            //SetCanvasCameraParamets(_abilitiesTreeCanvasInstance, 120);
             _abilitiesTreeCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_abilitiesTreeCanvasInstance);
             GameManager.Instance.SetAbilitiesTreeCanvasInstance(_abilitiesTreeCanvasInstance);
@@ -244,6 +246,7 @@ public class EntryPoint : MonoBehaviour
         {
             _mapCanvasInstance = Instantiate(mapCanvasPrefab, _gameMenuCanvasInstance.transform);
             //SetCanvasParamets(_mapCanvasInstance, 50);
+            //SetCanvasCameraParamets(_mapCanvasInstance, 120);
             _mapCanvasInstance.SetActive(true);
             DontDestroyOnLoad(_mapCanvasInstance);
             GameManager.Instance.SetMapCanvasInstance(_mapCanvasInstance);
@@ -420,13 +423,24 @@ public class EntryPoint : MonoBehaviour
         var collider = _playerInstance.GetComponent<BoxCollider2D>();
         collider.enabled = true;
 
+        _playerInstance.GetComponent<PlayerChargeAttack>().enabled = playerView.PlayerModel.HasChargedAttack;
+
+        _playerInstance.GetComponent<PlayerSoulRelease>().enabled = playerView.PlayerModel.HasSoulRelease;
+
+        _playerInstance.GetComponent<PlayerParrying>().enabled = playerView.PlayerModel.HasParrying;
+
+
         piercingClaw = _playerInstance.GetComponent<PiercingClaw>();
         if (piercingClaw) piercingClaw.enabled = false;
 
-        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasClaw)
+        playerMana = _playerInstance.GetComponent<PlayerMana>();
+        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasChargedAttack || playerView.PlayerModel.HasClaw)
         {
-            playerMana = _playerInstance.GetComponent<PlayerMana>();
             playerMana.enabled = true; 
+        }
+        else
+        {
+            playerMana.enabled = false;
         }
 
         InitializeManager.Instance.player = _playerInstance;
@@ -506,6 +520,14 @@ public class EntryPoint : MonoBehaviour
         componentCanvas = canvasInstance.GetComponent<Canvas>();
         componentCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         //componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+        componentCanvas.sortingOrder = sortOrder;
+    }
+
+    private void SetCanvasCameraParamets(GameObject canvasInstance, int sortOrder)
+    {
+        componentCanvas = canvasInstance.GetComponent<Canvas>();
+        componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
         componentCanvas.sortingOrder = sortOrder;
     }
 

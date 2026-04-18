@@ -39,6 +39,10 @@ public class PlayerData : ScriptableObject
     public bool hasDash;
     public bool hasRun;
     public bool hasDamageDash;
+    public bool hasChargedAttack;
+    public bool hasFourPaws;
+    public bool hasSoulRelease;
+    public bool hasParrying;
 
     [Header("Player State")]
     public bool facingRight;

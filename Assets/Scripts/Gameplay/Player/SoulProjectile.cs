@@ -17,12 +17,21 @@ public class SoulProjectile : MonoBehaviour
     private float _currentSpeed;
     private float _aliveTimer = 0f;
 
+    private bool _canMove = false;
+
+    private Animator _projectileAnimator;
+
     private List<GameObject> _enemiesInside = new List<GameObject>();
     private Dictionary<GameObject, Coroutine> _damageCoroutines = new Dictionary<GameObject, Coroutine>();
 
     #endregion
 
     #region Common Methods
+
+    private void Awake()
+    {
+        _projectileAnimator = GetComponent<Animator>();
+    }
 
     private void Start()
     {
@@ -33,7 +42,10 @@ public class SoulProjectile : MonoBehaviour
     {
         CleanupEnemiesList();
 
-        transform.Translate(_currentSpeed * Time.deltaTime * _direction, Space.World);
+        if (_canMove)
+        {
+            transform.Translate(_currentSpeed * Time.deltaTime * _direction, Space.World);
+        }
 
         HandleLifeTime();
     }
@@ -127,5 +139,11 @@ public class SoulProjectile : MonoBehaviour
 
             yield return new WaitForSeconds(_hitInterval);
         }
+    }
+
+    public void PlayMoveAnimation()
+    {
+        _canMove = true;
+        _projectileAnimator.SetBool("IsMove", true);
     }
 }

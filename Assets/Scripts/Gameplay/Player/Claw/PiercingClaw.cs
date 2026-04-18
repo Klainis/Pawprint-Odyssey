@@ -16,6 +16,7 @@ public class PiercingClaw : MonoBehaviour
     private PlayerMana playerMana;
     private PlayerMove playerMove;
     private Transform attackCheck;
+    private Rigidbody2D _rigidbody;
 
     private bool canAttack = true;
     private bool isAttacking = false;
@@ -46,6 +47,7 @@ public class PiercingClaw : MonoBehaviour
         playerAnimation = GetComponent<PlayerAnimation>();
         playerMana = GetComponent<PlayerMana>();
         playerMove = GetComponent<PlayerMove>();
+        _rigidbody = GetComponent<Rigidbody2D>();
 
         attackCheck = transform.Find("ClawAttackCheck");
         clawSprite.SetActive(false);
@@ -53,6 +55,12 @@ public class PiercingClaw : MonoBehaviour
 
     private void Update()
     {
+        if (isAttacking)
+        {
+            _rigidbody.linearVelocity = Vector2.zero;
+            _rigidbody.gravityScale = 0f;
+        }
+
         playerAnimation.ApplyRootMotion(false);
  
         //if (clawAction != null && clawAction.action != null && playerMove.IsGrounded)
@@ -94,8 +102,8 @@ public class PiercingClaw : MonoBehaviour
         yield return new WaitForSeconds(clawEnd);
         playerAnimation.SetBoolClaw(false);
         clawSprite.SetActive(false);
+        isAttacking = false;
         yield return new WaitForSeconds(durationAfterSeries - clawEnd);
         canAttack = true;
-        isAttacking = false;
     }
 }

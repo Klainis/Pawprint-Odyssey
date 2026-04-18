@@ -25,6 +25,10 @@ public class PlayerModel
     public bool HasWallRun { get; private set; }
     public bool HasRun { get; private set; }
     public bool HasDamageDash { get; private set; }
+    public bool HasChargedAttack { get; private set; }//
+    public bool HasFourPaws { get; private set; }//
+    public bool HasSoulRelease { get; private set; }//
+    public bool HasParrying { get; private set; }//
     public bool FacingRight { get; private set; }
     public bool IsDead { get { return Life <= 0; } }
     public bool SpiritGuideKilled { get; private set; }
@@ -42,7 +46,7 @@ public class PlayerModel
                         int moneyCollected,
                         string currentScene, float curPosX, float curPosY,
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
-                        bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash,
+                        bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash, bool hasChargedAttack, bool hasFourPaws, bool hasSoulRelease, bool hasParrying,
                         bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed)
@@ -74,6 +78,10 @@ public class PlayerModel
         HasWallRun = hasWallRun;
         HasRun = hasRun;
         HasDamageDash = hasDamageDash;
+        HasChargedAttack = hasChargedAttack;
+        HasFourPaws = hasFourPaws;
+        HasSoulRelease = hasSoulRelease;
+        HasParrying = hasParrying;
         FacingRight = facingRight;
         SpiritGuideKilled = spiritGuideKilled;
         GuardianOwlKilled = guardianOwlKilled;
@@ -104,6 +112,10 @@ public class PlayerModel
             data.HasWallRun,
             data.HasRun,
             data.HasDamageDash,
+            data.HasChargedAttack,
+            data.HasFourPaws,
+            data.HasSoulRelease,
+            data.HasParrying,
             data.FacingRight,
             data.SpiritGuideKilled,
             data.GuardianOwlKilled,
@@ -135,6 +147,10 @@ public class PlayerModel
             playerData.hasWallRun,
             playerData.hasRun,
             playerData.hasDamageDash,
+            playerData.hasChargedAttack,
+            playerData.hasFourPaws,
+            playerData.hasSoulRelease,
+            playerData.hasParrying,
             playerData.facingRight,
             playerData.spiritGuideKilled,
             playerData.guardianOwlKilled,
@@ -286,6 +302,30 @@ public class PlayerModel
         return HasDamageDash;
     }
 
+    public bool SetHasChargedAttack()
+    {
+        HasChargedAttack = true;
+        return HasChargedAttack;
+    }
+
+    public bool SetHasFourPaws()
+    {
+        HasFourPaws = true;
+        return HasFourPaws;
+    }
+
+    public bool SetHasSoulRelease()
+    {
+        HasSoulRelease = true;
+        return HasSoulRelease;
+    }
+
+    public bool SetHasParrying()
+    {
+        HasParrying = true;
+        return HasParrying;
+    }
+
     public bool SetSpiritGuideKilled()
     {
         SpiritGuideKilled = true;
@@ -331,6 +371,10 @@ public class PlayerModel
         data.HasWallRun = HasWallRun;
         data.HasRun = HasRun;
         data.HasDamageDash = HasDamageDash;
+        data.HasChargedAttack = HasChargedAttack;
+        data.HasFourPaws = HasFourPaws;
+        data.HasSoulRelease = HasSoulRelease;
+        data.HasParrying = HasParrying;
         data.FacingRight = true;
         data.SpiritGuideKilled = SpiritGuideKilled;
         data.GuardianOwlKilled = GuardianOwlKilled;
@@ -360,6 +404,10 @@ public class PlayerModel
         HasWallRun = data.HasWallRun;
         HasRun = data.HasRun;
         HasDamageDash = data.HasDamageDash;
+        HasChargedAttack = data.HasChargedAttack;
+        HasFourPaws = data.HasFourPaws;
+        HasSoulRelease = data.HasSoulRelease;
+        HasParrying = data.HasParrying;
         FacingRight = data.FacingRight;
         SpiritGuideKilled = data.SpiritGuideKilled;
         GuardianOwlKilled = data.GuardianOwlKilled;
@@ -393,6 +441,10 @@ public struct PlayerSaveData
     public bool HasWallRun;
     public bool HasRun;
     public bool HasDamageDash;
+    public bool HasChargedAttack;
+    public bool HasFourPaws;
+    public bool HasSoulRelease;
+    public bool HasParrying;
     public bool FacingRight;
     public bool SpiritGuideKilled;
     public bool GuardianOwlKilled;

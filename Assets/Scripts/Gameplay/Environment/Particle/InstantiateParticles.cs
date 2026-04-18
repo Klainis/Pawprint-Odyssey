@@ -31,6 +31,7 @@ public class InstantiateParticles : MonoBehaviour
 
     public void InstantiateNodePollen(Vector3 nodeButtonPosition)
     {
+        Debug.Log("Созданы партиклы дерева");
         _pollenNodeInstance = Instantiate(_pollenNodeTreeExplosionParticle, nodeButtonPosition, Quaternion.identity);
     }
 }
