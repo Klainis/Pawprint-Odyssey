@@ -26,8 +26,6 @@ public class RootGuardianView : MonoBehaviour
     private Rigidbody2D _rb;
 
     private Coroutine _telegraphCoroutine;
-    private Color _defaultColor;
-    private RigidbodyConstraints2D _defaultConstraints;
 
     private Coroutine _retreatCoroutine;
     private Vector3 _centerPosition;
@@ -59,10 +57,6 @@ public class RootGuardianView : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
 
         _attack.PlayerDetectDist = _playerDetectDist;
-
-        var renderer = GetComponent<SpriteRenderer>();
-        _defaultColor = renderer.color;
-        _defaultConstraints = _rb.constraints;
     }
 
     private void FixedUpdate()
@@ -77,6 +71,18 @@ public class RootGuardianView : MonoBehaviour
 
         if (_isRetreating || !_attack.IsAttacking)
             _move.Move(Model.Speed, FacingRight);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (!Model.IsDead)
+            {
+                var playerView = collision.gameObject.GetComponent<PlayerView>();
+                playerView.ApplyDamage(Model.Damage, transform.position, gameObject);
+            }
+        }
     }
 
     #endregion
@@ -136,16 +142,13 @@ public class RootGuardianView : MonoBehaviour
 
     private void StartTelegraph(bool faceRight)
     {
-        if (!_attack.CanAttack(_attackCooldown) || _attack.IsAttacking)
+        if (!_attack.CanAttack(_attackCooldown) || _attack.IsAttacking || _telegraphCoroutine != null)
             return;
-
-        if (_telegraphCoroutine != null)
-            StopCoroutine(_telegraphCoroutine);
 
         if (faceRight != FacingRight)
             FacingRight = _move.Turn(FacingRight);
 
-        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
+        _telegraphCoroutine = StartCoroutine(AttackWrapperRoutine());
     }
 
     #endregion
@@ -189,33 +192,6 @@ public class RootGuardianView : MonoBehaviour
         _isKnockback = false;
     }
 
-    private IEnumerator AttackTelegraphRoutine()
-    {
-        var playerPos = _playerAttack.transform.position;
-        _attack.IsAttacking = true;
-        _animation.SetBoolAttack(true);
-
-        var renderer = GetComponent<SpriteRenderer>();
-        renderer.color = Color.red;
-        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
-        yield return new WaitForSeconds(_telegraphTime);
-
-        renderer.color = _defaultColor;
-        _rb.constraints = _defaultConstraints;
-
-        _attack.Attack();
-
-        yield return new WaitUntil(() => _rb.linearVelocity.y < 0);
-        yield return new WaitUntil(() => Mathf.Abs(_rb.linearVelocity.y) < 0.1f);
-        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
-
-        _attack.UpdateLastAttackTime();
-        _attack.IsAttacking = false;
-        _animation.SetBoolAttack(false);
-        _telegraphCoroutine = null;
-    }
-
     private IEnumerator RetreatRoutine()
     {
         yield return new WaitForSeconds(_patrolTimeWithoutPlayer);
@@ -244,6 +220,13 @@ public class RootGuardianView : MonoBehaviour
 
         _retreatCoroutine = null;
         _targetZoneHandler.HideEnemy();
+    }
+
+    private IEnumerator AttackWrapperRoutine()
+    {
+        yield return StartCoroutine(_attack.AttackTelegraphRoutine(_telegraphTime));
+
+        _telegraphCoroutine = null;
     }
 
     #endregion

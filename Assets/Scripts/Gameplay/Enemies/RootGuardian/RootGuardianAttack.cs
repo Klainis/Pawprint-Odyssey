@@ -6,16 +6,17 @@ public class RootGuardianAttack : MonoBehaviour
 {
     [Header("Main params")]
     [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private GameObject _spearObj;  // temp decision
-    [SerializeField] private float _attackDuration = 1.0f;  // temp decision
-    [SerializeField] private Vector3 _targetScale;  // temp decision
 
     #region Variables
 
     public event Action OnPlayerLeftDetected;
     public event Action OnPlayerRightDetected;
 
-    private Vector3 _initialScale;
+    private RootGuardianAnimation _animation;
+    private Rigidbody2D _rb;
+
+    private Color _defaultColor;
+    private RigidbodyConstraints2D _defaultConstraints;
 
     private float _lastAttackTime;
 
@@ -30,9 +31,14 @@ public class RootGuardianAttack : MonoBehaviour
 
     #region Common Methods
 
-    private void Start()
+    private void Awake()
     {
-        _initialScale = _spearObj.transform.localScale;
+        _animation = GetComponent<RootGuardianAnimation>();
+        _rb = GetComponent<Rigidbody2D>();
+
+        var renderer = GetComponent<SpriteRenderer>();
+        _defaultColor = renderer.color;
+        _defaultConstraints = _rb.constraints;
     }
 
     private void FixedUpdate()
@@ -56,8 +62,6 @@ public class RootGuardianAttack : MonoBehaviour
     public void Attack()
     {
         IsAttacking = true;
-        StartCoroutine(ScaleSpearOverTime());
-        IsAttacking = false;
     }
 
     private void CheckPlayerHits()
@@ -71,26 +75,25 @@ public class RootGuardianAttack : MonoBehaviour
             OnPlayerRightDetected?.Invoke();
     }
 
-    #region IEnumerators
-
-    private IEnumerator ScaleSpearOverTime()
+    public IEnumerator AttackTelegraphRoutine(float telegraphTime)
     {
-        yield return StartCoroutine(ChangeSpearScale(_initialScale, _targetScale, _attackDuration));
+        var renderer = GetComponent<SpriteRenderer>();
+        renderer.color = Color.red;
+        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        yield return StartCoroutine(ChangeSpearScale(_targetScale, _initialScale, _attackDuration));
+        _animation.SetBoolAttack(true);
+
+        yield return new WaitForSeconds(telegraphTime);
+
+        renderer.color = _defaultColor;
+        _rb.constraints = _defaultConstraints;
+
+        Attack();
+
+        yield return new WaitForSeconds(0.5f);
+
+        IsAttacking = false;
+        _animation.SetBoolAttack(false);
+        UpdateLastAttackTime();
     }
-
-    private IEnumerator ChangeSpearScale(Vector3 from, Vector3 to, float time)
-    {
-        var elapsed = 0f;
-        while (elapsed < time)
-        {
-            _spearObj.transform.localScale = Vector3.Lerp(from, to, elapsed / time);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        _spearObj.transform.localScale = to;
-    }
-
-    #endregion
 }

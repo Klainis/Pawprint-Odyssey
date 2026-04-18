@@ -9,9 +9,10 @@ public class RootGuardianMove : MonoBehaviour
 
     #region Variables
 
+    private RootGuardianAnimation _animation;
+    private Rigidbody2D _rb;
     private Transform _fallCheck;
     private Transform _wallCheck;
-    private Rigidbody2D _rb;
 
     #endregion
 
@@ -21,6 +22,7 @@ public class RootGuardianMove : MonoBehaviour
 
     private void Awake()
     {
+        _animation = GetComponent<RootGuardianAnimation>();
         _rb = GetComponent<Rigidbody2D>();
 
         _fallCheck = transform.Find("FallCheck");
@@ -50,6 +52,7 @@ public class RootGuardianMove : MonoBehaviour
         if (Mathf.Abs(_rb.linearVelocity.y) > 0.5f)
             return;
 
+        _animation.SetBoolMove(true);
         var moveDirection = facingRight ? 1 : -1;
         _rb.linearVelocity = new Vector2(moveDirection * speed, _rb.linearVelocity.y);
     }
