@@ -146,6 +146,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                     BuyDash();
                     Debug.Log($"Купили {_dashButton.gameObject.name}");
                 }
+                else if (!_dashCostCheck.canBuy)
+                {
+                    var shaker = _dashAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _dashAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
         _wallRunBuyButton.onClick.AddListener(() =>
@@ -158,6 +168,17 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                     BuyWallRun();
                     Debug.Log($"Купили {_wallRunButton.gameObject.name}");
                 }
+                else if (!_wallRunCostCheck.canBuy || !_playerModel.HasDash)
+                {
+                    var shaker = _wallRunAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+
+            }
+            else
+            {
+                var shaker = _wallRunAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
 
@@ -170,6 +191,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                     BuyDamageDash();
                     Debug.Log($"Купили {_damageDashButton.gameObject.name}");
                 }
+                else if (!_damageDashCostCheck.canBuy || !_playerModel.HasWallRun)
+                {
+                    var shaker = _damageDashAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _damageDashAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
 
@@ -182,6 +213,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                     BuyChargedAttack();
                     Debug.Log($"Купили {_chargedAttackButton.gameObject.name}");
                 }
+                else if (!_chargedAttackCostCheck.canBuy)
+                {
+                    var shaker = _chargedAttackAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _chargedAttackAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
 
@@ -193,6 +234,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 {
                     BuyFourPaws();
                 }
+                else if (!_fourPawsCostCheck.canBuy || !_playerModel.HasChargedAttack)
+                {
+                    var shaker = _fourPawsAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _fourPawsAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
 
@@ -204,6 +255,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 {
                     BuySoulRelease();
                 }
+                else if (!_soulReleaseCostCheck.canBuy || !_playerModel.HasFourPaws)
+                {
+                    var shaker = _soulReleaseAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _soulReleaseAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
 
@@ -215,6 +276,16 @@ public class AbilitiesTreeUIManager : MonoBehaviour
                 {
                     BuyParrying();
                 }
+                else if (!_parryingCostCheck.canBuy)
+                {
+                    var shaker = _parryingAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                    shaker.Shake();
+                }
+            }
+            else
+            {
+                var shaker = _parryingAbilityImage.gameObject.GetComponent<ShakeCantBuyNode>();
+                shaker.Shake();
             }
         });
     }
@@ -368,7 +439,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
 
         GetDashTreeState();
         _instantiateParticles.InstantiateNodePollen(_dashButton.transform.position);
-        _eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
+        //_eventSystem.SetSelectedGameObject(_wallRunButton.gameObject);
 
         SaveSystem.CrystalSave();
         SaveSystem.MoneySave();

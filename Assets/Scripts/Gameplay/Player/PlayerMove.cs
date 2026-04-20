@@ -687,6 +687,8 @@ public class PlayerMove : MonoBehaviour
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
         canDoubleJump = true;
+
+        PlayParticleJumpUp();
     }
 
     private void WallRunningJump()
@@ -721,7 +723,9 @@ public class PlayerMove : MonoBehaviour
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
-        canDoubleJump = true;   
+        canDoubleJump = true;
+
+        PlayParticleJumpUp();
     }
 
     public void ScaleJump()

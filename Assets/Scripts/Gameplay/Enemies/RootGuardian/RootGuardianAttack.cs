@@ -81,13 +81,11 @@ public class RootGuardianAttack : MonoBehaviour
         renderer.color = Color.red;
         _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        _animation.SetBoolAttack(true);
-
         yield return new WaitForSeconds(telegraphTime);
 
         renderer.color = _defaultColor;
         _rb.constraints = _defaultConstraints;
-
+        _animation.SetBoolAttack(true);
         Attack();
 
         yield return new WaitForSeconds(0.5f);
