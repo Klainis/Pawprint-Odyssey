@@ -23,6 +23,9 @@ public class RootGuardianView : MonoBehaviour
     [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
     [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
 
+    //[Header("Effects")]
+    //[SerializeField] private DamageFlash _damageFlash;
+
     #endregion
 
     #region Variables
@@ -34,7 +37,7 @@ public class RootGuardianView : MonoBehaviour
     private Rigidbody2D _rb;
     private AudioSource _audioSource;
     private InstantiateMoney _money;
-    private DamageFlash _damageFlash;
+    private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
 
     private Coroutine _telegraphCoroutine;
@@ -66,7 +69,8 @@ public class RootGuardianView : MonoBehaviour
     {
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
-        _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
+        //_playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
+        _playerAttack = PlayerAttack.Instance;
         _animation = GetComponent<RootGuardianAnimation>();
         _attack = GetComponent<RootGuardianAttack>();
         _move = GetComponent<RootGuardianMove>();
@@ -74,7 +78,7 @@ public class RootGuardianView : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
         _money = FindAnyObjectByType<InstantiateMoney>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
         _attack.PlayerDetectDist = _playerDetectDist;
@@ -123,7 +127,10 @@ public class RootGuardianView : MonoBehaviour
         if (damageApplied)
         {
             PlayHitSound(_hitClip);
-            _damageFlash.CallDamageFlash();
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
 
             _animation.SetTriggerHit();
             _rb.linearVelocity = Vector2.zero;

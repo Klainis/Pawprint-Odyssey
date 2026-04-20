@@ -36,8 +36,8 @@ public class RootGuardianAttack : MonoBehaviour
         _animation = GetComponent<RootGuardianAnimation>();
         _rb = GetComponent<Rigidbody2D>();
 
-        var renderer = GetComponent<SpriteRenderer>();
-        _defaultColor = renderer.color;
+        //var renderer = GetComponent<SpriteRenderer>();
+        //_defaultColor = renderer.color;
         _defaultConstraints = _rb.constraints;
     }
 
@@ -77,14 +77,16 @@ public class RootGuardianAttack : MonoBehaviour
 
     public IEnumerator AttackTelegraphRoutine(float telegraphTime)
     {
-        var renderer = GetComponent<SpriteRenderer>();
-        renderer.color = Color.red;
+        //var renderer = GetComponent<SpriteRenderer>();
+        //renderer.color = Color.red;
+        _animation.SetBoolTelegraph(true);
         _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(telegraphTime);
 
-        renderer.color = _defaultColor;
+        //renderer.color = _defaultColor;
         _rb.constraints = _defaultConstraints;
+        _animation.SetBoolTelegraph(false);
         _animation.SetBoolAttack(true);
         Attack();
 

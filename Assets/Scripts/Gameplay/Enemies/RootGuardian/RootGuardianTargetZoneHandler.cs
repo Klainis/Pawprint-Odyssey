@@ -17,6 +17,10 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
     private RootGuardianView _view;
     private RootGuardianAnimation _animation;
 
+    private Rigidbody2D _rb;
+
+    private RigidbodyConstraints2D _defaultConstraints;
+
     #endregion
 
     #region Common Methods
@@ -27,6 +31,10 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
         _view = _rootGuardianObj.GetComponent<RootGuardianView>();
         _animation = _rootGuardianObj.GetComponent<RootGuardianAnimation>();
+
+        _rb = _view.gameObject.GetComponent<Rigidbody2D>();
+
+        _defaultConstraints = _rb.constraints;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -34,6 +42,7 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             SetObjectsActive(true);
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
             var isPlayerToTheRight = collision.transform.position.x > transform.position.x;
             _view.FacePlayerOnSpawn(isPlayerToTheRight);
@@ -66,6 +75,7 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
     {
         _animation.SetBoolRevealing(true);
         yield return new WaitForSeconds(0.2f);
+        _rb.constraints = _defaultConstraints;
         _animation.SetBoolRevealing(false);
     }
 }

@@ -18,6 +18,12 @@ public class DamageFlash : MonoBehaviour
         Init();
     }
 
+    private void OnEnable()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        Init();
+    }
+
     private void Init()
     {
         _material = _spriteRenderer.material;
