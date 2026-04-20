@@ -317,7 +317,7 @@ public class PlayerView : MonoBehaviour
             SetFlashAmount(currentFlashAmount);
             yield return null;
         }
-        SetFlashAmount(1f);///////
+        SetFlashAmount(0f);///////
         //_spriteRenderer.material.color = Color.white;
     }
 
