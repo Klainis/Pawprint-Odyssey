@@ -11,6 +11,8 @@ public class DestroyBrokenWalls : MonoBehaviour
     private WallsManager wallsManager;
     private GameObject _lightDoorGameObjectInstance;
 
+    [SerializeField] private ShowScretRoomAfterBrakeWall _showSecretRoomAfterBrakeWall;
+
     public string WallID { get { return _wallID; } }
 
     private void Awake()
@@ -19,14 +21,26 @@ public class DestroyBrokenWalls : MonoBehaviour
 
         if (wallsManager.WallsExistenceInstance != null)
             DestroyWall();
+
+        //_showSecretRoomAfterBrakeWall = FindAnyObjectByType<ShowScretRoomAfterBrakeWall>();
     }
 
     public void DestroyWall()
     {
+        Debug.Log(wallsManager);
+        Debug.Log(wallsManager.WallsExistenceInstance);
         if (wallsManager.WallsExistenceInstance.IsWallBroken(_wallID))
         {
-            Destroy(gameObject);
-            InstantiateDoorLight();
+            if (gameObject.CompareTag("SecretWall"))
+            {
+                _showSecretRoomAfterBrakeWall.ShowOpenedSecretRoom();
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+                InstantiateDoorLight();
+            }
         }
     }
     private void InstantiateDoorLight()
@@ -52,6 +66,7 @@ public class DestroyBrokenWalls : MonoBehaviour
     public void AddInDestroyWallList()
     {
         wallsManager.WallsExistenceInstance.BreakWall(_wallID);
-        MapManager.Instance.OpenDestructibleWall(_wallID);
+        if (!gameObject.CompareTag("SecretWall"))
+            MapManager.Instance.OpenDestructibleWall(_wallID);
     }
 }

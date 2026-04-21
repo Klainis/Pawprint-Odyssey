@@ -177,11 +177,11 @@ public class PlayerAttack : MonoBehaviour
             {
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply, SendMessageOptions.DontRequireReceiver);
 
-                if (!enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
+                if (!enemy.CompareTag("isDead") && (!objectEnvironment.CompareTag("Object") || objectEnvironment.CompareTag("SecretWall")))
                     playerMana.GetMana();
             }
 
-            if (objectEnvironment.CompareTag("Object"))
+            if (objectEnvironment.CompareTag("Object") || objectEnvironment.CompareTag("SecretWall"))
                 collidersEnemies[i].gameObject.SendMessage("ApplyDamage", new object[2] { false, damageToApply });
         }
     }

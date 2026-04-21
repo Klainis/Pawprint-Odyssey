@@ -45,10 +45,22 @@ public class DestructibleWall : MonoBehaviour
 
         if (life <= 0)
         {
-            Destroy(gameObject);
-            InstantiateDoorLight();
-            _destroyBrokenWalls.AddInDestroyWallList();
-            SaveSystem.AutoSave();
+            if (gameObject.CompareTag("SecretWall"))
+            {
+                FindAnyObjectByType<ShowScretRoomAfterBrakeWall>().StartShower();
+                _destroyBrokenWalls.AddInDestroyWallList();
+                SaveSystem.AutoSave();
+
+                Destroy(gameObject);
+            }
+            else
+            {
+                _destroyBrokenWalls.AddInDestroyWallList();
+                SaveSystem.AutoSave();
+                InstantiateDoorLight();
+
+                Destroy(gameObject);
+            }
         }
     }
 

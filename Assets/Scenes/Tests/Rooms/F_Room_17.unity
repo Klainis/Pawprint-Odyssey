@@ -3967,6 +3967,7 @@ MonoBehaviour:
   isInteract: 0
   isClaw: 0
   isDoubleJump: 1
+  __clawWallForEd: {fileID: 0}
   _fadeDuration: 1
   _waitBeforeShow: 0
 --- !u!225 &273800243
@@ -47449,13 +47450,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1897754845}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -4.93, y: 9.42, z: 0}
-  m_LocalScale: {x: 1.4989, y: 1.4989, z: 1.4989}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1380759294}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!50 &1897754847
 Rigidbody2D:
   serializedVersion: 5
@@ -47566,7 +47567,7 @@ SpriteRenderer:
   m_SortingLayerID: 1891582151
   m_SortingLayer: 9
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4646876343654227710, guid: bee2c3e549855174a8eee651d47dbb69, type: 3}
+  m_Sprite: {fileID: 8556764700491921374, guid: a859c0ee1d129c14998501d74f158eb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
