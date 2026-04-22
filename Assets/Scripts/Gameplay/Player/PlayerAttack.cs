@@ -175,7 +175,7 @@ public class PlayerAttack : MonoBehaviour
 
             if (enemy.CompareTag("Enemy"))
             {
-                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply);
+                collidersEnemies[i].gameObject.SendMessage("ApplyDamage", damageToApply, SendMessageOptions.DontRequireReceiver);
 
                 if (!enemy.CompareTag("isDead") && !objectEnvironment.CompareTag("Object"))
                     playerMana.GetMana();

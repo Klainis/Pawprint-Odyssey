@@ -15,7 +15,7 @@ public class RootGuardianView : MonoBehaviour
     [Header("Attack")]
     [SerializeField] private float _playerDetectDist;
     [SerializeField] private float _attackCooldown;
-    [SerializeField] private float _telegraphTime;
+    [SerializeField] private float _telegraphTime = 0.8f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -82,6 +82,7 @@ public class RootGuardianView : MonoBehaviour
         _screenShaker = GetComponent<ScreenShaker>();
 
         _attack.PlayerDetectDist = _playerDetectDist;
+        _attack.AttackCooldown = _attackCooldown;
     }
 
     private void FixedUpdate()
@@ -249,12 +250,12 @@ public class RootGuardianView : MonoBehaviour
         FacingRight = _move.Turn(FacingRight);
     }
 
-    private void HandlePlayerLeftDetected() => StartTelegraph(true);
-    private void HandlePlayerRightDetected() => StartTelegraph(false);
+    private void HandlePlayerLeftDetected() => StartTelegraph(false);
+    private void HandlePlayerRightDetected() => StartTelegraph(true);
 
     private void StartTelegraph(bool faceRight)
     {
-        if (!_attack.CanAttack(_attackCooldown) || _isRetreating || _telegraphCoroutine != null)
+        if (!_attack.CanAttack || _isRetreating || _telegraphCoroutine != null)
             return;
 
         if (faceRight != FacingRight)
@@ -336,6 +337,8 @@ public class RootGuardianView : MonoBehaviour
 
     private IEnumerator AttackWrapperRoutine()
     {
+        _move.StopMove();
+
         yield return StartCoroutine(_attack.AttackTelegraphRoutine(_telegraphTime));
 
         _telegraphCoroutine = null;
