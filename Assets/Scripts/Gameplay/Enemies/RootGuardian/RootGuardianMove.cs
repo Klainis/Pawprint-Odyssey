@@ -79,4 +79,10 @@ public class RootGuardianMove : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotator);
         return !facingRight;
     }
+
+    public void StopMove()
+    {
+        _animation.SetBoolMove(false);
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+    }
 }

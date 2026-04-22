@@ -11,7 +11,6 @@ public class RootGuardianAnimation : MonoBehaviour
 
     public void SetBoolAttack(bool value)
     {
-        _animator.SetBool("Telegraph", false);
         _animator.SetBool("Attack", value);
     }
 

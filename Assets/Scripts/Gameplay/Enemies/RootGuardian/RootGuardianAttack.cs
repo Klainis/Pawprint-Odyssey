@@ -18,14 +18,20 @@ public class RootGuardianAttack : MonoBehaviour
     private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
-    private float _lastAttackTime;
+    private float _lastAttackTime = 0f;
 
     #endregion
 
     #region Properties
 
     public float PlayerDetectDist { get; set; }
+    public float AttackCooldown { get; set; }
     public bool IsAttacking { get; set; }
+    public bool CanAttack {
+        get {
+            return !((Time.time < _lastAttackTime + AttackCooldown) || IsAttacking);
+        }
+    }
 
     #endregion
 
@@ -43,7 +49,7 @@ public class RootGuardianAttack : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (IsAttacking) return;
+        if (IsAttacking || !CanAttack) return;
         CheckPlayerHits();
     }
 
@@ -54,20 +60,10 @@ public class RootGuardianAttack : MonoBehaviour
         _lastAttackTime = Time.time;
     }
 
-    public bool CanAttack(float attackCooldown)
-    {
-        return !((Time.time < _lastAttackTime + attackCooldown) || IsAttacking);
-    }
-
-    public void Attack()
-    {
-        IsAttacking = true;
-    }
-
     private void CheckPlayerHits()
     {
-        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, PlayerDetectDist, _playerLayer);
-        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, PlayerDetectDist, _playerLayer);
+        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.left, PlayerDetectDist, _playerLayer);
+        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.right, PlayerDetectDist, _playerLayer);
 
         if (playerHitLeft.collider != null)
             OnPlayerLeftDetected?.Invoke();
@@ -81,6 +77,7 @@ public class RootGuardianAttack : MonoBehaviour
         //renderer.color = Color.red;
         _animation.SetBoolTelegraph(true);
         _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        IsAttacking = true;
 
         yield return new WaitForSeconds(telegraphTime);
 
@@ -88,12 +85,11 @@ public class RootGuardianAttack : MonoBehaviour
         _rb.constraints = _defaultConstraints;
         _animation.SetBoolTelegraph(false);
         _animation.SetBoolAttack(true);
-        Attack();
 
         yield return new WaitForSeconds(0.5f);
 
-        IsAttacking = false;
         _animation.SetBoolAttack(false);
         UpdateLastAttackTime();
+        IsAttacking = false;
     }
 }

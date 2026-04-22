@@ -21,6 +21,8 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     private RigidbodyConstraints2D _defaultConstraints;
 
+    private bool _isRevealed = false;
+
     #endregion
 
     #region Common Methods
@@ -39,7 +41,7 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !_isRevealed)
         {
             SetObjectsActive(true);
             _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
@@ -54,7 +56,7 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && _isRevealed)
             _view.StartRetreatSequence(transform.position);
     }
 
@@ -62,6 +64,7 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     private void SetObjectsActive(bool enemyReveal)
     {
+        _isRevealed = enemyReveal;
         _leavesPileObj.SetActive(!enemyReveal);
         _rootGuardianObj.SetActive(enemyReveal);
     }
