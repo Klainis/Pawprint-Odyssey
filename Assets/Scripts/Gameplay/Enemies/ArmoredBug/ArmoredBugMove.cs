@@ -7,7 +7,7 @@ public class ArmoredBugMove : MonoBehaviour
 
     public event Action OnWallHit;
 
-    private ArmoredBugView _bugView;
+    private ArmoredBugView _view;
 
     private Transform _fallCheck;
     private Transform _wallCheck;
@@ -17,7 +17,7 @@ public class ArmoredBugMove : MonoBehaviour
 
     private void Awake()
     {
-        _bugView = GetComponent<ArmoredBugView>();
+        _view = GetComponent<ArmoredBugView>();
 
         _fallCheck = transform.Find("FallCheck");
         _wallCheck = transform.Find("WallCheck");
@@ -31,16 +31,16 @@ public class ArmoredBugMove : MonoBehaviour
             OnWallHit?.Invoke();
     }
 
-    public void Move(bool isAccelerated = false, float acceleratedSpeed = 0f)
+    public void Move()
     {
-        if (_bugView.IsHitted || Mathf.Abs(_bugView.RigidBody.linearVelocity.y) > 0.5f)
+        if (_view.IsHitted || Mathf.Abs(_view.RigidBody.linearVelocity.y) > 0.5f)
             return;
 
-        var moveSpeed = isAccelerated ? acceleratedSpeed : _bugView.Model.Speed;
-        var moveDirection = _bugView.FacingRight ? -1 : 1;
+        var moveSpeed = _view.Model.Speed;
+        var moveDirection = _view.FacingRight ? -1 : 1;
 
-        if (!_bugView.IsHitted)
-            _bugView.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, _bugView.RigidBody.linearVelocity.y);
+        if (!_view.IsHitted)
+            _view.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, _view.RigidBody.linearVelocity.y);
     }
 
     public bool Turn(bool facingRight)

@@ -4,10 +4,7 @@ using UnityEngine.Audio;
 
 public class ArmoredBugView : MonoBehaviour
 {
-
-    #region Variables
-
-    public EnemyModel Model { get; private set; }
+    #region SerializeFields
 
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
@@ -18,20 +15,21 @@ public class ArmoredBugView : MonoBehaviour
     [SerializeField] private AudioClip _hitClip;
     [SerializeField] private AudioClip _shieldHitClip;
 
-    [Header("Dash attack")]
-    [SerializeField] private float _dashDist = 1.5f;
+    [Header("Attack")]
     [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _attackDist = 1f;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
-
-    [Header("Not used")]
-    [SerializeField] private float _acceleratedSpeed = 5f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
     [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
     [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
+    
+    #endregion
+
+    #region Variables
 
     private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
     private ParticleSystem _damageParticleInstance;
@@ -39,33 +37,33 @@ public class ArmoredBugView : MonoBehaviour
     private ParticleSystem _playerWeaponSliceParticleInstance;
 
     private AudioSource _audioSource;
-    private Rigidbody2D _rigidBody;
-    private ArmoredBugAnimation _bugAnimation;
-    private ArmoredBugAttack _bugAttack;
-    private ArmoredBugMove _bugMove;
+    private Rigidbody2D _rb;
+    private ArmoredBugAnimation _animation;
+    private ArmoredBugAttack _attack;
+    private ArmoredBugMove _move;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
 
     private Coroutine _telegraphCoroutine;
-    private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
     private bool _isHitted = false;
     private bool _isAccelerated = false;
-    private bool _facingRight = true;
-    private bool damageApplied = false;
+    private bool _damageApplied = false;
     private bool _isKnockback = false;
 
     #endregion
 
     #region Properties
 
+    public EnemyModel Model { get; private set; }
     public float PlayerDetectDist { get { return _playerDetectDist; } }
-    public Rigidbody2D RigidBody { get { return _rigidBody; } }
+    public float AttackDist { get { return _attackDist; } }
+    public Rigidbody2D RigidBody { get { return _rb; } }
     public bool IsHitted { get { return _isHitted; } }
     public bool IsAccelerated { get { return _isAccelerated; } set { _isAccelerated = value; } }
-    public bool FacingRight { get { return _facingRight; } set { _facingRight = value; } }
+    public bool FacingRight { get; private set; } = false;
 
     #endregion
 
@@ -78,17 +76,15 @@ public class ArmoredBugView : MonoBehaviour
         _playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
 
         _audioSource = GetComponent<AudioSource>();
-        _rigidBody = GetComponent<Rigidbody2D>();
-        _bugAnimation = GetComponent<ArmoredBugAnimation>();
-        _bugAttack = GetComponent<ArmoredBugAttack>();
-        _bugMove = GetComponent<ArmoredBugMove>();
+        _rb = GetComponent<Rigidbody2D>();
+        _animation = GetComponent<ArmoredBugAnimation>();
+        _attack = GetComponent<ArmoredBugAttack>();
+        _move = GetComponent<ArmoredBugMove>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _money = FindAnyObjectByType<InstantiateMoney>();
 
-        var renderer = GetComponent<SpriteRenderer>();
-        _defaultColor = renderer.color;
-        _defaultConstraints = _rigidBody.constraints;
+        _defaultConstraints = _rb.constraints;
     }
 
     private void FixedUpdate()
@@ -98,9 +94,10 @@ public class ArmoredBugView : MonoBehaviour
             StartCoroutine(DestroySelf());
             return;
         }
-        else if (!_bugAttack.IsAttacking)
+        else if (!_attack.IsAttacking)
         {
-            _bugMove.Move(_isAccelerated, _acceleratedSpeed);
+            _animation.SetBoolMove(true);
+            _move.Move();
         }
     }
 
@@ -112,15 +109,15 @@ public class ArmoredBugView : MonoBehaviour
 
         var direction = damage / Mathf.Abs(damage);
 
-        if ((direction > 0 && !_facingRight) ||
-            (direction < 0 && _facingRight))
+        if ((direction > 0 && !FacingRight) ||
+            (direction < 0 && FacingRight))
         {
-            damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+            _damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         }
         else
         {
-            damageApplied = false;
-            _bugAnimation.SetTriggerBlockHit();
+            _damageApplied = false;
+            //_animation.SetTriggerBlockHit();
             PlayHitSound(_shieldHitClip);
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);
@@ -132,13 +129,14 @@ public class ArmoredBugView : MonoBehaviour
             _money.InstantiateMon(transform.position);
         }
 
-        if (damageApplied)
+        if (_damageApplied)
         {
             PlayHitSound(_hitClip);
             _damageFlash.CallDamageFlash();
 
-            _bugAnimation.SetTriggerHit();
-            _rigidBody.linearVelocity = Vector2.zero;
+            _animation.SetBoolHit(true);
+            StartCoroutine(HitTime(0.5f));
+            _rb.linearVelocity = Vector2.zero;
 
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
@@ -159,7 +157,7 @@ public class ArmoredBugView : MonoBehaviour
     {
         if (_isInvincible) return;
 
-        damageApplied = Model.TakeDamage(Mathf.Abs(damage));
+        _damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
         if (Model.IsDead)
         {
@@ -167,12 +165,13 @@ public class ArmoredBugView : MonoBehaviour
             _money.InstantiateMon(transform.position);
         }
 
-        if (damageApplied)
+        if (_damageApplied)
         {
             var direction = damage / Mathf.Abs(damage);
             _damageFlash.CallDamageFlash();
-            _bugAnimation.SetTriggerHit();
-            _rigidBody.linearVelocity = Vector2.zero;
+            _animation.SetBoolHit(true);
+            StartCoroutine(HitTime(0.5f));
+            _rb.linearVelocity = Vector2.zero;
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
             KnockBack(direction, _lastPlayerAttackForce);
@@ -193,7 +192,7 @@ public class ArmoredBugView : MonoBehaviour
         if (_isKnockback)
             StopCoroutine(WaitForKnockBack());
 
-        _rigidBody.linearVelocity = new Vector2(direction * forceAttack, _rigidBody.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(direction * forceAttack, _rb.linearVelocity.y);
         StartCoroutine(WaitForKnockBack());
     }
 
@@ -250,39 +249,48 @@ public class ArmoredBugView : MonoBehaviour
 
     private void OnEnable()
     {
-        _bugMove.OnWallHit += HandleWallHit;
+        _move.OnWallHit += HandleWallHit;
 
-        _bugAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
-        _bugAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
+        _attack.OnPlayerLeftHitDetected += HandlePlayerLeftHitDetected;
+        _attack.OnPlayerRightHitDetected += HandlePlayerRightHitDetected;
+
+        _attack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
+        _attack.OnPlayerRightDetected += HandlePlayerRightDetected;
     }
 
     private void OnDisable()
     {
-        _bugMove.OnWallHit -= HandleWallHit;
+        _move.OnWallHit -= HandleWallHit;
 
-        _bugAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
-        _bugAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
+        _attack.OnPlayerLeftHitDetected -= HandlePlayerLeftHitDetected;
+        _attack.OnPlayerRightHitDetected -= HandlePlayerRightHitDetected;
+
+        _attack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
+        _attack.OnPlayerRightDetected -= HandlePlayerRightDetected;
     }
 
     private void HandleWallHit()
     {
         _isAccelerated = false;
-        _facingRight = _bugMove.Turn(_facingRight);
+        FacingRight = _move.Turn(FacingRight);
     }
 
-    private void HandlePlayerLeftDetected() => StartTelegraph(false);
-    private void HandlePlayerRightDetected() => StartTelegraph(true);
+    private void HandlePlayerLeftHitDetected() => StartTelegraph(false);
+    private void HandlePlayerRightHitDetected() => StartTelegraph(true);
+
+    private void HandlePlayerLeftDetected() => FacingRight = _move.Turn(true);
+    private void HandlePlayerRightDetected() => FacingRight = _move.Turn(false);
 
     private void StartTelegraph(bool faceRight)
     {
-        if (!_bugAttack.CanAttack(_attackCooldown))
+        if (!_attack.CanAttack(_attackCooldown))
             return;
 
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
 
-        if (faceRight != _facingRight)
-            _facingRight = _bugMove.Turn(_facingRight);
+        if (faceRight != FacingRight)
+            FacingRight = _move.Turn(FacingRight);
 
         _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
     }
@@ -300,31 +308,20 @@ public class ArmoredBugView : MonoBehaviour
 
     private IEnumerator AttackTelegraphRoutine()
     {
-        _bugAttack.SetIsAttacking(true);
-        _bugAnimation.SetBoolAttack(true);
+        _attack.IsAttacking = true;
+        _animation.SetBoolMove(false);
+        _animation.SetBoolAttack(true);
 
-        var renderer = GetComponent<SpriteRenderer>();
-        renderer.color = Color.red;
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(_telegraphTime);
 
-        renderer.color = _defaultColor;
-        _rigidBody.constraints = _defaultConstraints;
+        _rb.constraints = _defaultConstraints;
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
 
-        _telegraphCoroutine = null;
-
-        if (_playerAttack != null)
-        {
-            var dashTime = _bugAttack.DashAttack(_facingRight, _dashDist);
-            yield return new WaitForSeconds(dashTime);
-        }
-
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-
-        _bugAttack.UpdateLastAttackTime();
-        _bugAttack.SetIsAttacking(false);
-        _bugAnimation.SetBoolAttack(false);
+        _attack.UpdateLastAttackTime();
+        _attack.IsAttacking = false;
+        _animation.SetBoolAttack(false);
         _telegraphCoroutine = null;
     }
 
@@ -333,6 +330,7 @@ public class ArmoredBugView : MonoBehaviour
         _isHitted = true;
         yield return new WaitForSeconds(time);
         _isHitted = false;
+        _animation.SetBoolHit(false);
     }
 
     private IEnumerator DestroySelf()
@@ -345,7 +343,7 @@ public class ArmoredBugView : MonoBehaviour
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
-        _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
         Destroy(gameObject);

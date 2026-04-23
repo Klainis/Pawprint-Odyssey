@@ -9,9 +9,9 @@ public class ArmoredBugAnimation : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetTriggerHit()
+    public void SetBoolHit(bool value)
     {
-        _animator.SetTrigger("Hit");
+        _animator.SetBool("Hit", value);
     }
 
     public void SetTriggerBlockHit()
