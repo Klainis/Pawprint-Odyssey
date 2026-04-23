@@ -83,6 +83,7 @@ public class PlayerMove : MonoBehaviour
     private float _initialGravityScale;
     private int dashCounter = 0;
     private int turnCoefficient = 1;
+    private int _dashDirection = 1;
 
     private bool isWall = false;
     private bool isGrounded;
@@ -254,6 +255,11 @@ public class PlayerMove : MonoBehaviour
     {
         if (!canMove) return;
 
+        if (Mathf.Abs(moveX) > 0.1f)
+            _dashDirection = (int)Mathf.Sign(moveX);
+        else
+            _dashDirection = PlayerView.Instance.PlayerModel.FacingRight ? 1 : -1;
+
         // --- DASH ---
         DoDash(dash);
 
@@ -351,10 +357,16 @@ public class PlayerMove : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasDash)
         {
-            if (dash && canDash && !isWallSliding && isGrounded)
+            if (dash && canDash && !isWallSliding && (isGrounded || (!isGrounded && CanAirDash)))
+            {
+                if (limitVelocityOnWallJump)
+                {
+                    limitVelocityOnWallJump = false;
+                }
                 StartCoroutine(DashCooldown());
-            else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
-                StartCoroutine(DashCooldown());
+            }
+            //else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
+            //    StartCoroutine(DashCooldown());
         }
     }
 
@@ -467,7 +479,7 @@ public class PlayerMove : MonoBehaviour
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(move));
 
-        if ((isWallJumping || isWallRunJumping) && move == 0)
+        if ((isWallJumping || isWallRunJumping) && move == 0 && !isDashing)
         {
             return;
         }
@@ -636,7 +648,8 @@ public class PlayerMove : MonoBehaviour
 
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        canDoubleJump = true;
+        //canDoubleJump = true;
+        StartCoroutine(WaitAfterJumpForDoubleJump(0.05f));
         PlayParticleJumpDown();
         PlayParticleJumpUp();
     }
@@ -794,13 +807,14 @@ public class PlayerMove : MonoBehaviour
         if (isDashing)
         {
             rb.gravityScale = 0f;
-            rb.linearVelocity = new Vector2(turnCoefficient * dashForce, 0);
+            rb.linearVelocity = new Vector2(_dashDirection * dashForce, 0);
         }
 
         yield return new WaitForSeconds(0.15f); //0.1 
+        rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, 1);
         PlayerAttack.Instance.CanAttack = true;
-        isDashing = false;
         rb.gravityScale = _initialGravityScale;
+        isDashing = false;
         PlayerAttack.Instance.SpendMana = true;
         canJump = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
@@ -825,6 +839,12 @@ public class PlayerMove : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         canWallRun = true;
+    }
+
+    private IEnumerator WaitAfterJumpForDoubleJump(float time)
+    {
+        yield return new WaitForSeconds(time);
+        canDoubleJump = true;
     }
 
     private IEnumerator WaitToCheck(float time)
