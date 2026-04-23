@@ -87,6 +87,7 @@ public class PlayerMove : MonoBehaviour
     private bool isWall = false;
     private bool isGrounded;
     private bool isJumping;
+    private bool isDoubleJumping;
     private bool isWallJumping = false;
     private bool isWallRunJumping = false;
     private bool isSpeedRunning;
@@ -314,6 +315,7 @@ public class PlayerMove : MonoBehaviour
         {
             SetPlayerAirState(AirState.Grounded);
             isJumping = false;
+            isDoubleJumping = false;
             isWallJumping = false;
             isWallRunJumping = false;
             rb.gravityScale = _initialGravityScale;
@@ -413,13 +415,15 @@ public class PlayerMove : MonoBehaviour
                 break;
 
             case AirState.Falling:
-                if (lastPressedJumpTime > 0 && CanJump && canJump)
+                if (lastOnGroundTime > 0 && jump && CanJump && canJump && !isDoubleJumping)
                 {
                     Jump();
+                    Debug.Log("Jump");
                 }
                 else if (jump && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
                 {
                     DoubleJump();
+                    Debug.Log("Double Jump");
                 }
                 break;
         }
@@ -465,9 +469,6 @@ public class PlayerMove : MonoBehaviour
 
         if ((isWallJumping || isWallRunJumping) && move == 0)
         {
-            //var targetWallJumpVelocity = new Vector2(turnCoefficient * wallJumpForce.x * Time.fixedDeltaTime, rb.linearVelocity.y);
-
-            //rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetWallJumpVelocity, 0.35f);
             return;
         }
 
@@ -554,6 +555,7 @@ public class PlayerMove : MonoBehaviour
         {
             isWallSliding = true;
             isJumping = false;
+            isDoubleJumping = false;
             isWallJumping = false;
             wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
             Turn();
@@ -601,6 +603,7 @@ public class PlayerMove : MonoBehaviour
         if (isWallRunning)
         {
             isJumping = false;
+            isDoubleJumping = false;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 10f);
             oldWallRunning = true;
         }
@@ -622,11 +625,16 @@ public class PlayerMove : MonoBehaviour
         playerAnimation.SetBoolIsFall(false);
         isGrounded = false;
 
-        var force = jumpForce;
-        if (rb.linearVelocity.y < 0)
-            force -= rb.linearVelocity.y;
+        //var force = jumpForce;
+        //if (rb.linearVelocity.y < 0)
+        //    force -= rb.linearVelocity.y;
 
-        rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
+
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
         canDoubleJump = true;
         PlayParticleJumpDown();
@@ -643,11 +651,17 @@ public class PlayerMove : MonoBehaviour
         PlayerDoubleJumpEd = true;
 
         IsJumping = true;
+        isDoubleJumping = true;
         lastPressedJumpTime = 0;
         SetPlayerAirState(AirState.Jumping);
 
         canDoubleJump = false;
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        }
+
         rb.AddForce(Vector2.up * doubleJumpForce, ForceMode2D.Impulse);
 
         PlatParticleDoubleJump();
