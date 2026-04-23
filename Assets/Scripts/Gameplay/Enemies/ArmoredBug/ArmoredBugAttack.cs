@@ -8,17 +8,18 @@ public class ArmoredBugAttack : MonoBehaviour
     public event Action OnPlayerLeftDetected;
     public event Action OnPlayerRightDetected;
 
-    private ArmoredBugView _bugView;
+    public event Action OnPlayerLeftHitDetected;
+    public event Action OnPlayerRightHitDetected;
+
+    private ArmoredBugView _view;
 
     private float _lastAttackTime;
-    private bool _isAttacking = false;
 
-    public float LastAttackTime { get { return _lastAttackTime; } }
-    public bool IsAttacking { get { return _isAttacking; } }
+    public bool IsAttacking { get; set; } = false;
 
     private void Awake()
     {
-        _bugView = GetComponent<ArmoredBugView>();
+        _view = GetComponent<ArmoredBugView>();
     }
 
     private void FixedUpdate()
@@ -30,23 +31,18 @@ public class ArmoredBugAttack : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _bugView.IsAccelerated = false;
-            if (!_bugView.Model.IsDead)
+            _view.IsAccelerated = false;
+            if (!_view.Model.IsDead)
             {
                 var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_bugView.Model.Damage, transform.position, gameObject);
+                playerView.ApplyDamage(_view.Model.Damage, transform.position, gameObject);
             }
         }
     }
 
     public bool CanAttack(float attackCooldown)
     {
-        return !((Time.time < _lastAttackTime + attackCooldown) || _isAttacking);
-    }
-
-    public void SetIsAttacking(bool flag)
-    {
-        _isAttacking = flag;
+        return !((Time.time < _lastAttackTime + attackCooldown) || IsAttacking);
     }
 
     public void UpdateLastAttackTime()
@@ -54,23 +50,32 @@ public class ArmoredBugAttack : MonoBehaviour
         _lastAttackTime = Time.time;
     }
 
-    public float DashAttack(bool facingRight, float distance)
-    {
-        var rb = _bugView.RigidBody;
-        var direction = facingRight ? -1 : 1;
-        var dashSpeed = 20f;
-        rb.linearVelocity = new Vector2(direction * dashSpeed, 0);
-        return distance / dashSpeed;
-    }
-
     private void CheckPlayerHits()
     {
-        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, _bugView.PlayerDetectDist, _playerLayer);
-        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, _bugView.PlayerDetectDist, _playerLayer);
-
+        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.right, _view.AttackDist, _playerLayer);
+        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.left, _view.AttackDist, _playerLayer);
         if (playerHitLeft.collider != null)
-            OnPlayerLeftDetected?.Invoke();
+        {
+            OnPlayerLeftHitDetected?.Invoke();
+            return;
+        }
         else if (playerHitRight.collider != null)
+        {
+            OnPlayerRightHitDetected?.Invoke();
+            return;
+        }
+
+        var playerDetectHitLeft = Physics2D.Raycast(transform.position, Vector2.right, _view.PlayerDetectDist, _playerLayer);
+        var playerDetectHitRight = Physics2D.Raycast(transform.position, Vector2.left, _view.PlayerDetectDist, _playerLayer);
+        if (playerDetectHitLeft.collider != null)
+        {
+            OnPlayerLeftDetected?.Invoke();
+            return;
+        }
+        else if (playerDetectHitRight.collider != null)
+        {
             OnPlayerRightDetected?.Invoke();
+            return;
+        }
     }
 }
