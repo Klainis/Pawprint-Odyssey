@@ -2,6 +2,7 @@ using GlobalEnums;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Rendering.Universal;
 
 public class PlayerView : MonoBehaviour
@@ -16,6 +17,7 @@ public class PlayerView : MonoBehaviour
 
     [Header("Parameters")]
     [SerializeField] private float _invisibleTime = 1.3f;
+    [SerializeField] private float _hitStopDuration = 0.1f;
     [SerializeField] private float _damageFlashSpeed = 5.5f;
     [SerializeField] private float _knockbackForce = 10f;
     [SerializeField] private float _vignetteSpeed = 0.8f;
@@ -41,11 +43,13 @@ public class PlayerView : MonoBehaviour
     private GameObject _globalVolumeInstance;
     private GameObject _manaBar;
     
-    private Vignette _vignette;
+    private UnityEngine.Rendering.Universal.Vignette _vignette;
     private Coroutine _vignetteCoroutine;
 
     private AudioSource _music;
     private Coroutine _muffleSoundCoroutine;
+
+    private HitStop _hitStop;
 
     private PlayerAnimation _playerAnimation;
     private PlayerAttack _playerAttack;
@@ -90,6 +94,7 @@ public class PlayerView : MonoBehaviour
         _playerHeart = GetComponent<PlayerHeart>();
         _playerInteract = GetComponent<Interact>();
         _playerMana = GetComponent<PlayerMana>();
+        _hitStop = GetComponent<HitStop>();
     }
 
     private void Update()
@@ -155,14 +160,15 @@ public class PlayerView : MonoBehaviour
 
         SpawnDamageParticles(damageDir.x);
 
-        if (PlayerModel.IsDead)
-            StartCoroutine(WaitToDead());
-        else
-        {
-            IndicateApplyDamage();
-            StartCoroutine(Stun(0.25f));
-            StartCoroutine(MakeInvincible(_invisibleTime));
-        }
+        ApplyDamageState();
+        //if (PlayerModel.IsDead)
+        //    StartCoroutine(WaitToDead());
+        //else
+        //{
+        //    IndicateApplyDamage();
+        //    StartCoroutine(Stun(0.25f));
+        //    StartCoroutine(MakeInvincible(_invisibleTime));
+        //}
     }
 
     public void ApplyObjectDamage(int damage)
@@ -173,11 +179,25 @@ public class PlayerView : MonoBehaviour
         PlayerModel.TakeDamage(damage);
         _playerHeart.RemoveHearts();
 
+        ApplyDamageState();
+        //if (PlayerModel.IsDead)
+        //    StartCoroutine(WaitToDead());
+        //else
+        //{
+        //    IndicateApplyDamage();
+        //    StartCoroutine(Stun(0.25f));
+        //    StartCoroutine(MakeInvincible(_invisibleTime));
+        //}
+    }
+
+    private void ApplyDamageState()
+    {
         if (PlayerModel.IsDead)
             StartCoroutine(WaitToDead());
         else
         {
             IndicateApplyDamage();
+            //_hitStop.Stop(_hitStopDuration);
             StartCoroutine(Stun(0.25f));
             StartCoroutine(MakeInvincible(_invisibleTime));
         }
@@ -220,7 +240,7 @@ public class PlayerView : MonoBehaviour
         {
             if (EntryPoint.Instance.GlobalVolumeInstance.TryGetComponent<Volume>(out var globalVolume))
             {
-                globalVolume.profile.TryGet<Vignette>(out _vignette);
+                globalVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out _vignette);
             }
         }
         if (_vignette == null) return;
@@ -242,7 +262,7 @@ public class PlayerView : MonoBehaviour
         if (_muffleSoundCoroutine != null)
             StopCoroutine(_muffleSoundCoroutine);
 
-        _muffleSoundCoroutine = StartCoroutine(PulseValueRoutine(
+        _muffleSoundCoroutine = StartCoroutine(PulseMusicValueRoutine(
             _muffleSoundSpeed, 1, _muffleSoundMinValue, 1, (v) => _music.volume = v)
         );
     }
@@ -254,8 +274,9 @@ public class PlayerView : MonoBehaviour
     private IEnumerator VignettePulseWrapper()
     {
         _vignette.active = true;
-
-        yield return StartCoroutine(PulseValueRoutine(
+        //_vignette.intensity.value = _vignetteMaxValue;
+        //_hitStop.Stop(_hitStopDuration);
+        yield return StartCoroutine(PulseVignetteValueRoutine(
             _vignetteSpeed, 0, _vignetteMaxValue, 0, (v) => _vignette.intensity.value = v)
         );
 
@@ -263,7 +284,26 @@ public class PlayerView : MonoBehaviour
         _vignetteCoroutine = null;
     }
 
-    private IEnumerator PulseValueRoutine(
+    private IEnumerator PulseVignetteValueRoutine(
+        float speed, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
+    // "Пульсация" значения
+    {
+        var elapsed = 0f;
+
+        applyValue(maxValue);
+        _hitStop.Stop(_hitStopDuration);
+
+        while (elapsed < speed)
+        {
+            elapsed += Time.deltaTime;
+            applyValue(Mathf.Lerp(maxValue, minValue, elapsed / speed));
+            yield return null;
+        }
+
+        applyValue(finishValue);
+    }
+
+    private IEnumerator PulseMusicValueRoutine(
         float speed, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
     // "Пульсация" значения
     {
@@ -289,7 +329,7 @@ public class PlayerView : MonoBehaviour
     private IEnumerator Stun(float time)
     {
         _playerMove.CanMove = false;
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSecondsRealtime(time);
         _playerMove.CanMove = true;
     }
 

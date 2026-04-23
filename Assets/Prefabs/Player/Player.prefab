@@ -66,6 +66,7 @@ GameObject:
   - component: {fileID: 82701611152381692}
   - component: {fileID: 2744179684250450763}
   - component: {fileID: -694016004946606839}
+  - component: {fileID: 3397533189607767244}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -83,8 +84,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4291727345091452}
   - {fileID: 3754120865036139522}
@@ -166,10 +167,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerView
   _invisibleTime: 1.3
+  _hitStopDuration: 0.2
   _damageFlashSpeed: 5.5
   _knockbackForce: 10
-  _vignetteSpeed: 0.6
-  _vignetteMaxValue: 0.5
+  _vignetteSpeed: 1.2
+  _vignetteMaxValue: 0.7
   _muffleSoundSpeed: 1
   _muffleSoundMinValue: 0.3
   _damageParticle: {fileID: 357403908313967066, guid: b7ccf145b633a4149aa514e6345a5ece, type: 3}
@@ -822,6 +824,18 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3397533189607767244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16b05ccd1c4a7924491f49359be1cd42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStop
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0
