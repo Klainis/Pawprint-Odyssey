@@ -20,7 +20,7 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private float _hitStopDuration = 0.1f;
     [SerializeField] private float _damageFlashSpeed = 5.5f;
     [SerializeField] private float _knockbackForce = 10f;
-    [SerializeField] private float _vignetteSpeed = 0.8f;
+    [SerializeField] private float _vignetteDuration = 0.8f;
     [SerializeField] private float _vignetteMaxValue = 0.7f;
     [SerializeField] private float _muffleSoundSpeed = 1.0f;
     [SerializeField] private float _muffleSoundMinValue = 0.3f;
@@ -50,6 +50,7 @@ public class PlayerView : MonoBehaviour
     private Coroutine _muffleSoundCoroutine;
 
     private HitStop _hitStop;
+    private StunAudioController _stunAudioController;
 
     private PlayerAnimation _playerAnimation;
     private PlayerAttack _playerAttack;
@@ -94,7 +95,9 @@ public class PlayerView : MonoBehaviour
         _playerHeart = GetComponent<PlayerHeart>();
         _playerInteract = GetComponent<Interact>();
         _playerMana = GetComponent<PlayerMana>();
+
         _hitStop = GetComponent<HitStop>();
+        _stunAudioController = GetComponent<StunAudioController>();
     }
 
     private void Update()
@@ -180,14 +183,6 @@ public class PlayerView : MonoBehaviour
         _playerHeart.RemoveHearts();
 
         ApplyDamageState();
-        //if (PlayerModel.IsDead)
-        //    StartCoroutine(WaitToDead());
-        //else
-        //{
-        //    IndicateApplyDamage();
-        //    StartCoroutine(Stun(0.25f));
-        //    StartCoroutine(MakeInvincible(_invisibleTime));
-        //}
     }
 
     private void ApplyDamageState()
@@ -197,7 +192,6 @@ public class PlayerView : MonoBehaviour
         else
         {
             IndicateApplyDamage();
-            //_hitStop.Stop(_hitStopDuration);
             StartCoroutine(Stun(0.25f));
             StartCoroutine(MakeInvincible(_invisibleTime));
         }
@@ -259,12 +253,14 @@ public class PlayerView : MonoBehaviour
         }
         if (_music == null) return;
 
-        if (_muffleSoundCoroutine != null)
-            StopCoroutine(_muffleSoundCoroutine);
+        _stunAudioController.TriggerStun();
 
-        _muffleSoundCoroutine = StartCoroutine(PulseMusicValueRoutine(
-            _muffleSoundSpeed, 1, _muffleSoundMinValue, 1, (v) => _music.volume = v)
-        );
+        //if (_muffleSoundCoroutine != null)
+        //    StopCoroutine(_muffleSoundCoroutine);
+
+        //_muffleSoundCoroutine = StartCoroutine(PulseMusicValueRoutine(
+        //    _muffleSoundSpeed, 1, _muffleSoundMinValue, 1, (v) => _music.volume = v)
+        //);
     }
 
     #endregion
@@ -277,7 +273,7 @@ public class PlayerView : MonoBehaviour
         //_vignette.intensity.value = _vignetteMaxValue;
         //_hitStop.Stop(_hitStopDuration);
         yield return StartCoroutine(PulseVignetteValueRoutine(
-            _vignetteSpeed, 0, _vignetteMaxValue, 0, (v) => _vignette.intensity.value = v)
+            _vignetteDuration, 0, _vignetteMaxValue, 0, (v) => _vignette.intensity.value = v)
         );
 
         _vignette.active = false;
@@ -285,7 +281,7 @@ public class PlayerView : MonoBehaviour
     }
 
     private IEnumerator PulseVignetteValueRoutine(
-        float speed, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
+        float duration, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
     // "Пульсация" значения
     {
         var elapsed = 0f;
@@ -293,38 +289,38 @@ public class PlayerView : MonoBehaviour
         applyValue(maxValue);
         _hitStop.Stop(_hitStopDuration);
 
-        while (elapsed < speed)
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            applyValue(Mathf.Lerp(maxValue, minValue, elapsed / speed));
+            applyValue(Mathf.Lerp(maxValue, minValue, elapsed / duration));
             yield return null;
         }
 
         applyValue(finishValue);
     }
 
-    private IEnumerator PulseMusicValueRoutine(
-        float speed, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
-    // "Пульсация" значения
-    {
-        var elapsed = 0f;
-        while (elapsed < speed)
-        {
-            elapsed += Time.deltaTime;
-            applyValue(Mathf.Lerp(minValue, maxValue, elapsed / speed));
-            yield return null;
-        }
+    //private IEnumerator PulseMusicValueRoutine(
+    //    float duration, float minValue, float maxValue, float finishValue, System.Action<float> applyValue)
+    //// "Пульсация" значения
+    //{
+    //    var elapsed = 0f;
+    //    while (elapsed < duration)
+    //    {
+    //        elapsed += Time.deltaTime;
+    //        applyValue(Mathf.Lerp(minValue, maxValue, elapsed / duration));
+    //        yield return null;
+    //    }
 
-        elapsed = 0f;
-        while (elapsed < speed)
-        {
-            elapsed += Time.deltaTime;
-            applyValue(Mathf.Lerp(maxValue, minValue, elapsed / speed));
-            yield return null;
-        }
+    //    elapsed = 0f;
+    //    while (elapsed < duration)
+    //    {
+    //        elapsed += Time.deltaTime;
+    //        applyValue(Mathf.Lerp(maxValue, minValue, elapsed / duration));
+    //        yield return null;
+    //    }
 
-        applyValue(finishValue);
-    }
+    //    applyValue(finishValue);
+    //}
 
     private IEnumerator Stun(float time)
     {
