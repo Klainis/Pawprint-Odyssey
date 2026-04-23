@@ -99,6 +99,7 @@ public class PlayerMove : MonoBehaviour
     private bool oldWallSliding = false;
     private bool canMove = true;
     private bool canDoubleJump = true;
+    private bool didJumpThisFrame = false;
     private bool canCheck = false;
     private bool canDash = true;
     private bool limitVelocityOnWallJump = false;
@@ -255,6 +256,8 @@ public class PlayerMove : MonoBehaviour
     {
         if (!canMove) return;
 
+        didJumpThisFrame = false;
+
         if (Mathf.Abs(moveX) > 0.1f)
             _dashDirection = (int)Mathf.Sign(moveX);
         else
@@ -402,12 +405,15 @@ public class PlayerMove : MonoBehaviour
 
     private void DoJump(bool jump)
     {
+        if (didJumpThisFrame) return;
+
         switch (_airState)
         {
             case AirState.WallSliding:
                 if (jump && isWallSliding && isWall)
                 {
                     WallJump();
+                    didJumpThisFrame = true;
                 }
                 break;
 
@@ -415,6 +421,7 @@ public class PlayerMove : MonoBehaviour
                 if (jump && isWallRunning && isWall)
                 {
                     WallRunningJump();
+                    didJumpThisFrame = true;
                 }
                 break;
 
@@ -423,19 +430,20 @@ public class PlayerMove : MonoBehaviour
                 {
                     //Debug.Log("Grounded Jump");
                     Jump();
+                    didJumpThisFrame = true;
                 }
                 break;
 
             case AirState.Falling:
-                if (lastOnGroundTime > 0 && jump && CanJump && canJump && !isDoubleJumping)
+                if (lastOnGroundTime > 0 && jump && CanJump && canJump)
                 {
                     Jump();
-                    Debug.Log("Jump");
+                    didJumpThisFrame = true;
                 }
                 else if (jump && canDoubleJump && canJump && PlayerView.Instance.PlayerModel.HasDoubleJump)
                 {
                     DoubleJump();
-                    Debug.Log("Double Jump");
+                    didJumpThisFrame = true;
                 }
                 break;
         }
