@@ -57,10 +57,14 @@ public class PlayerMove : MonoBehaviour
     [SerializeField][Range(0, 1f)] private float movementSmoothing;
     [SerializeField] private float timeToWaitAfterWallJump = 1;
 
-    [Header("Check")]
+    [Header("Ground check")]
     [SerializeField] private Transform groundCheck1;
     [SerializeField] private Transform groundCheck2;
     [SerializeField] private Transform groundCheck3;
+
+    [Header("Wall check")]
+    [SerializeField] private Transform wallCheckLeft;
+    [SerializeField] private Transform wallCheckRight;
 
     #endregion
 
@@ -73,7 +77,7 @@ public class PlayerMove : MonoBehaviour
     private PlayerAnimation playerAnimation;
     private PlayerSoulRelease playerSoulRelease;
 
-    private Transform wallCheck;
+    //private Transform wallCheck;
 
     private Vector3 velocity = Vector3.zero;
     private float lastOnGroundTime;
@@ -119,7 +123,8 @@ public class PlayerMove : MonoBehaviour
     private bool CanAirDash { get { return dashCounter < 1; } }
 
     //public Transform GroundCheck { get { return groundCheck; } }
-    public Transform WallCheck { get { return wallCheck; } }
+    //public Transform WallCheck { get { return wallCheck; } }
+    public bool IsWall { get { return isWall; } private set { } }
 
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
@@ -130,6 +135,7 @@ public class PlayerMove : MonoBehaviour
 
     public bool PlayerDoubleJumpEd { get; set; } = false;
     public bool IsWallJumping { get { return isWallJumping; } }
+    public bool IsWallRunJumping { get { return isWallRunJumping; } }
 
     #endregion
 
@@ -146,7 +152,7 @@ public class PlayerMove : MonoBehaviour
         playerAnimation = GetComponent<PlayerAnimation>();
         playerSoulRelease = GetComponent<PlayerSoulRelease>();
 
-        wallCheck = transform.Find("WallCheck");
+        //wallCheck = transform.Find("WallCheck");
 
         //_fallSpeedYDampingChangeThreshold = CameraManager.Instance.FallSpeedYDampingChangeTreshold;
     }
@@ -163,6 +169,12 @@ public class PlayerMove : MonoBehaviour
 
         var wasGrounded = isGrounded;
         isGrounded = false;
+
+        didJumpThisFrame = false;
+
+        //Debug.Log($"Air State: {_airState}");
+        //Debug.Log($"Is WallRunning: {isWallRunning}");
+        //Debug.Log($"Is Wall: {isWall}");
 
         if (Physics2D.Raycast(groundCheck1.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
             Physics2D.Raycast(groundCheck2.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
@@ -197,8 +209,8 @@ public class PlayerMove : MonoBehaviour
 
         if (isSpeedRunning)
         {
-            var leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-            var rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
             wallHit = leftHit || rightHit;
 
             if (wallHit)
@@ -207,6 +219,11 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
+        ScaleJump();
+    }
+
+    private void FixedUpdate()
+    {
         isWall = false;
 
         if (!isGrounded)
@@ -217,18 +234,18 @@ public class PlayerMove : MonoBehaviour
                 playerAnimation.SetBoolIsFall(true);
             }
 
-            var leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-            var rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
             isWall = leftHit || rightHit;
 
             if (isWall)
             {
                 ResetDashCounter();
                 isDashing = false;
+                //isWallJumping = false;
+                //isWallRunJumping = false;
             }
         }
-
-        ScaleJump();
     }
 
     public void ResetDashCounter()
@@ -241,22 +258,12 @@ public class PlayerMove : MonoBehaviour
     {
         _airState = state;
     }
-    public void SetGroundedAirState()
-    {
-        _airState = AirState.Grounded;
-    }
-    public void SetFallingAirState()
-    {
-        _airState = AirState.Falling;
-    }
     #endregion
 
     #region Movement
     public void Movement(float moveY, float moveX, bool jump, bool dash, bool grab, bool speedRun) //�������������� � FixedUpdate � PlayerInput
     {
         if (!canMove) return;
-
-        didJumpThisFrame = false;
 
         if (Mathf.Abs(moveX) > 0.1f)
             _dashDirection = (int)Mathf.Sign(moveX);
@@ -274,9 +281,18 @@ public class PlayerMove : MonoBehaviour
 
         // --- JUMP ---
         DoJump(jump);
-        //Debug.Log(lastPressedJumpTime);
 
-        //Debug.Log(rb.gravityScale);
+        //// --- WALL RUN ---
+        if (canWallRun)
+        {
+            //Debug.Log($"Is Wall: {isWall}");
+            DoWallRun(grab, moveX, moveY);
+        }
+
+        //// --- WALL SLIDING ---
+        DoWallSlide(grab, moveX);
+
+        // --- FALLING STATE ---
         if (!isGrounded &&
             !isWallSliding &&
             !isWallRunning)
@@ -327,9 +343,12 @@ public class PlayerMove : MonoBehaviour
             isDoubleJumping = false;
             isWallJumping = false;
             isWallRunJumping = false;
+            isWallSliding = false;
+            isWallRunning = false;
             rb.gravityScale = _initialGravityScale;
         }
 
+        // --- Limit Fall Speed ---
         if (rb.linearVelocity.y < -limitFallSpeed)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, -limitFallSpeed);
 
@@ -344,15 +363,6 @@ public class PlayerMove : MonoBehaviour
             
             CameraManager.Instance.LerpYDamping(false);
         }
-
-        // --- WALL RUN ---
-        if (canWallRun)
-        {
-            DoWallRun(grab, moveX, moveY);
-        }
-
-        // --- WALL SLIDING ---
-        DoWallSlide(grab, moveX);
     }
 
     #region Movement Methods
@@ -453,13 +463,13 @@ public class PlayerMove : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasWallRun)
         {
-            if (grab)
-                WallRunnig(moveY, moveX);
+            if (isWall && !isGrounded && grab)
+                WallRunning(moveY, moveX);
             else if (isWallRunning && !grab)
             {
                 isWallRunning = false;
                 oldWallRunning = false;
-                HandleWallSliding(moveX);
+                //HandleWallSliding(moveX);
                 playerAnimation.SetBoolIsWallRunning(false);
             }
         }
@@ -474,20 +484,18 @@ public class PlayerMove : MonoBehaviour
             isWallSliding = false;
             playerAnimation.SetBoolIsWallSliding(false);
             oldWallSliding = false;
-            wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+            //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
         }
     }
     #endregion
 
     private void MoveHorizontal(float move)
     {
-        if (isKnockBack) return;
-
-        if (limitVelocityOnWallJump) return;
+        if (isKnockBack || isWallRunning || limitVelocityOnWallJump) return;
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(move));
 
-        if ((isWallJumping || isWallRunJumping) && move == 0 && !isDashing)
+        if ((isWallJumping || isWallRunJumping) && move == 0)
         {
             return;
         }
@@ -502,7 +510,7 @@ public class PlayerMove : MonoBehaviour
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 0.35f);
         }
 
-        if (!isWallSliding)
+        if (!isWallSliding && !isWallRunning)
         {
             if (isTurnOld)
                 Turn();
@@ -527,14 +535,14 @@ public class PlayerMove : MonoBehaviour
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
 
-            CameraFollowObject.Instance.CallTurn();
+            CameraFollowObject.Instance.CallCameraTurn();
         }
         else
         {
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
 
-            CameraFollowObject.Instance.CallTurn();
+            CameraFollowObject.Instance.CallCameraTurn();
         }
 
         isTurnOld = false;
@@ -570,14 +578,18 @@ public class PlayerMove : MonoBehaviour
 
     private void HandleWallSliding(float moveX)
     {
-        SetPlayerAirState(AirState.WallSliding);
-        if (!oldWallSliding && rb.linearVelocity.y < 0 && (!isWallRunning || isDashing))
+        if (isWallRunning && isDashing) return;
+
+        if (!oldWallSliding && rb.linearVelocity.y < 0/* && (!isWallRunning || isDashing)*/)
         {
+            SetPlayerAirState(AirState.WallSliding);
+
             isWallSliding = true;
             isJumping = false;
             isDoubleJumping = false;
             isWallJumping = false;
-            wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
+            isWallRunJumping = false;
+            //wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
             Turn();
             StartCoroutine(WaitToCheck(0.1f));
 
@@ -600,18 +612,32 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void WallRunnig(float moveY, float moveX)
+    private void WallRunning(float moveY, float moveX)
     {
-        if (!isWall)
+        bool currentWallCheck = false;
+        if (!isGrounded)
         {
-            SetPlayerAirState(AirState.Falling);
+            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround);
+            currentWallCheck = leftHit || rightHit;
+        }
+
+        if (!currentWallCheck)
+        {
+            isWallRunning = false;
+            //SetPlayerAirState(AirState.Falling);
+            playerAnimation.SetBoolIsWallSliding(false);
+            playerAnimation.SetBoolIsWallRunning(false);
             return;
         }
 
         if (!oldWallRunning && moveY > 0)
         {
+            isWallSliding = false;
+            oldWallSliding = false;
             isWallRunning = true;
             isWallRunJumping = false;
+            isWallJumping = false;
             SetPlayerAirState(AirState.WallRunning);
             Turn();
 
@@ -624,7 +650,7 @@ public class PlayerMove : MonoBehaviour
         {
             isJumping = false;
             isDoubleJumping = false;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 10f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 13f);
             oldWallRunning = true;
         }
     }
@@ -700,22 +726,23 @@ public class PlayerMove : MonoBehaviour
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;
-        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
 
         isWallJumping = true;
-
 
         playerAnimation.SetBoolIsJumping(true);
         playerAnimation.SetBoolJumpUp(true);
         playerAnimation.SetBoolIsFall(false);
+
+        rb.linearVelocity = Vector2.zero;
 
         var force = new Vector2(turnCoefficient * wallJumpForce.x, wallJumpForce.y);
 
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
 
-        if (rb.linearVelocity.y < 0)
-            force.y -= rb.linearVelocity.y;
+        //if (rb.linearVelocity.y < 0)
+        //    force.y -= rb.linearVelocity.y;
 
         rb.AddForce(force, ForceMode2D.Impulse);
 
@@ -729,13 +756,13 @@ public class PlayerMove : MonoBehaviour
     private void WallRunningJump()
     {
         lastOnGroundTime = 0;
-        lastPressedJumpTime = 0;
+        lastPressedJumpTime = -1;
         SetPlayerAirState(AirState.Jumping);
 
         isWallRunning = false;
         playerAnimation.SetBoolIsWallRunning(false);
         oldWallRunning = false;
-        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
 
         canWallRun = false;
         StartCoroutine(WaitAfterWallRun());
@@ -746,13 +773,22 @@ public class PlayerMove : MonoBehaviour
         playerAnimation.SetBoolJumpUp(true);
         playerAnimation.SetBoolIsFall(false);
 
-        var force = new Vector2(-turnCoefficient * wallJumpForce.x, wallJumpForce.y * 1.3f);
+        rb.linearVelocity = Vector2.zero;
+
+        //напрачление прыжка от стены 
+        float jumpDirX = -turnCoefficient;
+        if (Physics2D.Raycast(wallCheckLeft.position, Vector2.left, groundCheckRadius, whatIsGround))
+            jumpDirX = 1f;
+        else if (Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround))
+            jumpDirX = -1f;
+
+        var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.2f);
 
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
 
-        if (rb.linearVelocity.y < 0)
-            force.y -= rb.linearVelocity.y;
+        //if (rb.linearVelocity.y < 0)
+        //    force.y -= rb.linearVelocity.y;
 
         rb.AddForce(force, ForceMode2D.Impulse);
 
@@ -845,7 +881,7 @@ public class PlayerMove : MonoBehaviour
 
     private IEnumerator WaitAfterWallRun()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         canWallRun = true;
     }
 
@@ -868,7 +904,7 @@ public class PlayerMove : MonoBehaviour
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;
-        wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
     }
 
     #endregion

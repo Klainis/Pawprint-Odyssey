@@ -16,7 +16,11 @@ public class CameraFollowObject : MonoBehaviour
     public Transform playerTransfom { get { return _playerTransfom; } set { _playerTransfom = value; } }
     
     private bool _isFacingRight;
+    private bool _isFlipping;
+
     private float _initialOffsetX;
+    private float _wallOffsetX = 0f;
+    private float _currentOffsetX;
 
     private Coroutine _flipCoroutine;
 
@@ -37,6 +41,18 @@ public class CameraFollowObject : MonoBehaviour
         if (_playerTransfom != null)
         {
             transform.position = _playerTransfom.position;
+
+            if (PlayerMove.Instance != null)
+            {
+                if (PlayerMove.Instance.IsWall || PlayerMove.Instance.IsWallJumping || PlayerMove.Instance.IsWallRunJumping)
+                {
+                    _currentOffsetX = _wallOffsetX;
+                }
+                else
+                {
+                    _currentOffsetX = _initialOffsetX;
+                }
+            }
         }
         else
         {
@@ -49,16 +65,21 @@ public class CameraFollowObject : MonoBehaviour
         _followCamera = followCamera;
         _transpoer = _followCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         _initialOffsetX = _transpoer.m_TrackedObjectOffset.x;
+        _currentOffsetX = _initialOffsetX;
     }
 
-    public void CallTurn()
+    public void CallCameraTurn()
     {
-        //LeanTween.rotateY(gameObject, DetermineRotation(), _flipRotationTime);
+        if (_flipCoroutine != null)
+            StopCoroutine(_flipCoroutine);
+
         _flipCoroutine = StartCoroutine(FlipYLerp());
     }
 
     private IEnumerator FlipYLerp()
     {
+        _isFlipping = true;
+
         float startXOffset = _transpoer.m_TrackedObjectOffset.x;
         float endXOffset = DetermineRotation();
         float XOffset = 0f;
@@ -68,23 +89,18 @@ public class CameraFollowObject : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            XOffset = Mathf.Lerp(startXOffset, endXOffset, (elapsedTime / _flipRotationTime));
+            XOffset = Mathf.SmoothStep(startXOffset, endXOffset, (elapsedTime / _flipRotationTime));
             _transpoer.m_TrackedObjectOffset.x = XOffset;
 
             yield return null;
         }
+
+        _transpoer.m_TrackedObjectOffset.x = endXOffset;
+        _isFlipping = false;
     }
 
     private float DetermineRotation()
     {
-        _isFacingRight = !_isFacingRight;
-        if (PlayerMove.Instance.WallCheck.localPosition.x < 0)
-        {
-            return _isFacingRight ? -_initialOffsetX : _initialOffsetX;
-        }
-        else
-        {
-            return _isFacingRight ? _initialOffsetX : -_initialOffsetX;
-        }
+        return PlayerView.Instance.PlayerModel.FacingRight ? _currentOffsetX : -_currentOffsetX;
     }
 }
