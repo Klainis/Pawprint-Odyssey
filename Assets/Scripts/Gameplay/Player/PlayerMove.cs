@@ -122,8 +122,6 @@ public class PlayerMove : MonoBehaviour
     private bool CanJump { get { return (lastOnGroundTime > 0 && !isJumping); } }
     private bool CanAirDash { get { return dashCounter < 1; } }
 
-    //public Transform GroundCheck { get { return groundCheck; } }
-    //public Transform WallCheck { get { return wallCheck; } }
     public bool IsWall { get { return isWall; } private set { } }
 
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
@@ -242,8 +240,6 @@ public class PlayerMove : MonoBehaviour
             {
                 ResetDashCounter();
                 isDashing = false;
-                //isWallJumping = false;
-                //isWallRunJumping = false;
             }
         }
     }
@@ -270,11 +266,21 @@ public class PlayerMove : MonoBehaviour
         else
             _dashDirection = PlayerView.Instance.PlayerModel.FacingRight ? 1 : -1;
 
+        if (!isWallSliding && !isWallRunning)
+        {
+            if (isTurnOld)
+                Turn();
+            else if (moveX > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
+                Turn();
+            else if (moveX < 0 && PlayerView.Instance.PlayerModel.FacingRight)
+                Turn();
+        }
+
         // --- DASH ---
         DoDash(dash);
 
         // --- RUN ---
-        DoRun(speedRun, moveX);
+        //DoRun(speedRun, moveX);
 
         // --- MOVE ---
         DoMove(moveX);
@@ -378,8 +384,6 @@ public class PlayerMove : MonoBehaviour
                 }
                 StartCoroutine(DashCooldown());
             }
-            //else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
-            //    StartCoroutine(DashCooldown());
         }
     }
 
@@ -510,15 +514,15 @@ public class PlayerMove : MonoBehaviour
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 0.35f);
         }
 
-        if (!isWallSliding && !isWallRunning)
-        {
-            if (isTurnOld)
-                Turn();
-            else if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
-                Turn();
-            else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
-                Turn();
-        }
+        //if (!isWallSliding && !isWallRunning)
+        //{
+        //    if (isTurnOld)
+        //        Turn();
+        //    else if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
+        //        Turn();
+        //    else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
+        //        Turn();
+        //}
     }
 
     private void Turn()
@@ -534,19 +538,16 @@ public class PlayerMove : MonoBehaviour
         {
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
-
-            CameraFollowObject.Instance.CallCameraTurn();
         }
         else
         {
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
-
-            CameraFollowObject.Instance.CallCameraTurn();
         }
 
         isTurnOld = false;
         PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
+        CameraFollowObject.Instance.CallCameraTurn();
         transform.rotation = Quaternion.Euler(rotator);
     }
 
