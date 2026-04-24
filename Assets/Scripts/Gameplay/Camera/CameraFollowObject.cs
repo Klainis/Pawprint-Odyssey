@@ -101,8 +101,8 @@ public class CameraFollowObject : MonoBehaviour
 
     private float DetermineRotation()
     {
-        Debug.Log(PlayerView.Instance.PlayerModel.FacingRight);
-        Debug.Log(_currentOffsetX);
+        //Debug.Log(PlayerView.Instance.PlayerModel.FacingRight);
+        //Debug.Log(_currentOffsetX);
         return PlayerView.Instance.PlayerModel.FacingRight ? _currentOffsetX : -_currentOffsetX;
     }
 }

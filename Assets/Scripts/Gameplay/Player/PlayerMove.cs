@@ -47,6 +47,11 @@ public class PlayerMove : MonoBehaviour
     [Space(5)]
     [SerializeField] private float limitFallSpeed = 25f;
 
+    [Header("Wall Run - Ledge Grab")]
+    [SerializeField] private float ledgeCheckDistance = 0.3f;
+    [SerializeField] private float ledgeHeadCheckHeight = 1f;
+    [SerializeField] private float ledgeGrabSpeed = 5f;
+
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
     [SerializeField] private ParticleSystem particleJumpDown;
@@ -112,6 +117,7 @@ public class PlayerMove : MonoBehaviour
     private bool isKnockBack = false;
     private bool isTurnOld = false;
     private bool canWallRun = true;
+    private bool _isGrabbingLedge = false;
 
     //private float _fallSpeedYDampingChangeThreshold;
 
@@ -136,6 +142,29 @@ public class PlayerMove : MonoBehaviour
     public bool IsWallRunJumping { get { return isWallRunJumping; } }
 
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        // Точка начала рейкаста
+        Vector2 originLow = turnCoefficient == 1 ? wallCheckRight.position : wallCheckLeft.position;
+        Vector2 originHight = turnCoefficient == 1 ? wallCheckRight.position + new Vector3(0, 1f) : wallCheckLeft.position + new Vector3(0, 1f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(originLow, originLow + Vector2.right * turnCoefficient * ledgeCheckDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(originHight, originHight + Vector2.right * turnCoefficient * ledgeCheckDistance);
+        //Gizmos.DrawWireSphere(originLow + Vector2.down * ledgeCheckDistance, 0.05f);
+
+        // Если есть хит — покажем нормаль
+        //RaycastHit2D hit = Physics2D.Raycast(originLow, Vector2.down, ledgeCheckDistance, whatIsGround);
+        //if (hit.collider != null)
+        //{
+        //    Gizmos.color = Color.green;
+        //    Gizmos.DrawSphere(hit.point, 0.05f);
+        //    // Рисуем нормаль (зелёная стрелка)
+        //    Gizmos.DrawLine(hit.point, hit.point + hit.normal * 0.3f);
+        //}
+    }
 
     private void Awake()
     {
@@ -467,6 +496,8 @@ public class PlayerMove : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasWallRun)
         {
+            if (isWallRunJumping) return;
+
             if (isWall && !isGrounded && grab)
                 WallRunning(moveY, moveX);
             else if (isWallRunning && !grab)
@@ -513,16 +544,6 @@ public class PlayerMove : MonoBehaviour
         {
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 0.35f);
         }
-
-        //if (!isWallSliding && !isWallRunning)
-        //{
-        //    if (isTurnOld)
-        //        Turn();
-        //    else if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
-        //        Turn();
-        //    else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
-        //        Turn();
-        //}
     }
 
     private void Turn()
@@ -615,6 +636,8 @@ public class PlayerMove : MonoBehaviour
 
     private void WallRunning(float moveY, float moveX)
     {
+        if (isWallRunJumping) return;
+
         bool currentWallCheck = false;
         if (!isGrounded)
         {
@@ -623,14 +646,32 @@ public class PlayerMove : MonoBehaviour
             currentWallCheck = leftHit || rightHit;
         }
 
+        if (moveY > 0.1f)
+        {
+            if (TryGrabLedge())
+            {
+                Debug.Log("Забрались на уступ");
+                return;
+            }
+        }
+
         if (!currentWallCheck)
         {
             isWallRunning = false;
+            oldWallSliding = false;
             //SetPlayerAirState(AirState.Falling);
             playerAnimation.SetBoolIsWallSliding(false);
             playerAnimation.SetBoolIsWallRunning(false);
             return;
         }
+
+        //if (moveY > 0.1f)
+        //{
+        //    if (TryGrabLedge())
+        //    {
+        //        return;
+        //    }
+        //}
 
         if (!oldWallRunning && moveY > 0)
         {
@@ -654,6 +695,108 @@ public class PlayerMove : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 13f);
             oldWallRunning = true;
         }
+    }
+
+    #endregion
+
+    #region Climbing
+
+    private bool TryGrabLedge()
+    {
+        if (_isGrabbingLedge) return false;
+
+        Vector2 ledgeCheckOriginLow = wallCheckRight.position;
+        Vector2 ledgeCheckOriginHight = wallCheckRight.position + new Vector3(0, 1f);
+        if (turnCoefficient == 1)
+        {
+            ledgeCheckOriginLow = wallCheckRight.position;
+            ledgeCheckOriginHight = wallCheckRight.position + new Vector3(0, 1f);
+        }
+        else
+        {
+            ledgeCheckOriginLow = wallCheckLeft.position;
+            ledgeCheckOriginHight = wallCheckLeft.position + new Vector3(0, 0.5f);
+        }
+        //Debug.Log(ledgeCheckOriginLow);
+        bool hitWallLow = Physics2D.Raycast(ledgeCheckOriginLow, Vector2.right * turnCoefficient, ledgeCheckDistance, whatIsGround);
+        bool hitWallHight = Physics2D.Raycast(ledgeCheckOriginHight, Vector2.right * turnCoefficient, ledgeCheckDistance, whatIsGround);
+
+        Debug.Log($"Hight  {hitWallHight}");
+        Debug.Log($"Low  { hitWallLow}");
+
+        if (hitWallLow && !hitWallHight)
+        {
+            //if (Mathf.Abs(hitWallLow.normal.x) > 0.7f)
+            //{
+            //    Debug.Log("Вертикальная поверхность");
+            //    return false;
+            //}
+
+            //if (hitWallLow.normal.y > 0.7f)
+            //{
+            Debug.Log("Горизонтальная поверхность");
+            Vector2 headCheckStart = new Vector2(ledgeCheckOriginLow.x + turnCoefficient * 0.1f, ledgeCheckOriginLow.y * 0.4f);
+
+            if (Physics2D.Raycast(headCheckStart, Vector2.up, ledgeHeadCheckHeight, whatIsGround)) //не помещаемсся
+            {
+                Debug.Log("Игрок не взалет");
+                return false;
+            }
+
+            StartCoroutine(GrabLedgeCoroutine(turnCoefficient, headCheckStart.y));
+            return true;
+            //}
+        }
+
+        return false;
+    }
+
+    private IEnumerator GrabLedgeCoroutine(float directionX, float targetY)
+    {
+        _isGrabbingLedge = true;
+
+        Debug.Log("Зашли в корутину залазанья");
+
+        float savedGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+
+        canMove = false;
+        isWallRunning = false;
+        playerAnimation.SetBoolIsWallRunning(false);
+
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = new Vector3(
+            startPos.x + directionX * 0.5f,
+            targetY - 0.9f,
+            startPos.z
+        );
+
+        float elapsed = 0f;
+        float duration = 0.3f; // Время анимации подтягивания
+
+        //playerAnimation.SetBoolIsClimbing(true);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        //playerAnimation.SetBoolIsClimbing(false);
+
+        //isGrounded = true;
+        //lastOnGroundTime = coyoteTime;
+        //SetPlayerAirState(AirState.Grounded);
+
+        _isGrabbingLedge = false;
+        rb.gravityScale = savedGravity;
+
+        rb.linearVelocity = Vector2.zero;
+        canMove = true;
+
+        StartCoroutine(WaitAfterWallRun());
     }
 
     #endregion
@@ -742,9 +885,6 @@ public class PlayerMove : MonoBehaviour
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
 
-        //if (rb.linearVelocity.y < 0)
-        //    force.y -= rb.linearVelocity.y;
-
         rb.AddForce(force, ForceMode2D.Impulse);
 
         limitVelocityOnWallJump = true;
@@ -783,15 +923,14 @@ public class PlayerMove : MonoBehaviour
         else if (Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround))
             jumpDirX = -1f;
 
-        var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.2f);
+        var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.05f);
 
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
 
-        //if (rb.linearVelocity.y < 0)
-        //    force.y -= rb.linearVelocity.y;
-
         rb.AddForce(force, ForceMode2D.Impulse);
+
+        Turn();
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
