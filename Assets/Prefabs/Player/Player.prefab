@@ -217,7 +217,7 @@ MonoBehaviour:
   dashCoolDown: 0.3
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   coyoteTime: 0.175
-  jumpInputBufferTime: 0.2
+  jumpInputBufferTime: 0.15
   _jumpFallVelocityModifier: 1.4
   _gravityOnJumpApexModifier: 0.6
   _velocityModifierForJumpScale: 0.4
@@ -225,6 +225,9 @@ MonoBehaviour:
   _gravityUpJumpModifier: 0.85
   _jumpHorizantalVelocityModifier: 0.8
   limitFallSpeed: 17
+  ledgeCheckDistance: 0.3
+  ledgeHeadCheckHeight: 1
+  ledgeGrabSpeed: 5
   particleJumpUp: {fileID: 198584872278178884}
   particleJumpDown: {fileID: 198967111524372206}
   particleDoubleJump: {fileID: 4285179851735596209, guid: 707b7c78a4854cf449a6149f2f7b4ece, type: 3}
@@ -234,7 +237,6 @@ MonoBehaviour:
   groundCheck1: {fileID: 4291727345091452}
   groundCheck2: {fileID: 3754120865036139522}
   groundCheck3: {fileID: 8839948401198372669}
-  wallCheckLeft: {fileID: 1479439750993083799}
   wallCheckRight: {fileID: 4986330650710208}
 --- !u!114 &1729494090702783638
 MonoBehaviour:

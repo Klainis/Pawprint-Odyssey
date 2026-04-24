@@ -47,6 +47,11 @@ public class PlayerMove : MonoBehaviour
     [Space(5)]
     [SerializeField] private float limitFallSpeed = 25f;
 
+    [Header("Wall Run - Ledge Grab")]
+    [SerializeField] private float ledgeCheckDistance = 0.3f;
+    [SerializeField] private float ledgeHeadCheckHeight = 1f;
+    [SerializeField] private float ledgeGrabSpeed = 5f;
+
     [Header("Particles")]
     [SerializeField] private ParticleSystem particleJumpUp;
     [SerializeField] private ParticleSystem particleJumpDown;
@@ -63,7 +68,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Transform groundCheck3;
 
     [Header("Wall check")]
-    [SerializeField] private Transform wallCheckLeft;
+    //[SerializeField] private Transform wallCheckLeft;
     [SerializeField] private Transform wallCheckRight;
 
     #endregion
@@ -112,6 +117,7 @@ public class PlayerMove : MonoBehaviour
     private bool isKnockBack = false;
     private bool isTurnOld = false;
     private bool canWallRun = true;
+    private bool _isGrabbingLedge = false;
 
     //private float _fallSpeedYDampingChangeThreshold;
 
@@ -122,8 +128,6 @@ public class PlayerMove : MonoBehaviour
     private bool CanJump { get { return (lastOnGroundTime > 0 && !isJumping); } }
     private bool CanAirDash { get { return dashCounter < 1; } }
 
-    //public Transform GroundCheck { get { return groundCheck; } }
-    //public Transform WallCheck { get { return wallCheck; } }
     public bool IsWall { get { return isWall; } private set { } }
 
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
@@ -138,6 +142,18 @@ public class PlayerMove : MonoBehaviour
     public bool IsWallRunJumping { get { return isWallRunJumping; } }
 
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        // Точка начала рейкаста
+        Vector2 originLow = wallCheckRight.position;
+        Vector2 originHight = wallCheckRight.position + new Vector3(0, 0.5f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(originLow, originLow + Vector2.right * turnCoefficient * ledgeCheckDistance);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(originHight, originHight + Vector2.right * turnCoefficient * ledgeCheckDistance);
+    }
 
     private void Awake()
     {
@@ -209,7 +225,7 @@ public class PlayerMove : MonoBehaviour
 
         if (isSpeedRunning)
         {
-            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckRight.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
             var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
             wallHit = leftHit || rightHit;
 
@@ -234,7 +250,7 @@ public class PlayerMove : MonoBehaviour
                 playerAnimation.SetBoolIsFall(true);
             }
 
-            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckRight.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
             var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
             isWall = leftHit || rightHit;
 
@@ -242,8 +258,6 @@ public class PlayerMove : MonoBehaviour
             {
                 ResetDashCounter();
                 isDashing = false;
-                //isWallJumping = false;
-                //isWallRunJumping = false;
             }
         }
     }
@@ -270,11 +284,23 @@ public class PlayerMove : MonoBehaviour
         else
             _dashDirection = PlayerView.Instance.PlayerModel.FacingRight ? 1 : -1;
 
+        if (!isWallSliding && !isWallRunning)
+        {
+            if (isTurnOld)
+                Turn();
+            else if (moveX > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
+                Turn();
+            else if (moveX < 0 && PlayerView.Instance.PlayerModel.FacingRight)
+                Turn();
+        }
+
+        //Debug.Log(Vector2.right * turnCoefficient);
+
         // --- DASH ---
         DoDash(dash);
 
         // --- RUN ---
-        DoRun(speedRun, moveX);
+        //DoRun(speedRun, moveX);
 
         // --- MOVE ---
         DoMove(moveX);
@@ -332,10 +358,14 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
-        else if (isWallSliding || isWallRunning)
+        else if (isWallSliding)
         {
             rb.gravityScale = _initialGravityScale;
         }
+        //else if (isWallRunning)
+        //{
+        //    rb.gravityScale = 0f;
+        //}
         else if (isGrounded)
         {
             SetPlayerAirState(AirState.Grounded);
@@ -378,8 +408,6 @@ public class PlayerMove : MonoBehaviour
                 }
                 StartCoroutine(DashCooldown());
             }
-            //else if (dash && canDash && !isWallSliding && !isGrounded && CanAirDash)
-            //    StartCoroutine(DashCooldown());
         }
     }
 
@@ -463,6 +491,8 @@ public class PlayerMove : MonoBehaviour
     {
         if (PlayerView.Instance.PlayerModel.HasWallRun)
         {
+            if (isWallRunJumping) return;
+
             if (isWall && !isGrounded && grab)
                 WallRunning(moveY, moveX);
             else if (isWallRunning && !grab)
@@ -484,7 +514,7 @@ public class PlayerMove : MonoBehaviour
             isWallSliding = false;
             playerAnimation.SetBoolIsWallSliding(false);
             oldWallSliding = false;
-            //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+            wallCheckRight.localPosition = new Vector3(Mathf.Abs(wallCheckRight.localPosition.x), wallCheckRight.localPosition.y, 0);
         }
     }
     #endregion
@@ -509,16 +539,6 @@ public class PlayerMove : MonoBehaviour
         {
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, targetVelocity, 0.35f);
         }
-
-        if (!isWallSliding && !isWallRunning)
-        {
-            if (isTurnOld)
-                Turn();
-            else if (move > 0 && !PlayerView.Instance.PlayerModel.FacingRight)
-                Turn();
-            else if (move < 0 && PlayerView.Instance.PlayerModel.FacingRight)
-                Turn();
-        }
     }
 
     private void Turn()
@@ -534,19 +554,16 @@ public class PlayerMove : MonoBehaviour
         {
             rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             turnCoefficient = -1;
-
-            CameraFollowObject.Instance.CallCameraTurn();
         }
         else
         {
             rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             turnCoefficient = 1;
-
-            CameraFollowObject.Instance.CallCameraTurn();
         }
 
         isTurnOld = false;
         PlayerView.Instance.PlayerModel.SetFacingRight(!PlayerView.Instance.PlayerModel.FacingRight);
+        CameraFollowObject.Instance.CallCameraTurn();
         transform.rotation = Quaternion.Euler(rotator);
     }
 
@@ -578,9 +595,10 @@ public class PlayerMove : MonoBehaviour
 
     private void HandleWallSliding(float moveX)
     {
-        if (isWallRunning && isDashing) return;
+        if (isWallRunning || isDashing) return;
 
-        if (!oldWallSliding && rb.linearVelocity.y < 0/* && (!isWallRunning || isDashing)*/)
+        rb.gravityScale = _initialGravityScale;
+        if (!oldWallSliding && rb.linearVelocity.y < 0)
         {
             SetPlayerAirState(AirState.WallSliding);
 
@@ -589,7 +607,7 @@ public class PlayerMove : MonoBehaviour
             isDoubleJumping = false;
             isWallJumping = false;
             isWallRunJumping = false;
-            //wallCheck.localPosition = new Vector3(-wallCheck.localPosition.x, wallCheck.localPosition.y, 0);
+            wallCheckRight.localPosition = new Vector3(-wallCheckRight.localPosition.x, wallCheckRight.localPosition.y, 0);
             Turn();
             StartCoroutine(WaitToCheck(0.1f));
 
@@ -614,17 +632,31 @@ public class PlayerMove : MonoBehaviour
 
     private void WallRunning(float moveY, float moveX)
     {
+        if (isWallRunJumping) return;
+
         bool currentWallCheck = false;
         if (!isGrounded)
         {
-            var leftHit = Physics2D.Raycast(wallCheckLeft.position, Vector2.left, groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckRight.position, Vector2.left, groundCheckRadius, whatIsGround);
             var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround);
             currentWallCheck = leftHit || rightHit;
+        }
+
+        if (moveY > 0.1f)
+        {
+            if (TryGrabLedge())
+            {
+                //Debug.Log("Забрались на уступ");
+                rb.gravityScale = 0f;
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                return;
+            }
         }
 
         if (!currentWallCheck)
         {
             isWallRunning = false;
+            oldWallRunning = false;
             //SetPlayerAirState(AirState.Falling);
             playerAnimation.SetBoolIsWallSliding(false);
             playerAnimation.SetBoolIsWallRunning(false);
@@ -633,13 +665,18 @@ public class PlayerMove : MonoBehaviour
 
         if (!oldWallRunning && moveY > 0)
         {
-            isWallSliding = false;
-            oldWallSliding = false;
             isWallRunning = true;
             isWallRunJumping = false;
             isWallJumping = false;
             SetPlayerAirState(AirState.WallRunning);
-            Turn();
+
+            if (isWallSliding)
+            {
+                wallCheckRight.localPosition = new Vector3(Mathf.Abs(wallCheckRight.localPosition.x), wallCheckRight.localPosition.y, 0);
+                Turn();
+                isWallSliding = false;
+                oldWallSliding = false;
+            }
 
             playerAnimation.SetBoolIsJumping(false);
             playerAnimation.SetBoolIsWallSliding(false);
@@ -650,9 +687,103 @@ public class PlayerMove : MonoBehaviour
         {
             isJumping = false;
             isDoubleJumping = false;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * 13f);
+            rb.linearVelocity = new Vector2(0f, moveY * 13f);
             oldWallRunning = true;
         }
+    }
+
+    #endregion
+
+    #region Climbing
+
+    private bool TryGrabLedge()
+    {
+        if (_isGrabbingLedge) return false;
+
+        Vector2 ledgeCheckOriginLow = wallCheckRight.position;
+        Vector2 ledgeCheckOriginHight = wallCheckRight.position + new Vector3(0, 0.5f);
+        //if (turnCoefficient == 1)
+        //{
+        //    ledgeCheckOriginLow = wallCheckRight.position;
+        //    ledgeCheckOriginHight = wallCheckRight.position + new Vector3(0, 0.5f);
+        //}
+        //else
+        //{
+        //    ledgeCheckOriginLow = wallCheckLeft.position;
+        //    ledgeCheckOriginHight = wallCheckLeft.position + new Vector3(0, 0.5f);
+        //}
+
+        bool hitWallLow = Physics2D.Raycast(ledgeCheckOriginLow, Vector2.right * turnCoefficient, ledgeCheckDistance, whatIsGround);
+        bool hitWallHight = Physics2D.Raycast(ledgeCheckOriginHight, Vector2.right * turnCoefficient, ledgeCheckDistance, whatIsGround);
+
+        //Debug.Log($"Hight  {hitWallHight}");
+        //Debug.Log($"Low  { hitWallLow}");
+
+        if (hitWallLow && !hitWallHight)
+        {
+            Debug.Log("Горизонтальная поверхность");
+            Vector2 headCheckStart = new Vector2(ledgeCheckOriginHight.x + turnCoefficient * 0.1f, ledgeCheckOriginHight.y);
+
+            //if (Physics2D.Raycast(headCheckStart, Vector2.up, ledgeHeadCheckHeight, whatIsGround)) //не помещаемсся
+            //{
+            //    Debug.Log("Игрок не взалет");
+            //    return false;
+            //}
+
+            //StartCoroutine(GrabLedgeCoroutine(turnCoefficient, headCheckStart.y));
+            return true;
+        }
+
+        return false;
+    }
+
+    private IEnumerator GrabLedgeCoroutine(float directionX, float targetY)
+    {
+        _isGrabbingLedge = true;
+
+        Debug.Log("Зашли в корутину залазанья");
+
+        float savedGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+
+        canMove = false;
+        isWallRunning = false;
+        oldWallRunning = false;
+        playerAnimation.SetBoolIsWallRunning(false);
+
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = new Vector3(
+            startPos.x + directionX * 0.5f,
+            targetY - 0.9f,
+            startPos.z
+        );
+
+        float elapsed = 0f;
+        float duration = 0.2f; // Время анимации подтягивания
+
+        //playerAnimation.SetBoolIsClimbing(true);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        //playerAnimation.SetBoolIsClimbing(false);
+
+        //isGrounded = true;
+        //lastOnGroundTime = coyoteTime;
+        //SetPlayerAirState(AirState.Grounded);
+
+        _isGrabbingLedge = false;
+        rb.gravityScale = savedGravity;
+
+        rb.linearVelocity = Vector2.zero;
+        canMove = true;
+
+        StartCoroutine(WaitAfterWallRun());
     }
 
     #endregion
@@ -726,7 +857,7 @@ public class PlayerMove : MonoBehaviour
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;
-        //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        wallCheckRight.localPosition = new Vector3(Mathf.Abs(wallCheckRight.localPosition.x), wallCheckRight.localPosition.y, 0);
 
         isWallJumping = true;
 
@@ -740,9 +871,6 @@ public class PlayerMove : MonoBehaviour
 
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
-
-        //if (rb.linearVelocity.y < 0)
-        //    force.y -= rb.linearVelocity.y;
 
         rb.AddForce(force, ForceMode2D.Impulse);
 
@@ -764,7 +892,7 @@ public class PlayerMove : MonoBehaviour
         oldWallRunning = false;
         //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
 
-        canWallRun = false;
+        //canWallRun = false;
         StartCoroutine(WaitAfterWallRun());
 
         isWallRunJumping = true;
@@ -777,20 +905,19 @@ public class PlayerMove : MonoBehaviour
 
         //напрачление прыжка от стены 
         float jumpDirX = -turnCoefficient;
-        if (Physics2D.Raycast(wallCheckLeft.position, Vector2.left, groundCheckRadius, whatIsGround))
-            jumpDirX = 1f;
-        else if (Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround))
-            jumpDirX = -1f;
+        //if (Physics2D.Raycast(wallCheckRight.position, Vector2.left, groundCheckRadius, whatIsGround))
+        //    jumpDirX = 1f;
+        //else if (Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround))
+        //    jumpDirX = -1f;
 
-        var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.2f);
+        var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.05f);
 
         if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
             force.x -= rb.linearVelocity.x;
 
-        //if (rb.linearVelocity.y < 0)
-        //    force.y -= rb.linearVelocity.y;
-
         rb.AddForce(force, ForceMode2D.Impulse);
+
+        Turn();
 
         limitVelocityOnWallJump = true;
         StartCoroutine(WaitToMoveAfterWallJump(timeToWaitAfterWallJump));
@@ -904,7 +1031,7 @@ public class PlayerMove : MonoBehaviour
         isWallSliding = false;
         playerAnimation.SetBoolIsWallSliding(false);
         oldWallSliding = false;
-        //wallCheck.localPosition = new Vector3(Mathf.Abs(wallCheck.localPosition.x), wallCheck.localPosition.y, 0);
+        wallCheckRight.localPosition = new Vector3(Mathf.Abs(wallCheckRight.localPosition.x), wallCheckRight.localPosition.y, 0);
     }
 
     #endregion
