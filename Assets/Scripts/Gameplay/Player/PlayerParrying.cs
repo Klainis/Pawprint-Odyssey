@@ -89,7 +89,10 @@ public class PlayerParrying : MonoBehaviour
         if (PlayerMove.Instance.IsGrounded && _parryingCooldownTimer >= _parryingCooldown)
         {
             if (isHeld && _canStartNewParrying)
+            {
+                _canStartNewParrying = false;
                 StartParrying();
+            }
         }
     }
 
@@ -127,7 +130,6 @@ public class PlayerParrying : MonoBehaviour
             _parryingShield.SetActive(false);
         }
         _isParrying = false;
-        _canStartNewParrying = false;
         _parryingCooldownTimer = 0f;
 
         _playerAnimation.SetBoolIsParrying(false);
@@ -143,9 +145,9 @@ public class PlayerParrying : MonoBehaviour
 
     public void HandleParrying(int damage, int direction, GameObject enemy)
     {
-        if (!_isParrying) return;
-        if (_hasReflected) return;
-        if (!PlayerView.Instance.IsInvincible) return;
+        if (!_isParrying || _hasReflected ||
+            !PlayerView.Instance.IsInvincible)
+            return;
 
         _hasReflected = true;
 
