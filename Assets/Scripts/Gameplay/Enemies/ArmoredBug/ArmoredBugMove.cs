@@ -8,6 +8,7 @@ public class ArmoredBugMove : MonoBehaviour
     public event Action OnWallHit;
 
     private ArmoredBugView _view;
+    private ArmoredBugAttack _attack;
 
     private Transform _fallCheck;
     private Transform _wallCheck;
@@ -18,6 +19,7 @@ public class ArmoredBugMove : MonoBehaviour
     private void Awake()
     {
         _view = GetComponent<ArmoredBugView>();
+        _attack = GetComponent<ArmoredBugAttack>();
 
         _fallCheck = transform.Find("FallCheck");
         _wallCheck = transform.Find("WallCheck");
@@ -27,7 +29,7 @@ public class ArmoredBugMove : MonoBehaviour
     {
         _isInPlatform = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
         _isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
-        if (!_isInPlatform || _isObstacle)
+        if ((!_isInPlatform && _view.RigidBody.linearVelocity.y >= 0) || _isObstacle)
             OnWallHit?.Invoke();
     }
 
@@ -37,7 +39,7 @@ public class ArmoredBugMove : MonoBehaviour
             return;
 
         var moveSpeed = _view.Model.Speed;
-        var moveDirection = _view.FacingRight ? -1 : 1;
+        var moveDirection = _view.FacingRight ? 1 : -1;
 
         if (!_view.IsHitted)
             _view.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, _view.RigidBody.linearVelocity.y);
@@ -45,11 +47,14 @@ public class ArmoredBugMove : MonoBehaviour
 
     public bool Turn(bool facingRight)
     {
+        if (_attack.IsAttacking)
+            return facingRight;
+
         Vector3 rotator;
         if (facingRight)
-            rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            rotator = new Vector3(transform.rotation.x, 0, transform.rotation.z);
         else
-            rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
         transform.rotation = Quaternion.Euler(rotator);
         return !facingRight;
     }

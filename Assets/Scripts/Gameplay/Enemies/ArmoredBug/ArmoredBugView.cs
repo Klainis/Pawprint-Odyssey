@@ -15,9 +15,9 @@ public class ArmoredBugView : MonoBehaviour
     [SerializeField] private AudioClip _hitClip;
     [SerializeField] private AudioClip _shieldHitClip;
 
-    [Header("Attack")]
-    [SerializeField] private float _playerDetectDist = 5f;
-    [SerializeField] private float _attackDist = 1f;
+    //[Header("Attack")]
+    //[SerializeField] private float _playerDetectDist = 5f;
+    //[SerializeField] private float _attackDist = 1f;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
 
@@ -41,7 +41,7 @@ public class ArmoredBugView : MonoBehaviour
     private ArmoredBugAnimation _animation;
     private ArmoredBugAttack _attack;
     private ArmoredBugMove _move;
-    private DamageFlash _damageFlash;
+    private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
 
@@ -58,12 +58,13 @@ public class ArmoredBugView : MonoBehaviour
     #region Properties
 
     public EnemyModel Model { get; private set; }
-    public float PlayerDetectDist { get { return _playerDetectDist; } }
-    public float AttackDist { get { return _attackDist; } }
+    //public float PlayerDetectDist { get { return _playerDetectDist; } }
+    //public float AttackDist { get { return _attackDist; } }
     public Rigidbody2D RigidBody { get { return _rb; } }
     public bool IsHitted { get { return _isHitted; } }
     public bool IsAccelerated { get { return _isAccelerated; } set { _isAccelerated = value; } }
     public bool FacingRight { get; private set; } = false;
+    public bool IsTargeting { get; set; } = false;
 
     #endregion
 
@@ -80,7 +81,7 @@ public class ArmoredBugView : MonoBehaviour
         _animation = GetComponent<ArmoredBugAnimation>();
         _attack = GetComponent<ArmoredBugAttack>();
         _move = GetComponent<ArmoredBugMove>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _money = FindAnyObjectByType<InstantiateMoney>();
 
@@ -96,8 +97,17 @@ public class ArmoredBugView : MonoBehaviour
         }
         else if (!_attack.IsAttacking)
         {
-            _animation.SetBoolMove(true);
-            _move.Move();
+            if (IsTargeting)
+            {
+                Debug.Log("Есть игрок");
+                _animation.SetBoolMove(true);
+                _move.Move();
+            }
+            else
+            {
+                Debug.Log("Потеряли игрока");
+                _animation.SetBoolMove(false);
+            }
         }
     }
 
@@ -109,8 +119,12 @@ public class ArmoredBugView : MonoBehaviour
 
         var direction = damage / Mathf.Abs(damage);
 
-        if ((direction > 0 && !FacingRight) ||
-            (direction < 0 && FacingRight))
+        Debug.Log($"Damage with direction: {damage}");
+        Debug.Log($"Direction: {direction}");
+        Debug.Log($"FacingRight: {FacingRight}");
+
+        if ((direction > 0 && FacingRight) ||
+            (direction < 0 && !FacingRight))
         {
             _damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         }
@@ -132,7 +146,10 @@ public class ArmoredBugView : MonoBehaviour
         if (_damageApplied)
         {
             PlayHitSound(_hitClip);
-            _damageFlash.CallDamageFlash();
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
 
             _animation.SetBoolHit(true);
             StartCoroutine(HitTime(0.5f));
@@ -168,7 +185,10 @@ public class ArmoredBugView : MonoBehaviour
         if (_damageApplied)
         {
             var direction = damage / Mathf.Abs(damage);
-            _damageFlash.CallDamageFlash();
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
             _animation.SetBoolHit(true);
             StartCoroutine(HitTime(0.5f));
             _rb.linearVelocity = Vector2.zero;
@@ -289,8 +309,8 @@ public class ArmoredBugView : MonoBehaviour
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
 
-        if (faceRight != FacingRight)
-            FacingRight = _move.Turn(FacingRight);
+        //if (faceRight != FacingRight)
+        //    FacingRight = _move.Turn(FacingRight);
 
         _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
     }
