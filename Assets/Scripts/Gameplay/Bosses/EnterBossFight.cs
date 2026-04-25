@@ -13,13 +13,13 @@ public class EnterBossFight : MonoBehaviour
     private SpiritGuideView _guideView;
     private GuardianOwlView _guardianOwlView;
 
-    private CinemachineVirtualCamera _followCamera;
-    private Transform _initialFollowTarget;
+    //private CinemachineVirtualCamera _followCamera;
+    //private Transform _initialFollowTarget;
 
-    private void Awake()
-    {
-        _followCamera = GameObject.FindGameObjectWithTag("CinemachineFollowCamera").GetComponent<CinemachineVirtualCamera>();
-    }
+    //private void Awake()
+    //{
+    //    _followCamera = GameObject.FindGameObjectWithTag("CinemachineFollowCamera").GetComponent<CinemachineVirtualCamera>();
+    //}
 
     private void Start()
     {
@@ -36,7 +36,7 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _initialFollowTarget = _followCamera.Follow;
+            //_initialFollowTarget = _followCamera.Follow;
 
             if (_door != null && _spiritGuide != null)
             {
@@ -94,18 +94,18 @@ public class EnterBossFight : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") && GameManager.Instance.GameState != GameState.IN_FIGHT_ROOM)
         {
             _health.DestroyBossHealthSlider();
-            _followCamera.Priority = 10;
+            //_followCamera.Priority = 10;
         }
     }
 
     #endregion
 
-    private IEnumerator WaitForShowBoss(float time)
-    {
-        yield return new WaitForSeconds(time);
-        _followCamera.Follow = _initialFollowTarget;
-        _followCamera.Priority = 0;
-    }
+    //private IEnumerator WaitForShowBoss(float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    _followCamera.Follow = _initialFollowTarget;
+    //    _followCamera.Priority = 0;
+    //}
 
     //private IEnumerator SetFollowTarget(Transform initial, Transform target)
     //{

@@ -99,13 +99,13 @@ public class ArmoredBugView : MonoBehaviour
         {
             if (IsTargeting)
             {
-                Debug.Log("Есть игрок");
+                //Debug.Log("Есть игрок");
                 _animation.SetBoolMove(true);
                 _move.Move();
             }
             else
             {
-                Debug.Log("Потеряли игрока");
+                //Debug.Log("Потеряли игрока");
                 _animation.SetBoolMove(false);
             }
         }
