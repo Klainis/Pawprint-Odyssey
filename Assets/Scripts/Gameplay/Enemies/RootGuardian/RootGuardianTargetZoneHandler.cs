@@ -10,6 +10,9 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
     [SerializeField] private GameObject _leavesPileObj;
     [SerializeField] private GameObject _rootGuardianObj;
 
+    [Header("Gizmos")]
+    [SerializeField] private BoxCollider2D _collider;
+
     #endregion
 
     #region Variables
@@ -23,12 +26,25 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
 
     private bool _isRevealed = false;
 
+    private Coroutine _revealeCoroutine;
+
+    public bool IsRevealed {  get { return _isRevealed; } }
+
     #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+
+        if (_collider != null)
+            Gizmos.DrawWireCube((Vector2)transform.position + _collider.offset, _collider.size);
+    }
 
     #region Common Methods
 
     private void Awake()
     {
+        Debug.Log(_collider.gameObject.name);
         SetObjectsActive(false);
 
         _view = _rootGuardianObj.GetComponent<RootGuardianView>();
@@ -49,16 +65,41 @@ public class RootGuardianTargetZoneHandler : MonoBehaviour
             var isPlayerToTheRight = collision.transform.position.x > transform.position.x;
             _view.FacePlayerOnSpawn(isPlayerToTheRight);
 
-            StartCoroutine(RevealRoutine());
+            if (_revealeCoroutine != null)
+            {
+                StopCoroutine(_revealeCoroutine);
+            }
+            _revealeCoroutine = StartCoroutine(RevealRoutine());
+
             _view.StopRetreatSequence();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && _isRevealed)
-            _view.StartRetreatSequence(transform.position);
+        if (collision.CompareTag("Player") && !_isRevealed)
+        {
+            SetObjectsActive(true);
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+            var isPlayerToTheRight = collision.transform.position.x > transform.position.x;
+            _view.FacePlayerOnSpawn(isPlayerToTheRight);
+
+            if (_revealeCoroutine != null)
+            {
+                StopCoroutine(_revealeCoroutine);
+            }
+            _revealeCoroutine = StartCoroutine(RevealRoutine());
+
+            _view.StopRetreatSequence();
+        }
     }
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player") && _isRevealed)
+    //        _view.StartRetreatSequence(transform.position);
+    //}
 
     #endregion
 

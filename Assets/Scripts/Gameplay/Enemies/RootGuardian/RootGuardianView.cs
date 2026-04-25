@@ -12,10 +12,10 @@ public class RootGuardianView : MonoBehaviour
     [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private AudioClip _hitClip;
 
-    [Header("Attack")]
-    [SerializeField] private float _playerDetectDist;
-    [SerializeField] private float _attackCooldown;
-    [SerializeField] private float _telegraphTime = 0.8f;
+    //[Header("Attack")]
+    //[SerializeField] private float _playerDetectDist = 5f;
+    //[SerializeField] private float _attackCooldown = 2f;
+    //[SerializeField] private float _telegraphTime = 0.8f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
@@ -81,8 +81,8 @@ public class RootGuardianView : MonoBehaviour
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
-        _attack.PlayerDetectDist = _playerDetectDist;
-        _attack.AttackCooldown = _attackCooldown;
+        //_attack.PlayerDetectDist = _playerDetectDist;
+        //_attack.AttackCooldown = _attackCooldown;
     }
 
     private void FixedUpdate()
@@ -97,6 +97,10 @@ public class RootGuardianView : MonoBehaviour
 
         if (_isRetreating || !_attack.IsAttacking)
             _move.Move(Model.Speed, FacingRight);
+
+        //Debug.Log($"isRetreating {_isRetreating}");
+        //Debug.Log($"isAttacking {_attack.IsAttacking}");
+
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -184,9 +188,12 @@ public class RootGuardianView : MonoBehaviour
 
     public void StartRetreatSequence(Vector3 center)
     {
+        if (_isRetreating) return;
+
         _centerPosition = center;
         if (_retreatCoroutine != null)
             StopCoroutine(_retreatCoroutine);
+
         _retreatCoroutine = StartCoroutine(RetreatRoutine());
     }
 
@@ -308,7 +315,7 @@ public class RootGuardianView : MonoBehaviour
     private IEnumerator RetreatRoutine()
     {
         yield return new WaitForSeconds(_patrolTimeWithoutPlayer);
-
+        Debug.Log("Враг начал отступать");
         _isRetreating = true;
 
         var distanceToCenter = Mathf.Abs(transform.position.x - _centerPosition.x);
@@ -324,7 +331,6 @@ public class RootGuardianView : MonoBehaviour
             yield return null;
         }
 
-        _isRetreating = false;
         _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
 
         _animation.SetBoolHiding(true);
@@ -332,6 +338,7 @@ public class RootGuardianView : MonoBehaviour
         _animation.SetBoolHiding(false);
 
         _retreatCoroutine = null;
+        _isRetreating = false;
         _targetZoneHandler.HideEnemy();
     }
 
@@ -339,7 +346,7 @@ public class RootGuardianView : MonoBehaviour
     {
         _move.StopMove();
 
-        yield return StartCoroutine(_attack.AttackTelegraphRoutine(_telegraphTime));
+        yield return StartCoroutine(_attack.AttackTelegraphRoutine(/*_telegraphTime*/));
 
         _telegraphCoroutine = null;
     }

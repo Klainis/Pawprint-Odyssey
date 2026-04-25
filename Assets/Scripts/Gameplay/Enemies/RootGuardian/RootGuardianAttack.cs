@@ -7,6 +7,14 @@ public class RootGuardianAttack : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private LayerMask _playerLayer;
 
+    [Header("Attack")]
+    [SerializeField] private float _playerDetectDist = 5f;
+    [SerializeField] private float _attackCooldown = 2f;
+    [SerializeField] private float _telegraphTime = 0.8f;
+
+    [Header("Attack Check Transform")]
+    [SerializeField] private Transform _attackCheck;
+
     #region Variables
 
     public event Action OnPlayerLeftDetected;
@@ -15,7 +23,6 @@ public class RootGuardianAttack : MonoBehaviour
     private RootGuardianAnimation _animation;
     private Rigidbody2D _rb;
 
-    private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
     private float _lastAttackTime = 0f;
@@ -24,16 +31,22 @@ public class RootGuardianAttack : MonoBehaviour
 
     #region Properties
 
-    public float PlayerDetectDist { get; set; }
-    public float AttackCooldown { get; set; }
+    //public float PlayerDetectDist { get; set; }
+    //public float AttackCooldown { get; set; }
     public bool IsAttacking { get; set; }
     public bool CanAttack {
         get {
-            return !((Time.time < _lastAttackTime + AttackCooldown) || IsAttacking);
+            return !((Time.time < _lastAttackTime + _attackCooldown) || IsAttacking);
         }
     }
 
     #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_attackCheck.position, new Vector2(_playerDetectDist * 2, 1.2f));
+    }
 
     #region Common Methods
 
@@ -42,8 +55,6 @@ public class RootGuardianAttack : MonoBehaviour
         _animation = GetComponent<RootGuardianAnimation>();
         _rb = GetComponent<Rigidbody2D>();
 
-        //var renderer = GetComponent<SpriteRenderer>();
-        //_defaultColor = renderer.color;
         _defaultConstraints = _rb.constraints;
     }
 
@@ -62,24 +73,36 @@ public class RootGuardianAttack : MonoBehaviour
 
     private void CheckPlayerHits()
     {
-        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.left, PlayerDetectDist, _playerLayer);
-        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.right, PlayerDetectDist, _playerLayer);
+        if (_attackCheck == null)
+        {
+            Debug.LogError($"Не назначен Attack Check {_attackCheck}");
+            return;
+        }
 
-        if (playerHitLeft.collider != null)
-            OnPlayerLeftDetected?.Invoke();
-        else if (playerHitRight.collider != null)
-            OnPlayerRightDetected?.Invoke();
+        Collider2D playerHit = Physics2D.OverlapBox(_attackCheck.position, new Vector2(_playerDetectDist * 2, 1.2f), 0, _playerLayer);
+
+        bool right = false;
+
+        if (playerHit != null)
+        {
+            right = playerHit.transform.position.x > transform.position.x ? true : false;
+
+            if (!right)
+                OnPlayerLeftDetected?.Invoke();
+            else if (right)
+                OnPlayerRightDetected?.Invoke();
+        }
     }
 
-    public IEnumerator AttackTelegraphRoutine(float telegraphTime)
+    public IEnumerator AttackTelegraphRoutine(/*float telegraphTime*/)
     {
         //var renderer = GetComponent<SpriteRenderer>();
         //renderer.color = Color.red;
         _animation.SetBoolTelegraph(true);
-        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        //_rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
         IsAttacking = true;
 
-        yield return new WaitForSeconds(telegraphTime);
+        yield return new WaitForSeconds(_telegraphTime);
 
         //renderer.color = _defaultColor;
         _rb.constraints = _defaultConstraints;

@@ -5,7 +5,7 @@ public class RootGuardianMove : MonoBehaviour
 {
     [Header("Main params")]
     [SerializeField] private LayerMask _turnLayerMask;
-    [SerializeField] private Collider2D _patrolBounds;
+    [SerializeField] private BoxCollider2D _patrolBounds;
 
     #region Variables
 
@@ -17,6 +17,14 @@ public class RootGuardianMove : MonoBehaviour
     #endregion
 
     public event Action OnWallHit;
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+
+        if (_patrolBounds != null)
+            Gizmos.DrawWireCube((Vector2)_patrolBounds.transform.position + _patrolBounds.offset, _patrolBounds.size);
+    }
 
     #region Common Methods
 
@@ -67,6 +75,7 @@ public class RootGuardianMove : MonoBehaviour
         _animation.SetBoolMove(true);
         var moveDirection = facingRight ? 1 : -1;
         _rb.linearVelocity = new Vector2(moveDirection * speed, _rb.linearVelocity.y);
+        //Debug.Log($"Moving: {_rb.linearVelocity}");
     }
 
     public bool Turn(bool facingRight)
