@@ -4,20 +4,19 @@ using UnityEngine;
 public class SGMove : MonoBehaviour
 {
     [SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private Transform wallCheck;
 
     public event Action OnWallHit;
 
     private SpiritGuideView sgView;
-
-    private Transform wallCheck;
+    private SGAnimation sgAnimation;
 
     private bool isObstacle;
 
     private void Awake()
     {
         sgView = GetComponent<SpiritGuideView>();
-
-        wallCheck = transform.Find("WallCheck");
+        sgAnimation = GetComponent<SGAnimation>();
     }
 
     private void FixedUpdate()
@@ -36,7 +35,20 @@ public class SGMove : MonoBehaviour
         var moveDirection = sgView.FacingRight ? -1 : 1;
 
         if (!sgView.IsHitted)
+        {
+            if (!isAccelerated)
+            {
+                sgAnimation.SetRunAnimation(false);
+                sgAnimation.SetWalkAnimation(true);
+            }
+            else
+            {
+                sgAnimation.SetWalkAnimation(false);
+                sgAnimation.SetRunAnimation(true);
+            }
+
             sgView.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, sgView.RigidBody.linearVelocity.y);
+        }
     }
 
     public bool Turn(bool facingRight)

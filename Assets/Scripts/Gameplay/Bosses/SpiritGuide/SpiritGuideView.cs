@@ -10,8 +10,11 @@ public class SpiritGuideView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private EnemyData data;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform groundCheck;
     [SerializeField] private float secondStageLifeCoef = 0.6f;
+    [SerializeField] private float playerHitDistance = 40f;
     [SerializeField] private bool isInvincible = false;
+    [SerializeField] private AudioClip _hitClip;
 
     [Header("Events")]
     [SerializeField] private UnityEvent<bool, bool> Hit;
@@ -20,9 +23,11 @@ public class SpiritGuideView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
-    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
 
-    private ParticleSystem _playerWeaponSliceParticleInstance;
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
+    private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
     [Space(5)]
     [SerializeField] private FightDoor _fightDoor;
@@ -30,16 +35,17 @@ public class SpiritGuideView : MonoBehaviour
     private const float groundedRadius = 0.2f;
 
     private Rigidbody2D rigidBody;
-    private Transform groundCheck;
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
 
+    private AudioSource _audioSource;
+
     private SGAnimation sgAnimation;
     private SGAttack sgAttack;
     private SGMove sgMove;
-    private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
+    private DamageFlash[] _damageFlash;
 
     private int maxLifeForReading;
     private float secondStageLifeAmount;
@@ -65,13 +71,13 @@ public class SpiritGuideView : MonoBehaviour
         secondStageLifeAmount = Model.Life * secondStageLifeCoef;
      
         rigidBody = GetComponent<Rigidbody2D>();
-        groundCheck = transform.Find("GroundCheck");
         
         sgAnimation = GetComponent<SGAnimation>();
         sgAttack = GetComponent<SGAttack>();
         sgMove = GetComponent<SGMove>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -90,7 +96,7 @@ public class SpiritGuideView : MonoBehaviour
             return;
         }
 
-        var playerHits = sgAttack.GetPlayerHits(35, facingRight);
+        var playerHits = sgAttack.GetPlayerHits(playerHitDistance, facingRight);
         var isGrounded = CheckIfGrounded();
         if (!isSecondStage && !isAccelerated && isGrounded)
             sgAttack.RamAttack(playerHits);
@@ -114,15 +120,36 @@ public class SpiritGuideView : MonoBehaviour
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         if (damageApplied)
         {
-            _damageFlash.CallDamageFlash();
+            PlayHitSound(_hitClip);
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
             _screenShaker.Shake();
             var direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
+
+            if (PlayerAttack.Instance.AttackSeriesCount >= 3)
+            {
+                SpawnPlayerLastAttackParticles();
+            }
+            else if (PlayerAttack.Instance.AttackSeriesCount < 3)
+            {
+                SpawnPlayerAttakParticles(direction);
+            }
 
             Hit.Invoke(false, true);
             if (Model.Life <= secondStageLifeAmount)
                 isSecondStage = true;
             StartCoroutine(HitTime());
+        }
+    }
+
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
         }
     }
 
@@ -136,10 +163,20 @@ public class SpiritGuideView : MonoBehaviour
         var vectorDirection = new Vector2(direction, 0);
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+    }
 
+    private void SpawnPlayerAttakParticles(int direction)
+    {
+        var vectorDirection = new Vector2(direction, 0);
         var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
-        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
-        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
 
     private void ChangeTag(string tag)
