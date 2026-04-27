@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using GlobalEnums;
 
 public class PlayerChargeAttack : MonoBehaviour
 {
@@ -22,9 +23,9 @@ public class PlayerChargeAttack : MonoBehaviour
 
     private static PlayerChargeAttack _instance;
     private AudioSource _audioSource;
-    private PlayerView _playerView;
-    private PlayerAnimation _playerAnimation;
-    private PlayerMana _playerMana;
+    private PlayerView _view;
+    private PlayerAnimation _animation;
+    private PlayerMana _mana;
     private Transform _attackCheck;
 
     const float _attackCheckRadius = 1.3f;
@@ -54,9 +55,9 @@ public class PlayerChargeAttack : MonoBehaviour
         _instance = this;
 
         _audioSource = GetComponent<AudioSource>();
-        _playerView = GetComponent<PlayerView>();
-        _playerAnimation = GetComponent<PlayerAnimation>();
-        _playerMana = GetComponent<PlayerMana>();
+        _view = GetComponent<PlayerView>();
+        _animation = GetComponent<PlayerAnimation>();
+        _mana = GetComponent<PlayerMana>();
         _attackCheck = transform.Find("AttackCheck");
     }
 
@@ -75,24 +76,32 @@ public class PlayerChargeAttack : MonoBehaviour
         var isHeld = PlayerInput.Instance.AttackHeld;
         var isReleased = PlayerInput.Instance.AttackReleased;
 
-        if (isHeld && !_isCharging && _playerView.PlayerModel.Mana >= _manaCost)
+        if (isHeld && !_isCharging && _view.PlayerModel.Mana >= _manaCost)
         {
             _isCharging = true;
             _currentChargeTimer = 0f;
 
-            _playerAnimation.SetBoolIsChargingAttack(true);
+            _animation.SetBoolIsChargingAttack(true);
         }
 
         if (_isCharging && isHeld)
         {
+            if (GameManager.Instance.GameState == GameState.ENTERING_LEVEL)
+            {
+                StopCharging();
+                return;
+            }
+
             _currentChargeTimer += Time.deltaTime;
             var isCharged = _currentChargeTimer >= _chargeTime + _startChargeTime;
             var startedCharging = _currentChargeTimer >= _startChargeTime;
+
             if (!isCharged && startedCharging)
             {
                 ResetParticleInstance(true);
                 SpawnParticle(false);
             }
+
             if (isCharged)
             {
                 PlayChargeAttackSound(_attackChargedClip);
@@ -107,25 +116,35 @@ public class PlayerChargeAttack : MonoBehaviour
             ResetParticleInstance(true);
             ResetParticleInstance(false);
 
-            if (_currentChargeTimer < _chargeTime)
+            if (_currentChargeTimer < _chargeTime + _startChargeTime)
             {
                 _isCharging = false;
                 return;
             }
 
-            _playerAnimation.SetBoolIsChargingAttack(false);
+            _animation.SetBoolIsChargingAttack(false);
             ReleaseAttack();
         }
+    }
+
+    private void StopCharging()
+    {
+        _isCharging = false;
+        _currentChargeTimer = 0f;
+        _animation.SetBoolIsChargingAttack(false);
+
+        ResetParticleInstance(true);
+        ResetParticleInstance(false);
     }
 
     private void ReleaseAttack()
     {
         _isCharging = false;
-        _playerMana.SpendMana("ChargeAttack", _manaCost);
+        _mana.SpendMana("ChargeAttack", _manaCost);
 
         ApplyAreaDamage(_damage);
 
-        _playerAnimation.SetTriggerAttack(3);
+        _animation.SetTriggerAttack(3);
         _currentChargeTimer = 0f;
     }
 
