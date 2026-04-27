@@ -32,6 +32,7 @@ public class GuardianOwlAttack : MonoBehaviour
     private Transform pivotBottom;
     private BoxCollider2D _colliderOfEyeAttack;
     private BoxCollider2D _colliderOfWaveAttack;
+    private CircleCollider2D _bossCollider;
 
     private Vector3 _targetWavePosition;
 
@@ -41,16 +42,18 @@ public class GuardianOwlAttack : MonoBehaviour
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
         _player = InitializeManager.Instance.player;
+        _bossCollider = GetComponent<CircleCollider2D>();
     }
 
     #region Wave Attack
     private void InstantiateWaveAttack()
     {
+        Debug.Log("Начали создавать волны");
         var playerFromOwl = transform.position.x - _player.transform.position.x;
 
         if (playerFromOwl > 0)//left wave
         {
-            Vector3 particlePosition = new Vector3(transform.position.x - transform.localScale.x, transform.position.y, transform.position.z);
+            Vector3 particlePosition = new Vector3(transform.position.x - _bossCollider.radius, transform.position.y, transform.position.z);
             _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
 
             //Смещение взято из LifeTime партикла * на Speed
@@ -60,7 +63,7 @@ public class GuardianOwlAttack : MonoBehaviour
         }
         else if (playerFromOwl <= 0)//right wave
         {
-            Vector3 particlePosition = new Vector3(transform.position.x + transform.localScale.x, transform.position.y, transform.position.z);
+            Vector3 particlePosition = new Vector3(transform.position.x + _bossCollider.radius, transform.position.y, transform.position.z);
             _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
             var main = _waveAttackInstance.main;
             main.startRotation = 180f * Mathf.Deg2Rad;
@@ -70,49 +73,49 @@ public class GuardianOwlAttack : MonoBehaviour
                 _waveAttackInstance.transform.position.z);
         }
 
-        _colliderOfWaveAttack = _waveAttackInstance.gameObject.GetComponent<BoxCollider2D>();
-        _waveAttackParticles = new ParticleSystem.Particle[_waveAttackInstance.main.maxParticles];
-        StartCoroutine(CollisionWaveAttack());
-        StartCoroutine(VelocityOfWaveAttack());
+        //_colliderOfWaveAttack = _waveAttackInstance.gameObject.GetComponent<BoxCollider2D>();
+        //_waveAttackParticles = new ParticleSystem.Particle[_waveAttackInstance.main.maxParticles];
+        StartCoroutine(CollisionWaveAttack(_waveAttackInstance));
+        StartCoroutine(VelocityOfWaveAttack(_waveAttackInstance, _targetWavePosition));
     }
 
-    private IEnumerator VelocityOfWaveAttack()
+    private IEnumerator VelocityOfWaveAttack(ParticleSystem waveInstance, Vector3 targetPosition)
     {
-        if (_waveAttackInstance != null)
+        ParticleSystem localWaveInstance = waveInstance;
+
+        if (localWaveInstance != null)
         {
-            while (Vector3.Distance(_waveAttackInstance.transform.position, _targetWavePosition) > 0.01f)
+            while (Vector3.Distance(localWaveInstance.transform.position, targetPosition) > 0.01f)
             {
-                if (_waveAttackInstance == null)
+                if (localWaveInstance == null)
                     yield return null;
 
-                _waveAttackInstance.transform.position = Vector3.MoveTowards(
-                    _waveAttackInstance.transform.position,
-                    _targetWavePosition,
+                localWaveInstance.transform.position = Vector3.MoveTowards(
+                    localWaveInstance.transform.position,
+                    targetPosition,
                     _waveVelocity * Time.deltaTime);
                 yield return null;
             }
         }
     }
 
-    private IEnumerator CollisionWaveAttack()
+    private IEnumerator CollisionWaveAttack(ParticleSystem waveInstance)
     {
         yield return new WaitForEndOfFrame();
 
-        int partCount = _waveAttackInstance.GetParticles(_waveAttackParticles);
-        //Debug.Log($"ВЫЗВАНА КОРУТИНА ВКЛЮЧЕНИЯ КОЛЛАЙДЕРА, партиклов:{partCount}");
-        while (_waveAttackInstance != null && partCount > 0)
+        BoxCollider2D collider = waveInstance.gameObject.GetComponent<BoxCollider2D>();
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[waveInstance.main.maxParticles];
+
+        while (waveInstance != null)
         {
+            int partCount = waveInstance.GetParticles(particles);
             if (partCount > 0)
             {
-                partCount = _waveAttackInstance.GetParticles(_waveAttackParticles);
-
-                var p = _waveAttackParticles[0];
-
-                var remainingLifetime = p.remainingLifetime;
-
-                if (remainingLifetime <= 0.2f)
+                var p = particles[0];
+                if (p.remainingLifetime <= 0.2f)
                 {
-                    _colliderOfWaveAttack.enabled = false;
+                    collider.enabled = false;
+                    break;
                 }
             }
             yield return null;
@@ -121,6 +124,7 @@ public class GuardianOwlAttack : MonoBehaviour
 
     public IEnumerator SpawnWaveAttack(int attackCount, BossStage stage)
     {
+        Debug.Log("Начали создавать волны");
         while (attackCount > 0)
         {
             if (_guardianOwlView.ShouldInterrupt(stage))
@@ -203,23 +207,23 @@ public class GuardianOwlAttack : MonoBehaviour
     }
     #endregion
 
-    public List<RaycastHit2D> GetPlayerHits(float distance, bool facingRight)
-    {
-        var direction = facingRight ? Vector2.left : Vector2.right;
-        var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, distance, playerLayer);
-        var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, distance, playerLayer);
-        return new List<RaycastHit2D> { playerHitTop, playerHitBottom };
-    }
+    //public List<RaycastHit2D> GetPlayerHits(float distance, bool facingRight)
+    //{
+    //    var direction = facingRight ? Vector2.left : Vector2.right;
+    //    var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, distance, playerLayer);
+    //    var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, distance, playerLayer);
+    //    return new List<RaycastHit2D> { playerHitTop, playerHitBottom };
+    //}
 
-    public List<RaycastHit2D> GetWallHits(float distance)
-    {
-        var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, distance, wallLayer);
-        var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, distance, wallLayer);
-        return new List<RaycastHit2D> { wallHitLeft, wallHitRight };
-    }
+    //public List<RaycastHit2D> GetWallHits(float distance)
+    //{
+    //    var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, distance, wallLayer);
+    //    var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, distance, wallLayer);
+    //    return new List<RaycastHit2D> { wallHitLeft, wallHitRight };
+    //}
 
     #region Body Attack
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {

@@ -13,6 +13,7 @@ public class GuardianOwlView : MonoBehaviour
     [SerializeField] private float _secondStageLifeCoef = 0.6f;
     [SerializeField] private float _thirdStageLifeCoef = 0.2f;
     [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private AudioClip _hitClip;
     [SerializeField] private GameObject _doubleJumpItem;
 
     [Header("Events")]
@@ -22,9 +23,11 @@ public class GuardianOwlView : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
-    [SerializeField] private ParticleSystem _playerWeaponSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
+    [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
 
-    private ParticleSystem _playerWeaponSliceParticleInstance;
+    private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
+    private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
     [Space(5)]
     [SerializeField] private FightDoor _fightDoor;
@@ -39,8 +42,9 @@ public class GuardianOwlView : MonoBehaviour
     //private SGAnimation sgAnimation;
     private GuardianOwlAttack _guraduianOwlAttack;
     private GuardianOwlMove _guraduianOwlMove;
-    private DamageFlash _damageFlash;
+    private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
+    private AudioSource _audioSource;
 
     private int _maxLifeForReading;
     private int _secondStageLifeAmount;
@@ -68,8 +72,9 @@ public class GuardianOwlView : MonoBehaviour
         //sgAnimation = GetComponent<SGAnimation>();
         _guraduianOwlAttack = GetComponent<GuardianOwlAttack>();
         _guraduianOwlMove = GetComponent<GuardianOwlMove>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -114,10 +119,23 @@ public class GuardianOwlView : MonoBehaviour
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         if (damageApplied)
         {
-            _damageFlash.CallDamageFlash();
+            PlayHitSound(_hitClip);
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
             _screenShaker.Shake();
             var direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
+
+            if (PlayerAttack.Instance.AttackSeriesCount >= 3)
+            {
+                SpawnPlayerLastAttackParticles();
+            }
+            else if (PlayerAttack.Instance.AttackSeriesCount < 3)
+            {
+                SpawnPlayerAttakParticles(direction);
+            }
 
             _Hit.Invoke(true, false);
 
@@ -135,6 +153,14 @@ public class GuardianOwlView : MonoBehaviour
         }
     }
 
+    private void PlayHitSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+    }
+
     public void ApplyChargeDamage(int damage)
     {
         ApplyDamage(damage);
@@ -145,10 +171,20 @@ public class GuardianOwlView : MonoBehaviour
         var vectorDirection = new Vector2(direction, 0);
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
+    }
 
+    private void SpawnPlayerAttakParticles(int direction)
+    {
+        var vectorDirection = new Vector2(direction, 0);
         var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
-        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation);
-        _playerWeaponSliceParticleInstance = Instantiate(_playerWeaponSliceParticle, transform.position, Quaternion.identity);
+
+        _playerWeaponParticleInstance = Instantiate(_playerWeaponParticle, transform.position, spawnPlayerAttackRotation, transform);
+        _playerWeaponSimpleSliceAttackParticleInstance = Instantiate(_playerWeapomSimpleSliceParticle, transform.position, Quaternion.identity);
+    }
+
+    private void SpawnPlayerLastAttackParticles()
+    {
+        _playerWeaponLastSliceAttackParticleInstance = Instantiate(_playerWeaponLastSliceParticle, transform.position, Quaternion.identity);
     }
 
     private void ChangeTag(string tag)

@@ -12,15 +12,17 @@ public class GuardianOwlMove : MonoBehaviour
     private GuardianOwlView _guardianOwlView;
 
     private GameObject _player;
-    private BoxCollider2D _bossCollider;
+    private CircleCollider2D _bossCollider;
 
     private float _realMoveModifier = 1;
     private bool _moveToPlayer;
 
+    private bool _facingRight = false;
+
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
-        _bossCollider = GetComponent<BoxCollider2D>();
+        _bossCollider = GetComponent<CircleCollider2D>();
         _player = InitializeManager.Instance.player;
     }
 
@@ -40,12 +42,21 @@ public class GuardianOwlMove : MonoBehaviour
 
     public IEnumerator MoveToPlayer()
     {
-        Vector3 playerPosition = _player.transform.position;
+        Vector3 playerPosition = _player.transform.position + new Vector3(0, _bossCollider.radius, 0);
+
+        if (playerPosition.x < transform.position.x && _facingRight)
+        {
+            Turn();
+        }
+        else if (playerPosition.x > transform.position.x && !_facingRight)
+        {
+            Turn();
+        }
 
         while (true)
         {
-            float _bossBottomY = _bossCollider.bounds.min.y;
-            Vector3 bossPosition = new Vector3(transform.position.x, _bossBottomY, transform.position.z);
+            //float _bossBottomY = transform.position.y - _bossCollider.radius;
+            //Vector3 bossPosition = new Vector3(transform.position.x, _bossBottomY, transform.position.z);
 
             if (Vector3.Distance(transform.position, playerPosition) > 0.3f)
             {
@@ -62,6 +73,22 @@ public class GuardianOwlMove : MonoBehaviour
             yield return null;
         }
         Debug.Log("Движение закончилось");
+    }
+
+    public void Turn()
+    {
+        Vector3 rotator;
+        if (_facingRight)
+        {
+            rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+            _facingRight = !_facingRight;
+        }
+        else
+        {
+            rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+            _facingRight = !_facingRight;
+        }
+        transform.rotation = Quaternion.Euler(rotator);
     }
 
     public void ApplySpeedModifier()
