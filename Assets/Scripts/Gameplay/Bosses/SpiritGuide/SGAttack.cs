@@ -66,19 +66,41 @@ public class SGAttack : MonoBehaviour
     public void RandomAttack(bool facingRight)
     {
         var wallHits = GetWallHits(6);
-        var playerHitsSecondStage = GetPlayerHits(5, facingRight);
+        var playerHitsSecondStage = GetPlayerHits(10, facingRight);
         if (wallHits[0].collider == null && wallHits[1].collider == null && Time.time >= nextLightZoneTime)
         {
-            if (UnityEngine.Random.value <= lightZoneChance
-                && (playerHitsSecondStage[0].collider != null || playerHitsSecondStage[1].collider != null) && !inLightZone)
+            bool isPlayerHits = false;
+            for (var i = 0; i < playerHitsSecondStage.Count; i++)
+            {
+                if (playerHitsSecondStage[i].collider != null)
+                {
+                    Debug.Log($"Hace player collider {playerHitsSecondStage[i]}");
+                    isPlayerHits = true;
+
+                    if (playerHitsSecondStage[i].collider.transform.position.x < transform.position.x && !sgView.FacingRight)
+                    {
+                        sgView.TurnToPlayer();
+                    }
+                    else if (playerHitsSecondStage[i].collider.transform.position.x > transform.position.x && sgView.FacingRight)
+                    {
+                        sgView.TurnToPlayer();
+                    }
+                }
+
+            }
+
+            if (UnityEngine.Random.value <= lightZoneChance && isPlayerHits)
             {
                 LightAttackTelegraph();
                 nextLightZoneTime = Time.time + lightZoneCooldown;
+                isPlayerHits = false;
             }
-            else if (!inLightZone)
+            else if (!inLightZone && isPlayerHits)
             {
                 RamTelegraph();
                 sgView.IsAccelerated = true;
+                ramSeriesCount += 1;
+                isPlayerHits = false;
             }
         }
     }
@@ -89,6 +111,15 @@ public class SGAttack : MonoBehaviour
         {
             if (playerHits[i].collider != null)
             {
+                if (playerHits[i].collider.transform.position.x < transform.position.x && !sgView.FacingRight)
+                {
+                    sgView.TurnToPlayer();
+                }
+                else if (playerHits[i].collider.transform.position.x > transform.position.x && sgView.FacingRight)
+                {
+                    sgView.TurnToPlayer();
+                }
+
                 RamTelegraph();
                 sgView.IsAccelerated = true;
                 ramSeriesCount += 1;
@@ -99,7 +130,8 @@ public class SGAttack : MonoBehaviour
 
     public void CheckRamSeriesCountAndPause()
     {
-        if (ramSeriesCount == maxRamSeriesCount)
+        Debug.Log($"current{ramSeriesCount}, max{maxRamSeriesCount}");
+        if (ramSeriesCount >= maxRamSeriesCount)
         {
             ramSeriesCount = 0;
             StartCoroutine(RamPause());
@@ -167,6 +199,7 @@ public class SGAttack : MonoBehaviour
 
     private IEnumerator RamPause()
     {
+        Debug.Log("Stop Ram!!");
         sgView.MoveDisabled = true;
         sgAnimation.SetRunAnimation(false);
         sgAnimation.SetWalkAnimation(false);

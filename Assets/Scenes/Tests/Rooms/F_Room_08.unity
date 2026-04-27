@@ -8975,6 +8975,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiritGuideMain
       objectReference: {fileID: 0}
+    - target: {fileID: 6946092275186354306, guid: 14f26ba42f25e924a9030fd5900887ac, type: 3}
+      propertyPath: lightZoneChance
+      value: 0.6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -24550,63 +24554,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7066146461792856489, guid: 67290c5d6aebf07448d0e3d021dd947e, type: 3}
   m_PrefabInstance: {fileID: 1328622001}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1335982301
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 883321360729684845, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_Name
-      value: LightAttackObject
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 103
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -59.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8271183484302352881, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
 --- !u!1 &1342358127
 GameObject:
   m_ObjectHideFlags: 0
@@ -59966,9 +59913,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
-    - target: {fileID: 4972508292046765134, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 6527275226073818282, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_Creator
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -59984,5 +59931,4 @@ SceneRoots:
   - {fileID: 1025745439}
   - {fileID: 1742043130}
   - {fileID: 1346029972}
-  - {fileID: 1335982301}
   - {fileID: 1887925205}

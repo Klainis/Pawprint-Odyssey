@@ -696,7 +696,7 @@ MonoBehaviour:
     m_Bits: 512
   groundCheck: {fileID: 1389475446215307647}
   secondStageLifeCoef: 0.6
-  playerHitDistance: 20
+  playerHitDistance: 15
   isInvincible: 0
   _hitClip: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   Hit:
@@ -771,12 +771,12 @@ MonoBehaviour:
   checkTransfom: {fileID: 8565992214216681977}
   pivotTop: {fileID: 7244372113430022273}
   pivotBottom: {fileID: 493847445056886264}
-  acceleratedSpeed: 7
+  acceleratedSpeed: 10
   ramTelegraphTime: 0.25
   ramPauseBetweenSeries: 3
   lightAttackObject: {fileID: 883321360729684845, guid: 84ca639091ea5cb4181c06f1c545227e, type: 3}
   lightZoneCooldown: 3
-  lightZoneChance: 1
+  lightZoneChance: 0.8
   lightZoneTime: 0.8
   lightObjectAmount: 5
   instantiateTimeStep: 0.07
@@ -841,7 +841,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.06374693, y: 0.055318296}
+  m_Offset: {x: -0.06374693, y: 0.017641515}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -851,7 +851,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.4390972, y: 1.324977}
+  m_Size: {x: 1.4390972, y: 1.2496235}
   m_EdgeRadius: 0
 --- !u!50 &6869974573299589593
 Rigidbody2D:

@@ -98,7 +98,7 @@ public class SpiritGuideView : MonoBehaviour
 
         var playerHits = sgAttack.GetPlayerHits(playerHitDistance, facingRight);
         var isGrounded = CheckIfGrounded();
-        if (!isSecondStage && !isAccelerated && isGrounded)
+        if (!isSecondStage && !isAccelerated && isGrounded && !MoveDisabled)
             sgAttack.RamAttack(playerHits);
         if (isSecondStage && !isAccelerated)
             sgAttack.RandomAttack(facingRight);
@@ -206,6 +206,11 @@ public class SpiritGuideView : MonoBehaviour
         isAccelerated = false;
         facingRight = sgMove.Turn(facingRight);
         sgAttack.CheckRamSeriesCountAndPause();
+    }
+
+    public void TurnToPlayer()
+    {
+        facingRight = sgMove.Turn(facingRight);
     }
 
     private void HandlePlayerDetected()
