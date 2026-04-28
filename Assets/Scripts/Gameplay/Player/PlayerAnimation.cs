@@ -3,14 +3,17 @@ using UnityEngine;
 public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] private Animator slashAnimator;
+    [SerializeField] private Animator clawAnimator;
 
     private SlashAnimation endSlashAnimation;
+    private ClawAnimation clawAnimation;
     private Animator animator;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         endSlashAnimation = slashAnimator.gameObject.GetComponent<SlashAnimation>();
+        clawAnimation = clawAnimator.gameObject.GetComponent<ClawAnimation>();
     }
 
     public void ApplyRootMotion(bool value)

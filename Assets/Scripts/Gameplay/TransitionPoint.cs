@@ -17,7 +17,7 @@ public class TransitionPoint : MonoBehaviour
     private Collider2D col;
 
     private bool activated;
-    private bool endMoveToGate;
+    private bool _isTransitioning = false;
 
     private float transitionSpeed = 7f;
 
@@ -34,8 +34,10 @@ public class TransitionPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D movigObj)
     {
-        if (movigObj.CompareTag("Player"))
+        if (movigObj.CompareTag("Player") && !_isTransitioning)
         {
+            _isTransitioning = true;
+
             if (gameManager.GameState == GameState.PLAYING)
             {
                 StartCoroutine(WalkIntoGate(movigObj, transitionSpeed));
@@ -43,6 +45,10 @@ public class TransitionPoint : MonoBehaviour
             else if (gameManager.GameState == GameState.EXITING_LEVEL)
             {
                 StartCoroutine(WalkOutGate(movigObj, transitionSpeed));
+            }
+            else
+            {
+                _isTransitioning = false;
             }
         }
     }
@@ -117,6 +123,9 @@ public class TransitionPoint : MonoBehaviour
         {
             TryDoTransition(playerCollider);
         }
+
+        yield return new WaitForSeconds(0.2f);
+        _isTransitioning = false;
     }
 
     private IEnumerator WalkOutGate(Collider2D playerCollider, float speed)
@@ -174,6 +183,9 @@ public class TransitionPoint : MonoBehaviour
         SafeGroundSaver.Instance.SetNewSafeGroundLocation();
 
         gameManager.SetGameState(GameState.PLAYING);
+
+        yield return new WaitForSeconds(0.2f);
+        _isTransitioning = false;
     }
 
     public void TryDoTransition(Collider2D playerCollider)
@@ -191,7 +203,7 @@ public class TransitionPoint : MonoBehaviour
 
         if (targetScene != null && entryGate != null)
         {
-            activated = true;
+            activated = false;
             gameManager.BeginSceneTransition(targetScene, entryGate);
         }
     }

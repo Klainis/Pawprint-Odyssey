@@ -233,12 +233,18 @@ public class SpiritGuideView : MonoBehaviour
         ChangeTag("isDead");
         ChangeLayer("DeadEnemy");
 
+        Time.timeScale = 0.4f;
+
         // _bugAnimation.SetTriggerDead();
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
-        yield return new WaitForSeconds(0.25f);
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        Time.timeScale = 1f;
         rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(3f);
+
+        yield return new WaitForSeconds(1.5f);
 
         Destroy(gameObject);
     }

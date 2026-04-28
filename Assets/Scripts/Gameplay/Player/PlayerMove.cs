@@ -146,8 +146,8 @@ public class PlayerMove : MonoBehaviour
     private void OnDrawGizmos()
     {
         // Точка начала рейкаста
-        Vector2 originLow = wallCheckRight.position;
-        Vector2 originHight = wallCheckRight.position + new Vector3(0, 0.5f);
+        Vector2 originHight = wallCheckRight.position;
+        Vector2 originLow = wallCheckRight.position - new Vector3(0, 0.5f);
 
         Gizmos.color = Color.green;
         Gizmos.DrawLine(originLow, originLow + Vector2.right * turnCoefficient * ledgeCheckDistance);
@@ -279,10 +279,13 @@ public class PlayerMove : MonoBehaviour
     {
         if (!canMove) return;
 
-        if (Mathf.Abs(moveX) > 0.1f)
-            _dashDirection = (int)Mathf.Sign(moveX);
-        else
-            _dashDirection = PlayerView.Instance.PlayerModel.FacingRight ? 1 : -1;
+        if (!isDashing && !PiercingClaw.Instance.IsAttacking)
+        {
+            if (Mathf.Abs(moveX) > 0.1f)
+                _dashDirection = (int)Mathf.Sign(moveX);
+            else
+                _dashDirection = PlayerView.Instance.PlayerModel.FacingRight ? 1 : -1;
+        }
 
         if (!isWallSliding && !isWallRunning)
         {
@@ -521,7 +524,7 @@ public class PlayerMove : MonoBehaviour
 
     private void MoveHorizontal(float move)
     {
-        if (isKnockBack || isWallRunning || limitVelocityOnWallJump) return;
+        if (isKnockBack || isWallRunning || limitVelocityOnWallJump || PiercingClaw.Instance.IsAttacking) return;
 
         playerAnimation.SetFloatSpeed(Mathf.Abs(move));
 
@@ -647,8 +650,23 @@ public class PlayerMove : MonoBehaviour
             if (TryGrabLedge())
             {
                 //Debug.Log("Забрались на уступ");
-                rb.gravityScale = 0f;
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                //rb.gravityScale = 0f;
+                //rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+
+                playerAnimation.SetBoolIsWallSliding(false);
+                playerAnimation.SetBoolIsWallRunning(false);
+
+                float jumpDirX = turnCoefficient;
+                var force = new Vector2(jumpDirX * wallJumpForce.x, wallJumpForce.y * 1.05f);
+
+                if (Mathf.Sign(rb.linearVelocity.x) != Mathf.Sign(force.x))
+                    force.x -= rb.linearVelocity.x;
+
+                rb.AddForce(force, ForceMode2D.Impulse);
+
+                limitVelocityOnWallJump = true;
+                StartCoroutine(WaitToMoveAfterLedge(timeToWaitAfterWallJump));
+
                 return;
             }
         }
@@ -974,6 +992,7 @@ public class PlayerMove : MonoBehaviour
         isDashing = true;
         canDash = false;
         canJump = false;
+        canMove = false;
 
         if (isDashing)
         {
@@ -988,6 +1007,7 @@ public class PlayerMove : MonoBehaviour
         isDashing = false;
         PlayerAttack.Instance.SpendMana = true;
         canJump = true;
+        canMove = true;
         gameObject.layer = LayerMask.NameToLayer("Player");
         yield return new WaitForSeconds(dashCoolDown); //0.25
         canDash = true;
@@ -1005,6 +1025,23 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(time);
         limitVelocityOnWallJump = false;
     }
+
+    ///////Временное решение для выступов 
+    private IEnumerator WaitToMoveAfterLedge(float time)
+    {
+        yield return new WaitForSeconds(time);
+        limitVelocityOnWallJump = false;
+        rb.linearVelocity = new Vector2(6 * turnCoefficient, 5);
+        StartCoroutine(WaitAfterLedgeJump());
+    }
+
+    private IEnumerator WaitAfterLedgeJump()
+    {
+        yield return new WaitForSeconds(0.1f);
+        isWallRunning = false;
+        oldWallRunning = false;
+    }
+    /////////
 
     private IEnumerator WaitAfterWallRun()
     {

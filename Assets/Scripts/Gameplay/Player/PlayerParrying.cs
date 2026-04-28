@@ -11,6 +11,7 @@ public class PlayerParrying : MonoBehaviour
     [SerializeField] private float _parryingCooldown = 1.0f;
     [SerializeField] private float _stopTime = 0.15f;
     [SerializeField] private int _knockBackForce = 15;
+    [SerializeField] private float _stopFrameDuration = 0.1f;
     [SerializeField] private AudioClip _successParryClip;
     [SerializeField] private GameObject _parryingShield;
 
@@ -22,6 +23,7 @@ public class PlayerParrying : MonoBehaviour
     private Rigidbody2D _rigidBody;
     private PlayerAnimation _playerAnimation;
     private PlayerMana _playerMana;
+    private HitStop _hitStop;
     private static PlayerParrying instance;
 
     private RigidbodyConstraints2D _rigidbodyConstraints;
@@ -159,6 +161,8 @@ public class PlayerParrying : MonoBehaviour
             PlaySound(_successParryClip);
 
         enemy.SendMessage("ApplyDamage", reflectedDamage);
+
+        _hitStop.Stop(_stopFrameDuration);
 
         StopParrying();
     }

@@ -22,6 +22,8 @@ public class PiercingClaw : MonoBehaviour
     private bool isAttacking = false;
     private bool clawPressed;
 
+    private float _initialGravityScale;
+
     public static PiercingClaw Instance { get { return _instance; } }
     public bool IsAttacking { get { return isAttacking; } }
 
@@ -53,6 +55,11 @@ public class PiercingClaw : MonoBehaviour
         clawSprite.SetActive(false);
     }
 
+    private void Start()
+    {
+        _initialGravityScale = _rigidbody.gravityScale;
+    }
+
     private void Update()
     {
         if (isAttacking)
@@ -68,16 +75,20 @@ public class PiercingClaw : MonoBehaviour
 
         if (PlayerInput.Instance.PlayerClawEd && canAttack && playerView.PlayerModel.Mana >= 25)
         {
-            clawSprite.SetActive(true);
             isAttacking = true;
-
+            PlayerMove.Instance.CanMove = false;
             //Debug.Log("Claw");
             playerMana.SpendMana("Claw", 1);
 
             playerAnimation.SetBoolClaw(true);
             canAttack = false;
-            StartCoroutine(AttackCooldown(1f));
+            //StartCoroutine(AttackCooldown(1f));
         }
+    }
+
+    public void SetActiveClawSprite()
+    {
+        clawSprite.SetActive(true);
     }
 
     public void ClawDamage()
@@ -98,12 +109,23 @@ public class PiercingClaw : MonoBehaviour
 
     private IEnumerator AttackCooldown(float durationAfterSeries)
     {
-        var clawEnd = 0.4f;
-        yield return new WaitForSeconds(clawEnd);
+        //var clawEnd = 0.4f;
+        //yield return new WaitForSeconds(clawEnd);
+        //playerAnimation.SetBoolClaw(false);
+        //clawSprite.SetActive(false);
+        //isAttacking = false;
+        yield return new WaitForSeconds(durationAfterSeries /*- clawEnd*/);
+        canAttack = true;
+    }
+
+    public void EndClawAnimation()
+    {
+        _rigidbody.gravityScale = _initialGravityScale;
+        PlayerMove.Instance.CanMove = true;
         playerAnimation.SetBoolClaw(false);
         clawSprite.SetActive(false);
         isAttacking = false;
-        yield return new WaitForSeconds(durationAfterSeries - clawEnd);
-        canAttack = true;
+
+        StartCoroutine(AttackCooldown(1));
     }
 }
