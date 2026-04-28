@@ -184,6 +184,8 @@ public class ArmoredBugView : MonoBehaviour
 
         if (_damageApplied)
         {
+            PlayHitSound(_hitClip);
+
             var direction = damage / Mathf.Abs(damage);
             foreach (var damageFlash in _damageFlash)
             {

@@ -713,7 +713,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     private void UpdateCurrencyText()
     {
         _moneyText.text = PlayerView.Instance.PlayerModel.MoneyCollected.ToString();
-        _crystalText.text = PlayerView.Instance.PlayerModel.SoulCrystalsCollected.ToString();
+        _crystalText.text = $"{PlayerView.Instance.PlayerModel.SoulCrystalsCollected.ToString()}/20";
     }
 
     private void OnEnable()
