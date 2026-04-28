@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
     public bool InPauseMenu { get { return inPauseMenu; } }
     public bool InGameMenu { get { return inGameMenu; } }
 
+    public event System.Action OnTransitionComplete;
+
     #endregion
 
     public enum MenuState { None, Pause, Options, Controls, GamepadControls, KeyboardControls }
@@ -156,6 +158,8 @@ public class GameManager : MonoBehaviour
         CameraFollowObject.Instance.transform.position = destination.transform.position;
 
         //yield return screenFader.FadeIn();
+        OnTransitionComplete?.Invoke();
+
         isTransitioning = false;
         SetGameState(GameState.EXITING_LEVEL);
 

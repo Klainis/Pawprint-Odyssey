@@ -39,6 +39,6 @@ public class PlayerGhostTrail : MonoBehaviour
     public void InstantiateGhostTrail()
     {
         _ghostInstance = Instantiate(_ghostPrefab, transform.position, transform.rotation);
-        Debug.Log($"Создался префаб ghost: {_ghostInstance}");
+        //Debug.Log($"Создался префаб ghost: {_ghostInstance}");
     }
 }

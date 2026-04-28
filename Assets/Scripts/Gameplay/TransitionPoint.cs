@@ -32,7 +32,7 @@ public class TransitionPoint : MonoBehaviour
         col = GetComponent<Collider2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D movigObj)
+    private void OnTriggerStay2D(Collider2D movigObj)
     {
         if (movigObj.CompareTag("Player") && !_isTransitioning)
         {
@@ -53,8 +53,32 @@ public class TransitionPoint : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnTransitionComplete += ResetTransitionLock;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnTransitionComplete -= ResetTransitionLock;
+        }
+    }
+
+    private void ResetTransitionLock()
+    {
+        _isTransitioning = false;
+        activated = false;
+    }
+
     private IEnumerator WalkIntoGate(Collider2D playerCollider, /*Vector2 targetPosotion,*/ float speed)
     {
+        Debug.Log($"[Transition] WalkIntoGate START | State: {gameManager.GameState}");
+
         playerInput.enabled = false;
         //playerView.enabled = false;
         Rigidbody2D playerRB1 = playerCollider.gameObject.GetComponent<Rigidbody2D>();
@@ -119,17 +143,23 @@ public class TransitionPoint : MonoBehaviour
             }
         }
 
+        Debug.Log($"[Transition] WalkIntoGate END | activated: {activated}");
+
         if (activated)
         {
+            Debug.Log($"[Transition] Calling TryDoTransition");
             TryDoTransition(playerCollider);
         }
 
         yield return new WaitForSeconds(0.2f);
         _isTransitioning = false;
+        Debug.Log($"[Transition] Lock released");
     }
 
     private IEnumerator WalkOutGate(Collider2D playerCollider, float speed)
     {
+        Debug.Log($"[Transition] WalkOutGate START | State: {gameManager.GameState}");
+
         GatePosition gatePosition = GetGatePosition();
 
         Rigidbody2D playerRB1 = playerCollider.gameObject.GetComponent<Rigidbody2D>();
@@ -177,6 +207,8 @@ public class TransitionPoint : MonoBehaviour
 
         }
 
+        Debug.Log($"[Transition] WalkOutGate END | activated: {activated}");
+
         playerView.enabled = true;
         playerInput.enabled = true;
         PlayerMove.Instance.CanMove = true;
@@ -186,6 +218,7 @@ public class TransitionPoint : MonoBehaviour
 
         yield return new WaitForSeconds(0.2f);
         _isTransitioning = false;
+        Debug.Log($"[Transition] Lock released");
     }
 
     public void TryDoTransition(Collider2D playerCollider)
