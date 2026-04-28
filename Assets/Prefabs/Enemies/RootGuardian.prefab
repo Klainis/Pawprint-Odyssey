@@ -1508,6 +1508,7 @@ GameObject:
   - component: {fileID: 1360591194232854109}
   - component: {fileID: 5894264568620993620}
   - component: {fileID: 4184825711133727269}
+  - component: {fileID: 8421684214011376600}
   m_Layer: 6
   m_Name: Arm Right
   m_TagString: Enemy
@@ -1609,6 +1610,52 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6486176326669427473}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 12352
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.5437531, y: 0.78568155}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.89078265, y: 0.23397385}
+    oldSize: {x: 0.96, y: 2.48}
+    newSize: {x: 1.18, y: 0.8}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.16935048, y: 1.7773947}
+  m_EdgeRadius: 0
+--- !u!60 &8421684214011376600
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6486176326669427473}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -1636,7 +1683,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.50739187, y: 0.7637984}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.89078265, y: 0.23397385}
@@ -1646,8 +1693,16 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.46778333, y: 1.7336284}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.20891975, y: -0.052583855}
+      - {x: -0.46878293, y: 0.85514426}
+      - {x: -0.39392087, y: 1.039902}
+      - {x: -0.5250298, y: 1.5509211}
+      - {x: -0.7224222, y: 1.0708005}
+      - {x: -0.55076724, y: 0.7467332}
+      - {x: -0.3442606, y: -0.09275508}
+  m_UseDelaunayMesh: 0
 --- !u!1 &8159746092935929527
 GameObject:
   m_ObjectHideFlags: 0
