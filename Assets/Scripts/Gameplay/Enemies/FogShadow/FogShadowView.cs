@@ -13,7 +13,11 @@ public class FogShadowView : MonoBehaviour
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private AudioClip _hitClip;
     [SerializeField] private bool _isInvincible = false;
-    [SerializeField] private bool _s = false;
+
+    [Header("Attack")]
+    [SerializeField] private GameObject _targetZone;
+    [SerializeField] private float _attackCooldown = 1f;
+    [SerializeField] private float _telegraphTime = 0.25f;
 
     [Header("Patrol")]
     [SerializeField] private Vector2 _patrolRange;
@@ -38,9 +42,13 @@ public class FogShadowView : MonoBehaviour
     private FogShadowAttack _attack;
     private FogShadowMove _move;
     private FogShadowAnimation _animation;
+    private FogShadowTargetZoneHandler _targetZoneHandler;
     private InstantiateMoney _money;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
+
+    private Coroutine _telegraphCoroutine;
+    private RigidbodyConstraints2D _defaultConstraints;
 
     private bool _isKnockback = false;
 
@@ -56,7 +64,7 @@ public class FogShadowView : MonoBehaviour
 
     #region Common Methods
 
-    private void Start()
+    private void Awake()
     {
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
@@ -65,17 +73,19 @@ public class FogShadowView : MonoBehaviour
         _attack = GetComponent<FogShadowAttack>();
         _move = GetComponent<FogShadowMove>();
         _animation = GetComponent<FogShadowAnimation>();
+        _targetZoneHandler = GetComponentInChildren<FogShadowTargetZoneHandler>();
         _money = FindAnyObjectByType<InstantiateMoney>();
         _damageFlash = GetComponent<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
         _move.Speed = Model.Speed;
         _move.PatrolRange = _patrolRange;
+
+        _defaultConstraints = _rb.constraints;
     }
 
     private void FixedUpdate()
     {
-        IsChasing = _s;
         if (Model.IsDead)
         {
             StartCoroutine(DestroySelf());
@@ -100,7 +110,22 @@ public class FogShadowView : MonoBehaviour
 
     #region Events
 
+    private void OnEnable()
+    {
+        _targetZoneHandler.TargetZoneEnter += HandleTargetZoneEnter;
+    }
 
+    private void OnDisable()
+    {
+        _targetZoneHandler.TargetZoneEnter -= HandleTargetZoneEnter;
+    }
+
+    private void HandleTargetZoneEnter()
+    {
+        _targetZoneHandler.enabled = false;
+        _targetZone.SetActive(false);
+        IsChasing = true;
+    }
 
     #endregion
 
@@ -165,6 +190,17 @@ public class FogShadowView : MonoBehaviour
         StartCoroutine(WaitForKnockBack());
     }
 
+    private void StartAttackTelegraph(bool faceRight)
+    {
+        if (!_attack.CanAttack(_attackCooldown))
+            return;
+
+        if (_telegraphCoroutine != null)
+            StopCoroutine(_telegraphCoroutine);
+
+        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
+    }
+
     #region Particles
 
     private void SpawnDamageParticles(int direction)
@@ -207,6 +243,27 @@ public class FogShadowView : MonoBehaviour
     #endregion
 
     #region IEnumerators
+
+    private IEnumerator AttackTelegraphRoutine()
+    {
+        _attack.IsAttacking = true;
+        _animation.SetBoolMove(false);
+        _animation.SetBoolAttack(true);
+
+        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+        yield return new WaitForSeconds(_telegraphTime);
+
+        _attack.Attack();
+
+        _rb.constraints = _defaultConstraints;
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+
+        _attack.UpdateLastAttackTime();
+        _attack.IsAttacking = false;
+        _animation.SetBoolAttack(false);
+        _telegraphCoroutine = null;
+    }
 
     private IEnumerator WaitForKnockBack()
     {
