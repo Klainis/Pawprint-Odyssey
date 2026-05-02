@@ -91,6 +91,7 @@ public class FogShadowView : MonoBehaviour
 
         _attack.ProjectilePrefab = _projectilePrefab;
         _attack.AttackPos = _attackPos;
+        _attack.Damage = Model.Damage;
         _attack.TelegraphTime = _telegraphTime;
         _attack.AttackCooldown = _attackCooldown;
         _attack.TimeToHit = _timeToHit;
@@ -117,6 +118,15 @@ public class FogShadowView : MonoBehaviour
                 _move.Chase();
                 FacingRight = _move.UpdateFacingDirection(FacingRight);
             }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && !Model.IsDead)
+        {
+            var playerView = collision.gameObject.GetComponent<PlayerView>();
+            playerView.ApplyDamage(Model.Damage, transform.position, gameObject);
         }
     }
 

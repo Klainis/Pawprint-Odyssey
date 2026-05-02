@@ -5,7 +5,6 @@ public class FogShadowAttack : MonoBehaviour
 {
     #region Variables
 
-    private FogShadowView _view;
     private FogShadowAnimation _animation;
     private Rigidbody2D _rb;
 
@@ -20,6 +19,7 @@ public class FogShadowAttack : MonoBehaviour
 
     public GameObject ProjectilePrefab { get; set; }
     public GameObject AttackPos { get; set; }
+    public int Damage { get; set; }
     public float TelegraphTime { get; set; }
     public float AttackCooldown { get; set; }
     public float TimeToHit { get; set; }
@@ -32,23 +32,10 @@ public class FogShadowAttack : MonoBehaviour
 
     private void Start()
     {
-        _view = GetComponent<FogShadowView>();
         _animation = GetComponent<FogShadowAnimation>();
         _rb = GetComponent<Rigidbody2D>();
 
         _defaultConstraints = _rb.constraints;
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (!_view.Model.IsDead)
-            {
-                var playerView = collision.gameObject.GetComponent<PlayerView>();
-                playerView.ApplyDamage(_view.Model.Damage, transform.position, gameObject);
-            }
-        }
     }
 
     #endregion
@@ -78,7 +65,7 @@ public class FogShadowAttack : MonoBehaviour
         var projObj = Instantiate(ProjectilePrefab, startPos, Quaternion.identity);
         var projectile = projObj.GetComponent<FogShadowProjectile>();
 
-        projectile.Launch(velocity, _view.Model.Damage);
+        projectile.Launch(velocity, Damage);
     }
 
     private Vector2 CalculateParabolicVelocity(Vector2 start, Vector2 target, float time)
