@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.InferenceEngine;
 using UnityEngine;
 
 public class FogShadowView : MonoBehaviour
@@ -16,8 +15,17 @@ public class FogShadowView : MonoBehaviour
 
     [Header("Attack")]
     [SerializeField] private GameObject _targetZone;
+    [SerializeField] private GameObject _attackPos;
+    [SerializeField] private GameObject _projectilePrefab;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
+    [SerializeField] private float _timeToHit = 1.0f;
+    [SerializeField] private float _arcHeight = 2.0f;
+
+    [Header("Chase")]
+    [SerializeField] private float _followDistance = 3.0f;
+    [SerializeField] private float _hoverHeight = 2.0f;
+    [SerializeField] private LayerMask _obstacleLayer;
 
     [Header("Patrol")]
     [SerializeField] private Vector2 _patrolRange;
@@ -46,9 +54,6 @@ public class FogShadowView : MonoBehaviour
     private InstantiateMoney _money;
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
-
-    private Coroutine _telegraphCoroutine;
-    private RigidbodyConstraints2D _defaultConstraints;
 
     private bool _isKnockback = false;
 
@@ -80,8 +85,16 @@ public class FogShadowView : MonoBehaviour
 
         _move.Speed = Model.Speed;
         _move.PatrolRange = _patrolRange;
+        _move.FollowDistance = _followDistance;
+        _move.HoverHeight = _hoverHeight;
+        _move.ObstacleLayer = _obstacleLayer;
 
-        _defaultConstraints = _rb.constraints;
+        _attack.ProjectilePrefab = _projectilePrefab;
+        _attack.AttackPos = _attackPos;
+        _attack.TelegraphTime = _telegraphTime;
+        _attack.AttackCooldown = _attackCooldown;
+        _attack.TimeToHit = _timeToHit;
+        _attack.ArcHeight = _arcHeight;
     }
 
     private void FixedUpdate()
@@ -96,12 +109,13 @@ public class FogShadowView : MonoBehaviour
             if (!IsChasing)
             {
                 _move.Patrol();
-                CheckTurn();
+                FacingRight = _move.UpdateFacingDirection(FacingRight);
             }
             else if (IsChasing)
             {
+                _attack.StartAttackTelegraph();
                 _move.Chase();
-                CheckTurn();
+                FacingRight = _move.UpdateFacingDirection(FacingRight);
             }
         }
     }
@@ -125,17 +139,10 @@ public class FogShadowView : MonoBehaviour
         _targetZoneHandler.enabled = false;
         _targetZone.SetActive(false);
         IsChasing = true;
+        _move.IsChasing = IsChasing;
     }
 
     #endregion
-
-    private void CheckTurn()
-    {
-        if (_move.TargetPosition.x < transform.position.x && FacingRight)
-            FacingRight = _move.Turn(FacingRight);
-        else if (_move.TargetPosition.x >= transform.position.x && !FacingRight)
-            FacingRight = _move.Turn(FacingRight);
-    }
 
     public void ApplyDamage(int damage)
     {
@@ -190,17 +197,6 @@ public class FogShadowView : MonoBehaviour
         StartCoroutine(WaitForKnockBack());
     }
 
-    private void StartAttackTelegraph(bool faceRight)
-    {
-        if (!_attack.CanAttack(_attackCooldown))
-            return;
-
-        if (_telegraphCoroutine != null)
-            StopCoroutine(_telegraphCoroutine);
-
-        _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
-    }
-
     #region Particles
 
     private void SpawnDamageParticles(int direction)
@@ -243,27 +239,6 @@ public class FogShadowView : MonoBehaviour
     #endregion
 
     #region IEnumerators
-
-    private IEnumerator AttackTelegraphRoutine()
-    {
-        _attack.IsAttacking = true;
-        _animation.SetBoolMove(false);
-        _animation.SetBoolAttack(true);
-
-        _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
-
-        yield return new WaitForSeconds(_telegraphTime);
-
-        _attack.Attack();
-
-        _rb.constraints = _defaultConstraints;
-        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
-
-        _attack.UpdateLastAttackTime();
-        _attack.IsAttacking = false;
-        _animation.SetBoolAttack(false);
-        _telegraphCoroutine = null;
-    }
 
     private IEnumerator WaitForKnockBack()
     {

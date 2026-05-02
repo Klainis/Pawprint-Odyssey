@@ -90,6 +90,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &965124576205422742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5066947579014215591}
+  m_Layer: 6
+  m_Name: AttackPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5066947579014215591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965124576205422742}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.897, y: 0.427, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 214941231178659107}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1017464118067607967
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +334,7 @@ Transform:
   m_Children:
   - {fileID: 6512199776844068269}
   - {fileID: 6615597995525763087}
+  - {fileID: 5066947579014215591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &3849890933215770483
@@ -507,8 +539,17 @@ MonoBehaviour:
   _hitClip: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   _isInvincible: 0
   _targetZone: {fileID: 1017464118067607967}
-  _attackCooldown: 1
+  _projectilePrefab: {fileID: 5532974359214069763, guid: e293bf0750507c14a8d1a04993af45db, type: 3}
+  _attackPos: {fileID: 965124576205422742}
+  _attackCooldown: 1.5
   _telegraphTime: 0.25
+  _timeToHit: 1
+  _arcHeight: 2
+  _followDistance: 4
+  _hoverHeight: 5
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 512
   _patrolRange: {x: 3, y: 1.5}
   _damageParticle: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
   _playerWeaponParticle: {fileID: 3511315664987222026, guid: f2dc37c6a64b774478fe8ad8855bb747, type: 3}
