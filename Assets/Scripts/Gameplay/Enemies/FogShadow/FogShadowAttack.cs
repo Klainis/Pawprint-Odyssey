@@ -23,7 +23,6 @@ public class FogShadowAttack : MonoBehaviour
     public float TelegraphTime { get; set; }
     public float AttackCooldown { get; set; }
     public float TimeToHit { get; set; }
-    public float ArcHeight { get; set; }
     public bool IsAttacking { get; set; } = false;
 
     #endregion
@@ -52,7 +51,7 @@ public class FogShadowAttack : MonoBehaviour
         _lastAttackTime = Time.time;
     }
 
-    public void Attack()
+    private void Attack()
     {
         var player = InitializeManager.Instance.player?.transform;
         if (player == null) return;

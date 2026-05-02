@@ -20,7 +20,6 @@ public class FogShadowView : MonoBehaviour
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
     [SerializeField] private float _timeToHit = 1.0f;
-    [SerializeField] private float _arcHeight = 2.0f;
 
     [Header("Chase")]
     [SerializeField] private float _followDistance = 3.0f;
@@ -95,7 +94,6 @@ public class FogShadowView : MonoBehaviour
         _attack.TelegraphTime = _telegraphTime;
         _attack.AttackCooldown = _attackCooldown;
         _attack.TimeToHit = _timeToHit;
-        _attack.ArcHeight = _arcHeight;
     }
 
     private void FixedUpdate()
