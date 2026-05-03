@@ -7,7 +7,6 @@ public class FogShadowView : MonoBehaviour
 
     [Header("Main params")]
     [SerializeField] private EnemyData _data;
-    [SerializeField] private PlayerAttack _playerAttack;
     [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private AudioClip _hitClip;
@@ -46,6 +45,8 @@ public class FogShadowView : MonoBehaviour
     private ParticleSystem _playerWeaponParticleInstance;
     private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
 
+    private PlayerAttack _playerAttack;
+
     private AudioSource _audioSource;
     private Rigidbody2D _rb;
     private FogShadowAttack _attack;
@@ -53,7 +54,7 @@ public class FogShadowView : MonoBehaviour
     private FogShadowAnimation _animation;
     private FogShadowTargetZoneHandler _targetZoneHandler;
     private InstantiateMoney _money;
-    private DamageFlash _damageFlash;
+    private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
 
     private SpriteRenderer[] _spriteRenderers;
@@ -86,7 +87,7 @@ public class FogShadowView : MonoBehaviour
         _animation = GetComponent<FogShadowAnimation>();
         _targetZoneHandler = GetComponentInChildren<FogShadowTargetZoneHandler>();
         _money = FindAnyObjectByType<InstantiateMoney>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
         _move.Speed = Model.Speed;
@@ -105,6 +106,8 @@ public class FogShadowView : MonoBehaviour
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         _mainCollider = GetComponent<Collider2D>();
         _dissipateTimer = Random.Range(3f, 6f);
+
+        _playerAttack = PlayerAttack.Instance;
     }
 
     private void FixedUpdate()
@@ -176,7 +179,10 @@ public class FogShadowView : MonoBehaviour
         if (damageApplied)
         {
             PlayHitSound(_hitClip);
-            _damageFlash.CallDamageFlash();
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
 
             _animation.SetBoolHit(true);
             _rb.linearVelocity = Vector2.zero;
