@@ -210,6 +210,7 @@ public class PlayerMove : MonoBehaviour
             {
                 playerAnimation.SetBoolIsJumping(false);//
                 playerAnimation.SetBoolIsFall(false);
+                playerAnimation.SetBoolIsLand(true);
 
                 //if (!isWall && !isDashing)
                 //    PlayParticleJumpDown();
