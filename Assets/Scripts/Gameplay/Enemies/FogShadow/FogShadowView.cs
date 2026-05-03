@@ -20,11 +20,12 @@ public class FogShadowView : MonoBehaviour
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
     [SerializeField] private float _timeToHit = 1.0f;
-    [SerializeField] private float _arcHeight = 2.0f;
 
     [Header("Chase")]
     [SerializeField] private float _followDistance = 3.0f;
     [SerializeField] private float _hoverHeight = 2.0f;
+    [SerializeField] private float _dissipateDuration;
+    [SerializeField] private float _fadeDuration = 0.5f;
     [SerializeField] private LayerMask _obstacleLayer;
 
     [Header("Patrol")]
@@ -55,6 +56,10 @@ public class FogShadowView : MonoBehaviour
     private DamageFlash _damageFlash;
     private ScreenShaker _screenShaker;
 
+    private SpriteRenderer[] _spriteRenderers;
+    private Collider2D _mainCollider;
+
+    private float _dissipateTimer;
     private bool _isKnockback = false;
 
     #endregion
@@ -64,6 +69,7 @@ public class FogShadowView : MonoBehaviour
     public EnemyModel Model { get; private set; }
     public bool FacingRight { get; private set; } = false;
     public bool IsChasing { get; set; } = false;
+    public bool IsDissipated { get; set; } = false;
 
     #endregion
 
@@ -91,10 +97,14 @@ public class FogShadowView : MonoBehaviour
 
         _attack.ProjectilePrefab = _projectilePrefab;
         _attack.AttackPos = _attackPos;
+        _attack.Damage = Model.Damage;
         _attack.TelegraphTime = _telegraphTime;
         _attack.AttackCooldown = _attackCooldown;
         _attack.TimeToHit = _timeToHit;
-        _attack.ArcHeight = _arcHeight;
+
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        _mainCollider = GetComponent<Collider2D>();
+        _dissipateTimer = Random.Range(3f, 6f);
     }
 
     private void FixedUpdate()
@@ -104,19 +114,26 @@ public class FogShadowView : MonoBehaviour
             StartCoroutine(DestroySelf());
             return;
         }
-        else if (!_attack.IsAttacking)
+        if (IsChasing && !_attack.IsAttacking)
         {
-            if (!IsChasing)
-            {
-                _move.Patrol();
-                FacingRight = _move.UpdateFacingDirection(FacingRight);
-            }
-            else if (IsChasing)
-            {
-                _attack.StartAttackTelegraph();
-                _move.Chase();
-                FacingRight = _move.UpdateFacingDirection(FacingRight);
-            }
+            HandleDissipation();
+            _attack.StartAttackTelegraph(IsDissipated);
+            _move.Chase();
+            FacingRight = _move.UpdateFacingDirection(FacingRight);
+        }
+        else if (!IsChasing)
+        {
+            _move.Patrol();
+            FacingRight = _move.UpdateFacingDirection(FacingRight);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && !Model.IsDead)
+        {
+            var playerView = collision.gameObject.GetComponent<PlayerView>();
+            playerView.ApplyDamage(Model.Damage, transform.position, gameObject);
         }
     }
 
@@ -146,7 +163,7 @@ public class FogShadowView : MonoBehaviour
 
     public void ApplyDamage(int damage)
     {
-        if (_isInvincible) return;
+        if (_isInvincible || IsDissipated) return;
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
@@ -197,6 +214,23 @@ public class FogShadowView : MonoBehaviour
         StartCoroutine(WaitForKnockBack());
     }
 
+    private void HandleDissipation()
+    {
+        _dissipateTimer -= Time.deltaTime;
+
+        if (!IsDissipated && _dissipateTimer <= 0)
+            StartCoroutine(DissipateRoutine());
+    }
+
+    private void SwitchColliderAndSpriteRenderers(bool state)
+    {
+        foreach (var sprite in _spriteRenderers)
+        {
+            sprite.enabled = state;
+        }
+        _mainCollider.enabled = state;
+    }
+
     #region Particles
 
     private void SpawnDamageParticles(int direction)
@@ -239,6 +273,48 @@ public class FogShadowView : MonoBehaviour
     #endregion
 
     #region IEnumerators
+
+    private IEnumerator DissipateRoutine()
+    {
+        IsDissipated = true;
+        _isInvincible = true;
+        _mainCollider.enabled = false;
+
+        yield return StartCoroutine(FadeSprites(0f));
+
+        var duration = Random.Range(_dissipateDuration - 0.5f, _dissipateDuration + 0.5f);
+        yield return new WaitForSeconds(duration);
+
+        yield return StartCoroutine(FadeSprites(1f));
+
+        IsDissipated = false;
+        _isInvincible = false;
+        _mainCollider.enabled = true;
+
+        _dissipateTimer = Random.Range(3f, 5f);
+    }
+
+    private IEnumerator FadeSprites(float targetAlpha)
+    {
+        var elapsedTime = 0f;
+        var startAlphas = new float[_spriteRenderers.Length];
+        for (var i = 0; i < _spriteRenderers.Length; i++)
+            startAlphas[i] = _spriteRenderers[i].color.a;
+
+        while (elapsedTime < _fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            var newAlpha = Mathf.Lerp(startAlphas[0], targetAlpha, elapsedTime / _fadeDuration);
+
+            for (var i = 0; i < _spriteRenderers.Length; i++)
+            {
+                var color = _spriteRenderers[i].color;
+                color.a = newAlpha;
+                _spriteRenderers[i].color = color;
+            }
+            yield return null;
+        }
+    }
 
     private IEnumerator WaitForKnockBack()
     {
