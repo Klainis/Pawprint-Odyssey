@@ -11,9 +11,12 @@ public class FogShadowMove : MonoBehaviour
     private Transform _playerTransform;
 
     private Vector2 _startPosition;
-    private Vector2 _currentChaseOffset;
+    private Vector2 _baseChaseOffset;
+    private Vector2 _driftOffset;
+    private Vector2 _playerAnchorPos;
 
-    private float _chaseRandomTimer;
+    private float _macroTimer;
+    private float _microTimer;
 
     #endregion
 
@@ -23,11 +26,14 @@ public class FogShadowMove : MonoBehaviour
     public Vector2 PatrolRange { get; set; }
     public Vector2 TargetPosition { get; private set; }
     public float Speed { get; set; }
-    public float ChaseSpeed { get { return Speed + 2.0f; } }
+    public float ChaseSpeed => Speed + 2.0f;
     public float FollowDistance { get; set; }
     public float HoverHeight { get; set; }
     public float RandomizeInterval { get; set; } = 1.5f;
     public float RandomRangeX { get; set; } = 2.0f;
+    public float MacroInterval { get; set; } = 4.0f;
+    public float MicroInterval { get; set; } = 0.8f;
+    public float DriftRadius { get; set; } = 1.5f;
     public bool IsChasing { get; set; }
 
     #endregion
@@ -56,27 +62,38 @@ public class FogShadowMove : MonoBehaviour
         _animation.SetBoolPatrol(false);
         _animation.SetBoolMove(true);
 
-        _chaseRandomTimer -= Time.deltaTime;
-        if (_chaseRandomTimer <= 0 || Vector2.Distance(transform.position, TargetPosition) < 0.2f)
+        _macroTimer -= Time.deltaTime;
+        if (_macroTimer <= 0)
         {
-            var rx = Random.Range(-FollowDistance - RandomRangeX, FollowDistance + RandomRangeX);
-            var ry = Random.Range(HoverHeight - 0.5f, HoverHeight + 1.0f);
+            _playerAnchorPos = _playerTransform.position;
 
-            _currentChaseOffset = new Vector2(rx, ry);
-            _chaseRandomTimer = RandomizeInterval;
+            var side = Random.value > 0.5f ? 1 : -1;
+            _baseChaseOffset = new Vector2(side * FollowDistance, HoverHeight);
+
+            _macroTimer = MacroInterval;
         }
 
-        var targetX = _playerTransform.position.x + _currentChaseOffset.x;
-        var targetY = _playerTransform.position.y + _currentChaseOffset.y;
+        _microTimer -= Time.deltaTime;
+        if (_microTimer <= 0)
+        {
+            _driftOffset = new Vector2(
+                Random.Range(-DriftRadius, DriftRadius),
+                Random.Range(-0.5f, 0.5f)
+            );
+            _microTimer = MicroInterval;
+        }
+
+        var targetX = _playerAnchorPos.x + _baseChaseOffset.x + _driftOffset.x;
+        var targetY = _playerAnchorPos.y + _baseChaseOffset.y + _driftOffset.y;
 
         var rayStart = (Vector2)_playerTransform.position + Vector2.up * 0.5f;
-        var hit = Physics2D.Raycast(rayStart, Vector2.up, targetY - _playerTransform.position.y, ObstacleLayer);
+        var hit = Physics2D.Raycast(rayStart, Vector2.up, HoverHeight, ObstacleLayer);
 
         if (hit.collider != null)
         {
             targetY = hit.point.y - 0.9f;
         }
-        targetY = Mathf.Max(targetY, _playerTransform.position.y + 1f);
+        targetY = Mathf.Max(targetY, _playerAnchorPos.y + 1f);
 
         TargetPosition = new Vector2(targetX, targetY);
         transform.position = Vector2.MoveTowards(transform.position, TargetPosition, ChaseSpeed * Time.deltaTime);
