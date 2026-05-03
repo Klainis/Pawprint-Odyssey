@@ -80,9 +80,9 @@ public class FogShadowAttack : MonoBehaviour
         return new Vector2(vx, vy);
     }
 
-    public void StartAttackTelegraph()
+    public void StartAttackTelegraph(bool isDissipated)
     {
-        if (!CanAttack(AttackCooldown))
+        if (isDissipated || !CanAttack(AttackCooldown))
             return;
 
         if (_telegraphCoroutine != null)
