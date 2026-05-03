@@ -18,7 +18,8 @@ public class FogShadowView : MonoBehaviour
     [SerializeField] private GameObject _projectilePrefab;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
-    [SerializeField] private float _timeToHit = 1.0f;
+    [SerializeField] private float _projectileSpeed;
+    [SerializeField] private float _maxAttackDistance;
 
     [Header("Chase")]
     [SerializeField] private float _followDistance = 3.0f;
@@ -101,7 +102,8 @@ public class FogShadowView : MonoBehaviour
         _attack.Damage = Model.Damage;
         _attack.TelegraphTime = _telegraphTime;
         _attack.AttackCooldown = _attackCooldown;
-        _attack.TimeToHit = _timeToHit;
+        _attack.ProjectileSpeed = _projectileSpeed;
+        _attack.MaxAttackDistance = _maxAttackDistance;
 
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         _mainCollider = GetComponent<Collider2D>();
@@ -226,15 +228,6 @@ public class FogShadowView : MonoBehaviour
 
         if (!IsDissipated && _dissipateTimer <= 0)
             StartCoroutine(DissipateRoutine());
-    }
-
-    private void SwitchColliderAndSpriteRenderers(bool state)
-    {
-        foreach (var sprite in _spriteRenderers)
-        {
-            sprite.enabled = state;
-        }
-        _mainCollider.enabled = state;
     }
 
     #region Particles

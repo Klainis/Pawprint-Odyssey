@@ -22,7 +22,8 @@ public class FogShadowAttack : MonoBehaviour
     public int Damage { get; set; }
     public float TelegraphTime { get; set; }
     public float AttackCooldown { get; set; }
-    public float TimeToHit { get; set; }
+    public float ProjectileSpeed { get; set; }
+    public float MaxAttackDistance { get; set; }
     public bool IsAttacking { get; set; } = false;
 
     #endregion
@@ -57,31 +58,45 @@ public class FogShadowAttack : MonoBehaviour
         if (player == null) return;
 
         var startPos = AttackPos.transform.position;
-        var targetPos = new Vector2(player.position.x, player.position.y + 0.7f);
+        var targetPos = new Vector2(player.position.x, player.position.y + 0.9f);
 
-        var velocity = CalculateParabolicVelocity(startPos, targetPos, TimeToHit);
+        var velocity = CalculateParabolicVelocity(startPos, targetPos, ProjectileSpeed);
 
         var projObj = Instantiate(ProjectilePrefab, startPos, Quaternion.identity);
         var projectile = projObj.GetComponent<FogShadowProjectile>();
-
         projectile.Launch(velocity, Damage);
     }
 
-    private Vector2 CalculateParabolicVelocity(Vector2 start, Vector2 target, float time)
+    private Vector2 CalculateParabolicVelocity(Vector2 start, Vector2 target, float speed)
     {
-        var distX = target.x - start.x;
-        var distY = target.y - start.y;
+        var x = target.x - start.x;
+        var y = target.y - start.y;
+        var g = Mathf.Abs(Physics2D.gravity.y);
+        var v = speed;
 
-        var vx = distX / time;
+        var v2 = speed * speed;
+        var root = v2 * v2 - g * (g * x * x + 2 * y * v2);
 
-        var gravity = Mathf.Abs(Physics2D.gravity.y);
-        var vy = (distY + 0.5f * gravity * time * time) / time;
+        if (root < 0)
+            return new Vector2(Mathf.Sign(x) * v * 0.7f, v * 0.7f);
 
-        return new Vector2(vx, vy);
+        var angle = Mathf.Atan((v2 - Mathf.Sqrt(root)) / (g * x));
+
+        if (x < 0)
+            angle += Mathf.PI;
+
+        return new Vector2(Mathf.Cos(angle) * v, Mathf.Sin(angle) * v);
     }
 
     public void StartAttackTelegraph(bool isDissipated)
     {
+        var player = InitializeManager.Instance.player?.transform;
+        if (player != null)
+        {
+            var distance = Vector2.Distance(transform.position, player.position);
+            if (distance > MaxAttackDistance) return;
+        }
+
         if (isDissipated || !CanAttack(AttackCooldown))
             return;
 
