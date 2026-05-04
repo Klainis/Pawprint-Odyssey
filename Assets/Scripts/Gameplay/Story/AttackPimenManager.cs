@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackPimenManager : MonoBehaviour
@@ -8,6 +10,9 @@ public class AttackPimenManager : MonoBehaviour
 
     [Header("Enemies")]
     [SerializeField] private int _maxEnemyAmount = 2;
+
+    [Header("Close walls")]
+    [SerializeField] private List<GameObject> _walls;
 
     private PimenMove _pimenMove;
     private StunAudioController _stunAudioController;
@@ -26,16 +31,20 @@ public class AttackPimenManager : MonoBehaviour
         }
         _instance = this;
 
+        if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel.MeetPimen)
+        {
+            gameObject.SetActive(false);
+        }
+
+        _pimenObject = GameObject.FindGameObjectWithTag("Pimen");
+
+        _pimenMove = _pimenObject.GetComponent<PimenMove>();
+
         _stunAudioController = GetComponent<StunAudioController>();
     }
 
     private void Start()
     {
-        _pimenObject = GameObject.FindGameObjectWithTag("Pimen");
-
-        _pimenMove = _pimenObject.GetComponent<PimenMove>();
-        _pimenMove.enabled = false;
-
         _currentDeadEnemyAmount = 0;
         Debug.Log(_currentDeadEnemyAmount);
     }
@@ -66,5 +75,17 @@ public class AttackPimenManager : MonoBehaviour
         Time.timeScale = 1;
 
         _pimenMove.enabled = true;
+
+        PlayerView.Instance.PlayerModel.SetMeetPimen();
+        SaveSystem.Save();
+        SaveSystem.AutoSave();
+
+        yield return new WaitForSeconds(1.5f);
+
+        foreach (var wall in _walls)
+        {
+            var closedGr = wall.GetComponent<ClosedGround>();
+            closedGr.StartDestroyer();
+        }
     }
 }

@@ -5,7 +5,7 @@ public class SoulCrystal : MonoBehaviour
     [Header("Data")] 
     [SerializeField] private EnvironmentData environmentData;
     [Space(5)]
-    private ShakeObjectAfterDamage shakeObjectAfterDamage;
+    private ShakeObject shakeObjectAfterDamage;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _playerWeaponParticle;
@@ -19,7 +19,7 @@ public class SoulCrystal : MonoBehaviour
     {
         _crystalCounter = PlayerView.Instance.GetComponent<SoulCrystalCounter>();
         _destroyBrokenCrystals = GetComponent<DestroyBrokenCrystals>();
-        shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
+        shakeObjectAfterDamage = GetComponent<ShakeObject>();
     }
 
     private void Start()

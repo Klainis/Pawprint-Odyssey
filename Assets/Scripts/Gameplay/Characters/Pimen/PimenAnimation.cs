@@ -13,4 +13,9 @@ public class PimenAnimation : MonoBehaviour
     {
         _animator.SetBool("IsMove", value);
     }
+
+    public void SetIsTrick(bool value)
+    {
+        _animator.SetBool("IsTrick", value);
+    }
 }

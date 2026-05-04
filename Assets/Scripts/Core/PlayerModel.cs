@@ -35,6 +35,9 @@ public class PlayerModel
     public bool GuardianOwlKilled { get; private set; }
     public bool StartCutSceneShowed { get; private set; }
 
+
+    public bool MeetPimen {  get; private set; }
+
     #endregion
 
     #region Init New Instance
@@ -49,7 +52,8 @@ public class PlayerModel
                         bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash, bool hasChargedAttack, bool hasFourPaws, bool hasSoulRelease, bool hasParrying,
                         bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled,
-                        bool startCutSceneShowed)
+                        bool startCutSceneShowed,
+                        bool meetPimen)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -86,6 +90,8 @@ public class PlayerModel
         SpiritGuideKilled = spiritGuideKilled;
         GuardianOwlKilled = guardianOwlKilled;
         StartCutSceneShowed = startCutSceneShowed;
+
+        MeetPimen = meetPimen;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -119,7 +125,8 @@ public class PlayerModel
             data.FacingRight,
             data.SpiritGuideKilled,
             data.GuardianOwlKilled,
-            data.StartCutSceneShowed
+            data.StartCutSceneShowed,
+            data.MeetPimen
         );
     }
 
@@ -154,7 +161,8 @@ public class PlayerModel
             playerData.facingRight,
             playerData.spiritGuideKilled,
             playerData.guardianOwlKilled,
-            playerData.startSutSceneShowed
+            playerData.startSutSceneShowed,
+            playerData.meetPimen
         );
     }
 
@@ -344,6 +352,12 @@ public class PlayerModel
         return StartCutSceneShowed;
     }
 
+    public bool SetMeetPimen()
+    {
+        MeetPimen = true;
+        return MeetPimen;
+    }
+
     #endregion
 
     #region Save & Load
@@ -379,6 +393,7 @@ public class PlayerModel
         data.SpiritGuideKilled = SpiritGuideKilled;
         data.GuardianOwlKilled = GuardianOwlKilled;
         data.StartCutSceneShowed = StartCutSceneShowed;
+        data.MeetPimen = MeetPimen;
     }
 
     public void Load(PlayerSaveData data)
@@ -412,6 +427,7 @@ public class PlayerModel
         SpiritGuideKilled = data.SpiritGuideKilled;
         GuardianOwlKilled = data.GuardianOwlKilled;
         StartCutSceneShowed = data.StartCutSceneShowed;
+        MeetPimen = data.MeetPimen;
     }
 
     #endregion
@@ -449,4 +465,5 @@ public struct PlayerSaveData
     public bool SpiritGuideKilled;
     public bool GuardianOwlKilled;
     public bool StartCutSceneShowed;
+    public bool MeetPimen;
 }

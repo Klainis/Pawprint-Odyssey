@@ -95,7 +95,8 @@ public class EntryPoint : MonoBehaviour
     public GameObject GlobalVolumeInstance { get { return _globalVolumeInstance; } }
     public GameObject MusicHandlerInstance { get { return _musicHandlerInstance; } }
 
-    private bool playerInitialized = false;
+    private bool _playerInitialized = false;
+    private bool _meetPimen = false;
 
     private void Awake()
     {
@@ -439,7 +440,7 @@ public class EntryPoint : MonoBehaviour
         if (piercingClaw) piercingClaw.enabled = false;
 
         playerMana = _playerInstance.GetComponent<PlayerMana>();
-        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasChargedAttack || playerView.PlayerModel.HasClaw)
+        if (playerView.PlayerModel.HasDamageDash || playerView.PlayerModel.HasChargedAttack || playerView.PlayerModel.HasClaw || playerView.PlayerModel.HasSoulRelease)
         {
             playerMana.enabled = true; 
         }
@@ -449,18 +450,31 @@ public class EntryPoint : MonoBehaviour
         }
 
         InitializeManager.Instance.player = _playerInstance;
-        playerInitialized = true;
+        _playerInitialized = true;
+
+        _meetPimen = playerView.PlayerModel.MeetPimen;
     }
 
     public void InitializePimen()
     {
         if (pimenPrefab != null)
         {
-            _pimenInstance = Instantiate(pimenPrefab);
-            DontDestroyOnLoad(_pimenInstance);
+            if (_meetPimen)
+            {
+                _pimenInstance = Instantiate(pimenPrefab, _playerInstance.transform.position + new Vector3(-1, 1, 0), Quaternion.identity);
+                DontDestroyOnLoad(_pimenInstance);
 
-            PimenMove _pimenMove = _pimenInstance.GetComponent<PimenMove>();
-            _pimenMove.enabled = false;
+                PimenMove _pimenMove = _pimenInstance.GetComponent<PimenMove>();
+                _pimenMove.enabled = true;
+            }
+            else
+            {
+                _pimenInstance = Instantiate(pimenPrefab, new Vector3(-53f, -2.5f, 0f), Quaternion.identity);
+                DontDestroyOnLoad(_pimenInstance);
+
+                PimenMove _pimenMove = _pimenInstance.GetComponent<PimenMove>();
+                _pimenMove.enabled = false;
+            }
         }
         else
         {
@@ -492,7 +506,7 @@ public class EntryPoint : MonoBehaviour
             {
                 _heartsInstance = Instantiate(heartsPrefab, _canvasInstance.transform);
                 DontDestroyOnLoad(_heartsInstance);
-                if (playerInitialized)
+                if (_playerInitialized)
                     StartHearts();
             }
 

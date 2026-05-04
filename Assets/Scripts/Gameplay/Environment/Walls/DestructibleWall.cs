@@ -21,13 +21,13 @@ public class DestructibleWall : MonoBehaviour
     //private string _currentScene;
     //[SerializeField] private string _currentWall;
     private DestroyBrokenWalls _destroyBrokenWalls;
-    private ShakeObjectAfterDamage _shakeObjectAfterDamage;
+    private ShakeObject _shakeObjectAfterDamage;
 
     private int life;
 
     private void Awake()
     {
-        _shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
+        _shakeObjectAfterDamage = GetComponent<ShakeObject>();
         _destroyBrokenWalls = GetComponent<DestroyBrokenWalls>();
     }
 

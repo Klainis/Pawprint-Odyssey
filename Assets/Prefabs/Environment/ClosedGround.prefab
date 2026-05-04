@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &207238340533578493
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6609353
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.229
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.729
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3815461241382403654, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_Name
+      value: ClosedGround
+      objectReference: {fileID: 0}
+    - target: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7681995335942031059, guid: b90c754989450794aa96086b99658a1e, type: 3}
+    - {fileID: 1479545958713669767, guid: b90c754989450794aa96086b99658a1e, type: 3}
+    - {fileID: 6061934330878471073, guid: b90c754989450794aa96086b99658a1e, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2948155359717742749}
+  m_SourcePrefab: {fileID: 100100000, guid: b90c754989450794aa96086b99658a1e, type: 3}
+--- !u!1 &6748489169763123822 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+  m_PrefabInstance: {fileID: 207238340533578493}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2948155359717742749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6748489169763123822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc9271b4eb7e2348aa1458091c533d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClosedGround
+  _destroyParticale: {fileID: 7202212583325874900, guid: 5ba8ea6d3d96cf0449435d76a5f96e15, type: 3}
+  _shakeDuration: 1.5
+  _shakeMagnitude: 0.2
+  _useLocalPosition: 1
