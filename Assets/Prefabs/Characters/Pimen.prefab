@@ -62,11 +62,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.67
+      value: -52.98
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -2.51
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -78,15 +78,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -102,11 +102,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_Name
-      value: Pimen Variant
+      value: Pimen
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
+      propertyPath: m_TagString
+      value: Pimen
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269570670109, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_SortingLayer
@@ -178,6 +182,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7122059586085564221}
+    - targetCorrespondingSourceObject: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4310328279250220375}
   m_SourcePrefab: {fileID: 100100000, guid: d1017599b656a27409b59197d065f3ae, type: 3}
 --- !u!1 &1043985723134260515 stripped
 GameObject:
@@ -191,7 +198,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043985723134260515}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a01c93cc0d206e3488bbef33e26c075c, type: 3}
   m_Name: 
@@ -210,3 +217,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8068bfac677f47a4bbeb7b7b4ab1474f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PimenAnimation
+--- !u!114 &4310328279250220375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043985723134260515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6168c0a601305a749bf6a6239e3a0ec1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PimenView

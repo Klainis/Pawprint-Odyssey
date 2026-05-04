@@ -45,6 +45,7 @@ public class GuardianOwlView : MonoBehaviour
     private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
     private AudioSource _audioSource;
+    private StunAudioController _stunAudioController;
 
     private int _maxLifeForReading;
     private int _secondStageLifeAmount;
@@ -75,6 +76,7 @@ public class GuardianOwlView : MonoBehaviour
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _audioSource = GetComponent<AudioSource>();
+        _stunAudioController = GetComponent<StunAudioController>();
     }
 
     private void Start()
@@ -393,13 +395,15 @@ public class GuardianOwlView : MonoBehaviour
         ChangeTag("isDead");
         ChangeLayer("DeadEnemy");
 
+        _stunAudioController.TriggerStun();
+
         Time.timeScale = 0.4f;
 
         // _bugAnimation.SetTriggerDead();
         var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         transform.rotation = Quaternion.Euler(rotator);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
 
         Time.timeScale = 1f;
         //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);

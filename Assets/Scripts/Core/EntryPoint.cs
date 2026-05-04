@@ -31,6 +31,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject crystalCounterPrefab;
     [SerializeField] private GameObject moneyCounterPrefab;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject pimenPrefab;
     [SerializeField] private GameObject pauseMenuCanvasPrefab;
     [SerializeField] private GameObject optionsMenuCanvasPrefab;
     [SerializeField] private GameObject controlsMenuCanvasPrefab;
@@ -66,6 +67,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _crystalCounterInstance;
     private GameObject _moneyCounterInstance;
     private GameObject _playerInstance;
+    private GameObject _pimenInstance;
     private GameObject _pauseMenuCanvasInstance;
     private GameObject _optionsMenuCanvasInstance;
     private GameObject _controlsMenuCanvasInstance;
@@ -306,6 +308,8 @@ public class EntryPoint : MonoBehaviour
             DontDestroyOnLoad(_cameraFollowObjectInstance);
         }
 
+        InitializePimen();
+
         InitializePlayerUI();
     }
 
@@ -323,6 +327,7 @@ public class EntryPoint : MonoBehaviour
         if (_cameraFollowObjectInstance != null) Destroy(_cameraFollowObjectInstance.gameObject);
         if (_mapManagerInstance != null) Destroy(_mapManagerInstance);
         if (_playerInstance != null) Destroy(_playerInstance);
+        if (_pimenInstance != null) Destroy(_pimenInstance);
         if (_musicHandlerInstance != null) Destroy(_musicHandlerInstance);
 
         if (_transitionCanvasInstance != null) Destroy(_transitionCanvasInstance);
@@ -445,6 +450,22 @@ public class EntryPoint : MonoBehaviour
 
         InitializeManager.Instance.player = _playerInstance;
         playerInitialized = true;
+    }
+
+    public void InitializePimen()
+    {
+        if (pimenPrefab != null)
+        {
+            _pimenInstance = Instantiate(pimenPrefab);
+            DontDestroyOnLoad(_pimenInstance);
+
+            PimenMove _pimenMove = _pimenInstance.GetComponent<PimenMove>();
+            _pimenMove.enabled = false;
+        }
+        else
+        {
+            Debug.LogError($"Отсутствует ссылка на префаб Пимена {pimenPrefab}");
+        }
     }
 
     public void InitializePlayerUI()

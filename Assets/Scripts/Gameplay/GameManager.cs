@@ -129,7 +129,6 @@ public class GameManager : MonoBehaviour
     {
         isTransitioning = true;
         TransitionFade._instance.FadeOut();
-        //AudioListener.pause = true;
         MusicHandler.Instance.AudioFadeOut();
 
         yield return new WaitForSeconds(1f);
@@ -157,14 +156,12 @@ public class GameManager : MonoBehaviour
         currentPlayer.transform.position = destination.transform.position;
         CameraFollowObject.Instance.transform.position = destination.transform.position;
 
-        //yield return screenFader.FadeIn();
         OnTransitionComplete?.Invoke();
 
         isTransitioning = false;
         SetGameState(GameState.EXITING_LEVEL);
 
         TransitionFade._instance.FadeIn();
-        //AudioListener.pause = false;
         MusicHandler.Instance.AudioFadeIn();
     }
 

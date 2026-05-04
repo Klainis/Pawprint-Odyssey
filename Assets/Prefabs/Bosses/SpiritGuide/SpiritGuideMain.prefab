@@ -576,6 +576,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 490802387791648043, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8744948370713726809}
+    - targetCorrespondingSourceObject: {fileID: 490802387791648043, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5461822744738396732}
     - targetCorrespondingSourceObject: {fileID: 490802388336154278, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2629787733578491654}
@@ -1043,6 +1046,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &5461822744738396732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4654176270732529588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244bba812a9c0594cad222debaa3e68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StunAudioController
+  normalSnap: {fileID: 8417409226218020093, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  stunSnap: {fileID: -8759061261933575918, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  fadeIn: 0.05
+  duration: 1
+  fadeOut: 0.8
 --- !u!1 &4654176271278541881 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 490802388336154278, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}

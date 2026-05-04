@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3577552613720566969}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.055821486, w: 0.9984408}
-  m_LocalPosition: {x: -0.1437424, y: 0.2032316, z: -0.007192156}
+  m_LocalPosition: {x: -0.1437424, y: 0.23035029, z: -0.007192156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 3756452493134891743}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.17192912, w: 0.9851093}
-  m_LocalPosition: {x: 0.3242573, y: 0.21523154, z: -0.007192156}
+  m_LocalPosition: {x: 0.3242573, y: 0.24235022, z: -0.007192156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -237,7 +237,7 @@ Transform:
   m_GameObject: {fileID: 5963840325699403193}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4872572, y: -0.10476845, z: -0.007192156}
+  m_LocalPosition: {x: 0.4872572, y: -0.07764977, z: -0.007192156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -342,7 +342,7 @@ Transform:
   m_GameObject: {fileID: 5963840326421738310}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.1478114, w: 0.9890156}
-  m_LocalPosition: {x: -0.2337427, y: -0.15376845, z: -0.007192156}
+  m_LocalPosition: {x: -0.2337427, y: -0.12664977, z: -0.007192156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -440,6 +440,7 @@ GameObject:
   - component: {fileID: 2096934843537983456}
   - component: {fileID: 5112462994370225742}
   - component: {fileID: 2291779660198888302}
+  - component: {fileID: 5523333901109596704}
   m_Layer: 6
   m_Name: GuardianOwl
   m_TagString: Enemy
@@ -550,8 +551,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5006967
+  m_Offset: {x: 0, y: 0.1199584}
+  m_Radius: 0.35770655
 --- !u!114 &1163108814168056358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -834,6 +835,23 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &5523333901109596704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5963840326503853482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244bba812a9c0594cad222debaa3e68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StunAudioController
+  normalSnap: {fileID: 8417409226218020093, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  stunSnap: {fileID: -8759061261933575918, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  fadeIn: 0.05
+  duration: 1
+  fadeOut: 0.8
 --- !u!1 &5963840326746825150
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,7 +879,7 @@ Transform:
   m_GameObject: {fileID: 5963840326746825150}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.12, y: -0.2811184, z: -0.007192156}
+  m_LocalPosition: {x: 0.12, y: -0.254, z: -0.007192156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

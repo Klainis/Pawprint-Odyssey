@@ -46,6 +46,7 @@ public class SpiritGuideView : MonoBehaviour
     private SGMove sgMove;
     private ScreenShaker _screenShaker;
     private DamageFlash[] _damageFlash;
+    private StunAudioController _stunAudioController;
 
     private int maxLifeForReading;
     private float secondStageLifeAmount;
@@ -78,6 +79,7 @@ public class SpiritGuideView : MonoBehaviour
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _audioSource = GetComponent<AudioSource>();
+        _stunAudioController = GetComponent<StunAudioController>();
     }
 
     private void FixedUpdate()
@@ -232,6 +234,8 @@ public class SpiritGuideView : MonoBehaviour
         isInvincible = true;
         ChangeTag("isDead");
         ChangeLayer("DeadEnemy");
+
+        _stunAudioController.TriggerStun();
 
         Time.timeScale = 0.4f;
 

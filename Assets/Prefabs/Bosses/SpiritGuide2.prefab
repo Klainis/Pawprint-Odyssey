@@ -585,6 +585,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 490802387791648043, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8286175859821262128}
+    - targetCorrespondingSourceObject: {fileID: 490802387791648043, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 616684436371405704}
     - targetCorrespondingSourceObject: {fileID: 490802388336154278, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1313387463117217970}
@@ -705,7 +708,9 @@ MonoBehaviour:
     m_Bits: 512
   groundCheck: {fileID: 1069420054396769046}
   secondStageLifeCoef: 0.6
+  playerHitDistance: 40
   isInvincible: 0
+  _hitClip: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   Hit:
     m_PersistentCalls:
       m_Calls:
@@ -781,11 +786,13 @@ MonoBehaviour:
   acceleratedSpeed: 5
   ramTelegraphTime: 0.25
   ramPauseBetweenSeries: 3
-  lightZone: {fileID: 1793547079032514525}
+  lightAttackObject: {fileID: 0}
   lightZoneCooldown: 3
   lightZoneChance: 0.8
   lightZoneTime: 1
-  lightZoneTelegraphTime: 0.5
+  lightObjectAmount: 7
+  instantiateTimeStep: 0.5
+  lightAttackObjectOffsetStep: 1
 --- !u!114 &138887085313646181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,6 +958,23 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 1, y: 0, z: 0}
+--- !u!114 &616684436371405704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7936537823657838647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244bba812a9c0594cad222debaa3e68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StunAudioController
+  normalSnap: {fileID: 8417409226218020093, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  stunSnap: {fileID: -8759061261933575918, guid: aa62bdae7f2bd6c4295d80d2b66bbac0, type: 2}
+  fadeIn: 0.05
+  duration: 1
+  fadeOut: 0.8
 --- !u!1 &7936537824187075514 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 490802388336154278, guid: 9eedc5bd4fe9e6e4bb5259511f3f8f8c, type: 3}
