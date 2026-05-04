@@ -1,4 +1,6 @@
 using UnityEngine;
+using GlobalEnums;
+using UnityEngine.Rendering;
 
 public class PimenMove : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class PimenMove : MonoBehaviour
     private Vector3 _currentOffset;
 
     private float _turnCoefficient = 1;
+
+    private bool _isFacingRight = false;
 
     private void Awake()
     {
@@ -43,6 +47,24 @@ public class PimenMove : MonoBehaviour
             _pimenAnimation.SetIsMove(false);
         }
 
+        if (GameManager.Instance.GameState == GameState.IN_FIGHT_ROOM)
+        {
+
+            transform.rotation = _isFacingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
+
+            if (transform.rotation.y == 0)
+            {
+                _turnCoefficient = 1;
+            }
+            else if (transform.rotation.y == 180)
+            {
+                _turnCoefficient = -1;
+            }
+
+            Vector3 leavePosition = new Vector3(transform.position.x + (50 * _turnCoefficient), transform.position.y, transform.position.z);
+            transform.position = Vector3.Lerp(transform.position, leavePosition, 10 * Time.deltaTime);
+        }
+
     }
 
     private void MoveWithPlayer()
@@ -59,10 +81,10 @@ public class PimenMove : MonoBehaviour
     {
         if (PlayerMove.Instance.IsWall) return;
 
-        bool isFacingRight = PlayerView.Instance.PlayerModel.FacingRight;
+        _isFacingRight = PlayerView.Instance.PlayerModel.FacingRight;
 
         Vector3 targetOffset = _baseOffset;
-        if (!isFacingRight)
+        if (!_isFacingRight)
         {
             targetOffset.x = -_baseOffset.x;
         }
@@ -71,7 +93,7 @@ public class PimenMove : MonoBehaviour
         {
             _currentOffset = targetOffset;
 
-            transform.rotation = isFacingRight ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
+            transform.rotation = _isFacingRight ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
         }
     }
 }
