@@ -5,13 +5,13 @@ public class AnotherDestructibleObjects : MonoBehaviour
     [Header("Data")]
     [SerializeField] private EnvironmentData environmentData;
     [Space(5)]
-    private ShakeObjectAfterDamage shakeObjectAfterDamage;
+    private ShakeObject shakeObjectAfterDamage;
 
     private int life;
 
     private void Awake()
     {
-        shakeObjectAfterDamage = GetComponent<ShakeObjectAfterDamage>();
+        shakeObjectAfterDamage = GetComponent<ShakeObject>();
     }
 
     private void Start()

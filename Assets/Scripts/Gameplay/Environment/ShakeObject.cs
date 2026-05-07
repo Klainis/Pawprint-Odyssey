@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ShakeObjectAfterDamage : MonoBehaviour
+public class ShakeObject : MonoBehaviour
 {
 	[Header("Data")] 
     [SerializeField] private EnvironmentData environmentData;

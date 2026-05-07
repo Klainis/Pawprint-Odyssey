@@ -132,6 +132,7 @@ public class PlayerMove : MonoBehaviour
 
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
+    public bool IsMoving { get; private set; }
 
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
@@ -381,6 +382,17 @@ public class PlayerMove : MonoBehaviour
             isWallRunning = false;
             rb.gravityScale = _initialGravityScale;
         }
+
+
+        if (rb.linearVelocity != Vector2.zero)
+        {
+            IsMoving = true;
+        }
+        else
+        {
+            IsMoving = false;
+        }
+
 
         // --- Limit Fall Speed ---
         if (rb.linearVelocity.y < -limitFallSpeed)
