@@ -25,6 +25,7 @@ public class AttackPimenManager : MonoBehaviour
     private StunAudioController _stunAudioController;
 
     private GameObject _pimenObject;
+    private GameObject _playerObject;
 
     private int _currentDeadEnemyAmount = 0;
     private bool _inDialogue = true;
@@ -46,6 +47,7 @@ public class AttackPimenManager : MonoBehaviour
         }
 
         _pimenObject = GameObject.FindGameObjectWithTag("Pimen");
+        _playerObject = GameObject.FindGameObjectWithTag("Player");
 
         _pimenMove = _pimenObject.GetComponent<PimenMove>();
         _pimenAnimation = _pimenObject.GetComponent<PimenAnimation>();
@@ -65,6 +67,18 @@ public class AttackPimenManager : MonoBehaviour
     {
         _currentDeadEnemyAmount = 0;
         Debug.Log(_currentDeadEnemyAmount);
+    }
+
+    private void TurnPimenToPlayer()
+    {
+        if (_playerObject.transform.position.x < _pimenObject.transform.position.x)
+        {
+            _pimenObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else if (_playerObject.transform.position.x > _pimenObject.transform.position.x)
+        {
+            _pimenObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 
     public void CountDeadEnemy()
@@ -97,23 +111,33 @@ public class AttackPimenManager : MonoBehaviour
 
         Time.timeScale = 1;
 
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        TurnPimenToPlayer();
+
+        _pimenAnimation.enabled = true;
+        _pimenAnimation.animator.enabled = true;
+
+        //анимация вылазанья из земли
+        _pimenAnimation.SetIsGetOutOfGround(true);
+
+        yield return new WaitForSeconds(1f);
+
+        _pimenAnimation.SetIsGetOutOfGround(false);
 
         float time = 1f;
         float elapsedTime = 0;
         while (elapsedTime < time)
         {
             elapsedTime += Time.deltaTime;
-            _pimenObject.transform.position = Vector3.MoveTowards(_pimenObject.transform.position, _pimenFirstMeetTopPoint.position, elapsedTime / time);
+            _pimenObject.transform.position = Vector3.MoveTowards(_pimenObject.transform.position, _pimenFirstMeetTopPoint.position, (elapsedTime / time));
             yield return null;
         }
 
-        _pimenAnimation.enabled = true;
-        _pimenAnimation.animator.enabled = true;
         _pimenWraith.FirstTalkWithPimen();
 
 
-        while (GameManager.Instance.GameState == GameState.DIALOGUE)
+        while (GameManager.Instance.GameState == GameState.DIALOGUE || GameManager.Instance.OldDialogue)
         {
             yield return null;
         }

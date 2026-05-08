@@ -479,7 +479,11 @@ public class EntryPoint : MonoBehaviour
             }
             else
             {
-                _pimenInstance = Instantiate(pimenPrefab, new Vector3(-53f, -2.5f, 0f), Quaternion.identity);
+                Vector3 initialPosition = pimenPrefab.transform.position;
+                Quaternion initialRotation = pimenPrefab.transform.rotation;
+
+                //_pimenInstance = Instantiate(pimenPrefab, new Vector3(-53f, -2.35f, 0f), Quaternion.Euler(0, 180, 0));
+                _pimenInstance = Instantiate(pimenPrefab, initialPosition, initialRotation);
                 DontDestroyOnLoad(_pimenInstance);
 
                 PimenMove _pimenMove = _pimenInstance.GetComponent<PimenMove>();

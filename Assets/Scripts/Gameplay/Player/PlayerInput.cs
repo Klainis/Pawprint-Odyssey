@@ -176,13 +176,13 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        if (IsValidAction(interactAction))
-        {
-            interactPressed = interactAction.action.WasPressedThisFrame();
-        }
-
         if (GameManager.Instance.GameState != GameState.DIALOGUE)
         {
+            if (IsValidAction(interactAction))
+            {
+                interactPressed = interactAction.action.WasPressedThisFrame();
+            }
+
             if (IsValidAction(attackAction))
             {
                 attackPressed = attackAction.action.WasPressedThisFrame();

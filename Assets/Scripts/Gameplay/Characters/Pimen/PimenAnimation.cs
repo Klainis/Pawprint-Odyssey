@@ -19,4 +19,9 @@ public class PimenAnimation : MonoBehaviour
     {
         animator.SetBool("IsTrick", value);
     }
+
+    public void SetIsGetOutOfGround(bool value)
+    {
+        animator.SetBool("IsGetOutGround", value);
+    }
 }

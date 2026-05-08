@@ -6,6 +6,8 @@ public class Wraith : NPC, ITalkable
     [SerializeField] private DialogueText PimenMeetDialogueText;
     [SerializeField] private DialogueController dialogueController;
 
+
+    private GameObject _player;
     //переопределение Interact()
 
     private void Awake()
@@ -24,6 +26,8 @@ public class Wraith : NPC, ITalkable
         {
             dialogueController.gameObject.SetActive(false);
         }
+
+        _player = GameObject.FindGameObjectWithTag("Player");
     }
 
     public override void Interact()
@@ -33,11 +37,24 @@ public class Wraith : NPC, ITalkable
 
     public void Talk(DialogueText diaogueText)
     {
-        dialogueController.DisplayNextParagraph(PimenMeetDialogueText);
+        TurnPlayerToNPC();
+        dialogueController.DisplayNextParagraph(diaogueText);
     }
 
     public void FirstTalkWithPimen()
     {
         Talk(PimenMeetDialogueText);
+    }
+
+    private void TurnPlayerToNPC()
+    {
+        if (_player.transform.position.x < transform.position.x && !PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+        else if (_player.transform.position.x > transform.position.x && PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
     }
 }

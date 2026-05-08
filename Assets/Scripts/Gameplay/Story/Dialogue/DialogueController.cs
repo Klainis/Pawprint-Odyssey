@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using GlobalEnums;
 using static DialogueText;
+using System.Collections;
 
 public class DialogueController : MonoBehaviour
 {
@@ -11,8 +12,12 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NPCDialogueText;
 
     private Queue<LineData> paragraphs = new Queue<LineData>();
+    private LineData _currentLine;
 
-    private bool conversationEnded;
+    private float _typeSpeed;
+
+    private bool _conversationEnded;
+    private bool _isTyping;
 
     private struct LineData
     {
@@ -20,29 +25,43 @@ public class DialogueController : MonoBehaviour
         public string text;
     }
 
+    private Coroutine _typeDialogueCoroutine;
+
+    private const string HTML_ALPHA = "<color=#00000000>";
+    private const float MAX_TYPE_TIME = 0.1f;
+
     public void DisplayNextParagraph(DialogueText dialogueText)
     {
+        //заполняем Queue, если ничего не в очереди
         if (paragraphs.Count == 0)
         {
-            if (!conversationEnded)
+            if (!_conversationEnded)
             {
                 StartConversation(dialogueText);
             }
-            else
+            else if (_conversationEnded && !_isTyping)
             {
                 EndConversation();
                 return;
             }
         }
 
-        LineData curentLine = paragraphs.Dequeue();
+        //Печатаем то, что если в очереди
+        if (!_isTyping)
+        {
+            _currentLine = paragraphs.Dequeue();
 
-        NPCNameText.text = curentLine.name;
-        NPCDialogueText.text = curentLine.text;
+            NPCNameText.text = _currentLine.name;
+            _typeDialogueCoroutine = StartCoroutine(TypeDialogueText(_currentLine.text));
+        }
+        else
+        {
+            FinishParagraphEarly();
+        }
 
         if (paragraphs.Count == 0)
         {
-            conversationEnded = true;
+            _conversationEnded = true;
         }
     }
 
@@ -57,18 +76,19 @@ public class DialogueController : MonoBehaviour
 
         paragraphs.Clear();
 
-        //for (int i = 0; i < dialogueText.dialogue.Count; i++)
-        //{
-        //    NPCNameText.text = dialogueText.dialogue[i].speakerName;
-
-        //    for (int j = 0; j < dialogueText.dialogue[i].paragraphs.Length; j++)
-        //    {
-        //        paragraphs.Enqueue(dialogueText.dialogue[i].paragraphs[j]);
-        //    }
-        //}
-
         foreach (var speakerLine in dialogueText.dialogue)
         {
+            //if (speakerLine.typeSpeed < 0) //Error value как дфлаг для дефолтного значения
+            //{
+            //    _typeSpeed = dialogueText.DefaultTypeSpeed;
+            //}
+            //else
+            //{
+            //    _typeSpeed = speakerLine.typeSpeed;
+            //}
+
+            _typeSpeed = dialogueText.DefaultTypeSpeed;
+
             foreach (string paragraphText in speakerLine.paragraphs)
             {
                 paragraphs.Enqueue(new LineData
@@ -82,7 +102,7 @@ public class DialogueController : MonoBehaviour
 
     private void EndConversation()
     {
-        conversationEnded = false;
+        _conversationEnded = false;
 
         if (gameObject.activeSelf)
         {
@@ -90,5 +110,38 @@ public class DialogueController : MonoBehaviour
         }
 
         GameManager.Instance.SetGameState(GameState.PLAYING);
+    }
+
+    private IEnumerator TypeDialogueText(string p)
+    {
+        _isTyping = true;
+
+        NPCDialogueText.text = "";
+
+        string originalText = p;
+        string displayedText = "";
+        int alphaINdex = 0;
+
+        foreach (char c in p.ToCharArray())
+        {
+            alphaINdex++;
+            NPCDialogueText.text = originalText;
+
+            displayedText = NPCDialogueText.text.Insert(alphaINdex, HTML_ALPHA);
+            NPCDialogueText.text = displayedText;
+
+            yield return new WaitForSeconds(MAX_TYPE_TIME / _typeSpeed);
+        }
+
+        _isTyping = false;
+    }
+
+    private void FinishParagraphEarly()
+    {
+        StopCoroutine(_typeDialogueCoroutine);
+
+        NPCDialogueText.text = _currentLine.text;
+
+        _isTyping = false;
     }
 }

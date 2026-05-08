@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     private bool inGameMenu = false;
     private bool gamePaused = false;
 
+    private bool _oldDialogue = false;
+
     #endregion
 
     #region Properties
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
     public string CurrentScene { get { return _currentScene; } set { _currentScene = value; } }
     public bool InPauseMenu { get { return inPauseMenu; } }
     public bool InGameMenu { get { return inGameMenu; } }
+    public bool OldDialogue { get { return _oldDialogue; } }
 
     public event System.Action OnTransitionComplete;
 
@@ -84,6 +87,15 @@ public class GameManager : MonoBehaviour
 
     public void SetGameState(GameState newState)
     {
+        if (newState == GameState.DIALOGUE)
+        {
+            _oldDialogue = true;
+        }
+        else if (newState == GameState.PLAYING)
+        {
+            _oldDialogue = false;
+        }
+
         GameState = newState;
     }
 
@@ -236,7 +248,15 @@ public class GameManager : MonoBehaviour
 
         inPauseMenu = false;
         UnpauseGame();
-        SetGameState(GameState.PLAYING);
+
+        if (_oldDialogue)
+        {
+            SetGameState(GameState.DIALOGUE);
+        }
+        else
+        {
+            SetGameState(GameState.PLAYING);
+        }
     }
 
     public void SetMenu(MenuState newState)
@@ -395,7 +415,15 @@ public class GameManager : MonoBehaviour
         _gameMenuCanvasInstance.SetActive(false);
         GameMenuUI.Instance.ResetWindowNumber();
         UnpauseGame();
-        SetGameState(GameState.PLAYING);
+
+        if (_oldDialogue)
+        {
+            SetGameState(GameState.DIALOGUE);
+        }
+        else
+        {
+            SetGameState(GameState.PLAYING);
+        }
     }
 
     public void SetGameMenuCanvasInstance(GameObject obj)

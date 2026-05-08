@@ -29,6 +29,10 @@ public class PimenMove : MonoBehaviour
     {
         _currentOffset = _baseOffset;
         _playerPosition = _player.position + _currentOffset;
+
+        _isFacingRight = PlayerView.Instance.PlayerModel.FacingRight;
+
+        transform.rotation = _isFacingRight ? Quaternion.Euler(0, 0, 0) : Quaternion.Euler(0, 180, 0);
     }
 
     private void Update()

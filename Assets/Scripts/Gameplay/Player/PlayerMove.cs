@@ -557,6 +557,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    public void CallTurn()
+    {
+        Turn();
+    }
+
     private void Turn()
     {
         if (PlayerAttack.Instance.IsAttacking)

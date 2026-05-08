@@ -115,6 +115,10 @@ public class PlayerView : MonoBehaviour
         if (GameManager.Instance.GameState == GameState.DIALOGUE)
         {
             _playerMove.CanMove = false;
+            if (_playerMove.IsGrounded)
+            {
+                _rigidBody.linearVelocity = Vector3.zero;
+            }
             _isInvincible = true;
             _oldDialogue = true;
         }
