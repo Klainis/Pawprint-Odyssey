@@ -81,6 +81,28 @@ public class AttackPimenManager : MonoBehaviour
         }
     }
 
+    private void StopPlayerAndTurnToPimen()
+    {
+        PlayerMove.Instance.CanMove = false;
+
+        Rigidbody2D rb = _playerObject.GetComponent<Rigidbody2D>();
+        if (PlayerMove.Instance.IsGrounded)
+        {
+
+            rb.linearVelocity = Vector3.zero;
+        }
+        PlayerView.Instance.IsInvincible = true;
+
+        if (_playerObject.transform.position.x < _pimenObject.transform.position.x && !PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+        else if (_playerObject.transform.position.x > _pimenObject.transform.position.x && PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+    }
+
     public void CountDeadEnemy()
     {
         _currentDeadEnemyAmount += 1;
@@ -101,17 +123,29 @@ public class AttackPimenManager : MonoBehaviour
         _victoryOverEnemiesCoroutine = StartCoroutine(VictoryOverEnemies());
     }
 
+    public void GetOutAndStartDialogueCoroutine()
+    {
+        if (_pimenDialogueCoroutine != null)
+        {
+            StopCoroutine(_pimenDialogueCoroutine);
+        }
+        _pimenDialogueCoroutine = StartCoroutine(GetOutAndStartDialogue());
+    }
+
     private IEnumerator VictoryOverEnemies()
     {
         _stunAudioController.TriggerStun();
 
         Time.timeScale = 0.4f;
 
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSecondsRealtime(1f);
 
         Time.timeScale = 1;
 
-        yield return new WaitForSecondsRealtime(0.5f);
+        StopPlayerAndTurnToPimen();
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+
+        yield return new WaitForSecondsRealtime(1f);
 
         TurnPimenToPlayer();
 
@@ -120,9 +154,10 @@ public class AttackPimenManager : MonoBehaviour
 
         //анимация вылазанья из земли
         _pimenAnimation.SetIsGetOutOfGround(true);
+    }
 
-        yield return new WaitForSeconds(1f);
-
+    private IEnumerator GetOutAndStartDialogue()
+    {
         _pimenAnimation.SetIsGetOutOfGround(false);
 
         float time = 1f;

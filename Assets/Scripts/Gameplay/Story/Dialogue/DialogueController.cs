@@ -109,6 +109,8 @@ public class DialogueController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
+        GameObject.FindGameObjectWithTag("Pimen").GetComponent<PimenMove>().enabled = true;
+
         GameManager.Instance.SetGameState(GameState.PLAYING);
     }
 

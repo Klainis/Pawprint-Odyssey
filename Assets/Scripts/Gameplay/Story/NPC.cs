@@ -7,14 +7,14 @@ public abstract class NPC : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        if (GameManager.Instance.GameState != GameState.DIALOGUE)
-        {
-            if (PlayerInput.Instance.InteractPressed)
-            {
-                Interact();
-            }
-        }
-        else if (GameManager.Instance.GameState == GameState.DIALOGUE)
+        //if (GameManager.Instance.GameState != GameState.DIALOGUE)
+        //{
+        //    if (PlayerInput.Instance.InteractPressed)
+        //    {
+        //        Interact();
+        //    }
+        //}
+        if (GameManager.Instance.GameState == GameState.DIALOGUE)
         {
             if (PlayerInput.Instance.AgreeButtonPressed)
             {

@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    private static PlayerAnimation _instance;
+    public static PlayerAnimation Instance {  get { return _instance; } }
+
     [SerializeField] private Animator slashAnimator;
     [SerializeField] private Animator clawAnimator;
 
@@ -11,9 +14,39 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Awake()
     {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+        _instance = this;
+
         animator = GetComponent<Animator>();
         endSlashAnimation = slashAnimator.gameObject.GetComponent<SlashAnimation>();
         clawAnimation = clawAnimator.gameObject.GetComponent<ClawAnimation>();
+    }
+
+    public void ResetAnimatorParameters()
+    {
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            switch (parameter.type)
+            {
+                case AnimatorControllerParameterType.Int:
+                    animator.SetInteger(parameter.name, (int)parameter.defaultInt);
+                    break;
+                case AnimatorControllerParameterType.Float:
+                    animator.SetFloat(parameter.name, parameter.defaultFloat);
+                    break;
+                case AnimatorControllerParameterType.Bool:
+                    animator.SetBool(parameter.name, parameter.defaultBool);
+                    break;
+                case AnimatorControllerParameterType.Trigger:
+                    animator.ResetTrigger(parameter.name);
+                    break;
+            }
+        }
+
+        animator.Play(animator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, 0f);
     }
 
     public void ApplyRootMotion(bool value)
