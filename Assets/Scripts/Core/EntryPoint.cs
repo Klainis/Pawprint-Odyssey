@@ -47,6 +47,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameObject abilitiesTreeCanvasPrefab;
     [SerializeField] private GameObject moneyManagerPrefab;
     [SerializeField] private GameObject musicHandlerPrefab;
+    [SerializeField] private GameObject dialogueCanvasPrefab;
 
     // INSTANCES (Runtime objects)
     private GameObject _musicHandlerInstance;
@@ -79,6 +80,7 @@ public class EntryPoint : MonoBehaviour
     private GameObject _abilitiesTreeCanvasInstance;
     private GameObject _mapManagerInstance;
     private GameObject _moneyManagerInstance;
+    private GameObject _dialogueCanvasInstance;
 
     private PiercingClaw piercingClaw;
     private PlayerHeart playerHeart;
@@ -301,6 +303,12 @@ public class EntryPoint : MonoBehaviour
             GameManager.Instance.SetControlsKeyboardMenuCanvasInstance(_controlsKeyboardMenuCanvasInstance);
         }
 
+        if (dialogueCanvasPrefab != null)
+        {
+            _dialogueCanvasInstance = Instantiate(dialogueCanvasPrefab);
+            DontDestroyOnLoad(_dialogueCanvasInstance);
+        }
+
         InitializePlayerDataFromSave();
 
         if (cameraFollowObjectPrefab != null)
@@ -337,6 +345,8 @@ public class EntryPoint : MonoBehaviour
         if (_mapCanvasInstance != null) Destroy(_mapCanvasInstance);
         if (_gameMenuCanvasInstance != null) Destroy(_gameMenuCanvasInstance);
         if (_abilitiesTreeCanvasInstance != null) Destroy(_abilitiesTreeCanvasInstance);
+
+        if (_dialogueCanvasInstance != null) Destroy(_dialogueCanvasInstance);
 
         if (_pauseMenuCanvasInstance != null) Destroy(_pauseMenuCanvasInstance);
         if (_optionsMenuCanvasInstance != null) Destroy(_optionsMenuCanvasInstance);

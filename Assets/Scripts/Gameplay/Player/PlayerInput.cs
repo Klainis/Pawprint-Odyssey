@@ -25,6 +25,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private InputActionReference interactAction;
     [SerializeField] private InputActionReference clawAction;
     [SerializeField] private InputActionReference lookAction;
+    [SerializeField] private InputActionReference agreeActionUI;
     [SerializeField] private float runSpeed = 40f;
     [SerializeField] private UnityEvent jumpPressed;
 
@@ -35,6 +36,7 @@ public class PlayerInput : MonoBehaviour
     private float horizontalMove = 0f;
     private float verticalMove = 0f;
     private bool interactPressed = false;
+    private bool agree = false;
     private bool clawPressed = false;
     private bool attackPressed = false;
     private bool jump = false;
@@ -47,6 +49,7 @@ public class PlayerInput : MonoBehaviour
     #region Properties
 
     public bool InteractPressed { get { return interactPressed; } }
+    public bool AgreeButtonPressed { get { return agree; } }
     public bool PlayerMovingEd { get; private set; } = false;
     public bool PlayerAttackingEd { get { return attackPressed; } }
     public bool PlayerInteractEd { get { return interactPressed; } }
@@ -178,93 +181,103 @@ public class PlayerInput : MonoBehaviour
             interactPressed = interactAction.action.WasPressedThisFrame();
         }
 
-        if (IsValidAction(attackAction))
+        if (GameManager.Instance.GameState != GameState.DIALOGUE)
         {
-            attackPressed = attackAction.action.WasPressedThisFrame();
-
-            AttackHeld = attackAction.action.IsPressed();
-            AttackReleased = attackAction.action.WasReleasedThisFrame();
-        }
-
-        if (IsValidAction(shootAction))
-        {
-            ShootPressed = shootAction.action.WasPressedThisFrame();
-        }
-
-        if (IsValidAction(parryingAction))
-        {
-            ParryingHeld = parryingAction.action.IsPressed();
-            ParryingReleased = parryingAction.action.WasReleasedThisFrame();
-        }
-
-        if (IsValidAction(clawAction))
-        {
-             clawPressed = clawAction.action.WasPressedThisFrame();
-        }
-
-        if (IsValidAction(moveAction))
-        {
-            var move = moveAction.action.ReadValue<Vector2>();
-
-            if (move.sqrMagnitude > 0.01f)
+            if (IsValidAction(attackAction))
             {
-                PlayerMovingEd = true;
-                if (Mathf.Abs(move.x) > Mathf.Abs(move.y))
-                    ShootDirection = new Vector2(Mathf.Sign(move.x), 0);
+                attackPressed = attackAction.action.WasPressedThisFrame();
+
+                AttackHeld = attackAction.action.IsPressed();
+                AttackReleased = attackAction.action.WasReleasedThisFrame();
+            }
+
+            if (IsValidAction(shootAction))
+            {
+                ShootPressed = shootAction.action.WasPressedThisFrame();
+            }
+
+            if (IsValidAction(parryingAction))
+            {
+                ParryingHeld = parryingAction.action.IsPressed();
+                ParryingReleased = parryingAction.action.WasReleasedThisFrame();
+            }
+
+            if (IsValidAction(clawAction))
+            {
+                clawPressed = clawAction.action.WasPressedThisFrame();
+            }
+
+            if (IsValidAction(moveAction))
+            {
+                var move = moveAction.action.ReadValue<Vector2>();
+
+                if (move.sqrMagnitude > 0.01f)
+                {
+                    PlayerMovingEd = true;
+                    if (Mathf.Abs(move.x) > Mathf.Abs(move.y))
+                        ShootDirection = new Vector2(Mathf.Sign(move.x), 0);
+                    else
+                        ShootDirection = new Vector2(0, Mathf.Sign(move.y));
+                    _lastFourWayDirection = ShootDirection;
+                }
                 else
-                    ShootDirection = new Vector2(0, Mathf.Sign(move.y));
-                _lastFourWayDirection = ShootDirection;
+                {
+                    ShootDirection = Vector2.zero/*_lastFourWayDirection*/;
+                }
+
+                Run(move);
+                WallRun(move);
             }
-            else
+
+            if (IsValidAction(dashAction))
             {
-                ShootDirection = Vector2.zero/*_lastFourWayDirection*/;
+                if (dashAction.action.IsPressed())
+                {
+                    run = true;
+                }
+                else
+                {
+                    run = false;
+                }
             }
 
-            Run(move);
-            WallRun(move);
-        }
-
-        if (IsValidAction(dashAction))
-        {
-            if(dashAction.action.IsPressed())
+            if (IsValidAction(jumpAction))
             {
-                run = true;
+                if (jumpAction.action.WasPressedThisFrame())
+                {
+                    jump = true;
+                    //jumpPressed.Invoke();
+                }
             }
-            else
+
+            if (IsValidAction(dashAction))
             {
-                run = false;
+                if (dashAction.action.WasPressedThisFrame())
+                    dash = true;
+            }
+
+            if (IsValidAction(attackAction) && IsValidAction(dashAction))
+            {
+                DamageDashActive = attackAction.action.IsPressed() && dashAction.action.IsPressed();
+
+            }
+
+            //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
+            if (IsValidAction(lookAction))
+            {
+                //Debug.Log(playerMove.IsGrounded);
+                if (playerMove.IsGrounded)
+                {
+                    look = lookAction.action.ReadValue<Vector2>();
+                    //Debug.Log(lookVector);
+                }
             }
         }
-
-        if (IsValidAction(jumpAction))
+        else if (GameManager.Instance.GameState == GameState.DIALOGUE)
         {
-            if (jumpAction.action.WasPressedThisFrame())
+            if (IsValidAction(agreeActionUI))
             {
-                jump = true;
-                //jumpPressed.Invoke();
-            }
-        }
-
-        if (IsValidAction(dashAction))
-        {
-            if (dashAction.action.WasPressedThisFrame())
-                dash = true;
-        }
-
-        if (IsValidAction(attackAction) && IsValidAction(dashAction))
-        {
-            DamageDashActive = attackAction.action.IsPressed() && dashAction.action.IsPressed();
-
-        }
-
-        //playerAnimation.SetFloatSpeed(Mathf.Abs(horizontalMove));
-        if (IsValidAction(lookAction))
-        {
-            //Debug.Log(playerMove.IsGrounded);
-            if (playerMove.IsGrounded)
-            {
-                look = lookAction.action.ReadValue<Vector2>();
-                //Debug.Log(lookVector);
+                agree = agreeActionUI.action.WasPressedThisFrame();
             }
         }
     }

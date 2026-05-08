@@ -2,20 +2,21 @@ using UnityEngine;
 
 public class PimenAnimation : MonoBehaviour
 {
-    private Animator _animator;
+    [HideInInspector]
+    public Animator animator;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public void SetIsMove(bool value)
     {
-        _animator.SetBool("IsMove", value);
+        animator.SetBool("IsMove", value);
     }
 
     public void SetIsTrick(bool value)
     {
-        _animator.SetBool("IsTrick", value);
+        animator.SetBool("IsTrick", value);
     }
 }

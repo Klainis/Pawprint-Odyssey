@@ -1,4 +1,5 @@
 using UnityEngine;
+using GlobalEnums;
 
 public class PimenView : MonoBehaviour
 {
@@ -31,14 +32,12 @@ public class PimenView : MonoBehaviour
     {
         if (PlayerMove.Instance != null )
         {
-            if (!PlayerMove.Instance.IsMoving/* && PlayerMove.Instance.IsGrounded*/)
+            if (!PlayerMove.Instance.IsMoving && GameManager.Instance.GameState != GameState.DIALOGUE)
             {
-                Debug.Log("Æäåì òðþêà");
                 _currentTimeToTrick -= Time.deltaTime;
 
                 if (_currentTimeToTrick <= 0)
                 {
-                    Debug.Log("Òðþê");
 
                     _currentTimeToTrick = _timeToTrick;
                     _pimenAnimation.SetIsTrick(true);

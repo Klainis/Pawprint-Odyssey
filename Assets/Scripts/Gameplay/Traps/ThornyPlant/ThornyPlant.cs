@@ -219,7 +219,7 @@ public class ThornyPlant : MonoBehaviour {
 	private IEnumerator DestroyEnemy()
 	{
         _isInvincible = true;
-        //_animator.SetTrigger("Dead");
+        //animator.SetTrigger("Dead");
         gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         gameObject.tag = "isDead";
         ChangeForm(true);

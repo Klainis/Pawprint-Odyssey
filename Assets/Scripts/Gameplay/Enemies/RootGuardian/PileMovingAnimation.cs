@@ -15,7 +15,7 @@ public class PileMovingAnimation : MonoBehaviour
 
     //private void Start()
     //{
-    //    _animator.SetTrigger("Moving");
+    //    animator.SetTrigger("Moving");
     //    _randomTime = Random.Range(3f, 6f);
     //}
 

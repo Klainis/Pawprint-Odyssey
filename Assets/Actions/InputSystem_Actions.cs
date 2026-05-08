@@ -644,7 +644,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -792,6 +792,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Agree"",
+                    ""type"": ""Button"",
+                    ""id"": ""3a8cb2d6-3646-462d-ad5f-1f67dd0fb130"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1377,6 +1386,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""PlayerMoveEducation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""413a0d17-47b3-41cc-8c9a-b05f54240ee3"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Agree"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46028f78-4888-41ea-9998-ae3eb58b0c4c"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Agree"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -1481,6 +1512,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_Buy = m_UI.FindAction("Buy", throwIfNotFound: true);
         m_UI_PlayerMoveUp = m_UI.FindAction("PlayerMoveUp", throwIfNotFound: true);
         m_UI_PlayerMoveEducation = m_UI.FindAction("PlayerMoveEducation", throwIfNotFound: true);
+        m_UI_Agree = m_UI.FindAction("Agree", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -1830,6 +1862,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Buy;
     private readonly InputAction m_UI_PlayerMoveUp;
     private readonly InputAction m_UI_PlayerMoveEducation;
+    private readonly InputAction m_UI_Agree;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1914,6 +1947,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PlayerMoveEducation => m_Wrapper.m_UI_PlayerMoveEducation;
         /// <summary>
+        /// Provides access to the underlying input action "UI/Agree".
+        /// </summary>
+        public InputAction @Agree => m_Wrapper.m_UI_Agree;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1993,6 +2030,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PlayerMoveEducation.started += instance.OnPlayerMoveEducation;
             @PlayerMoveEducation.performed += instance.OnPlayerMoveEducation;
             @PlayerMoveEducation.canceled += instance.OnPlayerMoveEducation;
+            @Agree.started += instance.OnAgree;
+            @Agree.performed += instance.OnAgree;
+            @Agree.canceled += instance.OnAgree;
         }
 
         /// <summary>
@@ -2058,6 +2098,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PlayerMoveEducation.started -= instance.OnPlayerMoveEducation;
             @PlayerMoveEducation.performed -= instance.OnPlayerMoveEducation;
             @PlayerMoveEducation.canceled -= instance.OnPlayerMoveEducation;
+            @Agree.started -= instance.OnAgree;
+            @Agree.performed -= instance.OnAgree;
+            @Agree.canceled -= instance.OnAgree;
         }
 
         /// <summary>
@@ -2402,5 +2445,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPlayerMoveEducation(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Agree" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAgree(InputAction.CallbackContext context);
     }
 }

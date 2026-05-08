@@ -62,11 +62,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.67
+      value: -53
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -2.36
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -78,15 +78,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4286921269205742035, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -185,6 +185,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4310328279250220375}
+    - targetCorrespondingSourceObject: {fileID: 4286921269205742036, guid: d1017599b656a27409b59197d065f3ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5213640744835301482}
   m_SourcePrefab: {fileID: 100100000, guid: d1017599b656a27409b59197d065f3ae, type: 3}
 --- !u!1 &1043985723134260515 stripped
 GameObject:
@@ -217,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8068bfac677f47a4bbeb7b7b4ab1474f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PimenAnimation
+  animator: {fileID: 0}
 --- !u!114 &4310328279250220375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,3 +234,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PimenView
   _timeToTrick: 12
+--- !u!114 &5213640744835301482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043985723134260515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db999848c3d93643871b601a5f5f012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wraith
+  PimenMeetDialogueText: {fileID: 11400000, guid: 8fcf9ea1d51f9a54ba5c9065caac8418, type: 2}
+  dialogueController: {fileID: 0}

@@ -62,6 +62,8 @@ public class PlayerView : MonoBehaviour
 
     private bool _isInvincible = false;
 
+    private bool _oldDialogue = false;
+
     #endregion
 
     #region Properties
@@ -108,6 +110,19 @@ public class PlayerView : MonoBehaviour
                 _playerAttack.Attack4();
             else
                 _playerAttack.Attack();
+        }
+
+        if (GameManager.Instance.GameState == GameState.DIALOGUE)
+        {
+            _playerMove.CanMove = false;
+            _isInvincible = true;
+            _oldDialogue = true;
+        }
+        else if (GameManager.Instance.GameState != GameState.DIALOGUE && _oldDialogue)
+        {
+            _oldDialogue = false;
+            _playerMove.CanMove = true;
+            _isInvincible = false;
         }
     }
 

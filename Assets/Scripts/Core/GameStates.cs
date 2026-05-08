@@ -20,6 +20,6 @@ namespace GlobalEnums
         PAUSED,
         EXITING_LEVEL,
         CUTSCENE,
-        PRIMER
+        DIALOGUE
     }
 }
