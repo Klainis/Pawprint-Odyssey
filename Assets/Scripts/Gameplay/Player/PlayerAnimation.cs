@@ -151,4 +151,9 @@ public class PlayerAnimation : MonoBehaviour
         animator.ResetTrigger(triggerName);
         slashAnimator.ResetTrigger(slashTriggerName);
     }
+
+    public void PlayerDead()
+    {
+        PlayerView.Instance.SetDeath();
+    }
 }

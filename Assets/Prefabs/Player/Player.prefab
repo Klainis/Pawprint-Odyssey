@@ -67,6 +67,7 @@ GameObject:
   - component: {fileID: 82701611152381692}
   - component: {fileID: 2744179684250450763}
   - component: {fileID: 3397533189607767244}
+  - component: {fileID: 4033809453743834353}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -85,9 +86,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4291727345091452}
+  - {fileID: 212796747517531420}
   - {fileID: 3754120865036139522}
   - {fileID: 8839948401198372669}
   - {fileID: 4986330650710208}
@@ -193,6 +195,9 @@ MonoBehaviour:
   _muffleSoundSpeed: 1
   _muffleSoundMinValue: 0.3
   _damageParticle: {fileID: 357403908313967066, guid: b7ccf145b633a4149aa514e6345a5ece, type: 3}
+  _deathBurstParticle: {fileID: 4595123776566498248, guid: 99e82116f2dd365408d1e983c68a3499, type: 3}
+  _deathExplosionParticle: {fileID: 8218929143799225855, guid: 2f0215ff2fdd257419b4d291e014a400, type: 3}
+  _deathParticlePoint: {fileID: 212796747517531420}
 --- !u!114 &3721457989882947448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,6 +756,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16b05ccd1c4a7924491f49359be1cd42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitStop
+--- !u!114 &4033809453743834353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377240496476148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aa231aa04b29d243b735de885e2f9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathFlash
+  _deathMaterial: {fileID: 2100000, guid: 93dac9201cef9d14b93aa660896e0a02, type: 2}
+  _deathFlashColor: {r: 1, g: 0.8478266, b: 0.14779866, a: 1}
+  _deathFlashDuration: 2.5
 --- !u!1 &1393053470196254
 GameObject:
   m_ObjectHideFlags: 0
@@ -10576,6 +10596,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &73203004159528765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 212796747517531420}
+  m_Layer: 3
+  m_Name: DeathParticlePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &212796747517531420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73203004159528765}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0050000027, y: 0.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4660076192433278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1690002925823045863
 GameObject:
   m_ObjectHideFlags: 0
