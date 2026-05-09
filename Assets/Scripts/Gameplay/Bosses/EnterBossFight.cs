@@ -2,6 +2,7 @@ using UnityEngine;
 using GlobalEnums;
 using Cinemachine;
 using System.Collections;
+using UnityEngine.UIElements;
 
 public class EnterBossFight : MonoBehaviour
 {
@@ -9,9 +10,13 @@ public class EnterBossFight : MonoBehaviour
     [SerializeField] private GameObject _spiritGuide;
     [SerializeField] private GameObject _guardianOwl;
     [SerializeField] private FightDoor _door;
+    [SerializeField] private CinemachineVirtualCamera _bossCamera;
+    [SerializeField] private float _showBossTime = 3f;
 
     private SpiritGuideView _guideView;
     private GuardianOwlView _guardianOwlView;
+
+    private int _initialBossCameraPrioriry = 0;
 
     //private CinemachineVirtualCamera _followCamera;
     //private Transform _initialFollowTarget;
@@ -28,6 +33,8 @@ public class EnterBossFight : MonoBehaviour
 
         if (guideIsDeadOrMissing && owlIsDeadOrMissing)
             Destroy(gameObject);
+
+        _initialBossCameraPrioriry = _bossCamera.Priority;
     }
 
     #region Trigger Enter & Exit
@@ -36,36 +43,27 @@ public class EnterBossFight : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            //_initialFollowTarget = _followCamera.Follow;
-
-            if (_door != null && _spiritGuide != null)
+            if (_door != null && _spiritGuide != null) // Boss 1
             {
                 _spiritGuide.SetActive(true);
                 _guideView = _spiritGuide.GetComponent<SpiritGuideView>();
                 _guideView.enabled = true;
-                _guideView.MoveDisabled = true;
 
                 if (!_guideView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
                 {
-                    PlayerMove.Instance.CanMove = false;
-                    //_followCamera.Follow = _spiritGuide.transform;
-                    //_followCamera.Priority = 0;
-                    GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
-                    _health.InstantiateBossHealth();
-                    _door.CloseDoor(true);
+                    //_spiritGuide.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 180f, transform.rotation.z));
+                    StartCoroutine(ShowBoss());
                 }
-
-                //StartCoroutine(WaitForShowBoss(1f));
-                PlayerMove.Instance.CanMove = true;
-                _guideView.MoveDisabled = false;
-                //Debug.Log(_followCamera.Follow);
             }
             else
             {
                 Debug.Log($"Door is {_door != null}, GuideView is {_guideView != null}");
             }
 
-            if (_guardianOwl != null)
+
+
+
+            if (_guardianOwl != null) // Boss 2
             {
                 _guardianOwl.SetActive(true);
                 _guardianOwlView = _guardianOwl.GetComponent<GuardianOwlView>();
@@ -79,7 +77,6 @@ public class EnterBossFight : MonoBehaviour
                     _health.InstantiateBossHealth();
                 }
 
-                //StartCoroutine(WaitForShowBoss(1.5f));
                 PlayerMove.Instance.CanMove = true;
             }
             else
@@ -94,29 +91,36 @@ public class EnterBossFight : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") && GameManager.Instance.GameState != GameState.IN_FIGHT_ROOM)
         {
             _health.DestroyBossHealthSlider();
-            //_followCamera.Priority = 10;
         }
     }
 
     #endregion
 
-    //private IEnumerator WaitForShowBoss(float time)
-    //{
-    //    yield return new WaitForSeconds(time);
-    //    _followCamera.Follow = _initialFollowTarget;
-    //    _followCamera.Priority = 0;
-    //}
+    private IEnumerator ShowBoss()
+    {
+        PlayerView.Instance.StopPlayer();
+        _guideView.MoveDisabled = true;
 
-    //private IEnumerator SetFollowTarget(Transform initial, Transform target)
-    //{
-    //    var flexTarget = target;
+        yield return new WaitForSeconds(1f);
 
-    //    while (flexTarget != target)
-    //    {
-    //        flexTarget = Vector3.Lerp(initial, target, 2f);
-    //        yield return;
-    //    }
-    //}
+        _bossCamera.Priority = 100;
+
+        //Диалог с боссом 1
+
+        yield return new WaitForSeconds(_showBossTime);
+
+        GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
+
+        _bossCamera.Priority = _initialBossCameraPrioriry;
+        _health.InstantiateBossHealth();
+        
+        if (_door != null) _door.CloseDoor(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        PlayerMove.Instance.CanMove = true;
+        if (_guideView != null) _guideView.MoveDisabled = false;
+    }
 
     private bool CheckAndInitSpiritGuide()
     {

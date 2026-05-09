@@ -138,6 +138,13 @@ public class PlayerView : MonoBehaviour
         }
     }
 
+    public void StopPlayer()
+    {
+        _playerMove.CanMove = false;
+        _rigidBody.linearVelocity = Vector3.zero;
+        _playerAnimation.ResetAnimatorParameters();
+    }
+
     #endregion
 
     #region Heal & CheckPoint

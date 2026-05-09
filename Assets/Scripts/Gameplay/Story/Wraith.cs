@@ -48,6 +48,7 @@ public class Wraith : NPC, ITalkable
     public void Talk(DialogueText diaogueText)
     {
         _pimen.gameObject.GetComponent<PimenMove>().enabled = false;
+        _pimen.gameObject.GetComponent<PimenAnimation>().SetIsMove(false);
         TurnPlayerToNPC();
         dialogueController.DisplayNextParagraph(diaogueText);
     }

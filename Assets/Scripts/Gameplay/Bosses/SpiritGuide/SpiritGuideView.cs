@@ -54,7 +54,7 @@ public class SpiritGuideView : MonoBehaviour
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool moveDisabled = false;
-    private bool facingRight = true;
+    private bool facingRight = false;
     private bool deathDone = false;
 
     public Rigidbody2D RigidBody { get { return rigidBody; } }
@@ -102,7 +102,7 @@ public class SpiritGuideView : MonoBehaviour
         var isGrounded = CheckIfGrounded();
         if (!isSecondStage && !isAccelerated && isGrounded && !MoveDisabled)
             sgAttack.RamAttack(playerHits);
-        if (isSecondStage && !isAccelerated)
+        if (isSecondStage && !isAccelerated && !MoveDisabled)
             sgAttack.RandomAttack(facingRight);
 
         sgMove.Move(isAccelerated, sgAttack.AcceleratedSpeed);
