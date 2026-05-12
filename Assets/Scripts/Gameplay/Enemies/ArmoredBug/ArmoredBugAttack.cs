@@ -3,7 +3,8 @@ using System;
 
 public class ArmoredBugAttack : MonoBehaviour
 {
-    [SerializeField] private LayerMask _playerLayer;
+    [SerializeField] private LayerMask _playerLayer1;
+    [SerializeField] private LayerMask _playerLayer2;
 
     [Header("Attack")]
     [SerializeField] private float _playerDetectDist = 5f;
@@ -16,6 +17,8 @@ public class ArmoredBugAttack : MonoBehaviour
     public event Action OnPlayerRightHitDetected;
 
     private ArmoredBugView _view;
+
+    private GameObject _player;
 
     private float _lastAttackTime;
 
@@ -65,10 +68,12 @@ public class ArmoredBugAttack : MonoBehaviour
 
     private void CheckPlayerHits()
     {
-        var playerHitLeft = Physics2D.Raycast(transform.position, Vector2.left, _attackDist, _playerLayer);
-        var playerHitRight = Physics2D.Raycast(transform.position, Vector2.right, _attackDist, _playerLayer);
+        var playerHitLeft1 = Physics2D.Raycast(transform.position, Vector2.left, _attackDist, _playerLayer1);
+        var playerHitRight1 = Physics2D.Raycast(transform.position, Vector2.right, _attackDist, _playerLayer1);
+        var playerHitLeft2 = Physics2D.Raycast(transform.position, Vector2.left, _attackDist, _playerLayer2);
+        var playerHitRight2 = Physics2D.Raycast(transform.position, Vector2.right, _attackDist, _playerLayer2);
 
-        //Collider2D playerHit = Physics2D.OverlapBox(transform.position, new Vector2(_attackDist * 2, 1f), 0, _playerLayer);
+        //Collider2D playerHit = Physics2D.OverlapBox(transform.position, new Vector2(_attackDist * 2, 1f), 0, _playerLayer1);
 
         //bool rightHit = false;
 
@@ -88,21 +93,23 @@ public class ArmoredBugAttack : MonoBehaviour
         //    }
         //}
 
-        if (playerHitLeft.collider != null)
+        if (playerHitLeft1.collider != null || playerHitLeft2.collider != null)
         {
             OnPlayerLeftHitDetected?.Invoke();
             return;
         }
-        else if (playerHitRight.collider != null)
+        else if (playerHitRight1.collider != null || playerHitRight2.collider != null)
         {
             OnPlayerRightHitDetected?.Invoke();
             return;
         }
 
-        var playerDetectHitLeft = Physics2D.Raycast(transform.position, Vector2.left, _playerDetectDist, _playerLayer);
-        var playerDetectHitRight = Physics2D.Raycast(transform.position, Vector2.right, _playerDetectDist, _playerLayer);
+        var playerDetectLeft1 = Physics2D.Raycast(transform.position, Vector2.left, _playerDetectDist, _playerLayer1);
+        var playerDetectRight1 = Physics2D.Raycast(transform.position, Vector2.right, _playerDetectDist, _playerLayer1);
+        var playerDetectLeft2 = Physics2D.Raycast(transform.position, Vector2.left, _playerDetectDist, _playerLayer2);
+        var playerDetectRight2 = Physics2D.Raycast(transform.position, Vector2.right, _playerDetectDist, _playerLayer2);
 
-        //Collider2D playerDetect = Physics2D.OverlapBox(transform.position, new Vector2(_playerDetectDist * 2, 1.5f), 0, _playerLayer);
+        //Collider2D playerDetect = Physics2D.OverlapBox(transform.position, new Vector2(_playerDetectDist * 2, 1.5f), 0, _playerLayer1);
 
         //bool rightDetect = false;
 
@@ -121,25 +128,29 @@ public class ArmoredBugAttack : MonoBehaviour
         //        return;
         //    }
         //}
-        //if (playerDetectHitLeft.collider == null && playerDetectHitRight.collider == null)
+        //if (playerDetectLeft1.collider == null && playerDetectRight1.collider == null)
         //{
         //    _view.IsTargeting = false;
         //    return;
         //}
 
-        if (playerDetectHitLeft.collider == null && playerDetectHitRight.collider == null)
+        //Debug.Log($"Right: {playerDetectRight1.collider != null || playerDetectRight2.collider != null}");
+
+        if ((playerDetectLeft1.collider == null && playerDetectRight1.collider == null) && 
+            playerDetectLeft2.collider == null && playerDetectRight2.collider == null)
         {
             _view.IsTargeting = false;
             return;
         }
 
-        if (playerDetectHitLeft.collider != null)
+        if (playerDetectLeft1.collider != null || playerDetectLeft2.collider != null)
         {
+            //Debug.Log($"Игрок слева, вызываем Detected");
             _view.IsTargeting = true;
             OnPlayerLeftDetected?.Invoke();
             return;
         }
-        else if (playerDetectHitRight.collider != null)
+        else if (playerDetectRight1.collider != null || playerDetectRight2.collider != null)
         {
             _view.IsTargeting = true;
             OnPlayerRightDetected?.Invoke();
