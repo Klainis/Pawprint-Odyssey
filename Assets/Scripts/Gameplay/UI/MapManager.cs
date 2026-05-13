@@ -49,14 +49,25 @@ public class MapManager : MonoBehaviour
             _mapIconTransform.transform.position = roomTransform.position;
     }
 
-    public void SetMnemirQuestObjectsIcons(string[] roomNames)
+    public void SetMnemirQuestObjectsIcons(List<string> roomNames)
     {
         foreach (var roomName in roomNames)
         {
-            var roomTransform = _roomsContainer.Find(roomName);
+            var iconName = roomName + "_MnemirObject";
+            var roomTransform = _roomsContainer.Find(iconName);
+
             if (roomTransform != null)
-                _mapIconTransform.transform.position = roomTransform.position;
+                roomTransform.gameObject.SetActive(true);
         }
+    }
+
+    public void RemoveMnemirQuestObjectsIcon(string roomName)
+    {
+        var iconName = roomName + "_MnemirObject";
+        var roomTransform = _roomsContainer.Find(iconName);
+
+        if (roomTransform != null)
+            roomTransform.gameObject.SetActive(false);
     }
 
     #region Show Opened Rooms & Walls
