@@ -8,6 +8,7 @@ public class MnemirView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private float _speed;
     [SerializeField] private LayerMask _turnLayerMask;
+    [SerializeField] private GameObject _mnemirQuestReward;
 
     #endregion
 
@@ -15,6 +16,7 @@ public class MnemirView : MonoBehaviour
 
     private MnemirMove _move;
     private MnemirAnimation _animation;
+    private Interact interact;
 
     private float _timer;
 
@@ -34,6 +36,7 @@ public class MnemirView : MonoBehaviour
     {
         _move = GetComponent<MnemirMove>();
         _animation = GetComponent<MnemirAnimation>();
+        interact = FindAnyObjectByType<Interact>();
 
         _move.TurnLayerMask = _turnLayerMask;
     }
@@ -62,16 +65,25 @@ public class MnemirView : MonoBehaviour
     private void OnEnable()
     {
         _move.OnWallHit += HandleWallHit;
+        interact.OnCompleteMnemirQuest += HandleCompleteMnemirQuest;
     }
 
     private void OnDisable()
     {
         _move.OnWallHit -= HandleWallHit;
+        interact.OnCompleteMnemirQuest -= HandleCompleteMnemirQuest;
     }
 
     private void HandleWallHit()
     {
         FacingRight = _move.Turn(FacingRight);
+    }
+
+    private void HandleCompleteMnemirQuest()
+    {
+        var pos = transform.position;
+        var rewardPos = new Vector3(pos.x - 1, pos.y + 0.5f, pos.z);
+        Instantiate(_mnemirQuestReward, rewardPos, Quaternion.identity);
     }
 
     #endregion

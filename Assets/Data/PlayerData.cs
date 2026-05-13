@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Player Data")]
@@ -57,6 +58,8 @@ public class PlayerData : ScriptableObject
 
     [Header("Quests")]
     public bool hasQuestMnemir;
+    public bool mnemirQuestRewarded;
+    public List<string> mnemirQuestCollectedObjects;
 
     [Header("CutScenes")]
     public bool startSutSceneShowed;

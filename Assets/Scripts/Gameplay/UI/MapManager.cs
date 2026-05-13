@@ -49,6 +49,16 @@ public class MapManager : MonoBehaviour
             _mapIconTransform.transform.position = roomTransform.position;
     }
 
+    public void SetMnemirQuestObjectsIcons(string[] roomNames)
+    {
+        foreach (var roomName in roomNames)
+        {
+            var roomTransform = _roomsContainer.Find(roomName);
+            if (roomTransform != null)
+                _mapIconTransform.transform.position = roomTransform.position;
+        }
+    }
+
     #region Show Opened Rooms & Walls
 
     public void ShowAllOpenedRoomsAndWalls()

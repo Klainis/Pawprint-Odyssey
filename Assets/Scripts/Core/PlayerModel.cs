@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerModel
 {
@@ -38,6 +40,8 @@ public class PlayerModel
 
     public bool MeetPimen { get; private set; }
     public bool HasQuestMnemir { get; private set; }
+    public bool MnemirQuestRewarded { get; private set; }
+    public List<string> MnemirQuestCollectedObjects { get; private set; }
 
     #endregion
 
@@ -55,7 +59,7 @@ public class PlayerModel
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed,
                         bool meetPimen,
-                        bool hasQuestMnemir)
+                        bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -95,6 +99,8 @@ public class PlayerModel
 
         MeetPimen = meetPimen;
         HasQuestMnemir = hasQuestMnemir;
+        MnemirQuestRewarded = mnemirQuestRewarded;
+        MnemirQuestCollectedObjects = mnemirQuestCollectedObjects;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -130,7 +136,9 @@ public class PlayerModel
             data.GuardianOwlKilled,
             data.StartCutSceneShowed,
             data.MeetPimen,
-            data.HasQuestMnemir
+            data.HasQuestMnemir,
+            data.MnemirQuestRewarded,
+            data.MnemirQuestCollectedObjects
         );
     }
 
@@ -167,7 +175,9 @@ public class PlayerModel
             playerData.guardianOwlKilled,
             playerData.startSutSceneShowed,
             playerData.meetPimen,
-            playerData.hasQuestMnemir
+            playerData.hasQuestMnemir,
+            playerData.mnemirQuestRewarded,
+            playerData.mnemirQuestCollectedObjects
         );
     }
 
@@ -369,6 +379,17 @@ public class PlayerModel
         return HasQuestMnemir;
     }
 
+    public bool SetMnemirQuestRewarded()
+    {
+        MnemirQuestRewarded = true;
+        return MnemirQuestRewarded;
+    }
+
+    public void AddObjectToMnemirQuestCollectedObjects(string name)
+    {
+        MnemirQuestCollectedObjects.Add(name);
+    }
+
     #endregion
 
     #region Save & Load
@@ -406,6 +427,8 @@ public class PlayerModel
         data.StartCutSceneShowed = StartCutSceneShowed;
         data.MeetPimen = MeetPimen;
         data.HasQuestMnemir = HasQuestMnemir;
+        data.MnemirQuestRewarded = MnemirQuestRewarded;
+        data.MnemirQuestCollectedObjects = MnemirQuestCollectedObjects;
     }
 
     public void Load(PlayerSaveData data)
@@ -441,6 +464,8 @@ public class PlayerModel
         StartCutSceneShowed = data.StartCutSceneShowed;
         MeetPimen = data.MeetPimen;
         HasQuestMnemir = data.HasQuestMnemir;
+        MnemirQuestRewarded = data.MnemirQuestRewarded;
+        MnemirQuestCollectedObjects = data.MnemirQuestCollectedObjects;
     }
 
     #endregion
@@ -480,4 +505,6 @@ public struct PlayerSaveData
     public bool StartCutSceneShowed;
     public bool MeetPimen;
     public bool HasQuestMnemir;
+    public bool MnemirQuestRewarded;
+    public List<string> MnemirQuestCollectedObjects;
 }
