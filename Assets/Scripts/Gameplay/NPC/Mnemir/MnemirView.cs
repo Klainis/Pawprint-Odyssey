@@ -16,12 +16,15 @@ public class MnemirView : MonoBehaviour
     private MnemirMove _move;
     private MnemirAnimation _animation;
 
+    private float _timer;
+
     #endregion
 
     #region Properties
 
     public bool FacingRight { get; private set; } = false;
-    public bool IsBusy { get; private set; } = false;
+    public bool IsSpeaking { get; private set; } = false;  /* Use when speak with player */
+    public bool IsLocked { get; private set; } = false;
 
     #endregion
 
@@ -37,22 +40,22 @@ public class MnemirView : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsBusy)
+        _timer -= Time.deltaTime;
+        if (_timer <= 0) SwitchState();
+
+        if (!IsSpeaking && !IsLocked)
         {
             _move.Move(_speed, FacingRight);
-            AnimationFlagsSwitcher(true);
+            _animation.SwitchMoving(true);
         }
         else
-            AnimationFlagsSwitcher(false);
+        {
+            _move.StopMove();
+            _animation.SwitchMoving(false);
+        }
     }
 
     #endregion
-
-    private void AnimationFlagsSwitcher(bool isMoving)
-    {
-        _animation.SetBoolIdle(!isMoving);
-        _animation.SetBoolMove(isMoving);
-    }
 
     #region Events
 
@@ -72,4 +75,10 @@ public class MnemirView : MonoBehaviour
     }
 
     #endregion
+
+    private void SwitchState()
+    {
+        _timer = UnityEngine.Random.Range(3f, 7f);
+        IsLocked = !IsLocked;
+    }
 }

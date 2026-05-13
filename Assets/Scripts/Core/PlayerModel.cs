@@ -36,7 +36,8 @@ public class PlayerModel
     public bool StartCutSceneShowed { get; private set; }
 
 
-    public bool MeetPimen {  get; private set; }
+    public bool MeetPimen { get; private set; }
+    public bool HasQuestMnemir { get; private set; }
 
     #endregion
 
@@ -53,7 +54,8 @@ public class PlayerModel
                         bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed,
-                        bool meetPimen)
+                        bool meetPimen,
+                        bool hasQuestMnemir)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -92,6 +94,7 @@ public class PlayerModel
         StartCutSceneShowed = startCutSceneShowed;
 
         MeetPimen = meetPimen;
+        HasQuestMnemir = hasQuestMnemir;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -126,7 +129,8 @@ public class PlayerModel
             data.SpiritGuideKilled,
             data.GuardianOwlKilled,
             data.StartCutSceneShowed,
-            data.MeetPimen
+            data.MeetPimen,
+            data.HasQuestMnemir
         );
     }
 
@@ -162,7 +166,8 @@ public class PlayerModel
             playerData.spiritGuideKilled,
             playerData.guardianOwlKilled,
             playerData.startSutSceneShowed,
-            playerData.meetPimen
+            playerData.meetPimen,
+            playerData.hasQuestMnemir
         );
     }
 
@@ -358,6 +363,12 @@ public class PlayerModel
         return MeetPimen;
     }
 
+    public bool SetHasQuestMnemir()
+    {
+        HasQuestMnemir = true;
+        return HasQuestMnemir;
+    }
+
     #endregion
 
     #region Save & Load
@@ -394,6 +405,7 @@ public class PlayerModel
         data.GuardianOwlKilled = GuardianOwlKilled;
         data.StartCutSceneShowed = StartCutSceneShowed;
         data.MeetPimen = MeetPimen;
+        data.HasQuestMnemir = HasQuestMnemir;
     }
 
     public void Load(PlayerSaveData data)
@@ -428,6 +440,7 @@ public class PlayerModel
         GuardianOwlKilled = data.GuardianOwlKilled;
         StartCutSceneShowed = data.StartCutSceneShowed;
         MeetPimen = data.MeetPimen;
+        HasQuestMnemir = data.HasQuestMnemir;
     }
 
     #endregion
@@ -466,4 +479,5 @@ public struct PlayerSaveData
     public bool GuardianOwlKilled;
     public bool StartCutSceneShowed;
     public bool MeetPimen;
+    public bool HasQuestMnemir;
 }

@@ -55,6 +55,9 @@ public class PlayerData : ScriptableObject
     [Header("Characters")]
     public bool meetPimen;
 
+    [Header("Quests")]
+    public bool hasQuestMnemir;
+
     [Header("CutScenes")]
     public bool startSutSceneShowed;
 }

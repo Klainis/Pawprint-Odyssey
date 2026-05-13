@@ -9,13 +9,19 @@ public class MnemirAnimation : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    public void SetBoolMove(bool value)
+    private void SetBoolMove(bool value)
     {
         _animator.SetBool("Move", value);
     }
 
-    public void SetBoolIdle(bool value)
+    private void SetBoolIdle(bool value)
     {
         _animator.SetBool("Idle", value);
+    }
+
+    public void SwitchMoving(bool isMoving)
+    {
+        SetBoolIdle(!isMoving);
+        SetBoolMove(isMoving);
     }
 }

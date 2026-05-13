@@ -57,4 +57,9 @@ public class MnemirMove : MonoBehaviour
         transform.rotation = Quaternion.Euler(rotator);
         return !facingRight;
     }
+
+    public void StopMove()
+    {
+        _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+    }
 }
