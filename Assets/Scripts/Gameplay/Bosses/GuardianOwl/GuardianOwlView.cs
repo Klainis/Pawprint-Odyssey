@@ -155,6 +155,14 @@ public class GuardianOwlView : MonoBehaviour
         }
     }
 
+    public void SetMaxMinFlashAmount(float value)
+    {
+        foreach (var damageFlash in _damageFlash)
+        {
+            damageFlash.CallMaxMinFlashAmount(value);
+        }
+    }
+
     private void PlayHitSound(AudioClip clip)
     {
         if (clip != null)

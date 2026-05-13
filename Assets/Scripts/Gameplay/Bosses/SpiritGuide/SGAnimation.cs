@@ -28,4 +28,13 @@ public class SGAnimation : MonoBehaviour
     {
         animator.SetBool("isLightAttack", isLightAttacking);
     }
+
+    public void SetDeathAnimation()
+    {
+        animator.SetBool("isWalking", false);
+        animator.SetBool("IsRunTelegraph", false);
+        animator.SetBool("isRunning", false);
+        animator.SetBool("isLightAttack", false);
+        animator.SetBool("IsDead", true);
+    }
 }

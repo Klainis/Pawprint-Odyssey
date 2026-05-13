@@ -93,7 +93,6 @@ public class ArmoredBugView : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(FacingRight);
         if (Model.IsDead)
         {
             StartCoroutine(DestroySelf());

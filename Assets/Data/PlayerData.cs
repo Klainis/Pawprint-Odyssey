@@ -23,6 +23,9 @@ public class PlayerData : ScriptableObject
     [Header("Money")]
     public int moneyCollected;
 
+    [Header("Artefact")]
+    public int artefactCollected;
+
     [Header("Current Coords")]
     public string currentScene;
     public float curPosX;

@@ -15,6 +15,7 @@ public class PlayerModel
     public int ClawDamage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
     public int MoneyCollected { get; private set; }
+    public int ArtefactCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public float CurPosX { get; private set; }
     public float CurPosY { get; private set; }
@@ -52,6 +53,7 @@ public class PlayerModel
                         int damage, int clawDamage,
                         int soulCrystalsCollected,
                         int moneyCollected,
+                        int artefactCollected,
                         string currentScene, float curPosX, float curPosY,
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
                         bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash, bool hasChargedAttack, bool hasFourPaws, bool hasSoulRelease, bool hasParrying,
@@ -73,6 +75,7 @@ public class PlayerModel
 
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
         MoneyCollected = Math.Max (0, moneyCollected);
+        ArtefactCollected = Math.Max(0, artefactCollected);
 
         CurrentScene = currentScene;
         CurPosX = curPosX;
@@ -115,6 +118,7 @@ public class PlayerModel
             data.ClawDamage,
             data.SoulCrystalsCollected,
             data.MoneyCollected,
+            data.ArtefactCollected,
             data.CurrentScene,
             data.CurPosX,
             data.CurPosY,
@@ -154,6 +158,7 @@ public class PlayerModel
             playerData.clawDamage,
             playerData.soulCrystalsCollected,
             playerData.moneyCollected,
+            playerData.artefactCollected,
             playerData.currentScene,
             playerData.curPosX,
             playerData.curPosY,
@@ -248,6 +253,12 @@ public class PlayerModel
     public bool AddMoney(int reward)
     {
         MoneyCollected += reward;
+        return true;
+    }
+
+    public bool AddArtefact()
+    {
+        ArtefactCollected += 1;
         return true;
     }
 
@@ -405,6 +416,7 @@ public class PlayerModel
         data.ClawDamage = ClawDamage;
         data.SoulCrystalsCollected = SoulCrystalsCollected;
         data.MoneyCollected = MoneyCollected;
+        data.ArtefactCollected = ArtefactCollected;
         data.CurrentScene = CurrentScene;
         data.CurPosX = CurPosX;
         data.CurPosY = CurPosY;
@@ -442,6 +454,7 @@ public class PlayerModel
         ClawDamage = data.ClawDamage;
         SoulCrystalsCollected = data.SoulCrystalsCollected;
         MoneyCollected = data.MoneyCollected;
+        ArtefactCollected = data.ArtefactCollected;
         CurrentScene = data.CurrentScene;
         CurPosX = data.CurPosX;
         CurPosY = data.CurPosY;
@@ -483,6 +496,7 @@ public struct PlayerSaveData
     public int ClawDamage;
     public int SoulCrystalsCollected;
     public int MoneyCollected;
+    public int ArtefactCollected;
     public string CurrentScene;
     public float CurPosX;
     public float CurPosY;

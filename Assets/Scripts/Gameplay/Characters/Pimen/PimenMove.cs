@@ -39,6 +39,24 @@ public class PimenMove : MonoBehaviour
     {
         if (_player == null) return;
 
+        if (GameManager.Instance.GameState == GameState.IN_FIGHT_ROOM)
+        {
+
+            transform.rotation = _isFacingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
+
+            if (transform.rotation.y == 0)
+            {
+                _turnCoefficient = 1;
+            } 
+            else if (transform.rotation.y == 180)
+            {
+                _turnCoefficient = -1;
+            }
+
+            Vector3 leavePosition = new Vector3(transform.position.x + (50 * _turnCoefficient), transform.position.y, transform.position.z);
+            transform.position = Vector3.Lerp(transform.position, leavePosition, 5 * Time.deltaTime);
+        }
+
         HandleRotation();
         MoveWithPlayer();
 
@@ -50,25 +68,6 @@ public class PimenMove : MonoBehaviour
         {
             _pimenAnimation.SetIsMove(false);
         }
-
-        if (GameManager.Instance.GameState == GameState.IN_FIGHT_ROOM)
-        {
-
-            transform.rotation = _isFacingRight ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
-
-            if (transform.rotation.y == 0)
-            {
-                _turnCoefficient = 1;
-            }
-            else if (transform.rotation.y == 180)
-            {
-                _turnCoefficient = -1;
-            }
-
-            Vector3 leavePosition = new Vector3(transform.position.x + (50 * _turnCoefficient), transform.position.y, transform.position.z);
-            transform.position = Vector3.Lerp(transform.position, leavePosition, 10 * Time.deltaTime);
-        }
-
     }
 
     private void MoveWithPlayer()

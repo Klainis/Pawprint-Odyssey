@@ -41,6 +41,7 @@ public class PlayerView : MonoBehaviour
     #region Variables
 
     private Rigidbody2D _rigidBody;
+    private RigidbodyConstraints2D _initialConstraints;
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _playerCollider;
     private GameObject _globalVolumeInstance;
@@ -108,6 +109,8 @@ public class PlayerView : MonoBehaviour
 
         _hitStop = GetComponent<HitStop>();
         _stunAudioController = GetComponent<StunAudioController>();
+
+        _initialConstraints = _rigidBody.constraints;
     }
 
     private void Update()
@@ -143,6 +146,20 @@ public class PlayerView : MonoBehaviour
         _playerMove.CanMove = false;
         _rigidBody.linearVelocity = Vector3.zero;
         _playerAnimation.ResetAnimatorParameters();
+    }
+
+    public void FreezePlayer(bool isFreeze)
+    {
+        if (isFreeze)
+        {
+            _playerMove.CanMove = false;
+            _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+        }
+        else
+        {
+            _playerMove.CanMove = true;
+            _rigidBody.constraints = _initialConstraints;
+        }
     }
 
     #endregion
@@ -234,6 +251,11 @@ public class PlayerView : MonoBehaviour
     private void SetFlashAmount(float flashAmount)
     {
         _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount);
+    }
+
+    public void SetMaxMinFlashAmount(float value)
+    {
+        SetFlashAmount(value);
     }
 
     #endregion
