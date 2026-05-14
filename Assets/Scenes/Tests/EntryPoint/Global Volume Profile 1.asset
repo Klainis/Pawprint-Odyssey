@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 1.05
   intensity:
     m_OverrideState: 1
     m_Value: 2
@@ -62,13 +62,13 @@ MonoBehaviour:
   active: 1
   lift:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.99951696, z: 0.96991307, w: 0.00000006884964}
+    m_Value: {x: 0.9895333, y: 1, z: 0.9219386, w: 0.00000007166055}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.93899965, z: 0.92661726, w: -0.036129102}
+    m_Value: {x: 1, y: 0.94865, z: 0.8879166, w: 0.04190223}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.99764454, z: 0.97932297, w: 0.32028463}
+    m_Value: {x: 1, y: 0.99764454, z: 0.97932297, w: 0.081018135}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.Vignette
-  active: 0
+  active: 1
   color:
     m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}
@@ -106,10 +106,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.181
   smoothness:
-    m_OverrideState: 0
-    m_Value: 0.2
+    m_OverrideState: 1
+    m_Value: 1
   rounded:
     m_OverrideState: 0
     m_Value: 0

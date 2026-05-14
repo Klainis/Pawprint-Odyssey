@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlayerModel
 {
@@ -13,6 +15,7 @@ public class PlayerModel
     public int ClawDamage { get; private set; }
     public int SoulCrystalsCollected { get; private set; }
     public int MoneyCollected { get; private set; }
+    public int ArtefactCollected { get; private set; }
     public string CurrentScene { get; private set; }
     public float CurPosX { get; private set; }
     public float CurPosY { get; private set; }
@@ -36,7 +39,10 @@ public class PlayerModel
     public bool StartCutSceneShowed { get; private set; }
 
 
-    public bool MeetPimen {  get; private set; }
+    public bool MeetPimen { get; private set; }
+    public bool HasQuestMnemir { get; private set; }
+    public bool MnemirQuestRewarded { get; private set; }
+    public List<string> MnemirQuestCollectedObjects { get; private set; }
 
     #endregion
 
@@ -47,13 +53,15 @@ public class PlayerModel
                         int damage, int clawDamage,
                         int soulCrystalsCollected,
                         int moneyCollected,
+                        int artefactCollected,
                         string currentScene, float curPosX, float curPosY,
                         string checkPointScene, float checkPointPosX, float checkPointPosY,
                         bool hasClaw, bool hasDoubleJump, bool hasDash, bool hasWallRun, bool hasRun, bool hasDamageDash, bool hasChargedAttack, bool hasFourPaws, bool hasSoulRelease, bool hasParrying,
                         bool facingRight,
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed,
-                        bool meetPimen)
+                        bool meetPimen,
+                        bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -67,6 +75,7 @@ public class PlayerModel
 
         SoulCrystalsCollected = Math.Max(0, soulCrystalsCollected);
         MoneyCollected = Math.Max (0, moneyCollected);
+        ArtefactCollected = Math.Max(0, artefactCollected);
 
         CurrentScene = currentScene;
         CurPosX = curPosX;
@@ -92,6 +101,9 @@ public class PlayerModel
         StartCutSceneShowed = startCutSceneShowed;
 
         MeetPimen = meetPimen;
+        HasQuestMnemir = hasQuestMnemir;
+        MnemirQuestRewarded = mnemirQuestRewarded;
+        MnemirQuestCollectedObjects = mnemirQuestCollectedObjects;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -106,6 +118,7 @@ public class PlayerModel
             data.ClawDamage,
             data.SoulCrystalsCollected,
             data.MoneyCollected,
+            data.ArtefactCollected,
             data.CurrentScene,
             data.CurPosX,
             data.CurPosY,
@@ -126,7 +139,10 @@ public class PlayerModel
             data.SpiritGuideKilled,
             data.GuardianOwlKilled,
             data.StartCutSceneShowed,
-            data.MeetPimen
+            data.MeetPimen,
+            data.HasQuestMnemir,
+            data.MnemirQuestRewarded,
+            data.MnemirQuestCollectedObjects
         );
     }
 
@@ -142,6 +158,7 @@ public class PlayerModel
             playerData.clawDamage,
             playerData.soulCrystalsCollected,
             playerData.moneyCollected,
+            playerData.artefactCollected,
             playerData.currentScene,
             playerData.curPosX,
             playerData.curPosY,
@@ -162,7 +179,10 @@ public class PlayerModel
             playerData.spiritGuideKilled,
             playerData.guardianOwlKilled,
             playerData.startSutSceneShowed,
-            playerData.meetPimen
+            playerData.meetPimen,
+            playerData.hasQuestMnemir,
+            playerData.mnemirQuestRewarded,
+            playerData.mnemirQuestCollectedObjects
         );
     }
 
@@ -233,6 +253,12 @@ public class PlayerModel
     public bool AddMoney(int reward)
     {
         MoneyCollected += reward;
+        return true;
+    }
+
+    public bool AddArtefact()
+    {
+        ArtefactCollected += 1;
         return true;
     }
 
@@ -358,6 +384,23 @@ public class PlayerModel
         return MeetPimen;
     }
 
+    public bool SetHasQuestMnemir()
+    {
+        HasQuestMnemir = true;
+        return HasQuestMnemir;
+    }
+
+    public bool SetMnemirQuestRewarded()
+    {
+        MnemirQuestRewarded = true;
+        return MnemirQuestRewarded;
+    }
+
+    public void AddObjectToMnemirQuestCollectedObjects(string name)
+    {
+        MnemirQuestCollectedObjects.Add(name);
+    }
+
     #endregion
 
     #region Save & Load
@@ -373,6 +416,7 @@ public class PlayerModel
         data.ClawDamage = ClawDamage;
         data.SoulCrystalsCollected = SoulCrystalsCollected;
         data.MoneyCollected = MoneyCollected;
+        data.ArtefactCollected = ArtefactCollected;
         data.CurrentScene = CurrentScene;
         data.CurPosX = CurPosX;
         data.CurPosY = CurPosY;
@@ -394,6 +438,9 @@ public class PlayerModel
         data.GuardianOwlKilled = GuardianOwlKilled;
         data.StartCutSceneShowed = StartCutSceneShowed;
         data.MeetPimen = MeetPimen;
+        data.HasQuestMnemir = HasQuestMnemir;
+        data.MnemirQuestRewarded = MnemirQuestRewarded;
+        data.MnemirQuestCollectedObjects = MnemirQuestCollectedObjects;
     }
 
     public void Load(PlayerSaveData data)
@@ -407,6 +454,7 @@ public class PlayerModel
         ClawDamage = data.ClawDamage;
         SoulCrystalsCollected = data.SoulCrystalsCollected;
         MoneyCollected = data.MoneyCollected;
+        ArtefactCollected = data.ArtefactCollected;
         CurrentScene = data.CurrentScene;
         CurPosX = data.CurPosX;
         CurPosY = data.CurPosY;
@@ -428,6 +476,9 @@ public class PlayerModel
         GuardianOwlKilled = data.GuardianOwlKilled;
         StartCutSceneShowed = data.StartCutSceneShowed;
         MeetPimen = data.MeetPimen;
+        HasQuestMnemir = data.HasQuestMnemir;
+        MnemirQuestRewarded = data.MnemirQuestRewarded;
+        MnemirQuestCollectedObjects = data.MnemirQuestCollectedObjects;
     }
 
     #endregion
@@ -445,6 +496,7 @@ public struct PlayerSaveData
     public int ClawDamage;
     public int SoulCrystalsCollected;
     public int MoneyCollected;
+    public int ArtefactCollected;
     public string CurrentScene;
     public float CurPosX;
     public float CurPosY;
@@ -466,4 +518,7 @@ public struct PlayerSaveData
     public bool GuardianOwlKilled;
     public bool StartCutSceneShowed;
     public bool MeetPimen;
+    public bool HasQuestMnemir;
+    public bool MnemirQuestRewarded;
+    public List<string> MnemirQuestCollectedObjects;
 }

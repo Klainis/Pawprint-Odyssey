@@ -11,6 +11,7 @@ public class ArmoredBugView : MonoBehaviour
     [SerializeField] private PlayerAttack _playerAttack;
     [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private float _playerAttackForce = 7f;
+    [SerializeField] private float _waitTimeBeforeTurn = 0.7f;
     [SerializeField] private bool _isInvincible = false;
     [SerializeField] private AudioClip _hitClip;
     [SerializeField] private AudioClip _shieldHitClip;
@@ -46,12 +47,14 @@ public class ArmoredBugView : MonoBehaviour
     private InstantiateMoney _money;
 
     private Coroutine _telegraphCoroutine;
+    private Coroutine _waitBeforeTurnCoroutine;
     private RigidbodyConstraints2D _defaultConstraints;
 
     private bool _isHitted = false;
     private bool _isAccelerated = false;
     private bool _damageApplied = false;
     private bool _isKnockback = false;
+    private bool _isTurningToRight;
 
     #endregion
 
@@ -97,17 +100,19 @@ public class ArmoredBugView : MonoBehaviour
         }
         else if (!_attack.IsAttacking)
         {
-            if (IsTargeting)
-            {
-                //Debug.Log("Есть игрок");
-                _animation.SetBoolMove(true);
-                _move.Move();
-            }
-            else
-            {
-                //Debug.Log("Потеряли игрока");
-                _animation.SetBoolMove(false);
-            }
+            //if (IsTargeting)
+            //{
+            //    //Debug.Log("Есть игрок");
+            //    _animation.SetBoolMove(true);
+            //    _move.Move();
+            //}
+            //else
+            //{
+            //    //Debug.Log("Потеряли игрока");
+            //    _animation.SetBoolMove(false);
+            //}
+            _animation.SetBoolMove(true);
+            _move.Move();
         }
     }
 
@@ -297,13 +302,13 @@ public class ArmoredBugView : MonoBehaviour
         FacingRight = _move.Turn(FacingRight);
     }
 
-    private void HandlePlayerLeftHitDetected() => StartTelegraph(false);
-    private void HandlePlayerRightHitDetected() => StartTelegraph(true);
+    private void HandlePlayerLeftHitDetected() => StartTelegraph();
+    private void HandlePlayerRightHitDetected() => StartTelegraph();
 
-    private void HandlePlayerLeftDetected() => FacingRight = _move.Turn(true);
-    private void HandlePlayerRightDetected() => FacingRight = _move.Turn(false);
+    private void HandlePlayerLeftDetected() => StartTurnCoroutine(true);
+    private void HandlePlayerRightDetected() => StartTurnCoroutine(false);
 
-    private void StartTelegraph(bool faceRight)
+    private void StartTelegraph()
     {
         if (!_attack.CanAttack(_attackCooldown))
             return;
@@ -311,15 +316,48 @@ public class ArmoredBugView : MonoBehaviour
         if (_telegraphCoroutine != null)
             StopCoroutine(_telegraphCoroutine);
 
-        //if (faceRight != FacingRight)
-        //    FacingRight = _move.Turn(FacingRight);
-
         _telegraphCoroutine = StartCoroutine(AttackTelegraphRoutine());
+    }
+
+    private void StartTurnCoroutine(bool targetFacingRight)
+    {
+
+        if (FacingRight == !targetFacingRight)
+        {
+            Debug.Log("Поворот в туже сторону, куда смотрим");
+            if (_waitBeforeTurnCoroutine != null)
+            {
+                StopCoroutine(_waitBeforeTurnCoroutine);
+            }
+            return;
+        }
+
+        if (_waitBeforeTurnCoroutine != null && _isTurningToRight == targetFacingRight)
+        {
+            return;
+        }
+
+        if (_waitBeforeTurnCoroutine != null)
+        {
+            StopCoroutine(_waitBeforeTurnCoroutine);
+        }
+
+        _isTurningToRight = targetFacingRight;
+        _waitBeforeTurnCoroutine = StartCoroutine(WaitBeforeTurn(targetFacingRight));
     }
 
     #endregion
 
     #region IEnumerators
+
+    private IEnumerator WaitBeforeTurn(bool targetFacingRight)
+    {
+        Debug.Log("Ждем разворота");
+        yield return new WaitForSeconds(_waitTimeBeforeTurn);
+
+        //Debug.Log("Разворот");
+        FacingRight = _move.Turn(targetFacingRight);
+    }
 
     private IEnumerator WaitForKnockBack()
     {

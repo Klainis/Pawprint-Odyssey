@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
     {
         if (GameState == GameState.DEAD)
         {
-            Destroy(Player);
+            if (Player != null) Destroy(Player);
             _playerCached = null;
             Destroy(PlayerView.Instance.gameObject);
 

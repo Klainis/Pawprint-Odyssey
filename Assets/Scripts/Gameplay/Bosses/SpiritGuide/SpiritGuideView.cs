@@ -7,6 +7,9 @@ public class SpiritGuideView : MonoBehaviour
 {
     public EnemyModel Model { get; private set; }
 
+    [Header("Objects")]
+    [SerializeField] private GameObject _artefactObject;
+
     [Header("Main params")]
     [SerializeField] private EnemyData data;
     [SerializeField] private LayerMask groundLayer;
@@ -38,6 +41,7 @@ public class SpiritGuideView : MonoBehaviour
 
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
+    private GameObject _artefactInstance;
 
     private AudioSource _audioSource;
 
@@ -49,12 +53,15 @@ public class SpiritGuideView : MonoBehaviour
     private StunAudioController _stunAudioController;
 
     private int maxLifeForReading;
+
     private float secondStageLifeAmount;
+    private float direction;
+
     private bool isSecondStage = false;
     private bool isHitted = false;
     private bool isAccelerated = false;
     private bool moveDisabled = false;
-    private bool facingRight = true;
+    private bool facingRight = false;
     private bool deathDone = false;
 
     public Rigidbody2D RigidBody { get { return rigidBody; } }
@@ -102,7 +109,7 @@ public class SpiritGuideView : MonoBehaviour
         var isGrounded = CheckIfGrounded();
         if (!isSecondStage && !isAccelerated && isGrounded && !MoveDisabled)
             sgAttack.RamAttack(playerHits);
-        if (isSecondStage && !isAccelerated)
+        if (isSecondStage && !isAccelerated && !MoveDisabled)
             sgAttack.RandomAttack(facingRight);
 
         sgMove.Move(isAccelerated, sgAttack.AcceleratedSpeed);
@@ -123,12 +130,11 @@ public class SpiritGuideView : MonoBehaviour
         if (damageApplied)
         {
             PlayHitSound(_hitClip);
-            foreach (var damageFlash in _damageFlash)
-            {
-                damageFlash.CallDamageFlash();
-            }
+            SetFlashAmount();
+
             _screenShaker.Shake();
-            var direction = damage / Mathf.Abs(damage);
+
+            direction = damage / Mathf.Abs(damage);
             SpawnDamageParticles(direction);
 
             if (PlayerAttack.Instance.AttackSeriesCount >= 3)
@@ -147,6 +153,22 @@ public class SpiritGuideView : MonoBehaviour
         }
     }
 
+    public void SetMaxMinFlashAmount(float value)
+    {
+        foreach (var damageFlash in _damageFlash)
+        {
+            damageFlash.CallMaxMinFlashAmount(value);
+        }
+    }
+
+    public void SetFlashAmount()
+    {
+        foreach (var damageFlash in _damageFlash)
+        {
+            damageFlash.CallDamageFlash();
+        }
+    }
+
     private void PlayHitSound(AudioClip clip)
     {
         if (clip != null)
@@ -160,14 +182,14 @@ public class SpiritGuideView : MonoBehaviour
         ApplyDamage(damage);
     }
 
-    private void SpawnDamageParticles(int direction)
+    private void SpawnDamageParticles(float direction)
     {
         var vectorDirection = new Vector2(direction, 0);
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
-    private void SpawnPlayerAttakParticles(int direction)
+    private void SpawnPlayerAttakParticles(float direction)
     {
         var vectorDirection = new Vector2(direction, 0);
         var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
@@ -237,19 +259,33 @@ public class SpiritGuideView : MonoBehaviour
 
         _stunAudioController.TriggerStun();
 
-        Time.timeScale = 0.4f;
+        Time.timeScale = 0.15f;
 
-        // _bugAnimation.SetTriggerDead();
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
-        transform.rotation = Quaternion.Euler(rotator);
+        sgAnimation.SetDeathAnimation();
 
-        yield return new WaitForSecondsRealtime(1.5f);
+        rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+
+        EndBossFightFX.Instance.EnableEndFightFX();
+        SpawnDamageParticles(direction);
+        SpawnPlayerLastAttackParticles();
+
+        yield return new WaitForSecondsRealtime(3f);
 
         Time.timeScale = 1f;
-        rigidBody.linearVelocity = new Vector2(0, rigidBody.linearVelocity.y);
+        EndBossFightFX.Instance.DisableEndFightFX();
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2f);
 
-        Destroy(gameObject);
+        _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
+        var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
+        artefactRB.AddForce(new Vector2(50f, 50f));
+
+        PlayerView.Instance.FreezePlayer(false);
+
+        yield return new WaitForSeconds(1f);
+
+        PimenView.Instance.gameObject.GetComponent<Wraith>().WinFirstBoss();
+
+        //Destroy(gameObject);
     }
 }

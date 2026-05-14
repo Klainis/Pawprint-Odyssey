@@ -27,6 +27,9 @@ public class PlayerView : MonoBehaviour
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
+    [SerializeField] private ParticleSystem _deathBurstParticle;
+    [SerializeField] private ParticleSystem _deathExplosionParticle;
+    [SerializeField] private Transform _deathParticlePoint;
 
     //[Header("Events")]
     //[Space]
@@ -38,11 +41,15 @@ public class PlayerView : MonoBehaviour
     #region Variables
 
     private Rigidbody2D _rigidBody;
+    private RigidbodyConstraints2D _initialConstraints;
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _playerCollider;
     private GameObject _globalVolumeInstance;
     private GameObject _manaBar;
-    
+    private ParticleSystem _deathBurstParticleInstance;
+    private ParticleSystem _deathExplosionParticleInstance;
+
+
     private UnityEngine.Rendering.Universal.Vignette _vignette;
     private Coroutine _vignetteCoroutine;
 
@@ -59,6 +66,7 @@ public class PlayerView : MonoBehaviour
     private PlayerHeart _playerHeart;
     private PlayerMana _playerMana;
     private Interact _playerInteract;
+    private DeathFlash _deathFlash;
 
     private bool _isInvincible = false;
 
@@ -97,9 +105,12 @@ public class PlayerView : MonoBehaviour
         _playerHeart = GetComponent<PlayerHeart>();
         _playerInteract = GetComponent<Interact>();
         _playerMana = GetComponent<PlayerMana>();
+        _deathFlash = GetComponent<DeathFlash>();
 
         _hitStop = GetComponent<HitStop>();
         _stunAudioController = GetComponent<StunAudioController>();
+
+        _initialConstraints = _rigidBody.constraints;
     }
 
     private void Update()
@@ -127,6 +138,27 @@ public class PlayerView : MonoBehaviour
             _oldDialogue = false;
             _playerMove.CanMove = true;
             _isInvincible = false;
+        }
+    }
+
+    public void StopPlayer()
+    {
+        _playerMove.CanMove = false;
+        _rigidBody.linearVelocity = Vector3.zero;
+        _playerAnimation.ResetAnimatorParameters();
+    }
+
+    public void FreezePlayer(bool isFreeze)
+    {
+        if (isFreeze)
+        {
+            _playerMove.CanMove = false;
+            _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+        }
+        else
+        {
+            _playerMove.CanMove = true;
+            _rigidBody.constraints = _initialConstraints;
         }
     }
 
@@ -218,7 +250,12 @@ public class PlayerView : MonoBehaviour
 
     private void SetFlashAmount(float flashAmount)
     {
-        _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount); // когда появится нормальный арт героя, скоррекировать
+        _spriteRenderer.material.SetFloat("_FlashAmount", flashAmount);
+    }
+
+    public void SetMaxMinFlashAmount(float value)
+    {
+        SetFlashAmount(value);
     }
 
     #endregion
@@ -232,7 +269,17 @@ public class PlayerView : MonoBehaviour
         
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
 
-        Instantiate(_damageParticle, transform.position, spawnRotation);
+        Instantiate(_damageParticle, _deathParticlePoint.position, spawnRotation);
+    }
+
+    private void SpawnDeathBurstParticles()
+    {
+        _deathBurstParticleInstance = Instantiate(_deathBurstParticle, _deathParticlePoint.position, Quaternion.identity, transform);
+    }
+
+    private void SpawnDeathExplosionParticles()
+    {
+        _deathExplosionParticleInstance = Instantiate(_deathExplosionParticle, _deathParticlePoint.position, Quaternion.identity);
     }
 
     #endregion
@@ -378,15 +425,42 @@ public class PlayerView : MonoBehaviour
 
     private IEnumerator WaitToDead()
     {
-        _playerAnimation.SetBoolIsDead(true);
+        //_playerAnimation.SetBoolIsDead(true);
         _playerMove.CanMove = false;
         _isInvincible = true;
         _playerAttack.enabled = false;
-        yield return new WaitForSeconds(0.4f);
-        _rigidBody.linearVelocity = /*new Vector2(0, _rigidBody.linearVelocity.y);*/ Vector2.zero;
-        yield return new WaitForSeconds(1.1f);
+
+        yield return new WaitForSeconds(0.1f);
+        _playerAnimation.SetBoolIsDead(true);
+
+        _rigidBody.linearVelocity = Vector2.zero;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+
+        yield return new WaitForSeconds(0.1f);
+
+        _deathFlash.CallDeathFlashCoroutine();
+        SpawnDeathBurstParticles();
+        //yield return new WaitForSeconds(1.1f);
+        //SaveSystem.AutoSaveBeforePlayerDeath();
+        //GameManager.Instance.SetGameState(GameState.DEAD);
+        //GameManager.Instance.RevivalPlayer();
+    }
+
+    public void SetDeath()
+    {
         SaveSystem.AutoSaveBeforePlayerDeath();
         GameManager.Instance.SetGameState(GameState.DEAD);
+        StartCoroutine(Revivaler());
+    }
+
+    private IEnumerator Revivaler()
+    {
+        _deathBurstParticleInstance.Stop();
+        SpawnDeathExplosionParticles();
+        _spriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(1f);
+
         GameManager.Instance.RevivalPlayer();
     }
 

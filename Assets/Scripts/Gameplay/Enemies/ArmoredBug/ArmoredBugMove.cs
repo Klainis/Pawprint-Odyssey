@@ -16,6 +16,9 @@ public class ArmoredBugMove : MonoBehaviour
     private bool _isInPlatform;
     private bool _isObstacle;
 
+    private float _lastTurnTime;
+    private float _turnCooldown = 0.2f;
+
     private void Awake()
     {
         _view = GetComponent<ArmoredBugView>();
@@ -29,10 +32,14 @@ public class ArmoredBugMove : MonoBehaviour
     {
         _isInPlatform = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
         _isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
-        if ((!_isInPlatform && _view.RigidBody.linearVelocity.y >= 0) || _isObstacle)
-            OnWallHit?.Invoke();
-    }
 
+        if (((!_isInPlatform && _view.RigidBody.linearVelocity.y >= 0) || _isObstacle)
+            && Time.time > _lastTurnTime + _turnCooldown)
+        {
+            _lastTurnTime = Time.time;
+            OnWallHit?.Invoke();
+        }
+    }
     public void Move()
     {
         if (_view.IsHitted || Mathf.Abs(_view.RigidBody.linearVelocity.y) > 0.5f)

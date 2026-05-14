@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Player Data")]
@@ -21,6 +22,9 @@ public class PlayerData : ScriptableObject
 
     [Header("Money")]
     public int moneyCollected;
+
+    [Header("Artefact")]
+    public int artefactCollected;
 
     [Header("Current Coords")]
     public string currentScene;
@@ -54,6 +58,11 @@ public class PlayerData : ScriptableObject
 
     [Header("Characters")]
     public bool meetPimen;
+
+    [Header("Quests")]
+    public bool hasQuestMnemir;
+    public bool mnemirQuestRewarded;
+    public List<string> mnemirQuestCollectedObjects;
 
     [Header("CutScenes")]
     public bool startSutSceneShowed;

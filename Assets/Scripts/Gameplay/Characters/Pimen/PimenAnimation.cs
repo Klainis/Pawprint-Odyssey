@@ -24,4 +24,9 @@ public class PimenAnimation : MonoBehaviour
     {
         animator.SetBool("IsGetOutGround", value);
     }
+
+    public void StartGetOut()
+    {
+        AttackPimenManager.Instance.GetOutAndStartDialogueCoroutine();
+    }
 }

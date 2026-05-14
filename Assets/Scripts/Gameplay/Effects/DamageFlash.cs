@@ -61,4 +61,11 @@ public class DamageFlash : MonoBehaviour
     {
         _material.SetFloat("_FlashAmount", flashAmount);
     }
+
+    public void CallMaxMinFlashAmount(float value)
+    {
+        if (_damageFlashCoroutine != null) StopCoroutine(_damageFlashCoroutine);
+
+        SetFlashAmount(value);
+    }
 }
