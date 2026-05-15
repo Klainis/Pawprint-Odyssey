@@ -907,13 +907,12 @@ GameObject:
   m_Component:
   - component: {fileID: 7753759496127434388}
   - component: {fileID: 8148602886258222474}
-  - component: {fileID: 4960937551757295646}
   - component: {fileID: 4067127734825223365}
-  - component: {fileID: 5293412149923451211}
   - component: {fileID: 6250476052798156613}
   - component: {fileID: 3846802358258008237}
   - component: {fileID: 1042892992246907767}
   - component: {fileID: 3562679650113050435}
+  - component: {fileID: 1892375821393880866}
   m_Layer: 14
   m_Name: Mnemir
   m_TagString: NPC
@@ -963,33 +962,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!50 &4960937551757295646
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8617592752598214497}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!58 &4067127734825223365
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1026,52 +998,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.22, y: 0.87}
   m_Radius: 1.35
---- !u!61 &5293412149923451211
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8617592752598214497}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 24648
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.119659424, y: 0.9112203}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.1365101, y: 1.9354239}
-  m_EdgeRadius: 0
 --- !u!114 &6250476052798156613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1088,7 +1014,9 @@ MonoBehaviour:
   _turnLayerMask:
     serializedVersion: 2
     m_Bits: 512
-  _mnemirQuestReward: {fileID: 2450283227829768065, guid: 3c4ea5cf5548bc74682ae2671a889cc3, type: 3}
+  _artefactObject: {fileID: 8327509386740446822, guid: 0bebde4ff66e54649bce61033ac8d46f, type: 3}
+  zoneCheck: {fileID: 8604512451603457762}
+  educationCanvas: {fileID: 824325873922465681}
 --- !u!114 &3846802358258008237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1125,6 +1053,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d68bce5409e46a47913e3a74f2f30f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MnemirInteract
+--- !u!114 &1892375821393880866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8617592752598214497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2dc47e8a16e0a24c9486d75b3eeb4d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MnemirTalk
+  dialogueController: {fileID: 0}
+  BeforeMnemirQuestDialogueText: {fileID: 11400000, guid: 0a07f1901ddfc7b48bf4b64650b348df, type: 2}
+  DuringMnemirQuestDialogueText: {fileID: 11400000, guid: 47ac5c552c846a74cb78a9d2db87cac7, type: 2}
+  AfterMnemirQuestDialogueText: {fileID: 11400000, guid: 915bd3d36f357ef46b953b87191a22af, type: 2}
 --- !u!1 &8933897582638000634
 GameObject:
   m_ObjectHideFlags: 0

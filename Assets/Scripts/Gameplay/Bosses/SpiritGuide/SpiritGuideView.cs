@@ -284,7 +284,7 @@ public class SpiritGuideView : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        PimenView.Instance.gameObject.GetComponent<Wraith>().WinFirstBoss();
+        PimenView.Instance.gameObject.GetComponent<PimenTalk>().WinFirstBoss();
 
         //Destroy(gameObject);
     }

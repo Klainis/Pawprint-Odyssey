@@ -10,6 +10,10 @@ public class MnemirView : MonoBehaviour
     [SerializeField] private LayerMask _turnLayerMask;
     [SerializeField] private GameObject _artefactObject;
 
+    [Header("Help UI")]
+    public GameObject zoneCheck;
+    public GameObject educationCanvas;
+
     #endregion
 
     #region Variables
@@ -89,7 +93,7 @@ public class MnemirView : MonoBehaviour
 
         _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
         var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
-        artefactRB.AddForce(new Vector2(-50f, 50f));
+        artefactRB.AddForce(new Vector2(200f, 100f));
     }
 
     #endregion

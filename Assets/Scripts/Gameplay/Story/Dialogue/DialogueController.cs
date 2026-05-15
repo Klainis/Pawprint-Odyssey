@@ -30,9 +30,15 @@ public class DialogueController : MonoBehaviour
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
 
+    private void Awake()
+    {
+        InitializeManager.Instance.dialogueController = this;
+        gameObject.SetActive(false);
+    }
+
     public void DisplayNextParagraph(DialogueText dialogueText)
     {
-        //заполняем Queue, если ничего не в очереди
+        //заполняем Queue, если ничего нет в очереди
         if (paragraphs.Count == 0)
         {
             if (!_conversationEnded)
@@ -46,7 +52,7 @@ public class DialogueController : MonoBehaviour
             }
         }
 
-        //Печатаем то, что если в очереди
+        //Печатаем то, что есть в очереди
         if (!_isTyping)
         {
             _currentLine = paragraphs.Dequeue();
@@ -109,7 +115,18 @@ public class DialogueController : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        GameObject.FindGameObjectWithTag("Pimen").GetComponent<PimenMove>().enabled = true;
+        var pimen = GameObject.FindGameObjectWithTag("Pimen");
+        if (pimen != null)
+        {
+            pimen.GetComponent<PimenMove>().enabled = true;
+            pimen.GetComponent<PimenTalk>().IsPimenTalk = false;
+        }
+
+        var mnemir = GameObject.FindGameObjectWithTag("NPC");
+        if (mnemir != null)
+        {
+            mnemir.GetComponent<MnemirTalk>().IsMnemirTalk = false;
+        }
 
         GameManager.Instance.SetGameState(GameState.PLAYING);
     }

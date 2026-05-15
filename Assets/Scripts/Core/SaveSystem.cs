@@ -59,7 +59,7 @@ public class SaveSystem
     }
 
     // Сохранение для того, чтобы сохранились сломанные стены и кристаллы, а также карта
-    public static void AutoSaveBeforePlayerDeath()
+    public static void AutoSaveSimple()
     {
         HandleAutoSaveDataWithoutPlayerPos();
         SaveDataToFile();
@@ -246,6 +246,11 @@ public class SaveSystem
 
     private static void HandleAutoSaveDataWithoutPlayerPos()
     {
+        if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
+        {
+            PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
+
         if (WallsManager.Instance != null && WallsManager.Instance.WallsExistenceInstance != null)
         {
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);

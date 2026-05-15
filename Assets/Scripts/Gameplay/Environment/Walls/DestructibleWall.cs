@@ -50,7 +50,7 @@ public class DestructibleWall : MonoBehaviour
                 FindAnyObjectByType<ShowScretRoomAfterBrakeWall>().StartShower();
                 _destroyBrokenWalls.AddInDestroyWallList();
                 //SaveSystem.AutoSave();
-                SaveSystem.AutoSaveBeforePlayerDeath();
+                SaveSystem.AutoSaveSimple();
 
                 Destroy(gameObject);
             }
@@ -58,7 +58,7 @@ public class DestructibleWall : MonoBehaviour
             {
                 _destroyBrokenWalls.AddInDestroyWallList();
                 //SaveSystem.AutoSave();
-                SaveSystem.AutoSaveBeforePlayerDeath();
+                SaveSystem.AutoSaveSimple();
                 InstantiateDoorLight();
 
                 Destroy(gameObject);

@@ -3,8 +3,6 @@ using GlobalEnums;
 
 public abstract class NPC : MonoBehaviour, IInteractable
 {
-    
-
     private void Update()
     {
         //if (GameManager.Instance.GameState != GameState.DIALOGUE)

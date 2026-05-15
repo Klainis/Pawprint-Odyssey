@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,12 +23,22 @@ public class Interact : MonoBehaviour
     public bool Mnemir { get; set; } = false;
     public string MnemirQuestObject { get; set; } = "";
     public bool Artefact { get; set; } = false;
+    public bool CanInteractWithMnemir { get; set; } = true;
     public GameObject artefactObject { get; set; }
 
     public event Action OnCompleteMnemirQuest;
 
-    private void FixedUpdate()
+    private Coroutine _takeMnemirQuestCoroutine;
+    private Coroutine _takeRewardCoroutine;
+
+    private void Update()
     {
+
+        if (GameManager.Instance.GameState == GlobalEnums.GameState.DIALOGUE)
+        {
+            return;
+        }
+
         if (PlayerInput.Instance.InteractPressed)
         {
             if (FullHeal)
@@ -39,34 +50,46 @@ public class Interact : MonoBehaviour
                 _interactHealEvent.Invoke(); //PlayerView
             }
 
+            else if (Artefact)
+            {
+                TakeArtefact();
+            }
+
             else if (Mnemir)
             {
-                if (!PlayerView.Instance.PlayerModel.HasQuestMnemir)
+                if (!PlayerView.Instance.PlayerModel.HasQuestMnemir && CanInteractWithMnemir)
                 {
-                    MapManager.Instance.SetMnemirQuestObjectsIcons(_mnemirObjectsRoomNames);
+                    Debug.Log("Подошли в первый раз");
 
-                    var mnemirPos = FindAnyObjectByType<MnemirView>().gameObject.transform.position;
-                    var save = new Vector3(mnemirPos.x, mnemirPos.y + 0.1f, mnemirPos.z);
+                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
+                    wraith.BeforeMnemirQuest();
 
-                    PlayerView.Instance.SetCheckPoint(save);
-                    PlayerView.Instance.PlayerModel.SetHasQuestMnemir();
-                    
-                    SaveSystem.Save();
-                    SaveSystem.AutoSave();
+                    _takeMnemirQuestCoroutine = StartCoroutine(TakeMnemirQuest());
+
+                    return;
                 }
                 else if (PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects.Count == 3
-                    && !PlayerView.Instance.PlayerModel.MnemirQuestRewarded)
+                    && !PlayerView.Instance.PlayerModel.MnemirQuestRewarded
+                    && CanInteractWithMnemir)
                 {
-                    OnCompleteMnemirQuest?.Invoke();
-                    PlayerView.Instance.PlayerModel.SetMnemirQuestRewarded();
+                    Debug.Log("Подошли после выполнения квеста");
 
-                    var mnemirPos = FindAnyObjectByType<MnemirView>().gameObject.transform.position;
-                    var save = new Vector3(mnemirPos.x, mnemirPos.y + 0.1f, mnemirPos.z);
+                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
+                    wraith.AfterMnemirQuest();
 
-                    PlayerView.Instance.SetCheckPoint(save);
+                    _takeRewardCoroutine = StartCoroutine(TakeReward());
 
-                    SaveSystem.Save();
-                    SaveSystem.AutoSave();
+                    return;
+                }
+                else if (PlayerView.Instance.PlayerModel.HasQuestMnemir
+                    && CanInteractWithMnemir)
+                {
+                    Debug.Log("Подошли еще раз");
+                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
+                    wraith.DuringMnemirQuest();
+
+                    return;
+
                 }
             }
 
@@ -78,14 +101,10 @@ public class Interact : MonoBehaviour
 
                     PlayerView.Instance.PlayerModel.AddObjectToMnemirQuestCollectedObjects(MnemirQuestObject);
 
-                    SaveSystem.Save();
-                    SaveSystem.AutoSave();
+                    //SaveSystem.Save();
+                    //SaveSystem.AutoSave();
+                    SaveSystem.AutoSaveSimple();
                 }
-            }
-
-            else if (Artefact)
-            {
-                TakeArtefact();
             }
         }
     }
@@ -94,5 +113,51 @@ public class Interact : MonoBehaviour
     {
         PlayerView.Instance.PlayerModel.AddArtefact();
         Destroy(artefactObject);
+    }
+
+    private IEnumerator TakeMnemirQuest()
+    {
+        while (GameManager.Instance.GameState == GlobalEnums.GameState.DIALOGUE)
+        {
+            yield return null;
+        }
+
+        MapManager.Instance.SetMnemirQuestObjectsIcons(_mnemirObjectsRoomNames);
+
+        var mnemirPos = FindAnyObjectByType<MnemirView>().gameObject.transform.position;
+        var save = new Vector3(mnemirPos.x, mnemirPos.y + 0.1f, mnemirPos.z);
+
+        PlayerView.Instance.SetCheckPoint(save);
+        PlayerView.Instance.PlayerModel.SetHasQuestMnemir();
+
+        //SaveSystem.Save();
+        //SaveSystem.AutoSave();
+        SaveSystem.AutoSaveSimple();
+    }
+
+    private IEnumerator TakeReward()
+    {
+        while (GameManager.Instance.GameState == GlobalEnums.GameState.DIALOGUE)
+        {
+            yield return null;
+        }
+
+        OnCompleteMnemirQuest?.Invoke();
+        PlayerView.Instance.PlayerModel.SetMnemirQuestRewarded();
+
+        CanInteractWithMnemir = false;
+
+        var mnemirView = FindAnyObjectByType<MnemirView>();
+        mnemirView.zoneCheck.SetActive(false);
+        mnemirView.educationCanvas.SetActive(false);
+
+        var mnemirPos = mnemirView.gameObject.transform.position;
+        var save = new Vector3(mnemirPos.x, mnemirPos.y + 0.1f, mnemirPos.z);
+
+        PlayerView.Instance.SetCheckPoint(save);
+
+        //SaveSystem.Save();
+        //SaveSystem.AutoSave();
+        SaveSystem.AutoSaveSimple();
     }
 }

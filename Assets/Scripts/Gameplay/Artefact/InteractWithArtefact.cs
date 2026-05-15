@@ -11,14 +11,14 @@ public class InteractWithArtefact : MonoBehaviour
         interact = FindAnyObjectByType<Interact>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             interact.enabled = true;
             interact.Artefact = true;
             interact.artefactObject = gameObject;
-            Debug.Log("Передали все в Interact");
+            //Debug.Log("Передали все в Interact");
         }
     }
 
