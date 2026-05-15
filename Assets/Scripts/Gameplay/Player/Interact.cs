@@ -21,6 +21,8 @@ public class Interact : MonoBehaviour
     public bool AbilitiesTree { get { return _abilitiesTree; } set { _abilitiesTree = value; } }
     public bool Mnemir { get; set; } = false;
     public string MnemirQuestObject { get; set; } = "";
+    public bool Artefact { get; set; } = false;
+    public GameObject artefactObject { get; set; }
 
     public event Action OnCompleteMnemirQuest;
 
@@ -80,6 +82,17 @@ public class Interact : MonoBehaviour
                     SaveSystem.AutoSave();
                 }
             }
+
+            else if (Artefact)
+            {
+                TakeArtefact();
+            }
         }
+    }
+
+    private void TakeArtefact()
+    {
+        PlayerView.Instance.PlayerModel.AddArtefact();
+        Destroy(artefactObject);
     }
 }
