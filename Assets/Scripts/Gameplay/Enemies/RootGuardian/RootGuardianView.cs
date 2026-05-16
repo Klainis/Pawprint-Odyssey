@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class RootGuardianView : MonoBehaviour
+public class RootGuardianView : MonoBehaviour, IEnemy
 {
     #region SerializeFields
 
@@ -53,6 +54,8 @@ public class RootGuardianView : MonoBehaviour
     private bool _isKnockback = false;
     private bool _isInvincible = false;
     private bool _isRetreating = false;
+
+    public event Action<IEnemy> OnDeath;
 
     #endregion
 
@@ -302,6 +305,7 @@ public class RootGuardianView : MonoBehaviour
         _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
+        OnDeath?.Invoke(this);
         Destroy(transform.parent.gameObject);
     }
 

@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class WanderingSpiritView : MonoBehaviour
+public class WanderingSpiritView : MonoBehaviour, IEnemy
 {
     #region Variables
 
@@ -53,6 +54,8 @@ public class WanderingSpiritView : MonoBehaviour
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool _isKnockback = false;
+
+    public event Action<IEnemy> OnDeath;
 
     #endregion
 
@@ -310,6 +313,7 @@ public class WanderingSpiritView : MonoBehaviour
         _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
+        OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
 

@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class ArmoredBugView : MonoBehaviour
+public class ArmoredBugView : MonoBehaviour, IEnemy
 {
     #region SerializeFields
 
@@ -55,6 +56,8 @@ public class ArmoredBugView : MonoBehaviour
     private bool _damageApplied = false;
     private bool _isKnockback = false;
     private bool _isTurningToRight;
+
+    public event Action<IEnemy> OnDeath;
 
     #endregion
 
@@ -406,6 +409,7 @@ public class ArmoredBugView : MonoBehaviour
         _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
+        OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
 

@@ -56,6 +56,9 @@ public class PlayerData : ScriptableObject
     public bool spiritGuideKilled;
     public bool guardianOwlKilled;
 
+    [Header("Fight Rooms")]
+    public List<string> completedFightRooms;
+
     [Header("Characters")]
     public bool meetPimen;
 

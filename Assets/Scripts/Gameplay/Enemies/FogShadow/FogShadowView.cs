@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class FogShadowView : MonoBehaviour
+public class FogShadowView : MonoBehaviour, IEnemy
 {
     #region SerializeFields
 
@@ -64,6 +65,8 @@ public class FogShadowView : MonoBehaviour
     private float _dissipateTimer;
     private bool _isKnockback = false;
 
+    public event Action<IEnemy> OnDeath;
+
     #endregion
 
     #region Properties
@@ -107,7 +110,7 @@ public class FogShadowView : MonoBehaviour
 
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         _mainCollider = GetComponent<Collider2D>();
-        _dissipateTimer = Random.Range(3f, 6f);
+        _dissipateTimer = UnityEngine.Random.Range(3f, 6f);
 
         _playerAttack = PlayerAttack.Instance;
     }
@@ -281,7 +284,7 @@ public class FogShadowView : MonoBehaviour
 
         yield return StartCoroutine(FadeSprites(0f));
 
-        var duration = Random.Range(_dissipateDuration - 0.5f, _dissipateDuration + 0.5f);
+        var duration = UnityEngine.Random.Range(_dissipateDuration - 0.5f, _dissipateDuration + 0.5f);
         yield return new WaitForSeconds(duration);
 
         yield return StartCoroutine(FadeSprites(1f));
@@ -290,7 +293,7 @@ public class FogShadowView : MonoBehaviour
         _isInvincible = false;
         _mainCollider.enabled = true;
 
-        _dissipateTimer = Random.Range(3f, 5f);
+        _dissipateTimer = UnityEngine.Random.Range(3f, 5f);
     }
 
     private IEnumerator FadeSprites(float targetAlpha)
@@ -335,6 +338,7 @@ public class FogShadowView : MonoBehaviour
         _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);
 
+        OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
 

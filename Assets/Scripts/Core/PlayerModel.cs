@@ -38,11 +38,12 @@ public class PlayerModel
     public bool GuardianOwlKilled { get; private set; }
     public bool StartCutSceneShowed { get; private set; }
 
-
     public bool MeetPimen { get; private set; }
     public bool HasQuestMnemir { get; private set; }
     public bool MnemirQuestRewarded { get; private set; }
     public List<string> MnemirQuestCollectedObjects { get; private set; }
+    
+    public List<string> CompletedFightRooms { get; private set; }
 
     #endregion
 
@@ -61,7 +62,8 @@ public class PlayerModel
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed,
                         bool meetPimen,
-                        bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects)
+                        bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects,
+                        List<string> completedFightRooms)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -104,6 +106,8 @@ public class PlayerModel
         HasQuestMnemir = hasQuestMnemir;
         MnemirQuestRewarded = mnemirQuestRewarded;
         MnemirQuestCollectedObjects = mnemirQuestCollectedObjects;
+
+        CompletedFightRooms = completedFightRooms;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -142,7 +146,8 @@ public class PlayerModel
             data.MeetPimen,
             data.HasQuestMnemir,
             data.MnemirQuestRewarded,
-            data.MnemirQuestCollectedObjects
+            data.MnemirQuestCollectedObjects,
+            data.CompletedFightRooms
         );
     }
 
@@ -182,7 +187,8 @@ public class PlayerModel
             playerData.meetPimen,
             playerData.hasQuestMnemir,
             playerData.mnemirQuestRewarded,
-            playerData.mnemirQuestCollectedObjects
+            playerData.mnemirQuestCollectedObjects,
+            playerData.completedFightRooms
         );
     }
 
@@ -401,6 +407,12 @@ public class PlayerModel
         MnemirQuestCollectedObjects.Add(name);
     }
 
+    public void AddCompletedFightRoom(string name)
+    {
+        if (!CompletedFightRooms.Contains(name))
+            CompletedFightRooms.Add(name);
+    }
+
     #endregion
 
     #region Save & Load
@@ -441,6 +453,7 @@ public class PlayerModel
         data.HasQuestMnemir = HasQuestMnemir;
         data.MnemirQuestRewarded = MnemirQuestRewarded;
         data.MnemirQuestCollectedObjects = MnemirQuestCollectedObjects;
+        data.CompletedFightRooms = CompletedFightRooms;
     }
 
     public void Load(PlayerSaveData data)
@@ -479,6 +492,7 @@ public class PlayerModel
         HasQuestMnemir = data.HasQuestMnemir;
         MnemirQuestRewarded = data.MnemirQuestRewarded;
         MnemirQuestCollectedObjects = data.MnemirQuestCollectedObjects;
+        CompletedFightRooms = data.CompletedFightRooms;
     }
 
     #endregion
@@ -521,4 +535,5 @@ public struct PlayerSaveData
     public bool HasQuestMnemir;
     public bool MnemirQuestRewarded;
     public List<string> MnemirQuestCollectedObjects;
+    public List<string> CompletedFightRooms;
 }
