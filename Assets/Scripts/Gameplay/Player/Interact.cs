@@ -61,8 +61,8 @@ public class Interact : MonoBehaviour
                 {
                     Debug.Log("Подошли в первый раз");
 
-                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
-                    wraith.BeforeMnemirQuest();
+                    var talk = FindAnyObjectByType<MnemirTalk>();
+                    talk.BeforeMnemirQuest();
 
                     _takeMnemirQuestCoroutine = StartCoroutine(TakeMnemirQuest());
 
@@ -74,8 +74,8 @@ public class Interact : MonoBehaviour
                 {
                     Debug.Log("Подошли после выполнения квеста");
 
-                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
-                    wraith.AfterMnemirQuest();
+                    var talk = FindAnyObjectByType<MnemirTalk>();
+                    talk.AfterMnemirQuest();
 
                     _takeRewardCoroutine = StartCoroutine(TakeReward());
 
@@ -85,8 +85,8 @@ public class Interact : MonoBehaviour
                     && CanInteractWithMnemir)
                 {
                     Debug.Log("Подошли еще раз");
-                    var wraith = FindAnyObjectByType<MnemirView>().gameObject.GetComponent<MnemirTalk>();
-                    wraith.DuringMnemirQuest();
+                    var talk = FindAnyObjectByType<MnemirTalk>();
+                    talk.DuringMnemirQuest();
 
                     return;
 
@@ -113,6 +113,12 @@ public class Interact : MonoBehaviour
     {
         PlayerView.Instance.PlayerModel.AddArtefact();
         Destroy(artefactObject);
+
+        if (PlayerView.Instance.PlayerModel.ArtefactCollected == 2)
+        {
+            var talk = FindAnyObjectByType<PimenTalk>();
+            talk.TakeSecondArtifact();
+        }
     }
 
     private IEnumerator TakeMnemirQuest()
