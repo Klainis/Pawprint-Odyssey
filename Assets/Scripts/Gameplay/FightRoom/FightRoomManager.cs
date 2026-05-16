@@ -92,7 +92,7 @@ public class FightRoomManager : MonoBehaviour
 
     private void SpawnGroundEnemies(Wave wave)
     {
-        if (wave.groundEnemies.Count == 0) return;
+        if (wave.groundEnemiesPrefabs.Count == 0) return;
 
         var availablePositions = new List<Transform>(_groundEnemyPositions);
         var spawnCount = Mathf.Min(wave.groundEnemiesCount, availablePositions.Count);
@@ -104,14 +104,14 @@ public class FightRoomManager : MonoBehaviour
 
             availablePositions.RemoveAt(positionIndex);
 
-            var prefab = wave.groundEnemies[UnityEngine.Random.Range(0, wave.groundEnemies.Count)];
+            var prefab = wave.groundEnemiesPrefabs[UnityEngine.Random.Range(0, wave.groundEnemiesPrefabs.Count)];
             StartCoroutine(SpawnEnemyRoutine(prefab, position));
         }
     }
 
     private void SpawnAirEnemies(Wave wave)
     {
-        if (wave.airEnemies.Count == 0) return;
+        if (wave.airEnemiesPrefabs.Count == 0) return;
 
         var availablePositions = new List<Transform>(_airEnemyPositions);
         var spawnCount = Mathf.Min(wave.airEnemiesCount, availablePositions.Count);
@@ -123,7 +123,7 @@ public class FightRoomManager : MonoBehaviour
 
             availablePositions.RemoveAt(positionIndex);
 
-            var prefab = wave.airEnemies[UnityEngine.Random.Range(0, wave.airEnemies.Count)];
+            var prefab = wave.airEnemiesPrefabs[UnityEngine.Random.Range(0, wave.airEnemiesPrefabs.Count)];
             StartCoroutine(SpawnEnemyRoutine(prefab, position));
         }
     }
@@ -187,8 +187,8 @@ public class FightRoomManager : MonoBehaviour
 public class Wave
 {
     public int groundEnemiesCount;
-    public List<GameObject> groundEnemies;
+    public List<GameObject> groundEnemiesPrefabs;
 
     public int airEnemiesCount;
-    public List<GameObject> airEnemies;
+    public List<GameObject> airEnemiesPrefabs;
 }
