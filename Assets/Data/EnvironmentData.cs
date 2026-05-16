@@ -11,6 +11,9 @@ public class EnvironmentData : ScriptableObject
     [Header("Soul Crystal")]
     public int crystalLife = 2;
 
+    [Header("Money Object")]
+    public int moneyObjectLife = 2;
+
     [Header("Destructible Wall")]
     public int wallLife = 3;
 

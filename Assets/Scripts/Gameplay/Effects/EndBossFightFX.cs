@@ -80,6 +80,9 @@ public class EndBossFightFX : MonoBehaviour
     {
         _darkBackground.SetActive(true);
 
+        GameManager.Instance.SetGameState(GlobalEnums.GameState.CUTSCENE);
+
+        PlayerView.Instance.StopPlayer();
         PlayerView.Instance.FreezePlayer(true);
         PlayerView.Instance.SetMaxMinFlashAmount(1);
         _playerObject.GetComponent<SpriteRenderer>().sortingLayerName = _sortingLayerName;
@@ -108,7 +111,8 @@ public class EndBossFightFX : MonoBehaviour
     {
         _darkBackground.SetActive(false);
 
-        //PlayerView.Instance.FreezePlayer(false);
+        PlayerView.Instance.FreezePlayer(false);
+        GameManager.Instance.SetGameState(GlobalEnums.GameState.PLAYING);
         PlayerView.Instance.SetMaxMinFlashAmount(0);
         _playerObject.GetComponent<SpriteRenderer>().sortingLayerName = _initialPlayerLayer;
 

@@ -1,5 +1,7 @@
 using Cinemachine;
 using GlobalEnums;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
@@ -86,8 +88,9 @@ public class PimenTalk : MonoBehaviour, ITalkable
 
     public void FirstTalkWithPimen()
     {
-        PlayerAnimation.Instance.ResetAnimatorParameters();
-        Talk(PimenMeetDialogueText);
+        StartCoroutine(WalkAwayFromNPC(_player.transform.position, PimenMeetDialogueText));
+        //PlayerAnimation.Instance.ResetAnimatorParameters();
+        //Talk(PimenMeetDialogueText);
     }
 
     public void BeforeFirstBoss()
@@ -142,6 +145,44 @@ public class PimenTalk : MonoBehaviour, ITalkable
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
         Talk(LastRoomDialogueText);
+    }
+
+    private IEnumerator WalkAwayFromNPC(Vector3 initialPlayerPosition, DialogueText diaogueText)
+    {
+        while (!PlayerMove.Instance.IsGrounded)
+        {
+            yield return null;
+        }
+
+        float startX = initialPlayerPosition.x;
+        float targetX = transform.position.x - 1.5f;
+        float currentX = startX;
+
+
+        float distance = Mathf.Abs(startX - targetX);
+        float time = distance / 3f;
+        float elapsedTime = 0f;
+
+        PlayerView.Instance.StopPlayer();
+        PlayerView.Instance.FreezePlayer(true);
+        PlayerAnimation.Instance.SetFloatSpeed(0.8f);
+
+        if (PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+
+        while (elapsedTime < time && Mathf.Abs(startX - targetX) > 0.1)
+        {
+            elapsedTime += Time.deltaTime;
+            currentX = Mathf.Lerp(startX, targetX, elapsedTime / time);
+            _player.transform.position = new Vector3(currentX, _player.transform.position.y, _player.transform.position.z);
+            yield return null;
+        }
+        PlayerView.Instance.FreezePlayer(false);
+
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(diaogueText);
     }
 
     #endregion

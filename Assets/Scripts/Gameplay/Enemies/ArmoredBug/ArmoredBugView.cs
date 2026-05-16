@@ -161,7 +161,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
             _animation.SetBoolHit(true);
             StartCoroutine(HitTime(0.5f));
-            _rb.linearVelocity = Vector2.zero;
+            //_rb.linearVelocity = Vector2.zero;
 
             _screenShaker.Shake();
             SpawnDamageParticles(direction);

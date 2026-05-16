@@ -1,4 +1,5 @@
 using GlobalEnums;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,7 +19,12 @@ public class MnemirTalk : MonoBehaviour, ITalkable
 
     private DialogueText _currentDialogue;
 
+    public float _moveDistance = 2f;
+    public float _moveSpeed = 2f;
+
     public bool IsMnemirTalk {  get; set; }
+
+    private Coroutine _walkAwayNPCCoroutine;
 
     private void Awake()
     {
@@ -76,20 +82,29 @@ public class MnemirTalk : MonoBehaviour, ITalkable
     #region Mnemir Methods
     public void BeforeMnemirQuest()
     {
-        PlayerAnimation.Instance.ResetAnimatorParameters();
-        Talk(BeforeMnemirQuestDialogueText);
+        if (_walkAwayNPCCoroutine != null) StopCoroutine(_walkAwayNPCCoroutine);
+        
+        _walkAwayNPCCoroutine = StartCoroutine(WalkAwayFromNPC(_player.transform.position, BeforeMnemirQuestDialogueText));
+        //PlayerAnimation.Instance.ResetAnimatorParameters();
+        //Talk(BeforeMnemirQuestDialogueText);
     }
 
     public void DuringMnemirQuest()
     {
-        PlayerAnimation.Instance.ResetAnimatorParameters();
-        Talk(DuringMnemirQuestDialogueText);
+        if (_walkAwayNPCCoroutine != null) StopCoroutine(_walkAwayNPCCoroutine);
+
+        _walkAwayNPCCoroutine = StartCoroutine(WalkAwayFromNPC(_player.transform.position, DuringMnemirQuestDialogueText));
+        //PlayerAnimation.Instance.ResetAnimatorParameters();
+        //Talk(DuringMnemirQuestDialogueText);
     }
 
     public void AfterMnemirQuest()
     {
-        PlayerAnimation.Instance.ResetAnimatorParameters();
-        Talk(AfterMnemirQuestDialogueText);
+        if (_walkAwayNPCCoroutine != null) StopCoroutine(_walkAwayNPCCoroutine); 
+        
+        _walkAwayNPCCoroutine = StartCoroutine(WalkAwayFromNPC(_player.transform.position, AfterMnemirQuestDialogueText));
+        //PlayerAnimation.Instance.ResetAnimatorParameters();
+        //Talk(AfterMnemirQuestDialogueText);
     }
 
     #endregion
@@ -104,6 +119,44 @@ public class MnemirTalk : MonoBehaviour, ITalkable
         {
             PlayerMove.Instance.CallTurn();
         }
+    }
+
+    private IEnumerator WalkAwayFromNPC(Vector3 initialPlayerPosition, DialogueText diaogueText)
+    {
+        while (!PlayerMove.Instance.IsGrounded)
+        {
+            yield return null;
+        }
+
+        float startX = initialPlayerPosition.x;
+        float targetX = transform.position.x - _moveDistance;
+        float currentX = startX;
+
+
+        float distance = Mathf.Abs(startX - targetX);
+        float time = _moveSpeed > 0 ? distance / _moveSpeed : 0.1f;
+        float elapsedTime = 0f;
+
+        PlayerView.Instance.StopPlayer();
+        PlayerView.Instance.FreezePlayer(true);
+        PlayerAnimation.Instance.SetFloatSpeed(0.8f);
+
+        if (PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+
+        while (elapsedTime < time && Mathf.Abs(startX - targetX) > 0.1)
+        {
+            elapsedTime += Time.deltaTime;
+            currentX = Mathf.Lerp(startX, targetX, elapsedTime / time);
+            _player.transform.position = new Vector3(currentX, _player.transform.position.y, _player.transform.position.z);
+            yield return null;
+        }
+        PlayerView.Instance.FreezePlayer(false);
+
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(diaogueText);
     }
 }
 
