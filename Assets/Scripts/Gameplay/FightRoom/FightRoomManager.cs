@@ -29,7 +29,7 @@ public class FightRoomManager : MonoBehaviour
     private int _currentWaveIndex = 0;
     private string _roomName;
     private readonly List<IEnemy> _aliveEnemies = new();
-    private FightDoor _fightDoor;
+    private FightDoor[] _fightDoors;
 
     #endregion
 
@@ -38,7 +38,7 @@ public class FightRoomManager : MonoBehaviour
     private void Start()
     {
         _roomName = SceneManager.GetActiveScene().name;
-        _fightDoor = FindAnyObjectByType<FightDoor>();
+        _fightDoors = FindObjectsByType<FightDoor>(FindObjectsSortMode.None);
 
         if (!PlayerView.Instance.PlayerModel.CompletedFightRooms.Contains(_roomName))
         {
@@ -72,7 +72,7 @@ public class FightRoomManager : MonoBehaviour
     private void CompleteRoom()
     {
         PlayerView.Instance.PlayerModel.CompletedFightRooms.Add(_roomName);
-        OpenDoors();
+        SwitchDoorsState(false);
     }
 
     private void HandleEnemyDeath(IEnemy enemy)
@@ -92,27 +92,39 @@ public class FightRoomManager : MonoBehaviour
 
     private void SpawnGroundEnemies(Wave wave)
     {
-        for (int i = 0; i < _groundEnemyPositions.Length; i++)
+        if (wave.groundEnemies.Count == 0) return;
+
+        var availablePositions = new List<Transform>(_groundEnemyPositions);
+        var spawnCount = Mathf.Min(wave.groundEnemiesCount, availablePositions.Count);
+
+        for (int i = 0; i < spawnCount; i++)
         {
-            if (wave.groundEnemies.Count == 0) return;
+            var positionIndex = UnityEngine.Random.Range(0, availablePositions.Count);
+            var position = (Vector2)availablePositions[positionIndex].position;
+
+            availablePositions.RemoveAt(positionIndex);
 
             var prefab = wave.groundEnemies[UnityEngine.Random.Range(0, wave.groundEnemies.Count)];
-            var pos = (Vector2)_groundEnemyPositions[i].position;
-
-            StartCoroutine(SpawnEnemyRoutine(prefab, pos));
+            StartCoroutine(SpawnEnemyRoutine(prefab, position));
         }
     }
 
     private void SpawnAirEnemies(Wave wave)
     {
-        for (int i = 0; i < _airEnemyPositions.Length; i++)
+        if (wave.airEnemies.Count == 0) return;
+
+        var availablePositions = new List<Transform>(_airEnemyPositions);
+        var spawnCount = Mathf.Min(wave.airEnemiesCount, availablePositions.Count);
+
+        for (int i = 0; i < spawnCount; i++)
         {
-            if (wave.airEnemies.Count == 0) return;
+            var positionIndex = UnityEngine.Random.Range(0, availablePositions.Count);
+            var position = (Vector2)availablePositions[positionIndex].position;
+
+            availablePositions.RemoveAt(positionIndex);
 
             var prefab = wave.airEnemies[UnityEngine.Random.Range(0, wave.airEnemies.Count)];
-            var pos = (Vector2)_airEnemyPositions[i].position;
-
-            StartCoroutine(SpawnEnemyRoutine(prefab, pos));
+            StartCoroutine(SpawnEnemyRoutine(prefab, position));
         }
     }
 
@@ -130,14 +142,12 @@ public class FightRoomManager : MonoBehaviour
 
     #region Doors
 
-    private void CloseDoors()
+    private void SwitchDoorsState(bool toCloseState)
     {
-        //_fightDoor.CloseDoor(true);
-    }
-
-    private void OpenDoors()
-    {
-        //_fightDoor.CloseDoor(false);
+        foreach (var door in _fightDoors)
+        {
+            door.CloseDoor(toCloseState);
+        }
     }
 
     #endregion
@@ -149,7 +159,7 @@ public class FightRoomManager : MonoBehaviour
         while (!PlayerMove.Instance.IsGrounded)
             yield return null;
 
-        CloseDoors();
+        SwitchDoorsState(true);
         PlayerView.Instance.StopPlayer();
         PlayerView.Instance.FreezePlayer(true);
 
