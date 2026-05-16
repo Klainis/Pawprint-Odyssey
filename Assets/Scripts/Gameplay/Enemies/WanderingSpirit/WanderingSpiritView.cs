@@ -41,18 +41,19 @@ public class WanderingSpiritView : MonoBehaviour
     private WSAnimation _wsAnimation;
     private WSAttack _wsAttack;
     private WSMove _wsMove;
-    private DamageFlash _damageFlash;
+    private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
     private InstantiateMoney _money;
 
     private Coroutine _telegraphCoroutine;
-    private Color _defaultColor;
     private RigidbodyConstraints2D _defaultConstraints;
 
     private bool _isHitted = false;
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool _isKnockback = false;
+
+    private Vector3 _playerPos;
 
     #endregion
 
@@ -79,11 +80,10 @@ public class WanderingSpiritView : MonoBehaviour
         _wsAttack = GetComponent<WSAttack>();
         _wsMove = GetComponent<WSMove>();
         _money = FindAnyObjectByType<InstantiateMoney>();
-        _damageFlash = GetComponent<DamageFlash>();
+        _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
         var renderer = GetComponent<SpriteRenderer>();
-        _defaultColor = renderer.color;
         _defaultConstraints = _rigidBody.constraints;
     }
 
@@ -120,7 +120,10 @@ public class WanderingSpiritView : MonoBehaviour
         if (damageApplied)
         {
             PlayHitSound(_hitClip);
-            _damageFlash.CallDamageFlash();
+            foreach (var damageFlash in _damageFlash)
+            {
+                damageFlash.CallDamageFlash();
+            }
 
             _wsAnimation.SetTriggerHit();
             _rigidBody.linearVelocity = Vector2.zero;
@@ -263,21 +266,31 @@ public class WanderingSpiritView : MonoBehaviour
 
     private IEnumerator AttackTelegraphRoutine()
     {
-        var playerPos = _playerAttack.transform.position;
+        _playerPos = _playerAttack.transform.position;
         _wsAttack.SetIsAttacking(true);
-        _wsAnimation.SetBoolAttack(true);
+        _wsAnimation.SetBoolTelegraph(true);
 
-        var renderer = GetComponent<SpriteRenderer>();
-        renderer.color = Color.red;
+        //var renderer = GetComponent<SpriteRenderer>();
+        //renderer.color = Color.red;
         _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
-        yield return new WaitForSeconds(_telegraphTime);
+        yield return new WaitForSeconds(0.01f);
+    }
 
-        renderer.color = _defaultColor;
+    public void Attacking()
+    {
+        StartCoroutine(AttackRoutine());
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        _wsAnimation.SetBoolTelegraph(false);
+        _wsAnimation.SetBoolAttack(true);
+        //renderer.color = _defaultColor;
         _rigidBody.constraints = _defaultConstraints;
 
         if (_playerAttack != null)
-            _wsAttack.JumpToPoint(playerPos, _jumpHeight);
+            _wsAttack.JumpToPoint(_playerPos, _jumpHeight);
 
         yield return new WaitUntil(() => _rigidBody.linearVelocity.y < 0);
         yield return new WaitUntil(() => Mathf.Abs(_rigidBody.linearVelocity.y) < 0.1f);
@@ -304,8 +317,8 @@ public class WanderingSpiritView : MonoBehaviour
         ChangeTag("isDead");
 
         _wsAnimation.SetTriggerDead();
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
-        transform.rotation = Quaternion.Euler(rotator);
+        //var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
+        //transform.rotation = Quaternion.Euler(rotator);
         yield return new WaitForSeconds(0.25f);
         _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
         yield return new WaitForSeconds(0.1f);

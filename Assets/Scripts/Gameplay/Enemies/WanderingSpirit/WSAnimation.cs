@@ -19,6 +19,11 @@ public class WSAnimation : MonoBehaviour
         _animator.SetBool("Attack", value);
     }
 
+    public void SetBoolTelegraph(bool value)
+    {
+        _animator.SetBool("Telegraph", value);
+    }
+
     public void SetTriggerDead()
     {
         _animator.SetTrigger("Dead");

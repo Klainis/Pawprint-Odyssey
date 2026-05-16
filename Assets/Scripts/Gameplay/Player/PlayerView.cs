@@ -123,7 +123,7 @@ public class PlayerView : MonoBehaviour
                 _playerAttack.Attack();
         }
 
-        if (GameManager.Instance.GameState == GameState.DIALOGUE)
+        if (GameManager.Instance.GameState == GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE)
         {
             _playerMove.CanMove = false;
             if (_playerMove.IsGrounded)
@@ -133,7 +133,7 @@ public class PlayerView : MonoBehaviour
             _isInvincible = true;
             _oldDialogue = true;
         }
-        else if (GameManager.Instance.GameState != GameState.DIALOGUE && _oldDialogue)
+        else if ((GameManager.Instance.GameState != GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE) && _oldDialogue)
         {
             _oldDialogue = false;
             _playerMove.CanMove = true;
