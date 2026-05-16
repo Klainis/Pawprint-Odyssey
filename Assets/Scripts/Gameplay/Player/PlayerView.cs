@@ -441,14 +441,14 @@ public class PlayerView : MonoBehaviour
         _deathFlash.CallDeathFlashCoroutine();
         SpawnDeathBurstParticles();
         //yield return new WaitForSeconds(1.1f);
-        //SaveSystem.AutoSaveBeforePlayerDeath();
+        //SaveSystem.AutoSaveSimple();
         //GameManager.Instance.SetGameState(GameState.DEAD);
         //GameManager.Instance.RevivalPlayer();
     }
 
     public void SetDeath()
     {
-        SaveSystem.AutoSaveBeforePlayerDeath();
+        SaveSystem.AutoSaveSimple();
         GameManager.Instance.SetGameState(GameState.DEAD);
         StartCoroutine(Revivaler());
     }

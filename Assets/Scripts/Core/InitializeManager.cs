@@ -13,7 +13,7 @@ public class InitializeManager : MonoBehaviour
     public TMP_Text moneyText;
     public GameObject bossHealth;
     public GameObject manaBar;
-
+    public DialogueController dialogueController;
     private void Awake()
     {
         if (instance != null)

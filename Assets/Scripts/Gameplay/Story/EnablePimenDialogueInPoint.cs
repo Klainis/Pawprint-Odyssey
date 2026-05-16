@@ -11,7 +11,7 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Wraith wr = PimenView.Instance.gameObject.GetComponent<Wraith>();
+            PimenTalk wr = PimenView.Instance.gameObject.GetComponent<PimenTalk>();
 
             if (_beforeFirstBoss)
             {

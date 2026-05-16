@@ -17,7 +17,7 @@ public class HelpUI : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            _showEducation.FadeOut();
+            if (_showEducation.gameObject.activeSelf) _showEducation.FadeOut();
         }
     }
 }

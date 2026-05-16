@@ -2,17 +2,34 @@ using UnityEngine;
 
 public class InteractWithArtefact : MonoBehaviour
 {
-    void Update()
+    private Interact interact;
+
+    #region Common Methods
+
+    private void Awake()
     {
-        if (PlayerInput.Instance.InteractPressed)
+        interact = FindAnyObjectByType<Interact>();
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            TakeArtefact();
+            interact.enabled = true;
+            interact.Artefact = true;
+            interact.artefactObject = gameObject;
+            //Debug.Log("Передали все в Interact");
         }
     }
 
-    private void TakeArtefact()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        PlayerView.Instance.PlayerModel.AddArtefact();
-        Destroy(gameObject);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            interact.enabled = false;
+            interact.Artefact = false;
+        }
     }
+
+    #endregion
 }

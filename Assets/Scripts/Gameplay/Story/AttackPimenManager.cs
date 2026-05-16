@@ -21,7 +21,7 @@ public class AttackPimenManager : MonoBehaviour
 
     private PimenMove _pimenMove;
     private PimenAnimation _pimenAnimation;
-    private Wraith _pimenWraith;
+    private PimenTalk _pimenWraith;
     private StunAudioController _stunAudioController;
 
     private GameObject _pimenObject;
@@ -51,7 +51,7 @@ public class AttackPimenManager : MonoBehaviour
 
         _pimenMove = _pimenObject.GetComponent<PimenMove>();
         _pimenAnimation = _pimenObject.GetComponent<PimenAnimation>();
-        _pimenWraith = _pimenObject.GetComponent<Wraith>();
+        _pimenWraith = _pimenObject.GetComponent<PimenTalk>();
 
         if (!PlayerView.Instance.PlayerModel.MeetPimen)
         {
