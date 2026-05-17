@@ -47690,8 +47690,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2061313370}
   m_SourcePrefab: {fileID: 100100000, guid: b90c754989450794aa96086b99658a1e, type: 3}
+--- !u!1 &2061313369 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6865510072229111955, guid: b90c754989450794aa96086b99658a1e, type: 3}
+  m_PrefabInstance: {fileID: 2061313368}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2061313370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061313369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bfc006840bcd484db329f37da4f1b8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OnSecretRoomWallBreakHandler
+  _roomToOpenOnMap: F_SecretRoom_01
 --- !u!1001 &2063074980
 PrefabInstance:
   m_ObjectHideFlags: 0

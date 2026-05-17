@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+
 public class DestructibleWall : MonoBehaviour
 {
     //public WallsExistence wallsExistence { get; private set; }
@@ -25,6 +26,8 @@ public class DestructibleWall : MonoBehaviour
 
     private int life;
 
+    public event Action OnWallBreak;
+
     private void Awake()
     {
         _shakeObjectAfterDamage = GetComponent<ShakeObject>();
@@ -47,6 +50,8 @@ public class DestructibleWall : MonoBehaviour
         {
             if (gameObject.CompareTag("SecretWall"))
             {
+                OnWallBreak?.Invoke();
+                
                 FindAnyObjectByType<ShowScretRoomAfterBrakeWall>().StartShower();
                 _destroyBrokenWalls.AddInDestroyWallList();
                 //SaveSystem.AutoSave();
@@ -56,6 +61,8 @@ public class DestructibleWall : MonoBehaviour
             }
             else
             {
+                OnWallBreak?.Invoke();
+
                 _destroyBrokenWalls.AddInDestroyWallList();
                 //SaveSystem.AutoSave();
                 SaveSystem.AutoSaveSimple();
