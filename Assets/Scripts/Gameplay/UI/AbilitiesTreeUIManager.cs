@@ -32,7 +32,7 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [Header("Nodes Frames")]
     [SerializeField] private Image _dashNodeFrameImage;
     [SerializeField] private Image _wallRunNodeFrameImage;
-    [SerializeField] private Image _runNodeFrameImage;
+    //[SerializeField] private Image _runNodeFrameImage;
     [SerializeField] private Image _damageDashNodeFrameImage;
     [SerializeField] private Image _chargedAttackNodeFrameImage;
     [SerializeField] private Image _fourPawsNodeFrameImage;
@@ -44,7 +44,6 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [Header("Nodes Images")]
     [SerializeField] private Image _dashAbilityImage;
     [SerializeField] private Image _wallRunAbilityImage;
-    [SerializeField] private Image _runAbilityImage;
     [SerializeField] private Image _damageDashAbilityImage;
     [SerializeField] private Image _chargedAttackAbilityImage;
     [SerializeField] private Image _fourPawsAbilityImage;
@@ -53,13 +52,47 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     [SerializeField] private Image _piercingClawAbilityImage;
     [SerializeField] private Image _doubleJumpAbilityImage;
 
+    [Header("Get Nodes Sprite")]
+    [SerializeField] private Sprite _getDashAbilityImage;
+    [SerializeField] private Sprite _getWallRunAbilityImage;
+    [SerializeField] private Sprite _getDamageDashAbilityImage;
+    [SerializeField] private Sprite _getChargedAttackAbilityImage;
+    [SerializeField] private Sprite _getFourPawsAbilityImage;
+    [SerializeField] private Sprite _getSoulReleaseAbilityImage;
+    [SerializeField] private Sprite _getParryingAbilityImage;
+    [SerializeField] private Sprite _getPiercingClawAbilityImage;
+    [SerializeField] private Sprite _getDoubleJumpAbilityImage;
+
+    [Header("Can Get Nodes Sprite")]
+    [SerializeField] private Sprite _canGetDashAbilityImage;
+    [SerializeField] private Sprite _canGetWallRunAbilityImage;
+    [SerializeField] private Sprite _canGetDamageDashAbilityImage;
+    [SerializeField] private Sprite _canGetcChargedAttackAbilityImage;
+    [SerializeField] private Sprite _canGetFourPawsAbilityImage;
+    [SerializeField] private Sprite _canGetSoulReleaseAbilityImage;
+    [SerializeField] private Sprite _canGetParryingAbilityImage;
+    [SerializeField] private Sprite _canGetPiercingClawAbilityImage;
+    [SerializeField] private Sprite _canGetDoubleJumpAbilityImage;
+
+    [Header("Can Not Get Nodes Sprite")]
+    [SerializeField] private Sprite _canNotGetDashAbilityImage;
+    [SerializeField] private Sprite _canNotGetWallRunAbilityImage;
+    [SerializeField] private Sprite _canNotGetDamageDashAbilityImage;
+    [SerializeField] private Sprite _canNotGetChargedAttackAbilityImage;
+    [SerializeField] private Sprite _canNotGetFourPawsAbilityImage;
+    [SerializeField] private Sprite _canNotGetSoulReleaseAbilityImage;
+    [SerializeField] private Sprite _canNotGetParryingAbilityImage;
+    [SerializeField] private Sprite _canNotGetPiercingClawAbilityImage;
+    [SerializeField] private Sprite _canNotGetDoubleJumpAbilityImage;
+
+
     [Header("Color Of Node State")]
     [SerializeField] private Color _getColor;
-    [SerializeField] private Color _canGetColor;
+    //[SerializeField] private Color _canGetColor;
     [SerializeField] private Color _canNotGetColor;
-    [SerializeField] private Color _getFrameColor;
-    [SerializeField] private Color _canGetFrameColor;
-    [SerializeField] private Color _canNotGetFrameColor;
+    //[SerializeField] private Color _getFrameColor;
+    //[SerializeField] private Color _canGetFrameColor;
+    //[SerializeField] private Color _canNotGetFrameColor;
 
     [Header("Ability Card")]
     [SerializeField] private GameObject _dashAbilityTextCard;
@@ -130,10 +163,10 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _parryingCostCheck = _parryingButton.GetComponent<CostAbilitiesCheck>();
 
 
-        //_dashAbilityImage = (Image)_dashButton.targetGraphic;
-        //_wallRunAbilityImage = (Image)_wallRunButton.targetGraphic;
-        //_runAbilityImage = (Image)_runButton.targetGraphic;
-        //_damageDashAbilityImage = (Image)_damageDashButton.targetGraphic;
+        //_getDashAbilityImage = (Image)_dashButton.targetGraphic;
+        //_getWallRunAbilityImage = (Image)_wallRunButton.targetGraphic;
+        //_getRunAbilityImage = (Image)_runButton.targetGraphic;
+        //_getDamageDashAbilityImage = (Image)_damageDashButton.targetGraphic;
 
         InitializeNodes();
 
@@ -451,17 +484,17 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _dashCostCheck.HideCost();
         _dashBuyButton.gameObject.SetActive(false);
 
-        _dashAbilityImage.color = _getColor;
-        _wallRunAbilityImage.color = _canGetColor;
+        _dashAbilityImage.sprite = _getDashAbilityImage;
+        _wallRunAbilityImage.sprite = _canGetWallRunAbilityImage;
 
-        _dashNodeFrameImage.color = _getFrameColor;
-        _wallRunNodeFrameImage.color = _canGetFrameColor;
+        _dashNodeFrameImage.color = _getColor;
+        //_wallRunNodeFrameImage.color = _canGetFrameColor;
     }
 
     //private void DontGetDashTreeState()
     //{
-    //    _dashAbilityImage.color = _canGetColor;
-    //    _wallRunAbilityImage.color = _canNotGetColor;
+    //    _getDashAbilityImage.color = _canGetColor;
+    //    _getWallRunAbilityImage.color = _canNotGetColor;
 
     //    _dashNodeFrameImage.color = _canGetFrameColor;
     //    _wallRunNodeFrameImage.color = _canNotGetFrameColor;
@@ -487,19 +520,19 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _wallRunCostCheck.HideCost();
         _wallRunBuyButton.gameObject.SetActive(false);
 
-        _wallRunAbilityImage.color = _getColor;
-        _damageDashAbilityImage.color = _canGetColor;
+        _wallRunAbilityImage.sprite = _getWallRunAbilityImage;
+        _damageDashAbilityImage.sprite = _canGetDamageDashAbilityImage;
 
-        _wallRunNodeFrameImage.color = _getFrameColor;
-        _damageDashNodeFrameImage.color = _canGetFrameColor;
+        _wallRunNodeFrameImage.color = _getColor;
+        //_damageDashNodeFrameImage.color = _canGetFrameColor;
     }
 
     //private void DontGetWallRunTreeState()
     //{
     //    _wallRunCostCheck.HideCost();
 
-    //    _wallRunAbilityImage.color = _getColor;
-    //    _runAbilityImage.color = _canGetColor;
+    //    _getWallRunAbilityImage.color = _getColor;
+    //    _getRunAbilityImage.color = _canGetColor;
 
     //    _wallRunNodeFrameImage.color = _getFrameColor;
     //    _runNodeFrameImage.color = _canGetFrameColor;
@@ -509,8 +542,8 @@ public class AbilitiesTreeUIManager : MonoBehaviour
     //{
     //    _runCostCheck.HideCost();
 
-    //    _runAbilityImage.color = _getColor;
-    //    _damageDashAbilityImage.color = _canGetColor;
+    //    _getRunAbilityImage.color = _getColor;
+    //    _getDamageDashAbilityImage.color = _canGetColor;
 
     //    _runNodeFrameImage.color = _getFrameColor;
     //    _damageDashNodeFrameImage.color = _canGetFrameColor;
@@ -541,18 +574,18 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _damageDashCostCheck.HideCost();
         _damageDashBuyButton.gameObject.SetActive(false);
 
-        _damageDashAbilityImage.color = _getColor;
-        //_wallRunAbilityImage.color = _canGetColor;
+        _damageDashAbilityImage.sprite = _getDamageDashAbilityImage;
+        //_getWallRunAbilityImage.color = _canGetColor;
 
-        _damageDashNodeFrameImage.color = _getFrameColor;
+        //_damageDashNodeFrameImage.color = _getFrameColor;
     }
 
     //private void DontGetDamageDashTreeState()
     //{
     //    _damageDashCostCheck.HideCost();
 
-    //    _damageDashAbilityImage.color = _getColor;
-    //    //_wallRunAbilityImage.color = _canGetColor;
+    //    _getDamageDashAbilityImage.color = _getColor;
+    //    //_getWallRunAbilityImage.color = _canGetColor;
 
     //    _damageDashNodeFrameImage.color = _getFrameColor;
     //}
@@ -585,11 +618,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _chargedAttackCostCheck.HideCost();
         _chargedAttackBuyButton.gameObject.SetActive(false);
 
-        _chargedAttackAbilityImage.color = _getColor;
-        _fourPawsAbilityImage.color = _canGetColor;
+        _chargedAttackAbilityImage.sprite = _getChargedAttackAbilityImage;
+        _fourPawsAbilityImage.sprite = _canGetFourPawsAbilityImage;
 
-        _chargedAttackNodeFrameImage.color = _getFrameColor;
-        _fourPawsNodeFrameImage.color = _canGetFrameColor;
+        _chargedAttackNodeFrameImage.color = _getColor;
+        //_fourPawsNodeFrameImage.color = _canGetFrameColor;
     }
 
     private void BuyFourPaws()
@@ -612,11 +645,11 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _fourPawsCostCheck.HideCost();
         _fourPawsBuyButton.gameObject.SetActive(false);
 
-        _fourPawsAbilityImage.color = _getColor;
-        _soulReleaseAbilityImage.color = _canGetColor;
+        _fourPawsAbilityImage.sprite = _getFourPawsAbilityImage;
+        _soulReleaseAbilityImage.sprite = _canGetSoulReleaseAbilityImage;
 
-        _fourPawsNodeFrameImage.color = _getFrameColor;
-        _soulReleaseNodeFrameImage.color = _canGetFrameColor;
+        _fourPawsNodeFrameImage.color = _getColor;
+        //_soulReleaseNodeFrameImage.color = _canGetFrameColor;
     }
 
     private void BuySoulRelease()
@@ -647,9 +680,9 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _soulReleaseCostCheck.HideCost();
         _soulReleaseBuyButton.gameObject.SetActive(false);
 
-        _soulReleaseAbilityImage.color = _getColor;
+        _soulReleaseAbilityImage.sprite = _getSoulReleaseAbilityImage;
 
-        _soulReleaseNodeFrameImage.color = _getFrameColor;
+        //_soulReleaseNodeFrameImage.color = _getFrameColor;
     }
 
     private void BuyParrying()
@@ -675,23 +708,23 @@ public class AbilitiesTreeUIManager : MonoBehaviour
         _parryingCostCheck.HideCost();
         _parryingBuyButton.gameObject.SetActive(false);
 
-        _parryingAbilityImage.color = _getColor;
+        _parryingAbilityImage.sprite = _getParryingAbilityImage;
 
-        _parryingNodeFrameImage.color = _getFrameColor;
+        //_parryingNodeFrameImage.color = _getFrameColor;
     }
 
     private void GetDoubleJumpTreeState()
     {
-        _doubleJumpAbilityImage.color = _getColor;
+        _doubleJumpAbilityImage.sprite = _getDoubleJumpAbilityImage;
 
-        _doubleJumpNodeFrameImage.color = _getFrameColor;
+        //_doubleJumpNodeFrameImage.color = _getFrameColor;
     }
 
     private void GetPiercingClawTreeState()
     {
-        _piercingClawAbilityImage.color = _getColor;
+        _piercingClawAbilityImage.sprite = _getPiercingClawAbilityImage;
 
-        _piercingClawNodeFrameImage.color = _getFrameColor;
+        //_piercingClawNodeFrameImage.color = _getFrameColor;
     }
 
     #endregion
