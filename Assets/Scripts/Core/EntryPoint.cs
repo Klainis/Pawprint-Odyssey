@@ -16,7 +16,7 @@ public class EntryPoint : MonoBehaviour
 
     [Header("PREFABS (Assets)")]
     [SerializeField] private WallsManager wallsManagerPrefab;
-    [SerializeField] private CrystalsManager crystalsManagerPrefab;
+    [SerializeField] private EnvironmentManager crystalsManagerPrefab;
     [SerializeField] private InitializeManager initializeManagerPrefab;
     [SerializeField] private GameManager gameManagerPrefab;
     [SerializeField] private GameObject mainCameraPrefab;
@@ -52,7 +52,7 @@ public class EntryPoint : MonoBehaviour
     // INSTANCES (Runtime objects)
     private GameObject _musicHandlerInstance;
     private WallsManager _wallsManagerInstance;
-    private CrystalsManager _crystalsManagerInstance;
+    private EnvironmentManager _crystalsManagerInstance;
     private InitializeManager _initializeManagerInstance;
     private GameManager _gameManagerInstance;
     private GameObject _mainCameraInstance;

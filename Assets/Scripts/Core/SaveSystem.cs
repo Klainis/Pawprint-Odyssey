@@ -16,6 +16,7 @@ public class SaveSystem
         public PlayerSaveData PlayerSaveData;
         public WallSaveData WallSaveData;
         public CrystalSaveData CrystalSaveData;
+        public MoneyObjectSaveData MoneyObjectSaveData;
         public MapRoomsSaveData MapRoomsSaveData;
     }
 
@@ -137,6 +138,7 @@ public class SaveSystem
             if (CreatePlayerModel(ref saveData.PlayerSaveData) &&
                 DestroyBrokenWalls(ref saveData.WallSaveData) &&
                 DestroyBrokenCrystals(ref saveData.CrystalSaveData) &&
+                DestroyBrokenMoneyObject(ref saveData.MoneyObjectSaveData) &&
                 LoadOpenedMapRooms(ref saveData.MapRoomsSaveData)) return true;
 
             return false;
@@ -177,10 +179,21 @@ public class SaveSystem
 
     private static bool DestroyBrokenCrystals(ref CrystalSaveData data)
     {
-        if (CrystalsManager.Instance != null)
+        if (EnvironmentManager.Instance != null)
         {
-            CrystalsManager.Instance.CrystalsExistenceInstance = CrystalsExistence.CreateCrystalsExistence(ref data);
-            CrystalsManager.DestroyBrokenCrystals();
+            EnvironmentManager.Instance.CrystalsExistenceInstance = CrystalsExistence.CreateCrystalsExistence(ref data);
+            EnvironmentManager.DestroyBrokenCrystals();
+            return true;
+        }
+        return false;
+    }
+
+    private static bool DestroyBrokenMoneyObject(ref MoneyObjectSaveData data)
+    {
+        if (EnvironmentManager.Instance != null)
+        {
+            EnvironmentManager.Instance.MoneyObjectExistenceInstance = MoneyObjectExistence.CreateMoneyObjectExistence(ref data);
+            EnvironmentManager.DestroyBrokenMoneyObject();
             return true;
         }
         return false;
@@ -213,9 +226,17 @@ public class SaveSystem
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
         }
 
-        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        if (EnvironmentManager.Instance != null)
         {
-            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            if (EnvironmentManager.Instance.CrystalsExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            }
+
+            if (EnvironmentManager.Instance.MoneyObjectExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.MoneyObjectExistenceInstance.Save(ref saveData.MoneyObjectSaveData);
+            }
         }
 
         if (MapManager.Instance != null)
@@ -248,9 +269,17 @@ public class SaveSystem
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
         }
 
-        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        if (EnvironmentManager.Instance != null)
         {
-            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            if (EnvironmentManager.Instance.CrystalsExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            }
+
+            if (EnvironmentManager.Instance.MoneyObjectExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.MoneyObjectExistenceInstance.Save(ref saveData.MoneyObjectSaveData);
+            }
         }
 
         if (MapManager.Instance != null)
@@ -271,9 +300,17 @@ public class SaveSystem
             WallsManager.Instance.WallsExistenceInstance.Save(ref saveData.WallSaveData);
         }
 
-        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        if (EnvironmentManager.Instance != null)
         {
-            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            if (EnvironmentManager.Instance.CrystalsExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            }
+
+            if (EnvironmentManager.Instance.MoneyObjectExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.MoneyObjectExistenceInstance.Save(ref saveData.MoneyObjectSaveData);
+            }
         }
 
         if (MapManager.Instance != null)
@@ -289,9 +326,9 @@ public class SaveSystem
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
         }
 
-        if (CrystalsManager.Instance != null && CrystalsManager.Instance.CrystalsExistenceInstance != null)
+        if (EnvironmentManager.Instance != null && EnvironmentManager.Instance.CrystalsExistenceInstance != null)
         {
-            CrystalsManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
+            EnvironmentManager.Instance.CrystalsExistenceInstance.Save(ref saveData.CrystalSaveData);
         }
         //Debug.Log($"{PlayerView.Instance.PlayerModel.CheckPointPosX}, {PlayerView.Instance.PlayerModel.CheckPointPosY}");
     }
@@ -301,6 +338,14 @@ public class SaveSystem
         if (PlayerView.Instance != null && PlayerView.Instance.PlayerModel != null)
         {
             PlayerView.Instance.PlayerModel.Save(ref saveData.PlayerSaveData);
+        }
+
+        if (EnvironmentManager.Instance != null)
+        {
+            if (EnvironmentManager.Instance.MoneyObjectExistenceInstance != null)
+            {
+                EnvironmentManager.Instance.MoneyObjectExistenceInstance.Save(ref saveData.MoneyObjectSaveData);
+            }
         }
     }
 }

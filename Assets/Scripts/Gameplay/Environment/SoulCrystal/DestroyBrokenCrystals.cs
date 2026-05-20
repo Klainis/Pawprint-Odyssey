@@ -4,13 +4,13 @@ public class DestroyBrokenCrystals : MonoBehaviour
 {
     [SerializeField] private string _crystalID;
 
-    private CrystalsManager crystalsManager;
+    private EnvironmentManager crystalsManager;
 
     public string CrystalID { get { return _crystalID; } }
 
     private void Awake()
     {
-        crystalsManager = CrystalsManager.Instance;
+        crystalsManager = EnvironmentManager.Instance;
 
         if (crystalsManager.CrystalsExistenceInstance != null)
             DestroyCrystal();

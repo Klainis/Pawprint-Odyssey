@@ -11,11 +11,12 @@ GameObject:
   - component: {fileID: 5397628634742546850}
   - component: {fileID: 9136620268619653190}
   - component: {fileID: 9044161707681283140}
-  - component: {fileID: 6619944964867631596}
-  - component: {fileID: 5889849359375903879}
   - component: {fileID: 437522381738558091}
   - component: {fileID: 9173908153223522612}
   - component: {fileID: 5616587081090747869}
+  - component: {fileID: 1659059630835143071}
+  - component: {fileID: 5216366467271199346}
+  - component: {fileID: 4402938637714033929}
   m_Layer: 0
   m_Name: DestructibleMoneyObject
   m_TagString: Enemy
@@ -86,12 +87,12 @@ SpriteRenderer:
   m_SortingLayerID: 364494515
   m_SortingLayer: 7
   m_SortingOrder: 100
-  m_Sprite: {fileID: -3685089621592654553, guid: 4afc3a05d0cdda04bbcf089d762d1393, type: 3}
-  m_Color: {r: 0.8742138, g: 0.8742138, b: 0.8742138, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4afc3a05d0cdda04bbcf089d762d1393, type: 3}
+  m_Color: {r: 0.72327036, g: 0.72327036, b: 0.72327036, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.41, y: 3.03}
+  m_Size: {x: 0.81777775, y: 1.2377778}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -111,33 +112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DestructibleObject
   environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
   shakeDuration: 0
---- !u!114 &6619944964867631596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ba484df5f9b09b489956287ac5417a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CrystalApplyDamage
-  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
-  _playerWeaponParticle: {fileID: 3511315664987222026, guid: f2dc37c6a64b774478fe8ad8855bb747, type: 3}
---- !u!114 &5889849359375903879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b988d9e6d33d0d4ab43d022f57f026d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DestroyBrokenCrystals
-  _crystalID: 02_1
 --- !u!61 &437522381738558091
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -176,8 +150,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.0514286, y: 1.5914285}
-    newSize: {x: 2.41, y: 3.03}
+    oldSize: {x: 0.61333334, y: 0.92833334}
+    newSize: {x: 0.81777775, y: 1.2377778}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -306,12 +280,54 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2732582846674887396}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cc0a1545f2dc274dbe21ca869aa3c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrystalSound
   _crystalSound: {fileID: 8300000, guid: 44c7fd8c621a3744893a3aa54d6b26c1, type: 3}
+--- !u!114 &1659059630835143071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a2653f18fc3dff439ff35b8f97015b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MoneyObject
+  environmentData: {fileID: 11400000, guid: 41029dbf4788de14bb53b5841066f19f, type: 2}
+  _playerWeaponParticle: {fileID: 3511315664987222026, guid: f2dc37c6a64b774478fe8ad8855bb747, type: 3}
+--- !u!114 &5216366467271199346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92e37645027e4142afaa404b62f3578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantiateMoney
+  _moneyObject: {fileID: 392769766391082919, guid: 6e0de990cddb5ed4fb4bb06e51f276be, type: 3}
+  _objectCount: 5
+  _force: 3
+--- !u!114 &4402938637714033929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2732582846674887396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b995e4276e7b754b91da5148f8a4d73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestroyBrokenMoneyObject
+  _moneyObjectID: 01_1
 --- !u!1 &4925687930591526579
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +354,7 @@ Transform:
   m_GameObject: {fileID: 4925687930591526579}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.25094256, w: 0.96800196}
-  m_LocalPosition: {x: 0.04, y: 0.12, z: 0}
+  m_LocalPosition: {x: -0.01, y: -0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -361,7 +377,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.2
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 000000005d891203ed7da4ba8d82e2d115ca7e0dd9c62d69b3beb915c740bf70039ffe3fcdc23343
@@ -384,8 +400,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0.6
-  m_PointLightOuterRadius: 2
+  m_PointLightInnerRadius: 0.3
+  m_PointLightOuterRadius: 1.2
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
