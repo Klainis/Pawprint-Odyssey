@@ -3,7 +3,7 @@ using GlobalEnums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Rendering;
+//using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PimenTalk : MonoBehaviour, ITalkable

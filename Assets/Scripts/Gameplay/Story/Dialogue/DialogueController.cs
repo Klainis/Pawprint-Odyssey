@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
+//using UnityEditor.Rendering;
 using GlobalEnums;
 using static DialogueText;
 using System.Collections;
