@@ -11,26 +11,31 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            var playerModel = PlayerView.Instance.PlayerModel;
             PimenTalk wr = PimenView.Instance.gameObject.GetComponent<PimenTalk>();
 
-            if (_beforeFirstBoss)
+            if (_beforeFirstBoss && !playerModel.BeforeFirstBoss)
             {
                 wr.BeforeFirstBoss();
+                playerModel.SetBeforeFirstBoss(true);
                 return;
             }
-            if (_beforeTakeClaw)
+            if (_beforeTakeClaw && !playerModel.SawClaw)
             {
                 wr.SawClaw();
+                playerModel.SetSawClaw(true);
                 return;
             }
-            if (_beforeFirstFightRoom)
+            if (_beforeFirstFightRoom && !playerModel.BeforeFirstFightRoom)
             {
                 wr.BeforeFirstFightRoom();
+                playerModel.SetBeforeFirstFightRoom(true);
                 return;
             }
-            if (_beforeLastBoss)
+            if (_beforeLastBoss && !playerModel.BeforeFinalBoss)
             {
                 wr.BeforeFinalBoss();
+                playerModel.SetBeforeFinalBoss(true);
                 return;
             }
         }

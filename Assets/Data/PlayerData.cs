@@ -74,4 +74,10 @@ public class PlayerData : ScriptableObject
     public bool moveEducation;
     public bool wallJumpEducation;
     public bool attackEducation;
+
+    [Header("Pimen Dialogs Completed")]
+    public bool beforeFirstBoss;
+    public bool sawClaw;
+    public bool beforeFirstFightRoom;
+    public bool beforeFinalBoss;
 }
