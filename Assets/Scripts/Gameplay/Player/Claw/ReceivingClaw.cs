@@ -6,8 +6,8 @@ public class ReceivingClaw : MonoBehaviour
     private GameObject manaBar;
     private PlayerMana playerMana;
 
-    private readonly string clawGetItemTag = "ClawGetItem";
-    private GameObject clawGetItem;
+    //private readonly string clawGetItemTag = "ClawGetItem";
+    //private GameObject clawGetItem;
 
     private void Awake()
     {
@@ -21,14 +21,14 @@ public class ReceivingClaw : MonoBehaviour
         SetActiveManaBar();
     }
 
-    private void FixedUpdate()
-    {
-        if (clawGetItem == null)
-            clawGetItem = GameObject.Find(clawGetItemTag);
-        if (clawGetItem != null)
-            if (PlayerView.Instance.PlayerModel.HasClaw)
-                Destroy(clawGetItem);
-    }
+    //private void FixedUpdate()
+    //{
+    //    if (clawGetItem == null)
+    //        clawGetItem = GameObject.Find(clawGetItemTag);
+    //    if (clawGetItem != null)
+    //        if (PlayerView.Instance.PlayerModel.HasClaw)
+    //            Destroy(clawGetItem);
+    //}
 
     public void SetActiveManaBar()
     {
@@ -40,19 +40,21 @@ public class ReceivingClaw : MonoBehaviour
         }
     }
 
-    public void EnableClaw()
+    public void EnableClaw(GameObject clawItem)
     {
         PlayerView.Instance.PlayerModel.SetHasClaw();
         SetActiveManaBar();
         SaveSystem.AutoSave();
+
+        Destroy(clawItem);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag(clawGetItemTag))
-        {
-            Destroy(collision.gameObject);
-            EnableClaw();
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag(clawGetItemTag))
+    //    {
+    //        Destroy(collision.gameObject);
+    //        EnableClaw();
+    //    }
+    //}
 }

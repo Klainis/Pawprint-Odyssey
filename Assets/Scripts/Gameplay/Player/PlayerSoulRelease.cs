@@ -29,7 +29,7 @@ public class PlayerSoulRelease : MonoBehaviour
     private PlayerAnimation _playerAnimation;
     private PlayerMana _playerMana;
     private float _lastShootTime = 0f;
-    private float _startGravityScale;
+    //private float _startGravityScale;
 
     public bool _isStop { get; set; } = false;
 
@@ -44,18 +44,18 @@ public class PlayerSoulRelease : MonoBehaviour
         _playerMana = GetComponent<PlayerMana>();
     }
 
-    private void Start()
-    {
-        _startGravityScale = _rigidbody.gravityScale;
-    }
+    //private void Start()
+    //{
+    //    _startGravityScale = _rigidbody.gravityScale;
+    //}
 
     private void Update()
     {
-        if (_isStop)
-        {
-            _rigidbody.linearVelocity = Vector2.zero;
-            _rigidbody.gravityScale = 0f;
-        }
+        //if (_isStop)
+        //{
+        //    _rigidbody.linearVelocity = Vector2.zero;
+        //    _rigidbody.gravityScale = 0f;
+        //}
 
         HandleShootInput();
     }
@@ -106,7 +106,7 @@ public class PlayerSoulRelease : MonoBehaviour
     private IEnumerator ShootRoutine(Vector2 direction)
     {
         _lastShootTime = Time.time;
-        PlayerMove.Instance.CanMove = false;
+        //PlayerView.Instance.FreezePlayer(true);
         _playerAnimation.SetBoolSoulRelease(true);
         _playerMana.SpendMana("SoulRelease", _manaCost);
         yield return StartCoroutine(SmoothStopRoutine(0.2f));
@@ -116,9 +116,9 @@ public class PlayerSoulRelease : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         _playerAnimation.SetBoolSoulRelease(false);
         yield return new WaitForSeconds(0.25f);
-        _isStop = false;
-        _rigidbody.gravityScale = _startGravityScale;
-        PlayerMove.Instance.CanMove = true;
+        //_isStop = false;
+        //_rigidbody.gravityScale = _startGravityScale;
+        PlayerView.Instance.FreezePlayer(false);
     }
 
     private IEnumerator SmoothStopRoutine(float duration)
@@ -140,9 +140,10 @@ public class PlayerSoulRelease : MonoBehaviour
             yield return null;
         }
 
-        _isStop = true;
-        _rigidbody.linearVelocity = new Vector2(0, 0);
-        _rigidbody.gravityScale = 0;
+        //_isStop = true;
+        //_rigidbody.linearVelocity = new Vector2(0, 0);
+        //_rigidbody.gravityScale = 0;
+        PlayerView.Instance.FreezePlayer(true);
 
     }
 

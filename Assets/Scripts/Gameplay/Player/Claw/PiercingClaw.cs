@@ -76,7 +76,7 @@ public class PiercingClaw : MonoBehaviour
         if (PlayerInput.Instance.PlayerClawEd && canAttack && playerView.PlayerModel.Mana >= 25)
         {
             isAttacking = true;
-            PlayerMove.Instance.CanMove = false;
+            PlayerView.Instance.FreezePlayer(true);
             //Debug.Log("Claw");
             playerMana.SpendMana("Claw", 1);
 
@@ -121,7 +121,7 @@ public class PiercingClaw : MonoBehaviour
     public void EndClawAnimation()
     {
         _rigidbody.gravityScale = _initialGravityScale;
-        PlayerMove.Instance.CanMove = true;
+        PlayerView.Instance.FreezePlayer(false);
         playerAnimation.SetBoolClaw(false);
         clawSprite.SetActive(false);
         isAttacking = false;

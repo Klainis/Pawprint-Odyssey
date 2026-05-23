@@ -100,16 +100,18 @@ public class PlayerParrying : MonoBehaviour
 
     private void StartParrying()
     {
-        if (_parryingShield != null)
-        {
-            _parryingShield.SetActive(true);
-        }
+        //if (_parryingShield != null)
+        //{
+        //    _parryingShield.SetActive(true);
+        //}
+        PlayerMove.Instance.canJump = false;
+        PlayerMove.Instance.canDash = false;
         _isParrying = true;
         _hasReflected = false;
         _currentParryingTimer = 0;
 
         PlayerView.Instance.IsInvincible = true;
-        PlayerMove.Instance.CanMove = false;
+        //PlayerMove.Instance.CanMove = false;
 
         if (_smoothStopCoroutine != null)
             StopCoroutine(_smoothStopCoroutine);
@@ -127,17 +129,20 @@ public class PlayerParrying : MonoBehaviour
             _smoothStopCoroutine = null;
         }
 
-        if (_parryingShield != null)
-        {
-            _parryingShield.SetActive(false);
-        }
+        //if (_parryingShield != null)
+        //{
+        //    _parryingShield.SetActive(false);
+        //}
+        PlayerMove.Instance.canJump = true;
+        PlayerMove.Instance.canDash = true;
         _isParrying = false;
         _parryingCooldownTimer = 0f;
 
         _playerAnimation.SetBoolIsParrying(false);
 
-        _rigidBody.constraints = _rigidbodyConstraints;
-        PlayerMove.Instance.CanMove = true;
+        //_rigidBody.constraints = _rigidbodyConstraints;
+        //PlayerMove.Instance.CanMove = true;
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
         if (_hasReflected)
             StartCoroutine(SuccessParryInvincibleRoutine());
@@ -206,17 +211,22 @@ public class PlayerParrying : MonoBehaviour
 
     private IEnumerator SmoothStop(float duration)
     {
-        var initialVelocity = _rigidBody.linearVelocity;
-        var elapsedTime = 0f;
+        var velocityX = _rigidBody.linearVelocity.x;
+        var currentVelocity = 0f;
 
-        while (elapsedTime < duration)
+        var elapsed = 0f;
+        while (elapsed < duration)
         {
-            elapsedTime += Time.deltaTime;
-            _rigidBody.linearVelocity = Vector2.Lerp(initialVelocity, Vector2.zero, elapsedTime / duration);
+            elapsed += Time.deltaTime;
+            velocityX = Mathf.SmoothDamp(velocityX, 0, ref currentVelocity, duration);
+            _rigidBody.linearVelocity = new Vector2(velocityX, _rigidBody.linearVelocity.y);
             yield return null;
         }
 
-        _rigidBody.linearVelocity = Vector2.zero;
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+        //_isStop = true;
+        //_rigidbody.linearVelocity = new Vector2(0, 0);
+        //_rigidbody.gravityScale = 0;
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
+
     }
 }

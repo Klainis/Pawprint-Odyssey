@@ -10,7 +10,7 @@ public class MusicHandler : MonoBehaviour
     [Header("Music")]
     [SerializeField] private AudioClip _mainMusicClip;
     [SerializeField] private AudioClip _spiritGuideMusicClip;
-    [SerializeField] private AudioClip _GuardianOwlMusicClip;
+    [SerializeField] private AudioClip _guardianOwlMusicClip;
 
     [Header("Parameters")]
     [SerializeField][Range(-40f, 0f)] private float _musicVolumeInMenu = -20f;

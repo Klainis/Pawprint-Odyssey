@@ -12,7 +12,7 @@ public class ShowEducation : MonoBehaviour
     [SerializeField] private bool isDoubleJump;
 
     [Header("If Claw Education")]
-    [SerializeField] private InstantiateClawWallForEducation __clawWallForEd;
+    [SerializeField] private InstantiateClawWallForEducation _clawWallForEd;
 
     [Header("Duration")]
     [SerializeField] private float _fadeDuration = 0.5f;
@@ -24,6 +24,9 @@ public class ShowEducation : MonoBehaviour
 
     public bool HasClawOld { get; set; } = false;
     public bool HasDoubleJumpOld { get; set; } = false;
+    public bool IsMove => isMove;
+    public bool IsWallJump => isWallJump;
+    public bool IsAttack => isAttack;
 
     private void Awake()
     {
@@ -38,6 +41,7 @@ public class ShowEducation : MonoBehaviour
             if(PlayerInput.Instance.PlayerMovingEd)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetMoveEducation(true);
             }
         }
         if (isWallJump)
@@ -45,6 +49,7 @@ public class ShowEducation : MonoBehaviour
             if (PlayerMove.Instance.IsWallJumping)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetWallJumpEducation(true);
             }
         }
         if (isAttack)
@@ -52,6 +57,7 @@ public class ShowEducation : MonoBehaviour
             if (PlayerInput.Instance.PlayerAttackingEd)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetAttackEducation(true);
             }
         }
         if (isInteract)
@@ -67,7 +73,7 @@ public class ShowEducation : MonoBehaviour
             {
                 Debug.Log("Получили коготь");
                 HasClawOld = true;
-                __clawWallForEd.EnableClawWallEd();
+                _clawWallForEd.EnableClawWallEd();
                 gameObject.SetActive(true);
                 FadeIn();
             }

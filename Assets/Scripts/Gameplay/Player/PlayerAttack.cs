@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviour
     #region SerializeFields
 
     [Header("Parameters")]
+    [SerializeField] private float attackCheckRadius = 1f;
     [SerializeField] private float attackSeriesTimeout = 0.9f;
     [SerializeField] private int maxAttackSeriesCount = 3;
 
@@ -23,7 +24,7 @@ public class PlayerAttack : MonoBehaviour
     private PlayerMana playerMana;
     private Transform attackCheck;
 
-    const float attackCheckRadius = 1.1f;
+    //const float attackCheckRadius = 1.1f;
     private float lastAttackTime;
     private int attackSeriesCount = 0;
     private bool isAttacking = false;
@@ -42,6 +43,12 @@ public class PlayerAttack : MonoBehaviour
     #endregion
 
     #region Common Methods
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackCheck.position, attackCheckRadius);
+    }
 
     private void Awake()
     {

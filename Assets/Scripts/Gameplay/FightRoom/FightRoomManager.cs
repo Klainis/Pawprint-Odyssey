@@ -11,6 +11,9 @@ public class FightRoomManager : MonoBehaviour
     [Header("Player")]
     [SerializeField] private float _freezePlayerTime = 1.5f;
 
+    [Header("Doors")]
+    [SerializeField] private GameObject[] _doors;
+
     [Header("Particle")]
     [SerializeField] private float _particleLifetime = 2.5f;
     [SerializeField] private GameObject _particle;
@@ -29,7 +32,7 @@ public class FightRoomManager : MonoBehaviour
     private int _currentWaveIndex = 0;
     private string _roomName;
     private readonly List<IEnemy> _aliveEnemies = new();
-    private FightDoor[] _fightDoors;
+    //private FightDoor[] _fightDoors;
 
     #endregion
 
@@ -38,7 +41,7 @@ public class FightRoomManager : MonoBehaviour
     private void Start()
     {
         _roomName = SceneManager.GetActiveScene().name;
-        _fightDoors = FindObjectsByType<FightDoor>(FindObjectsSortMode.None);
+        //_fightDoors = FindObjectsByType<FightDoor>(FindObjectsSortMode.None);
 
         if (!PlayerView.Instance.PlayerModel.CompletedFightRooms.Contains(_roomName))
         {
@@ -72,7 +75,11 @@ public class FightRoomManager : MonoBehaviour
     private void CompleteRoom()
     {
         PlayerView.Instance.PlayerModel.CompletedFightRooms.Add(_roomName);
-        SwitchDoorsState(false);
+        //SwitchDoorsState(false);
+        foreach (var door in _doors)
+        {
+            door.GetComponent<ClosedGround>().StartDestroyer();
+        }
     }
 
     private void HandleEnemyDeath(IEnemy enemy)
@@ -142,13 +149,13 @@ public class FightRoomManager : MonoBehaviour
 
     #region Doors
 
-    private void SwitchDoorsState(bool toCloseState)
-    {
-        foreach (var door in _fightDoors)
-        {
-            door.CloseDoor(toCloseState);
-        }
-    }
+    //private void SwitchDoorsState(bool toCloseState)
+    //{
+    //    foreach (var door in _fightDoors)
+    //    {
+    //        door.CloseDoor(toCloseState);
+    //    }
+    //}
 
     #endregion
 
@@ -159,13 +166,17 @@ public class FightRoomManager : MonoBehaviour
         while (!PlayerMove.Instance.IsGrounded)
             yield return null;
 
-        SwitchDoorsState(true);
+        //SwitchDoorsState(true);
+        foreach (var door in _doors)
+        {
+            door.SetActive(true);
+        }
         PlayerView.Instance.StopPlayer();
-        PlayerView.Instance.FreezePlayer(true);
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
 
         yield return new WaitForSeconds(_freezePlayerTime);
 
-        PlayerView.Instance.FreezePlayer(false);
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
         StartWave();
     }
 

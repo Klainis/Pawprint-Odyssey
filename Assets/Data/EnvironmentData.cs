@@ -13,6 +13,7 @@ public class EnvironmentData : ScriptableObject
 
     [Header("Money Object")]
     public int moneyObjectLife = 2;
+    public int moneyObjectReward = 3;
 
     [Header("Destructible Wall")]
     public int wallLife = 3;
