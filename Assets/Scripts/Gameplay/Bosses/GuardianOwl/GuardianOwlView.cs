@@ -14,7 +14,7 @@ public class GuardianOwlView : MonoBehaviour
     [SerializeField] private float _thirdStageLifeCoef = 0.2f;
     [SerializeField] private bool _isInvincible = false;
     [SerializeField] private AudioClip _hitClip;
-    [SerializeField] private GameObject _doubleJumpItem;
+    [SerializeField] private GameObject _artefactObject;
 
     [Header("Events")]
     [SerializeField] private UnityEvent<bool, bool> _Hit;
@@ -39,6 +39,8 @@ public class GuardianOwlView : MonoBehaviour
     private ParticleSystem _damageParticleInstance;
     private ParticleSystem _playerWeaponParticleInstance;
 
+    private GameObject _artefactInstance;
+
     //private SGAnimation sgAnimation;
     private GuardianOwlAttack _guraduianOwlAttack;
     private GuardianOwlMove _guraduianOwlMove;
@@ -51,6 +53,8 @@ public class GuardianOwlView : MonoBehaviour
     private int _secondStageLifeAmount;
     private int _thirdStageLifeAmount;
 
+    private float _direction;
+
     private bool _isHitted = false;
     private bool _facingRight = true;
     private bool _deathDone = false;
@@ -59,6 +63,7 @@ public class GuardianOwlView : MonoBehaviour
     public int MaxLifeForReading { get { return _maxLifeForReading; } }
     public bool IsHitted { get { return _isHitted; } }
     public bool FacingRight { get { return _facingRight; } }
+    public bool StartFight { get; set; } = false;
 
     private void Awake()
     {
@@ -127,8 +132,8 @@ public class GuardianOwlView : MonoBehaviour
                 damageFlash.CallDamageFlash();
             }
             _screenShaker.Shake();
-            var direction = damage / Mathf.Abs(damage);
-            SpawnDamageParticles(direction);
+            _direction = damage / Mathf.Abs(damage);
+            SpawnDamageParticles(_direction);
 
             if (PlayerAttack.Instance.AttackSeriesCount >= 3)
             {
@@ -136,7 +141,7 @@ public class GuardianOwlView : MonoBehaviour
             }
             else if (PlayerAttack.Instance.AttackSeriesCount < 3)
             {
-                SpawnPlayerAttakParticles(direction);
+                SpawnPlayerAttakParticles(_direction);
             }
 
             _Hit.Invoke(true, false);
@@ -176,14 +181,14 @@ public class GuardianOwlView : MonoBehaviour
         ApplyDamage(damage);
     }
 
-    private void SpawnDamageParticles(int direction)
+    private void SpawnDamageParticles(float direction)
     {
         var vectorDirection = new Vector2(direction, 0);
         var spawnRotation = Quaternion.FromToRotation(Vector2.right, vectorDirection);
         _damageParticleInstance = Instantiate(_damageParticle, transform.position, spawnRotation);
     }
 
-    private void SpawnPlayerAttakParticles(int direction)
+    private void SpawnPlayerAttakParticles(float direction)
     {
         var vectorDirection = new Vector2(direction, 0);
         var spawnPlayerAttackRotation = Quaternion.FromToRotation(Vector2.right, -vectorDirection);
@@ -212,17 +217,17 @@ public class GuardianOwlView : MonoBehaviour
         StartCoroutine(OnEnteringBoss());
     }
 
-    private void OnDestroy()
-    {
-        if (!PlayerView.Instance.PlayerModel.HasDoubleJump)
-            _doubleJumpItem.SetActive(true);
-    }
-
     private IEnumerator OnEnteringBoss()
     {
-        yield return new WaitForSeconds(1.5f);
+        while (StartFight == false)
+        {
+            yield return null;
+        }
+
         StartCoroutine(_guraduianOwlMove.MoveUp());
+
         yield return new WaitForSeconds(2);
+
         StartCoroutine(BehaviourLoop());
     }
 
@@ -405,18 +410,31 @@ public class GuardianOwlView : MonoBehaviour
 
         _stunAudioController.TriggerStun();
 
-        Time.timeScale = 0.4f;
+        Time.timeScale = 0.15f;
 
-        // _bugAnimation.SetTriggerDead();
-        var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
-        transform.rotation = Quaternion.Euler(rotator);
+        //sgAnimation.SetDeathAnimation();
 
-        yield return new WaitForSecondsRealtime(1.5f);
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+
+        EndBossFightFX.Instance.EnableEndFightFX();
+        SpawnDamageParticles(_direction);
+        SpawnPlayerLastAttackParticles();
+
+        yield return new WaitForSecondsRealtime(3f);
 
         Time.timeScale = 1f;
-        //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(1.5f);
+        EndBossFightFX.Instance.DisableEndFightFX();
 
-        Destroy(gameObject);
+        yield return new WaitForSeconds(2f);
+
+        _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
+        var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
+        artefactRB.AddForce(new Vector2(50f, 50f));
+
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
+
+        yield return new WaitForSeconds(1f);
+
+        PimenView.Instance.gameObject.GetComponent<PimenTalk>().WinLastBoss();
     }
 }

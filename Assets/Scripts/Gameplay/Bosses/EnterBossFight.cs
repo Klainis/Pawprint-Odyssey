@@ -41,17 +41,17 @@ public class EnterBossFight : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && GameManager.Instance.GameState == GameState.PLAYING)
         {
             if (_door != null && _spiritGuide != null) // Boss 1
             {
                 _spiritGuide.SetActive(true);
                 _guideView = _spiritGuide.GetComponent<SpiritGuideView>();
                 _guideView.enabled = true;
+                _guideView.MoveDisabled = true;
 
-                if (!_guideView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
+                if (!_guideView.Model.IsDead)
                 {
-                    //_spiritGuide.transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.x, 180f, transform.rotation.z));
                     StartCoroutine(ShowBoss());
                 }
             }
@@ -62,22 +62,17 @@ public class EnterBossFight : MonoBehaviour
 
 
 
-
             if (_guardianOwl != null) // Boss 2
             {
                 _guardianOwl.SetActive(true);
                 _guardianOwlView = _guardianOwl.GetComponent<GuardianOwlView>();
                 _guardianOwlView.enabled = true;
+                _guardianOwlView.StartFight = false;
 
-                if (!_guardianOwlView.Model.IsDead && GameManager.Instance.GameState == GameState.PLAYING)
+                if (!_guardianOwlView.Model.IsDead)
                 {
-                    PlayerMove.Instance.CanMove = false;
-                    //_followCamera.Follow = _guardianOwl.transform;
-                    GameManager.Instance.SetGameState(GameState.IN_FIGHT_ROOM);
-                    _health.InstantiateBossHealth();
+                    StartCoroutine(ShowBoss());
                 }
-
-                PlayerMove.Instance.CanMove = true;
             }
             else
             {
@@ -98,14 +93,23 @@ public class EnterBossFight : MonoBehaviour
 
     private IEnumerator ShowBoss()
     {
+        GameManager.Instance.SetGameState(GameState.CUTSCENE);
+
         PlayerView.Instance.StopPlayer();
-        _guideView.MoveDisabled = true;
+        yield return new WaitForSeconds(0.5f);
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        if (PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
 
         yield return new WaitForSeconds(1f);
 
         _bossCamera.Priority = 100;
 
         //Диалог с боссом 1
+        //Диалог с боссом 2
 
         yield return new WaitForSeconds(_showBossTime);
 
@@ -118,8 +122,15 @@ public class EnterBossFight : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        PlayerMove.Instance.CanMove = true;
-        if (_guideView != null) _guideView.MoveDisabled = false;
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
+        if (_guideView != null)
+        {
+            _guideView.MoveDisabled = false;
+        }
+        if (_guardianOwlView != null)
+        {
+            _guardianOwlView.StartFight = true;
+        }
     }
 
     private bool CheckAndInitSpiritGuide()

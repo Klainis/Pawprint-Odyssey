@@ -18,18 +18,29 @@ public class Interact : MonoBehaviour
 
     private readonly List<string> _mnemirObjectsRoomNames = new() { "F_Room_06", "F_Room_31", "F_FightRoom_02" };
 
+    private ShowEducation _showEducation;
+
     public bool FullHeal { get { return _fullHeal; } set { _fullHeal = value; } }
     public bool AbilitiesTree { get { return _abilitiesTree; } set { _abilitiesTree = value; } }
     public bool Mnemir { get; set; } = false;
     public string MnemirQuestObject { get; set; } = "";
     public bool Artefact { get; set; } = false;
+    public bool DoubleJumpItem { get; set; } = false;
+    public bool ClawItem { get; set; } = false;
     public bool CanInteractWithMnemir { get; set; } = true;
     public GameObject artefactObject { get; set; }
+    public GameObject doubleJumpItemObject { get; set; }
+    public GameObject clawItemObject { get; set; }
 
     public event Action OnCompleteMnemirQuest;
 
     private Coroutine _takeMnemirQuestCoroutine;
     private Coroutine _takeRewardCoroutine;
+
+    //private void Awake()
+    //{
+    //    _showEducation = FindAnyObjectByType<ShowEducation>();
+    //}
 
     private void Update()
     {
@@ -53,6 +64,16 @@ public class Interact : MonoBehaviour
             else if (Artefact)
             {
                 TakeArtefact();
+            }
+
+            else if (DoubleJumpItem)
+            {
+                EnableDoubleJump();
+            }
+
+            else if (ClawItem)
+            {
+                EnableClaw();
             }
 
             else if (Mnemir)
@@ -119,6 +140,19 @@ public class Interact : MonoBehaviour
             var talk = FindAnyObjectByType<PimenTalk>();
             talk.TakeSecondArtifact();
         }
+    }
+
+    public void EnableDoubleJump()
+    {
+        PlayerView.Instance.PlayerModel.SetHasDoubleJump();
+        Destroy(doubleJumpItemObject);
+        SaveSystem.AutoSave();
+    }
+
+    public void EnableClaw()
+    {
+        var receivingClaw = FindAnyObjectByType<ReceivingClaw>();
+        receivingClaw.EnableClaw(clawItemObject);
     }
 
     private IEnumerator TakeMnemirQuest()

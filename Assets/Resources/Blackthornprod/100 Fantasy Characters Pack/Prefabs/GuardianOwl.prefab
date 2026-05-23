@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: 5112462994370225742}
   - component: {fileID: 2291779660198888302}
   - component: {fileID: 5523333901109596704}
+  - component: {fileID: 5890800827805601946}
   m_Layer: 6
   m_Name: GuardianOwl
   m_TagString: Enemy
@@ -458,8 +459,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5963840326746825145}
   - {fileID: 5963840325699403192}
@@ -524,7 +525,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5963840326503853482}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -551,8 +552,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.069992065, y: 0.14999998}
-  m_Radius: 0.5288391
+  m_Offset: {x: 0.04914856, y: 0.1226608}
+  m_Radius: 0.5448049
 --- !u!114 &1163108814168056358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,7 +654,7 @@ MonoBehaviour:
   _thirdStageLifeCoef: 0.2
   _isInvincible: 0
   _hitClip: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
-  _doubleJumpItem: {fileID: 0}
+  _artefactObject: {fileID: 8327509386740446822, guid: 0bebde4ff66e54649bce61033ac8d46f, type: 3}
   _Hit:
     m_PersistentCalls:
       m_Calls:
@@ -852,6 +853,43 @@ MonoBehaviour:
   fadeIn: 0.05
   duration: 1
   fadeOut: 0.8
+--- !u!70 &5890800827805601946
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5963840326503853482}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 8192
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.034930732, y: 0.16795622}
+  m_Size: {x: 1.0357497, y: 0.65566003}
+  m_Direction: 1
 --- !u!1 &5963840326746825150
 GameObject:
   m_ObjectHideFlags: 0

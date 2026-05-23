@@ -81,6 +81,7 @@ public class PlayerMove : MonoBehaviour
     //private PlayerView playerView;
     private PlayerAnimation playerAnimation;
     private PlayerSoulRelease playerSoulRelease;
+    private PlayerParrying playerParrying;
 
     //private Transform wallCheck;
 
@@ -110,14 +111,15 @@ public class PlayerMove : MonoBehaviour
     private bool canDoubleJump = true;
     private bool didJumpThisFrame = false;
     private bool canCheck = false;
-    private bool canDash = true;
     private bool limitVelocityOnWallJump = false;
-    private bool canJump = true;
     private bool wallHit = false;
     private bool isKnockBack = false;
     private bool isTurnOld = false;
     private bool canWallRun = true;
     private bool _isGrabbingLedge = false;
+
+    public bool canDash = true;
+    public bool canJump = true;
 
     //private float _fallSpeedYDampingChangeThreshold;
 

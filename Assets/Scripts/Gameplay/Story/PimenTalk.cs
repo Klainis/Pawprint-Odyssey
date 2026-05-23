@@ -164,7 +164,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
         float elapsedTime = 0f;
 
         PlayerView.Instance.StopPlayer();
-        PlayerView.Instance.FreezePlayer(true);
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
         PlayerAnimation.Instance.SetFloatSpeed(0.8f);
 
         if (PlayerView.Instance.PlayerModel.FacingRight)
@@ -179,7 +179,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
             _player.transform.position = new Vector3(currentX, _player.transform.position.y, _player.transform.position.z);
             yield return null;
         }
-        PlayerView.Instance.FreezePlayer(false);
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
         PlayerAnimation.Instance.ResetAnimatorParameters();
         Talk(diaogueText);

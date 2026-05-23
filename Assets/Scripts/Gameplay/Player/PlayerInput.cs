@@ -85,11 +85,12 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         var isGameActive = Time.timeScale > 0;
+
+        if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DEAD)
+            return;
+
         if (isGameActive)
         {
-            if (GameManager.Instance.GameState == GameState.CUTSCENE)
-                return;
-
             if (IsValidAction(pauseMenuAction))
             {
                 if (pauseMenuAction.action.WasPressedThisFrame())

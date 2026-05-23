@@ -83,7 +83,7 @@ public class EndBossFightFX : MonoBehaviour
         GameManager.Instance.SetGameState(GlobalEnums.GameState.CUTSCENE);
 
         PlayerView.Instance.StopPlayer();
-        PlayerView.Instance.FreezePlayer(true);
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
         PlayerView.Instance.SetMaxMinFlashAmount(1);
         _playerObject.GetComponent<SpriteRenderer>().sortingLayerName = _sortingLayerName;
 
@@ -111,8 +111,6 @@ public class EndBossFightFX : MonoBehaviour
     {
         _darkBackground.SetActive(false);
 
-        PlayerView.Instance.FreezePlayer(false);
-        GameManager.Instance.SetGameState(GlobalEnums.GameState.PLAYING);
         PlayerView.Instance.SetMaxMinFlashAmount(0);
         _playerObject.GetComponent<SpriteRenderer>().sortingLayerName = _initialPlayerLayer;
 
@@ -134,5 +132,8 @@ public class EndBossFightFX : MonoBehaviour
                 _guardianOwlView.SetMaxMinFlashAmount(0);
                 break;
         }
+
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
+        GameManager.Instance.SetGameState(GlobalEnums.GameState.PLAYING);
     }
 }

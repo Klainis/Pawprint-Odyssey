@@ -112,7 +112,7 @@ public class PlayerChargeAttack : MonoBehaviour
 
         if (_isCharging && isReleased)
         {
-            PlayerMove.Instance.CanMove = true;
+            //PlayerMove.Instance.CanMove = true;
             ResetParticleInstance(true);
             ResetParticleInstance(false);
 

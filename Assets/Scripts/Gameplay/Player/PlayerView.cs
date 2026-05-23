@@ -148,7 +148,7 @@ public class PlayerView : MonoBehaviour
         _playerAnimation.ResetAnimatorParameters();
     }
 
-    public void FreezePlayer(bool isFreeze)
+    public void FreezePlayerWithDisableMove(bool isFreeze)
     {
         if (isFreeze)
         {
@@ -158,6 +158,18 @@ public class PlayerView : MonoBehaviour
         else
         {
             _playerMove.CanMove = true;
+            _rigidBody.constraints = _initialConstraints;
+        }
+    }
+
+    public void FreezePlayer(bool isFreeze)
+    {
+        if (isFreeze)
+        {
+            _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+        }
+        else
+        {
             _rigidBody.constraints = _initialConstraints;
         }
     }
@@ -426,6 +438,7 @@ public class PlayerView : MonoBehaviour
     private IEnumerator WaitToDead()
     {
         //_playerAnimation.SetBoolIsDead(true);
+        GameManager.Instance.SetGameState(GameState.DEAD);
         _playerMove.CanMove = false;
         _isInvincible = true;
         _playerAttack.enabled = false;
@@ -433,8 +446,7 @@ public class PlayerView : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         _playerAnimation.SetBoolIsDead(true);
 
-        _rigidBody.linearVelocity = Vector2.zero;
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
+        FreezePlayer(true);
 
         yield return new WaitForSeconds(0.1f);
 

@@ -32,7 +32,7 @@ public class GuardianOwlAttack : MonoBehaviour
     private Transform pivotBottom;
     private BoxCollider2D _colliderOfEyeAttack;
     private BoxCollider2D _colliderOfWaveAttack;
-    private CircleCollider2D _bossCollider;
+    private CapsuleCollider2D _bossCollider;
 
     private Vector3 _targetWavePosition;
 
@@ -42,7 +42,7 @@ public class GuardianOwlAttack : MonoBehaviour
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
         _player = InitializeManager.Instance.player;
-        _bossCollider = GetComponent<CircleCollider2D>();
+        _bossCollider = GetComponent<CapsuleCollider2D>();
     }
 
     #region Wave Attack
@@ -53,7 +53,7 @@ public class GuardianOwlAttack : MonoBehaviour
 
         if (playerFromOwl > 0)//left wave
         {
-            Vector3 particlePosition = new Vector3(transform.position.x - _bossCollider.radius, transform.position.y, transform.position.z);
+            Vector3 particlePosition = new Vector3(transform.position.x - _bossCollider.size.x / 2, transform.position.y, transform.position.z);
             _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
 
             //Смещение взято из LifeTime партикла * на Speed
@@ -63,7 +63,7 @@ public class GuardianOwlAttack : MonoBehaviour
         }
         else if (playerFromOwl <= 0)//right wave
         {
-            Vector3 particlePosition = new Vector3(transform.position.x + _bossCollider.radius, transform.position.y, transform.position.z);
+            Vector3 particlePosition = new Vector3(transform.position.x + _bossCollider.size.x / 2, transform.position.y, transform.position.z);
             _waveAttackInstance = Instantiate(_waveAttack, particlePosition, new Quaternion(0, 0, 0, 0));
             var main = _waveAttackInstance.main;
             main.startRotation = 180f * Mathf.Deg2Rad;

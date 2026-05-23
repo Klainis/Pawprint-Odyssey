@@ -280,7 +280,7 @@ public class SpiritGuideView : MonoBehaviour
         var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
         artefactRB.AddForce(new Vector2(50f, 50f));
 
-        PlayerView.Instance.FreezePlayer(false);
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
         yield return new WaitForSeconds(1f);
 
