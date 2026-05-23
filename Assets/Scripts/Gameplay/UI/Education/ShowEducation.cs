@@ -24,6 +24,9 @@ public class ShowEducation : MonoBehaviour
 
     public bool HasClawOld { get; set; } = false;
     public bool HasDoubleJumpOld { get; set; } = false;
+    public bool IsMove => isMove;
+    public bool IsWallJump => isWallJump;
+    public bool IsAttack => isAttack;
 
     private void Awake()
     {
@@ -38,6 +41,7 @@ public class ShowEducation : MonoBehaviour
             if(PlayerInput.Instance.PlayerMovingEd)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetMoveEducation(true);
             }
         }
         if (isWallJump)
@@ -45,6 +49,7 @@ public class ShowEducation : MonoBehaviour
             if (PlayerMove.Instance.IsWallJumping)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetWallJumpEducation(true);
             }
         }
         if (isAttack)
@@ -52,6 +57,7 @@ public class ShowEducation : MonoBehaviour
             if (PlayerInput.Instance.PlayerAttackingEd)
             {
                 FadeOut();
+                PlayerView.Instance.PlayerModel.SetAttackEducation(true);
             }
         }
         if (isInteract)

@@ -45,6 +45,10 @@ public class PlayerModel
     
     public List<string> CompletedFightRooms { get; private set; }
 
+    public bool MoveEducation { get; private set; }
+    public bool WallJumpEducation { get; private set; }
+    public bool AttackEducation { get; private set; }
+
     #endregion
 
     #region Init New Instance
@@ -63,7 +67,8 @@ public class PlayerModel
                         bool startCutSceneShowed,
                         bool meetPimen,
                         bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects,
-                        List<string> completedFightRooms)
+                        List<string> completedFightRooms,
+                        bool moveEducation, bool wallJumpEducation, bool attackEducation)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -108,6 +113,10 @@ public class PlayerModel
         MnemirQuestCollectedObjects = mnemirQuestCollectedObjects;
 
         CompletedFightRooms = completedFightRooms;
+
+        MoveEducation = moveEducation;
+        WallJumpEducation = wallJumpEducation;
+        AttackEducation = attackEducation;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -147,7 +156,10 @@ public class PlayerModel
             data.HasQuestMnemir,
             data.MnemirQuestRewarded,
             data.MnemirQuestCollectedObjects,
-            data.CompletedFightRooms
+            data.CompletedFightRooms,
+            data.MoveEducation,
+            data.WallJumpEducation,
+            data.AttackEducation
         );
     }
 
@@ -188,7 +200,10 @@ public class PlayerModel
             playerData.hasQuestMnemir,
             playerData.mnemirQuestRewarded,
             playerData.mnemirQuestCollectedObjects.ToList(),
-            playerData.completedFightRooms.ToList()
+            playerData.completedFightRooms.ToList(),
+            playerData.moveEducation,
+            playerData.wallJumpEducation,
+            playerData.attackEducation
         );
     }
 
@@ -413,6 +428,24 @@ public class PlayerModel
             CompletedFightRooms.Add(name);
     }
 
+    public bool SetMoveEducation(bool value)
+    {
+        MoveEducation = value;
+        return MoveEducation;
+    }
+
+    public bool SetWallJumpEducation(bool value)
+    {
+        WallJumpEducation = value;
+        return WallJumpEducation;
+    }
+
+    public bool SetAttackEducation(bool value)
+    {
+        AttackEducation = value;
+        return AttackEducation;
+    }
+
     #endregion
 
     #region Save & Load
@@ -454,6 +487,9 @@ public class PlayerModel
         data.MnemirQuestRewarded = MnemirQuestRewarded;
         data.MnemirQuestCollectedObjects = MnemirQuestCollectedObjects;
         data.CompletedFightRooms = CompletedFightRooms;
+        data.MoveEducation = MoveEducation;
+        data.WallJumpEducation = WallJumpEducation;
+        data.AttackEducation = AttackEducation;
     }
 
     public void Load(PlayerSaveData data)
@@ -493,6 +529,9 @@ public class PlayerModel
         MnemirQuestRewarded = data.MnemirQuestRewarded;
         MnemirQuestCollectedObjects = data.MnemirQuestCollectedObjects;
         CompletedFightRooms = data.CompletedFightRooms;
+        MoveEducation = data.MoveEducation;
+        WallJumpEducation = data.WallJumpEducation;
+        AttackEducation = data.AttackEducation;
     }
 
     #endregion
@@ -536,4 +575,7 @@ public struct PlayerSaveData
     public bool MnemirQuestRewarded;
     public List<string> MnemirQuestCollectedObjects;
     public List<string> CompletedFightRooms;
+    public bool MoveEducation;
+    public bool WallJumpEducation;
+    public bool AttackEducation;
 }

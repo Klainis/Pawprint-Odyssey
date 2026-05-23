@@ -69,4 +69,9 @@ public class PlayerData : ScriptableObject
 
     [Header("CutScenes")]
     public bool startSutSceneShowed;
+
+    [Header("Educations Completed")]
+    public bool moveEducation;
+    public bool wallJumpEducation;
+    public bool attackEducation;
 }
