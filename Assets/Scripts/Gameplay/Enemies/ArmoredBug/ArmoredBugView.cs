@@ -302,6 +302,13 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
     private void HandleWallHit()
     {
         _isAccelerated = false;
+
+        if (_waitBeforeTurnCoroutine != null)
+        {
+            StopCoroutine(_waitBeforeTurnCoroutine);
+            _waitBeforeTurnCoroutine = null;
+        }
+
         FacingRight = _move.Turn(FacingRight);
     }
 
@@ -327,7 +334,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
         if (FacingRight == !targetFacingRight)
         {
-            Debug.Log("Поворот в туже сторону, куда смотрим");
+            //Debug.Log("Поворот в туже сторону, куда смотрим");
             if (_waitBeforeTurnCoroutine != null)
             {
                 StopCoroutine(_waitBeforeTurnCoroutine);
@@ -355,11 +362,18 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
     private IEnumerator WaitBeforeTurn(bool targetFacingRight)
     {
-        Debug.Log("Ждем разворота");
+        //Debug.Log("Ждем разворота");
         yield return new WaitForSeconds(_waitTimeBeforeTurn);
-
+        
+        if (FacingRight == targetFacingRight)
+        {
+            _waitBeforeTurnCoroutine = null;
+            yield break;
+        }
+        
         //Debug.Log("Разворот");
         FacingRight = _move.Turn(targetFacingRight);
+        _waitBeforeTurnCoroutine = null;
     }
 
     private IEnumerator WaitForKnockBack()
