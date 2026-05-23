@@ -19,17 +19,32 @@ public class SaveSystem
         public MapRoomsSaveData MapRoomsSaveData;
     }
 
-    private static string SaveFileName()
+    private static string SaveFileName(int profileIndex = 0)
     {
         var saveFile = $"{Application.persistentDataPath}/Saves/Profile_{CurrentProfileIndex}/save_{CurrentProfileIndex}.dat";
+        
+        if (profileIndex != 0)
+            saveFile = $"{Application.persistentDataPath}/Saves/Profile_{profileIndex}/save_{profileIndex}.dat";
+
         return saveFile;
     }
 
     // Можно использовать для изменения UI кнопки с уже имеющемся сохранением. Или наоборот.
     public static bool ProfileHasSave(int profileIndex)
     {
-        var path = $"{Application.persistentDataPath}/Saves/Profile_{CurrentProfileIndex}/save_{profileIndex}.dat";
+        var path = $"{Application.persistentDataPath}/Saves/Profile_{profileIndex}/save_{profileIndex}.dat";
         return File.Exists(path);
+    }
+
+    public static void DeleteSaveFile(int profileIndex)
+    {
+        var saveFileName = SaveFileName(profileIndex);
+
+        if (ProfileHasSave(profileIndex))
+            File.Delete(saveFileName);
+        
+        if (!ProfileHasSave(profileIndex))
+            Debug.Log($"PROFILE {profileIndex} DELETED SUCCESSFULLY");
     }
 
     private static void SaveDataToFile()

@@ -187,8 +187,8 @@ public class PlayerModel
             playerData.meetPimen,
             playerData.hasQuestMnemir,
             playerData.mnemirQuestRewarded,
-            playerData.mnemirQuestCollectedObjects,
-            playerData.completedFightRooms
+            playerData.mnemirQuestCollectedObjects.ToList(),
+            playerData.completedFightRooms.ToList()
         );
     }
 

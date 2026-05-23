@@ -225,6 +225,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(entryPointSceneName);
     }
 
+    public void DeleteProfile(int profileNumber)
+    {
+        SaveSystem.DeleteSaveFile(profileNumber);
+    }
+
     public void ExitGame()
     {
         Debug.Log("GameManager: Quit game...");

@@ -33,23 +33,25 @@ public class ArmoredBugMove : MonoBehaviour
         _isInPlatform = Physics2D.OverlapCircle(_fallCheck.position, .2f, _turnLayerMask);
         _isObstacle = Physics2D.OverlapCircle(_wallCheck.position, .2f, _turnLayerMask);
 
-        if (((!_isInPlatform && _view.RigidBody.linearVelocity.y >= 0) || _isObstacle)
-            && Time.time > _lastTurnTime + _turnCooldown)
+        if (Mathf.Abs(_view.RigidBody.linearVelocity.y) < 0.1f)
         {
-            _lastTurnTime = Time.time;
-            OnWallHit?.Invoke();
+            if ((!_isInPlatform || _isObstacle) && Time.time > _lastTurnTime + _turnCooldown)
+            {
+                _lastTurnTime = Time.time;
+                OnWallHit?.Invoke();
+            }
         }
     }
+
     public void Move()
     {
-        if (_view.IsHitted || Mathf.Abs(_view.RigidBody.linearVelocity.y) > 0.5f)
+        if (_view.IsHitted)
             return;
 
         var moveSpeed = _view.Model.Speed;
         var moveDirection = _view.FacingRight ? 1 : -1;
 
-        if (!_view.IsHitted)
-            _view.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, _view.RigidBody.linearVelocity.y);
+        _view.RigidBody.linearVelocity = new Vector2(moveDirection * moveSpeed, _view.RigidBody.linearVelocity.y);
     }
 
     public bool Turn(bool facingRight)
