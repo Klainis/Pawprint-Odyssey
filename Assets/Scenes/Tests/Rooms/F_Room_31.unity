@@ -16485,11 +16485,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.09
+      value: -3.9
       objectReference: {fileID: 0}
     - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.55
+      value: -5.8
       objectReference: {fileID: 0}
     - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16526,6 +16526,10 @@ PrefabInstance:
     - target: {fileID: 4001453215907155225, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_Name
       value: LEAFS Particle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155225, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22263,6 +22267,63 @@ SortingGroup:
   m_SortingLayer: 6
   m_SortingOrder: 29
   m_SortAtRoot: 0
+--- !u!1001 &967151870
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 15.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 62.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99396175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.10972734
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -12.599
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155225, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_Name
+      value: LEAFS Particle
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
 --- !u!1 &988167077
 GameObject:
   m_ObjectHideFlags: 0
@@ -22557,6 +22618,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_32
   entryGate: right1
+  finalTransition: 0
 --- !u!4 &1017330124
 Transform:
   m_ObjectHideFlags: 0
@@ -35070,6 +35132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_02
   entryGate: bottom1
+  finalTransition: 0
 --- !u!4 &1909698587
 Transform:
   m_ObjectHideFlags: 0
@@ -37478,3 +37541,4 @@ SceneRoots:
   - {fileID: 340003499}
   - {fileID: 1867182640}
   - {fileID: 91981961}
+  - {fileID: 967151870}

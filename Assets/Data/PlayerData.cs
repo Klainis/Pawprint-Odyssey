@@ -76,8 +76,9 @@ public class PlayerData : ScriptableObject
     public bool attackEducation;
 
     [Header("Pimen Dialogs Completed")]
-    public bool beforeFirstBoss;
-    public bool sawClaw;
-    public bool beforeFirstFightRoom;
-    public bool beforeFinalBoss;
+    public bool beforeFirstBossDialogue;
+    public bool sawClawDialogue;
+    public bool beforeFirstFightRoomDialogue;
+    public bool beforeFinalBossDialogue;
+    public bool lastRoomDialogue;
 }

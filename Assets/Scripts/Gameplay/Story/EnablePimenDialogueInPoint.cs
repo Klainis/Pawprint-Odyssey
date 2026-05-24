@@ -7,45 +7,61 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
     [SerializeField] private bool _beforeFirstFightRoom = false;
     [SerializeField] private bool _afterFirstFightRoom = false;
     [SerializeField] private bool _beforeLastBoss = false;
+    [SerializeField] private bool _lastRoom = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
         var playerModel = PlayerView.Instance.PlayerModel;
-        PimenTalk wr = PimenView.Instance.gameObject.GetComponent<PimenTalk>();
+        PimenTalk talk = PimenView.Instance.gameObject.GetComponent<PimenTalk>();
 
-        if (_beforeFirstBoss && !playerModel.BeforeFirstBoss)
+        if (_beforeFirstBoss && !playerModel.BeforeFirstBossDialogue)
         {
-            wr.BeforeFirstBoss();
+            talk.BeforeFirstBoss();
             playerModel.SetBeforeFirstBoss(true);
             return;
         }
 
-        if (_beforeTakeClaw && !playerModel.SawClaw)
+        if (_beforeTakeClaw && !playerModel.SawClawDialogue)
         {
-            wr.SawClaw();
+            talk.SawClaw();
             playerModel.SetSawClaw(true);
             return;
         }
 
-        if (_beforeFirstFightRoom && !playerModel.BeforeFirstFightRoom)
+        if (_beforeFirstFightRoom && !playerModel.BeforeFirstFightRoomDialogue)
         {
-            wr.BeforeFirstFightRoom();
+            talk.BeforeFirstFightRoom();
             playerModel.SetBeforeFirstFightRoom(true);
             return;
         }
 
         if (_afterFirstFightRoom)
         {
-            wr.AfterFirstFightRoom();
+            talk.AfterFirstFightRoom();
             return;
         }
 
-        if (_beforeLastBoss && !playerModel.BeforeFinalBoss)
+        if (_beforeLastBoss && !playerModel.BeforeFinalBossDialogue)
         {
-            wr.BeforeFinalBoss();
+            talk.BeforeFinalBoss();
             playerModel.SetBeforeFinalBoss(true);
+            return;
+        }
+
+        if (_lastRoom)
+        {
+            if (PlayerView.Instance.PlayerModel.ArtefactCollected < 3)
+            {
+                talk.DontHaveAllArtifact();
+            }
+            else if (PlayerView.Instance.PlayerModel.ArtefactCollected >= 3 && !playerModel.LastRoomDialogue)
+            {
+                talk.LastRoom();
+                playerModel.SetLastRoom(true);
+                gameObject.SetActive(false);
+            }
             return;
         }
     }

@@ -123,27 +123,27 @@ public class PlayerView : MonoBehaviour
                 _playerAttack.Attack();
         }
 
-        if (GameManager.Instance.GameState == GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE)
-        {
-            _playerMove.CanMove = false;
-            if (_playerMove.IsGrounded)
-            {
-                _rigidBody.linearVelocity = Vector3.zero;
-            }
-            _isInvincible = true;
-            _oldDialogue = true;
-        }
-        else if ((GameManager.Instance.GameState != GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE) && _oldDialogue)
-        {
-            _oldDialogue = false;
-            _playerMove.CanMove = true;
-            _isInvincible = false;
-        }
+        //if (GameManager.Instance.GameState == GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE)
+        //{
+        //    _playerMove.CanMove = false;
+        //    if (_playerMove.IsGrounded)
+        //    {
+        //        _rigidBody.linearVelocity = Vector3.zero;
+        //    }
+        //    _isInvincible = true;
+        //    _oldDialogue = true;
+        //}
+        //else if ((GameManager.Instance.GameState != GameState.DIALOGUE || GameManager.Instance.GameState == GameState.CUTSCENE) && _oldDialogue)
+        //{
+        //    _oldDialogue = false;
+        //    _playerMove.CanMove = true;
+        //    _isInvincible = false;
+        //}
     }
 
     public void StopPlayer()
     {
-        _playerMove.CanMove = false;
+        //_playerMove.CanMove = false;
         _rigidBody.linearVelocity = Vector3.zero;
         _playerAnimation.ResetAnimatorParameters();
     }
@@ -153,12 +153,14 @@ public class PlayerView : MonoBehaviour
         if (isFreeze)
         {
             _playerMove.CanMove = false;
-            _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+            _rigidBody.linearVelocity = Vector3.zero;
+            StartCoroutine(FreezePlayerRoutine());
         }
         else
         {
             _playerMove.CanMove = true;
             _rigidBody.constraints = _initialConstraints;
+            _rigidBody.gravityScale = _playerMove.InitialGravityScale;
         }
     }
 
@@ -166,12 +168,29 @@ public class PlayerView : MonoBehaviour
     {
         if (isFreeze)
         {
+            //StartCoroutine(FreezePlayerRoutine());
+            _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
         }
         else
         {
             _rigidBody.constraints = _initialConstraints;
+            _rigidBody.gravityScale = _playerMove.InitialGravityScale;
         }
+    }
+
+    private IEnumerator FreezePlayerRoutine()
+    {
+        while (!_playerMove.IsGrounded)
+        {
+            //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
+            yield return null;
+        }
+
+        //yield return new WaitForFixedUpdate();
+
+        _rigidBody.linearVelocity = Vector3.zero;
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
     }
 
     #endregion

@@ -269,7 +269,7 @@ public class SpiritGuideView : MonoBehaviour
         SpawnDamageParticles(direction);
         SpawnPlayerLastAttackParticles();
 
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSecondsRealtime(2f);
 
         Time.timeScale = 1f;
         EndBossFightFX.Instance.DisableEndFightFX();

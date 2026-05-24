@@ -49,10 +49,11 @@ public class PlayerModel
     public bool WallJumpEducation { get; private set; }
     public bool AttackEducation { get; private set; }
 
-    public bool BeforeFirstBoss { get; private set; }
-    public bool SawClaw { get; private set; }
-    public bool BeforeFirstFightRoom { get; private set; }
-    public bool BeforeFinalBoss { get; private set; }
+    public bool BeforeFirstBossDialogue { get; private set; }
+    public bool SawClawDialogue { get; private set; }
+    public bool BeforeFirstFightRoomDialogue { get; private set; }
+    public bool BeforeFinalBossDialogue { get; private set; }
+    public bool LastRoomDialogue { get; private set; }
 
     #endregion
 
@@ -74,7 +75,7 @@ public class PlayerModel
                         bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects,
                         List<string> completedFightRooms,
                         bool moveEducation, bool wallJumpEducation, bool attackEducation,
-                        bool beforeFirstBoss, bool sawClaw, bool beforeFirstFightRoom, bool beforeFinalBoss)
+                        bool beforeFirstBoss, bool sawClaw, bool beforeFirstFightRoom, bool beforeFinalBoss, bool lastRoom)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -124,10 +125,11 @@ public class PlayerModel
         WallJumpEducation = wallJumpEducation;
         AttackEducation = attackEducation;
 
-        BeforeFirstBoss = beforeFirstBoss;
-        SawClaw = sawClaw;
-        BeforeFirstFightRoom = beforeFirstFightRoom;
-        BeforeFinalBoss = beforeFinalBoss;
+        BeforeFirstBossDialogue = beforeFirstBoss;
+        SawClawDialogue = sawClaw;
+        BeforeFirstFightRoomDialogue = beforeFirstFightRoom;
+        BeforeFinalBossDialogue = beforeFinalBoss;
+        LastRoomDialogue = lastRoom;
     }
 
     public static PlayerModel CreateFromSave(ref PlayerSaveData data)
@@ -173,10 +175,11 @@ public class PlayerModel
             data.WallJumpEducation,
             data.AttackEducation,
             
-            data.BeforeFirstBoss,
-            data.SawClaw,
-            data.BeforeFirstFightRoom,
-            data.BeforeFinalBoss
+            data.BeforeFirstBossDialogue,
+            data.SawClawDialogue,
+            data.BeforeFirstFightRoomDialogue,
+            data.BeforeFinalBossDialogue,
+            data.LastRoomDialogue
         );
     }
 
@@ -223,10 +226,11 @@ public class PlayerModel
             playerData.wallJumpEducation,
             playerData.attackEducation,
 
-            playerData.beforeFirstBoss,
-            playerData.sawClaw,
-            playerData.beforeFirstFightRoom,
-            playerData.beforeFinalBoss
+            playerData.beforeFirstBossDialogue,
+            playerData.sawClawDialogue,
+            playerData.beforeFirstFightRoomDialogue,
+            playerData.beforeFinalBossDialogue,
+            playerData.lastRoomDialogue
         );
     }
 
@@ -471,26 +475,32 @@ public class PlayerModel
 
     public bool SetBeforeFirstBoss(bool value)
     {
-        BeforeFirstBoss = value;
-        return BeforeFirstBoss;
+        BeforeFirstBossDialogue = value;
+        return BeforeFirstBossDialogue;
     }
 
     public bool SetSawClaw(bool value)
     {
-        SawClaw = value;
-        return SawClaw;
+        SawClawDialogue = value;
+        return SawClawDialogue;
     }
 
     public bool SetBeforeFirstFightRoom(bool value)
     {
-        BeforeFirstFightRoom = value;
-        return BeforeFirstFightRoom;
+        BeforeFirstFightRoomDialogue = value;
+        return BeforeFirstFightRoomDialogue;
     }
 
     public bool SetBeforeFinalBoss(bool value)
     {
-        BeforeFinalBoss = value;
-        return BeforeFinalBoss;
+        BeforeFinalBossDialogue = value;
+        return BeforeFinalBossDialogue;
+    }
+
+    public bool SetLastRoom(bool value)
+    {
+        LastRoomDialogue = value;
+        return LastRoomDialogue;
     }
 
     #endregion
@@ -539,10 +549,11 @@ public class PlayerModel
         data.WallJumpEducation = WallJumpEducation;
         data.AttackEducation = AttackEducation;
 
-        data.BeforeFirstBoss = BeforeFirstBoss;
-        data.SawClaw = SawClaw;
-        data.BeforeFirstFightRoom = BeforeFirstFightRoom;
-        data.BeforeFinalBoss = BeforeFinalBoss;
+        data.BeforeFirstBossDialogue = BeforeFirstBossDialogue;
+        data.SawClawDialogue = SawClawDialogue;
+        data.BeforeFirstFightRoomDialogue = BeforeFirstFightRoomDialogue;
+        data.BeforeFinalBossDialogue = BeforeFinalBossDialogue;
+        data.LastRoomDialogue = LastRoomDialogue;
     }
 
     public void Load(PlayerSaveData data)
@@ -587,10 +598,11 @@ public class PlayerModel
         WallJumpEducation = data.WallJumpEducation;
         AttackEducation = data.AttackEducation;
 
-        BeforeFirstBoss = data.BeforeFirstBoss;
-        SawClaw = data.SawClaw;
-        BeforeFirstFightRoom = data.BeforeFirstFightRoom;
-        BeforeFinalBoss = data.BeforeFinalBoss;
+        BeforeFirstBossDialogue = data.BeforeFirstBossDialogue;
+        SawClawDialogue = data.SawClawDialogue;
+        BeforeFirstFightRoomDialogue = data.BeforeFirstFightRoomDialogue;
+        BeforeFinalBossDialogue = data.BeforeFinalBossDialogue;
+        LastRoomDialogue = data.LastRoomDialogue;
     }
 
     #endregion
@@ -639,8 +651,9 @@ public struct PlayerSaveData
     public bool WallJumpEducation;
     public bool AttackEducation;
 
-    public bool BeforeFirstBoss;
-    public bool SawClaw;
-    public bool BeforeFirstFightRoom;
-    public bool BeforeFinalBoss;
+    public bool BeforeFirstBossDialogue;
+    public bool SawClawDialogue;
+    public bool BeforeFirstFightRoomDialogue;
+    public bool BeforeFinalBossDialogue;
+    public bool LastRoomDialogue;
 }

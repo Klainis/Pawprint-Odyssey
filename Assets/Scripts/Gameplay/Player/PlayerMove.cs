@@ -1,3 +1,4 @@
+using GlobalEnums;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -135,6 +136,7 @@ public class PlayerMove : MonoBehaviour
     public int TurnCoefficient { get { return turnCoefficient; } set { turnCoefficient = value; } }
     public bool CanMove { get { return canMove; } set { canMove = value; } }
     public bool IsMoving { get; private set; }
+    public float InitialGravityScale { get { return _initialGravityScale; } }
 
     public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
     public bool IsJumping { get { return isJumping; } set { isJumping = value; } }
@@ -183,6 +185,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DIALOGUE)
+        {
+            return;
+        }
+
         lastOnGroundTime -= Time.deltaTime;
         lastPressedJumpTime -= Time.deltaTime;
 
@@ -195,9 +202,9 @@ public class PlayerMove : MonoBehaviour
         //Debug.Log($"Is WallRunning: {isWallRunning}");
         //Debug.Log($"Is Wall: {isWall}");
 
-        if (Physics2D.Raycast(groundCheck1.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
-            Physics2D.Raycast(groundCheck2.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround) ||
-            Physics2D.Raycast(groundCheck3.position, Vector2.down, PlayerMove.groundCheckRadius, whatIsGround))
+        if (Physics2D.Raycast(groundCheck1.position, Vector2.down, groundCheckRadius, whatIsGround) ||
+            Physics2D.Raycast(groundCheck2.position, Vector2.down, groundCheckRadius, whatIsGround) ||
+            Physics2D.Raycast(groundCheck3.position, Vector2.down, groundCheckRadius, whatIsGround))
         {
             isGrounded = true;
             lastOnGroundTime = coyoteTime;
@@ -244,6 +251,12 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DIALOGUE)
+        {
+            isDashing = false;
+            return;
+        }
+
         isWall = false;
 
         if (!isGrounded)
@@ -254,8 +267,8 @@ public class PlayerMove : MonoBehaviour
                 playerAnimation.SetBoolIsFall(true);
             }
 
-            var leftHit = Physics2D.Raycast(wallCheckRight.position, Vector2.left, PlayerMove.groundCheckRadius, whatIsGround);
-            var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, PlayerMove.groundCheckRadius, whatIsGround);
+            var leftHit = Physics2D.Raycast(wallCheckRight.position, Vector2.left, groundCheckRadius, whatIsGround);
+            var rightHit = Physics2D.Raycast(wallCheckRight.position, Vector2.right, groundCheckRadius, whatIsGround);
             isWall = leftHit || rightHit;
 
             if (isWall)

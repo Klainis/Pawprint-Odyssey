@@ -10,6 +10,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float attackCheckRadius = 1f;
     [SerializeField] private float attackSeriesTimeout = 0.9f;
     [SerializeField] private int maxAttackSeriesCount = 3;
+    [SerializeField] private Transform attackCheck;
 
     //[Header("Particles")]
     //[SerializeField] private ParticleSystem _attackParticle;
@@ -22,7 +23,6 @@ public class PlayerAttack : MonoBehaviour
     private PlayerView playerView;
     private PlayerAnimation playerAnimation;
     private PlayerMana playerMana;
-    private Transform attackCheck;
 
     //const float attackCheckRadius = 1.1f;
     private float lastAttackTime;
@@ -62,8 +62,6 @@ public class PlayerAttack : MonoBehaviour
         playerMana = GetComponent<PlayerMana>();
         playerView = GetComponent<PlayerView>();
         playerAnimation = GetComponent<PlayerAnimation>();
-
-        attackCheck = transform.Find("AttackCheck");
     }
 
     private void Update()

@@ -23,6 +23,8 @@ public class PimenTalk : MonoBehaviour, ITalkable
     public DialogueText BeforeFinalBossDialogueText;
     public DialogueText WinLastBossDialogueText;
     public DialogueText LastRoomDialogueText;
+    public DialogueText DontHaveAllArtifactDialogueText;
+    public DialogueText EndingDialogueText;
 
     private GameObject _player;
     private GameObject _pimen;
@@ -144,7 +146,20 @@ public class PimenTalk : MonoBehaviour, ITalkable
     public void LastRoom()
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
+        dialogueController.isFinalDialogue = true;
         Talk(LastRoomDialogueText);
+    }
+
+    public void Ending()
+    {
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(EndingDialogueText);
+    }
+
+    public void DontHaveAllArtifact()
+    {
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(DontHaveAllArtifactDialogueText);
     }
 
     private IEnumerator WalkAwayFromNPC(Vector3 initialPlayerPosition, DialogueText diaogueText)

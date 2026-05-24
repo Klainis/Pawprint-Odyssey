@@ -134,6 +134,11 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("IsParrying", value);
     }
 
+    public void SetBoolIsGiveArtifact(bool value)
+    {
+        animator.SetBool("IsGiveArtifact", value);
+    }
+
     public void SetTriggerAttack(int attackNum)
     {
         endSlashAnimation.SetActiveSlashObject();

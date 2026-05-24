@@ -4,8 +4,8 @@ using UnityEngine.Audio;
 
 public class MusicHandler : MonoBehaviour
 {
-    private static MusicHandler instance;
-    public static MusicHandler Instance {  get { return instance; } }
+    private static MusicHandler _instance;
+    public static MusicHandler Instance {  get { return _instance; } }
 
     [Header("Music")]
     [SerializeField] private AudioClip _mainMusicClip;
@@ -27,12 +27,12 @@ public class MusicHandler : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
+        if (_instance != null)
         {
             Destroy(gameObject);
             return;
         }
-        instance = this;
+        _instance = this;
 
         audioMaster.SetFloat("MasterVolume", -80f);
 
@@ -51,14 +51,14 @@ public class MusicHandler : MonoBehaviour
 
     public void AudioFadeOut()
     {
-        Debug.Log("AUDIO FADE IN");
+        Debug.Log("AUDIO FADE OUT");
         audioMaster.GetFloat("MasterVolume", out float currentDB);
         StartCoroutine(FadeAudio(currentDB, -80, fadeDuration));
     }
 
     public void AudioFadeIn()
     {
-        Debug.Log("AUDIO FADE OUT");
+        Debug.Log("AUDIO FADE IN");
         audioMaster.GetFloat("MasterVolume", out float currentDB);
         StartCoroutine(FadeAudio(currentDB, 0, fadeDuration));
     }

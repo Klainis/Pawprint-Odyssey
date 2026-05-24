@@ -6282,6 +6282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_08
   entryGate: bottom1
+  finalTransition: 0
 --- !u!4 &492777237
 Transform:
   m_ObjectHideFlags: 0
@@ -15448,6 +15449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_05
   entryGate: left1
+  finalTransition: 0
 --- !u!1 &629290755
 GameObject:
   m_ObjectHideFlags: 0
@@ -17481,6 +17483,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 819751238}
+  - {fileID: 1185904404}
   - {fileID: 1454183691}
   m_Father: {fileID: 293195461}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18018,7 +18021,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.73
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18331,6 +18334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_03
   entryGate: top1
+  finalTransition: 0
 --- !u!4 &852624913
 Transform:
   m_ObjectHideFlags: 0
@@ -21658,6 +21662,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_04
   entryGate: top2
+  finalTransition: 0
 --- !u!1001 &1094854117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24799,6 +24804,68 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &1185904403
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 753827822}
+    m_Modifications:
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 32.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99396175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.10972734
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -12.599
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001453215907155225, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+      propertyPath: m_Name
+      value: LEAFS Particle (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+--- !u!4 &1185904404 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4001453215907155224, guid: b413c6ee192b5734085fbac9c2a4a6b1, type: 3}
+  m_PrefabInstance: {fileID: 1185904403}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1191877022
 GameObject:
   m_ObjectHideFlags: 0
@@ -28649,6 +28716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TransitionPoint
   targetScene: F_Room_07
   entryGate: right1
+  finalTransition: 0
 --- !u!4 &1452378364
 Transform:
   m_ObjectHideFlags: 0

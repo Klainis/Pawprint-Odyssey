@@ -285,6 +285,18 @@ public class PlayerInput : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DIALOGUE)
+        {
+            horizontalMove = 0;
+            verticalMove = 0;
+            jump = false;
+            dash = false;
+            grab = false;
+            run = false;
+            return;
+        }
+
+
         playerMove.Movement(verticalMove * Time.fixedDeltaTime, horizontalMove * Time.fixedDeltaTime, jump, dash, grab, run);
 
         if (jump)

@@ -11,6 +11,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NPCNameText;
     [SerializeField] private TextMeshProUGUI NPCDialogueText;
 
+    public bool isFinalDialogue = false;
+
     private Queue<LineData> paragraphs = new Queue<LineData>();
     private LineData _currentLine;
 
@@ -75,7 +77,7 @@ public class DialogueController : MonoBehaviour
     {
         GameManager.Instance.SetGameState(GameState.DIALOGUE);
 
-        PlayerView.Instance.StopPlayer();
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
         PlayerAnimation.Instance.ResetAnimatorParameters();
 
         if (!gameObject.activeSelf)
@@ -113,13 +115,8 @@ public class DialogueController : MonoBehaviour
     {
         _conversationEnded = false;
 
-        if (gameObject.activeSelf)
-        {
-            gameObject.SetActive(false);
-        }
-
         var pimen = GameObject.FindGameObjectWithTag("Pimen");
-        if (pimen != null)
+        if (pimen != null && !isFinalDialogue)
         {
             pimen.GetComponent<PimenMove>().enabled = true;
             pimen.GetComponent<PimenTalk>().IsPimenTalk = false;
@@ -130,9 +127,39 @@ public class DialogueController : MonoBehaviour
         {
             mnemir.GetComponent<MnemirTalk>().IsMnemirTalk = false;
         }
+        //GameManager.Instance.SetGameState(GameState.PLAYING);
+        //PlayerView.Instance.FreezePlayerWithDisableMove(false);
+        if (isFinalDialogue)
+        {
+            isFinalDialogue = false;
+            StartArtifactScene();
+        }
+        else
+        {
+            GameManager.Instance.SetGameState(GameState.PLAYING);
+            PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
-        GameManager.Instance.SetGameState(GameState.PLAYING);
-        PlayerView.Instance.FreezePlayerWithDisableMove(false);
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+    }
+
+    private void StartArtifactScene()
+    {
+        if (!PlayerView.Instance.PlayerModel.FacingRight)
+        {
+            PlayerMove.Instance.CallTurn();
+        }
+
+        EndGameManager.Instance.GiveArtifactScene();
+
+        if (gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator TypeDialogueText(string p)
