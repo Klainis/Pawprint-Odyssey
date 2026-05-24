@@ -75,6 +75,9 @@ public class DialogueController : MonoBehaviour
     {
         GameManager.Instance.SetGameState(GameState.DIALOGUE);
 
+        PlayerView.Instance.StopPlayer();
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+
         if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
@@ -129,6 +132,7 @@ public class DialogueController : MonoBehaviour
         }
 
         GameManager.Instance.SetGameState(GameState.PLAYING);
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
     }
 
     private IEnumerator TypeDialogueText(string p)

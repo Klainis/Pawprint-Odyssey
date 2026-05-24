@@ -87,8 +87,6 @@ public class EntryPoint : MonoBehaviour
     private PlayerMana playerMana;
     private TransitionFade fadeScript;
     public Image manaBarImage { get; private set; }
-    private Canvas componentCanvas;
-    private Canvas componentTransitionCanvas;
     private CanvasScaler componentCanvasScaler;
 
     private static EntryPoint instance;
@@ -261,7 +259,7 @@ public class EntryPoint : MonoBehaviour
         if (pauseMenuCanvasPrefab != null)
         {
             _pauseMenuCanvasInstance = Instantiate(pauseMenuCanvasPrefab);
-            SetCanvasParamets(_pauseMenuCanvasInstance, 50);
+            SetCanvasParamets(_pauseMenuCanvasInstance, 50, RenderMode.ScreenSpaceOverlay);
             _pauseMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_pauseMenuCanvasInstance);
             GameManager.Instance.SetPauseMenuCanvasInstance(_pauseMenuCanvasInstance);
@@ -270,7 +268,7 @@ public class EntryPoint : MonoBehaviour
         if (optionsMenuCanvasPrefab != null)
         {
             _optionsMenuCanvasInstance = Instantiate(optionsMenuCanvasPrefab);
-            SetCanvasParamets(_optionsMenuCanvasInstance, 50);
+            SetCanvasParamets(_optionsMenuCanvasInstance, 50, RenderMode.ScreenSpaceOverlay);
             _optionsMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_optionsMenuCanvasInstance);
             GameManager.Instance.SetOptionsMenuCanvasInstance(_optionsMenuCanvasInstance);
@@ -279,7 +277,7 @@ public class EntryPoint : MonoBehaviour
         if (controlsMenuCanvasPrefab != null)
         {
             _controlsMenuCanvasInstance = Instantiate(controlsMenuCanvasPrefab);
-            SetCanvasParamets(_controlsMenuCanvasInstance, 50);
+            SetCanvasParamets(_controlsMenuCanvasInstance, 50, RenderMode.ScreenSpaceOverlay);
             _controlsMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_controlsMenuCanvasInstance);
             GameManager.Instance.SetControlsMenuCanvasInstance(_controlsMenuCanvasInstance);
@@ -288,7 +286,7 @@ public class EntryPoint : MonoBehaviour
         if (controlsGamepadMenuCanvasPrefab != null)
         {
             _controlsGamepadMenuCanvasInstance = Instantiate(controlsGamepadMenuCanvasPrefab);
-            SetCanvasParamets(_controlsGamepadMenuCanvasInstance, 50);
+            SetCanvasParamets(_controlsGamepadMenuCanvasInstance, 50, RenderMode.ScreenSpaceOverlay);
             _controlsGamepadMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_controlsGamepadMenuCanvasInstance);
             GameManager.Instance.SetControlsGamepadMenuCanvasInstance(_controlsGamepadMenuCanvasInstance);
@@ -297,7 +295,7 @@ public class EntryPoint : MonoBehaviour
         if (controlsKeyboardMenuCanvasPrefab != null)
         {
             _controlsKeyboardMenuCanvasInstance = Instantiate(controlsKeyboardMenuCanvasPrefab);
-            SetCanvasParamets(_controlsKeyboardMenuCanvasInstance, 50);
+            SetCanvasParamets(_controlsKeyboardMenuCanvasInstance, 50, RenderMode.ScreenSpaceOverlay);
             _controlsKeyboardMenuCanvasInstance.SetActive(false);
             DontDestroyOnLoad(_controlsKeyboardMenuCanvasInstance);
             GameManager.Instance.SetControlsKeyboardMenuCanvasInstance(_controlsKeyboardMenuCanvasInstance);
@@ -360,7 +358,7 @@ public class EntryPoint : MonoBehaviour
     private void InitializeCanvas()
     {
         _canvasInstance = Instantiate(canvasPrefab);
-        SetCanvasParamets(_canvasInstance, 0);
+        SetCanvasParamets(_canvasInstance, 0, RenderMode.ScreenSpaceCamera);
         DontDestroyOnLoad(_canvasInstance);
 
         if (InitializeManager.Instance != null)
@@ -564,28 +562,31 @@ public class EntryPoint : MonoBehaviour
             _manaBarInstance.SetActive(false);
     }
 
-    private void SetCanvasParamets(GameObject canvasInstance, int sortOrder)
+    private void SetCanvasParamets(GameObject canvasInstance, int sortOrder, RenderMode renderMode)
     {
-        componentCanvas = canvasInstance.GetComponent<Canvas>();
-        componentCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        //componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+        Canvas componentCanvas = canvasInstance.GetComponent<Canvas>();
+        componentCanvas.renderMode = renderMode;
+        if (renderMode == RenderMode.ScreenSpaceCamera)
+        {
+            componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+        }
         componentCanvas.sortingOrder = sortOrder;
     }
 
-    private void SetCanvasCameraParamets(GameObject canvasInstance, int sortOrder)
-    {
-        componentCanvas = canvasInstance.GetComponent<Canvas>();
-        componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-        componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
-        componentCanvas.sortingOrder = sortOrder;
-    }
+    //private void SetCanvasCameraParamets(GameObject canvasInstance, int sortOrder)
+    //{
+    //    componentCanvas = canvasInstance.GetComponent<Canvas>();
+    //    componentCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+    //    componentCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
+    //    componentCanvas.sortingOrder = sortOrder;
+    //}
 
     private void SetTransitionCanvasParamets()
     {
-        componentTransitionCanvas = _transitionCanvasInstance.GetComponent<Canvas>();
+        var componentTransitionCanvas = _transitionCanvasInstance.GetComponent<Canvas>();
         //componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceCamera;
         //componentTransitionCanvas.worldCamera = _mainCameraInstance.GetComponent<Camera>();
-        componentCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        componentTransitionCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         componentTransitionCanvas.sortingOrder = 1000;
     }
 

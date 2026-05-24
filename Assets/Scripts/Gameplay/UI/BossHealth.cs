@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BossHealth : MonoBehaviour
 {
     [SerializeField] private GameObject _health;
+    [SerializeField] private string _bossName;
     [SerializeField] private Transform _canvas;
 
     private SpiritGuideView _sgView;
@@ -31,6 +33,12 @@ public class BossHealth : MonoBehaviour
 
         _bossHealth = Instantiate(_health, _canvas);
         _bossHealthBar = _bossHealth.transform.Find("BossHealthBar").GetComponent<Image>();
+
+        var bossName = _bossHealth.gameObject.GetComponentInChildren<TextMeshProUGUI>();
+        if (bossName != null)
+        {
+            bossName.text = _bossName;
+        }
     }
 
     public void HitBoss(bool owlBoss, bool sgBoss)

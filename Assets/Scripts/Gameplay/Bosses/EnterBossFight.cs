@@ -52,6 +52,15 @@ public class EnterBossFight : MonoBehaviour
 
                 if (!_guideView.Model.IsDead)
                 {
+                    if ((_spiritGuide.transform.position.x < PlayerView.Instance.gameObject.transform.position.x) && PlayerView.Instance.PlayerModel.FacingRight)
+                    {
+                        PlayerMove.Instance.CallTurn();
+                    }
+                    else if ((_spiritGuide.transform.position.x > PlayerView.Instance.gameObject.transform.position.x) && !PlayerView.Instance.PlayerModel.FacingRight)
+                    {
+                        PlayerMove.Instance.CallTurn();
+                    }
+
                     StartCoroutine(ShowBoss());
                 }
             }
@@ -71,6 +80,15 @@ public class EnterBossFight : MonoBehaviour
 
                 if (!_guardianOwlView.Model.IsDead)
                 {
+                    if ((_guardianOwl.transform.position.x < PlayerView.Instance.gameObject.transform.position.x) && PlayerView.Instance.PlayerModel.FacingRight)
+                    {
+                        PlayerMove.Instance.CallTurn();
+                    }
+                    else if ((_guardianOwl.transform.position.x > PlayerView.Instance.gameObject.transform.position.x) && !PlayerView.Instance.PlayerModel.FacingRight)
+                    {
+                        PlayerMove.Instance.CallTurn();
+                    }
+
                     StartCoroutine(ShowBoss());
                 }
             }
@@ -99,10 +117,6 @@ public class EnterBossFight : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         PlayerView.Instance.FreezePlayerWithDisableMove(true);
         PlayerAnimation.Instance.ResetAnimatorParameters();
-        if (PlayerView.Instance.PlayerModel.FacingRight)
-        {
-            PlayerMove.Instance.CallTurn();
-        }
 
         yield return new WaitForSeconds(1f);
 

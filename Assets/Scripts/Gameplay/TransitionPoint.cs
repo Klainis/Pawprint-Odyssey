@@ -7,6 +7,7 @@ public class TransitionPoint : MonoBehaviour
     [Header("Distanation Scene")]
     [SerializeField] private string targetScene;
     [SerializeField] private string entryGate;
+    [SerializeField] private bool finalTransition = false;
 
     private PlayerInput playerInput;
     private PlayerView playerView;
@@ -141,6 +142,13 @@ public class TransitionPoint : MonoBehaviour
             {
                 activated = true;
             }
+        }
+
+        if (finalTransition)
+        {
+            activated = false;
+
+            EndGameManager.Instance.EnableEndGameScreen();
         }
 
         Debug.Log($"[Transition] WalkIntoGate END | activated: {activated}");

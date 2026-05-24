@@ -86,7 +86,10 @@ public class PlayerChargeAttack : MonoBehaviour
 
         if (_isCharging && isHeld)
         {
-            if (GameManager.Instance.GameState == GameState.ENTERING_LEVEL)
+            if (GameManager.Instance.GameState == GameState.ENTERING_LEVEL 
+                || GameManager.Instance.GameState == GameState.DIALOGUE 
+                || GameManager.Instance.GameState == GameState.DEAD
+                || GameManager.Instance.GameState == GameState.CUTSCENE)
             {
                 StopCharging();
                 return;

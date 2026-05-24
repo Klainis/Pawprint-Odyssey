@@ -12,7 +12,7 @@ public class GuardianOwlMove : MonoBehaviour
     private GuardianOwlView _guardianOwlView;
 
     private GameObject _player;
-    private CircleCollider2D _bossCollider;
+    private CapsuleCollider2D _bossCollider;
 
     private float _realMoveModifier = 1;
     private bool _moveToPlayer;
@@ -22,7 +22,7 @@ public class GuardianOwlMove : MonoBehaviour
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
-        _bossCollider = GetComponent<CircleCollider2D>();
+        _bossCollider = GetComponent<CapsuleCollider2D>();
         _player = InitializeManager.Instance.player;
     }
 
@@ -42,7 +42,7 @@ public class GuardianOwlMove : MonoBehaviour
 
     public IEnumerator MoveToPlayer()
     {
-        Vector3 playerPosition = _player.transform.position + new Vector3(0, _bossCollider.radius, 0);
+        Vector3 playerPosition = _player.transform.position + new Vector3(0, _bossCollider.size.x / 2, 0);
 
         if (playerPosition.x < transform.position.x && _facingRight)
         {
@@ -55,8 +55,6 @@ public class GuardianOwlMove : MonoBehaviour
 
         while (true)
         {
-            //float _bossBottomY = transform.position.y - _bossCollider.radius;
-            //Vector3 bossPosition = new Vector3(transform.position.x, _bossBottomY, transform.position.z);
 
             if (Vector3.Distance(transform.position, playerPosition) > 0.3f)
             {
@@ -97,35 +95,13 @@ public class GuardianOwlMove : MonoBehaviour
     }
     private IEnumerator OwlMove(Vector3 targetPosition, float speed)
     {
-        //if (_moveToPlayer)
-        //{
-        //float _bossBottomY = _bossCollider.bounds.min.y;
-        //Vector3 bossPosition = new Vector3(transform.position.x, _bossBottomY, transform.position.z);
-
-        //while (Vector3.Distance(bossPosition, targetPosition) > 0.01f)
-        //{
-        //    transform.position = Vector3.MoveTowards(
-        //        transform.position,
-        //        targetPosition,
-        //        speed * Time.deltaTime);
-        //    Debug.Log($"Target Position {targetPosition}");
-        //    Debug.Log($"Self Position {transform.position}");
-        //    yield return null;
-        //}
-        //    _moveToPlayer = false;
-        //}
-        //else
-        //{
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
         {
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 targetPosition,
                 speed * Time.deltaTime);
-            //Debug.Log($"Target Position {targetPosition}");
-            //Debug.Log($"Self Position {transform.position}");
             yield return null;
         }
-        //}
     }
 }
