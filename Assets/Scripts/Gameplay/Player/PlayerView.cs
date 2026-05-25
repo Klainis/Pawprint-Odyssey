@@ -183,13 +183,9 @@ public class PlayerView : MonoBehaviour
     {
         while (!_playerMove.IsGrounded)
         {
-            //_rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
             yield return null;
         }
 
-        //yield return new WaitForFixedUpdate();
-
-        _rigidBody.linearVelocity = Vector3.zero;
         _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
     }
 

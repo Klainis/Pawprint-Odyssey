@@ -6,6 +6,7 @@ public class PimenMove : MonoBehaviour
 {
     [SerializeField] private Vector3 _baseOffset = new Vector3(-3, 1);
     [SerializeField] private float _smoothMovement = 0.5f;
+    [SerializeField] private float _goOutDuration = 1f;
 
     private Transform _player;
 
@@ -54,7 +55,7 @@ public class PimenMove : MonoBehaviour
             }
 
             Vector3 leavePosition = new Vector3(transform.position.x + (50 * _turnCoefficient), transform.position.y, transform.position.z);
-            transform.position = Vector3.Lerp(transform.position, leavePosition, 5 * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, leavePosition, _goOutDuration * Time.deltaTime);
         }
 
         HandleRotation();

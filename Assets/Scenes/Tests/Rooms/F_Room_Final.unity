@@ -1622,6 +1622,7 @@ MonoBehaviour:
   _lightDoor: {fileID: 1077394976}
   _lightDoorFlashTime: 0.3
   _lightDoorFlashAmount: 17
+  endingSceneName: Ending
 --- !u!4 &88032875
 Transform:
   m_ObjectHideFlags: 0
@@ -30642,6 +30643,7 @@ GameObject:
   - component: {fileID: 421823737}
   - component: {fileID: 421823736}
   - component: {fileID: 421823735}
+  - component: {fileID: 421823738}
   m_Layer: 0
   m_Name: EndGameScreenFx
   m_TagString: Untagged
@@ -30696,7 +30698,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 296c63eca2054034885e0b554fb84c27, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -30744,6 +30746,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 88032875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &421823738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421823734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ad3837f54190446ad7ba0b7a32a3c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EndGameScreen
 --- !u!1 &426991589
 GameObject:
   m_ObjectHideFlags: 0
@@ -48970,7 +48984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3962018192614908, guid: 8197facb08b045a4ab02b72f76351384, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.04
+      value: -23.51
       objectReference: {fileID: 0}
     - target: {fileID: 3962018192614908, guid: 8197facb08b045a4ab02b72f76351384, type: 3}
       propertyPath: m_LocalPosition.y
@@ -49010,7 +49024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 239246256149531083, guid: 8197facb08b045a4ab02b72f76351384, type: 3}
       propertyPath: _wallID
-      value: 19-18
+      value: final-23
       objectReference: {fileID: 0}
     - target: {fileID: 4521961047121131143, guid: 8197facb08b045a4ab02b72f76351384, type: 3}
       propertyPath: m_Name

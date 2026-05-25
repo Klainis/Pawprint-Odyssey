@@ -146,13 +146,14 @@ public class PimenTalk : MonoBehaviour, ITalkable
     public void LastRoom()
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
-        dialogueController.isFinalDialogue = true;
+        dialogueController.isGivenArtifact = true;
         Talk(LastRoomDialogueText);
     }
 
     public void Ending()
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
+        dialogueController.isFinalDialogue = true;
         Talk(EndingDialogueText);
     }
 

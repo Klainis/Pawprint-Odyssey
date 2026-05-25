@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class EndGameManager : MonoBehaviour
@@ -29,6 +30,9 @@ public class EndGameManager : MonoBehaviour
     public float _lightDoorFlashTime = 0.3f;
     public float _lightDoorFlashAmount = 17f;
 
+    [Header("Scene Settings")]
+    public string endingSceneName;
+
     private Vignette _vignette;
 
     private GameObject _artifactObjectInstance;
@@ -45,6 +49,7 @@ public class EndGameManager : MonoBehaviour
     private Coroutine _artifactCreaterCoroutine;
     private Coroutine _lightFlashCoroutine;
     private Coroutine _lastDialogueCoroutne;
+    private Coroutine _endingSceneCoroutine;
 
     private void Awake()
     {
@@ -93,7 +98,11 @@ public class EndGameManager : MonoBehaviour
 
         PlayerView.Instance.FreezePlayerWithDisableMove(true);
 
-        StartMoveUp();
+        PlayerAnimation.Instance.SetBoolIsGiveArtifact(true);
+
+        StartCreateArtifact();
+
+        //StartMoveUp();
 
         finalTransition.SetActive(true);
     }
@@ -110,6 +119,13 @@ public class EndGameManager : MonoBehaviour
 
         StartDisableVignette();
         MusicHandler.Instance.AudioFadeOut();
+    }
+
+    public void LoadEndingScene()
+    {
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(endingSceneName);
     }
 
     private void MoveArtifact(GameObject artifactObject, Vector3 startPoint)
@@ -191,6 +207,15 @@ public class EndGameManager : MonoBehaviour
         StartCoroutine(WaitLastDialogue());
     }
 
+    //private void StartEndingScene()
+    //{
+    //    if (_endingSceneCoroutine != null)
+    //    {
+    //        StopCoroutine(_endingSceneCoroutine);
+    //    }
+    //    StartCoroutine(StartEnding());
+    //}
+
     #endregion
 
     #region Coroutines
@@ -243,6 +268,8 @@ public class EndGameManager : MonoBehaviour
 
     private IEnumerator CreateArtifact()
     {
+        yield return new WaitForSeconds(1.7f);
+
         Vector3 startPoint = _player.transform.position;
         yield return new WaitForSeconds(1f);
         int artifactCreated = 0;
@@ -261,9 +288,9 @@ public class EndGameManager : MonoBehaviour
 
         GameManager.Instance.SetGameState(GameState.PLAYING);
         //_playerMove.enabled = true;
-        PlayerAnimation.Instance.ResetAnimatorParameters();
-        PlayerAnimation.Instance.SetBoolIsFall(true);
         PlayerView.Instance.FreezePlayerWithDisableMove(false);
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        //PlayerAnimation.Instance.SetBoolIsFall(true);
 
         StartLastDialogue();
     }
@@ -279,7 +306,7 @@ public class EndGameManager : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            currentFlashAmount = Mathf.Lerp(1f, _initialLightDoorIntensity, (elapsedTime / _lightDoorFlashTime));
+            currentFlashAmount = Mathf.Lerp(_lightDoorFlashAmount, _initialLightDoorIntensity, (elapsedTime / _lightDoorFlashTime));
             _lightDoor.intensity = currentFlashAmount;
 
             yield return null;
@@ -301,6 +328,13 @@ public class EndGameManager : MonoBehaviour
         PimenTalk talk = PimenView.Instance.gameObject.GetComponent<PimenTalk>();
         talk.Ending();
     }
+
+    //private IEnumerator StartEnding()
+    //{
+    //    yield return new WaitForSeconds(8f);
+
+    //    LoadEndingScene();
+    //}
 
     #endregion
 }

@@ -185,10 +185,10 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DIALOGUE)
-        {
-            return;
-        }
+        //if (GameManager.Instance.GameState == GameState.CUTSCENE || GameManager.Instance.GameState == GameState.DIALOGUE)
+        //{
+        //    return;
+        //}
 
         lastOnGroundTime -= Time.deltaTime;
         lastPressedJumpTime -= Time.deltaTime;

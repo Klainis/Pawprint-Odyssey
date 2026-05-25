@@ -12,6 +12,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI NPCDialogueText;
 
     public bool isFinalDialogue = false;
+    public bool isGivenArtifact = false;
 
     private Queue<LineData> paragraphs = new Queue<LineData>();
     private LineData _currentLine;
@@ -116,7 +117,7 @@ public class DialogueController : MonoBehaviour
         _conversationEnded = false;
 
         var pimen = GameObject.FindGameObjectWithTag("Pimen");
-        if (pimen != null && !isFinalDialogue)
+        if (pimen != null && (!isGivenArtifact && !isFinalDialogue))
         {
             pimen.GetComponent<PimenMove>().enabled = true;
             pimen.GetComponent<PimenTalk>().IsPimenTalk = false;
@@ -129,13 +130,14 @@ public class DialogueController : MonoBehaviour
         }
         //GameManager.Instance.SetGameState(GameState.PLAYING);
         //PlayerView.Instance.FreezePlayerWithDisableMove(false);
-        if (isFinalDialogue)
+        if (isGivenArtifact)
         {
-            isFinalDialogue = false;
+            isGivenArtifact = false;
             StartArtifactScene();
         }
         else
         {
+            isFinalDialogue = false;
             GameManager.Instance.SetGameState(GameState.PLAYING);
             PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
