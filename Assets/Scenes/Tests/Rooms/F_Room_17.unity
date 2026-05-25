@@ -4704,6 +4704,78 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5917675070462121451, guid: 8cd8f30104cdc9346848d3cfd74bb913, type: 3}
   m_PrefabInstance: {fileID: 311538305}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &325828589
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 324.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -54.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 297798777935303639, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 4972508292046765134, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_Name
+      value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527275226073818282, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+      propertyPath: m_Creator
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+--- !u!114 &325828590 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3126859424584632616, guid: 5429454619c1ced43a723902d4994bbd, type: 3}
+  m_PrefabInstance: {fileID: 325828589}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e215a6344ab45f47a05960cf4c26697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightDoor
 --- !u!1001 &326053371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34454,6 +34526,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1924806891406630215, guid: 48933110da450ee41b6459f9294b78ee, type: 3}
+      propertyPath: _fightDoor
+      value: 
+      objectReference: {fileID: 325828590}
     - target: {fileID: 5112462994370225742, guid: 48933110da450ee41b6459f9294b78ee, type: 3}
       propertyPath: _topPoint
       value: 
@@ -37032,7 +37108,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1203004764}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -45532,7 +45608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1685729029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47606,7 +47682,7 @@ MonoBehaviour:
   _health: {fileID: 206633505}
   _spiritGuide: {fileID: 0}
   _guardianOwl: {fileID: 206633498}
-  _door: {fileID: 0}
+  _door: {fileID: 325828590}
   _bossCamera: {fileID: 2129297097}
   _showBossTime: 3
 --- !u!61 &1859323914
@@ -50768,3 +50844,4 @@ SceneRoots:
   - {fileID: 2129297096}
   - {fileID: 989355094}
   - {fileID: 1121427256}
+  - {fileID: 325828589}
