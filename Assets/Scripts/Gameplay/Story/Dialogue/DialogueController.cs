@@ -128,8 +128,11 @@ public class DialogueController : MonoBehaviour
         {
             mnemir.GetComponent<MnemirTalk>().IsMnemirTalk = false;
         }
+        
         //GameManager.Instance.SetGameState(GameState.PLAYING);
         //PlayerView.Instance.FreezePlayerWithDisableMove(false);
+        PlayerView.Instance.IsInvincible = false;
+
         if (isGivenArtifact)
         {
             isGivenArtifact = false;
