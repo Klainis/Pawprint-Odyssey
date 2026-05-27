@@ -315,8 +315,8 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
     private void HandlePlayerLeftHitDetected() => StartTelegraph();
     private void HandlePlayerRightHitDetected() => StartTelegraph();
 
-    private void HandlePlayerLeftDetected() => StartTurnCoroutine(true);
-    private void HandlePlayerRightDetected() => StartTurnCoroutine(false);
+    private void HandlePlayerLeftDetected() => StartTurnCoroutine(false);
+    private void HandlePlayerRightDetected() => StartTurnCoroutine(true);
 
     private void StartTelegraph()
     {
@@ -332,7 +332,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
     private void StartTurnCoroutine(bool targetFacingRight)
     {
 
-        if (FacingRight == !targetFacingRight)
+        if (FacingRight == targetFacingRight)
         {
             //Debug.Log("Поворот в туже сторону, куда смотрим");
             if (_waitBeforeTurnCoroutine != null)
@@ -372,7 +372,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         }
         
         //Debug.Log("Разворот");
-        FacingRight = _move.Turn(targetFacingRight);
+        FacingRight = _move.Turn(FacingRight);
         _waitBeforeTurnCoroutine = null;
     }
 
