@@ -4,9 +4,9 @@ public class BulletHandler : MonoBehaviour
 {
 	private int damage = 1;
 
-    void Start()
+    public void SetDamage(int plantDamage)
     {
-		damage = transform.parent.GetComponent<ThornyPlant>().Damage;
+        damage = plantDamage;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -16,7 +16,7 @@ public class BulletHandler : MonoBehaviour
             collision.gameObject.GetComponent<PlayerView>().ApplyDamage(damage, transform.position, gameObject);
 			Destroy(gameObject);
 		}
-		else if (!collision.gameObject.CompareTag("Player"))
+		else if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("EnemyBullet"))
 			Destroy(gameObject);
 	}
 }

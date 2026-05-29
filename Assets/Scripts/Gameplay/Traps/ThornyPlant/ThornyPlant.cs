@@ -3,14 +3,12 @@ using UnityEngine;
 
 public class ThornyPlant : MonoBehaviour {
 
-    #region Variables
+    #region SerializeFields
 
     [Header("Main params")]
     [SerializeField] private float _life = 10;
     [SerializeField] private int _damage = 1;
     [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private GameObject _openForm;
-    [SerializeField] private GameObject _closeForm;
     [SerializeField] private AudioClip _hitClip;
 
     [Header("Shots params")]
@@ -26,6 +24,10 @@ public class ThornyPlant : MonoBehaviour {
     [SerializeField] private ParticleSystem _playerWeaponParticle;
     [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
     [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
+    
+    #endregion
+
+    #region Variables
 
     private ParticleSystem _playerWeaponSimpleSliceAttackParticleInstance;
     private ParticleSystem _playerWeaponLastSliceAttackParticleInstance;
@@ -61,7 +63,7 @@ public class ThornyPlant : MonoBehaviour {
 
     #region Common Methods
 
-    void Awake () {
+    private void Awake () {
         _audioSource = GetComponent<AudioSource>();
         _plantAnimation = GetComponent<TPAnimation>();
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -72,7 +74,7 @@ public class ThornyPlant : MonoBehaviour {
         _shootPoints = transform.Find("ShootPoints");
     }
 	
-	void FixedUpdate () {
+	private void FixedUpdate () {
 		if (_life <= 0)
         {
             StartCoroutine(DestroyEnemy());
@@ -81,13 +83,12 @@ public class ThornyPlant : MonoBehaviour {
         if (_isHitted)
             return;
 
-        _canShoot = (Time.time >= _lastSeriesTime + _timeBetweenSeries)
-                && (Time.time >= _lastOpenTime + _delayAfterOpen);
+        _canShoot = CanShoot();
         if (!_isHidden && _canShoot && !_isShooting)
             StartCoroutine(ShootRoutine());
 	}
 
-    void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
             if (_life > 0)
@@ -96,14 +97,20 @@ public class ThornyPlant : MonoBehaviour {
 
     #endregion
 
+    private bool CanShoot()
+    {
+        return (Time.time >= _lastSeriesTime + _timeBetweenSeries)
+            && (Time.time >= _lastOpenTime + _delayAfterOpen);
+    }
+
     public void ChangeForm(bool toHidden)
     {
         if (gameObject.CompareTag("isDead"))
             return;
 
         _isHidden = toHidden;
-        _openForm.SetActive(!toHidden);
-        _closeForm.SetActive(toHidden);
+        _plantAnimation.SetBoolReveal(!toHidden);
+        _plantAnimation.SetBoolHide(toHidden);
 
         if (!toHidden)
             _lastOpenTime = Time.time;
@@ -114,10 +121,16 @@ public class ThornyPlant : MonoBehaviour {
         for (var i = 0; i < _shootPoints.childCount; i++)
         {
             var shootPoint = _shootPoints.GetChild(i);
-            var bullet = Instantiate(_bulletPrefab, shootPoint.position, shootPoint.rotation, transform);
-            _rigidBody = bullet.GetComponent<Rigidbody2D>();
-            if (_rigidBody != null)
-                _rigidBody.linearVelocity = shootPoint.right * _bulletSpeed;
+
+            var bullet = Instantiate(_bulletPrefab, shootPoint.position, shootPoint.rotation);
+
+            var bulletRb = bullet.GetComponent<Rigidbody2D>();
+            if (bulletRb != null)
+                bulletRb.linearVelocity = shootPoint.right * _bulletSpeed;
+
+            var bulletHandler = bullet.GetComponent<BulletHandler>();
+            if (bulletHandler != null)
+                bulletHandler.SetDamage(_damage);
         }
     }
 
@@ -198,11 +211,22 @@ public class ThornyPlant : MonoBehaviour {
     {
         _isShooting = true;
         _canShoot = false;
+        _plantAnimation.SetBoolAttack(true);
+
+        yield return new WaitForSeconds(0.6f);
+
+        _plantAnimation.SetBoolAttack(false);
+
         for (var i = 0; i < _shotsPerSeries; i++)
         {
             Shoot();
             yield return new WaitForSeconds(_timeBetweenShots);
         }
+
+        ChangeForm(true);
+
+        yield return new WaitForSeconds(0.2f);
+
         _lastSeriesTime = Time.time;
         _isShooting = false;
     }
