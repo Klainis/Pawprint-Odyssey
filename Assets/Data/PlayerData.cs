@@ -79,6 +79,7 @@ public class PlayerData : ScriptableObject
     public bool beforeFirstBossDialogue;
     public bool sawClawDialogue;
     public bool beforeFirstFightRoomDialogue;
+    public bool afterFirstFightRoomDialogue;
     public bool beforeFinalBossDialogue;
     public bool lastRoomDialogue;
 }

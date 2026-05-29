@@ -37,9 +37,10 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
             return;
         }
 
-        if (_afterFirstFightRoom)
+        if (_afterFirstFightRoom && !playerModel.AfterFirstFightRoomDialogue)
         {
             talk.AfterFirstFightRoom();
+            playerModel.SetAfterFirstFightRoom(true);
             return;
         }
 

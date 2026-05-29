@@ -63,7 +63,7 @@ public class CameraVerticalLook : MonoBehaviour
 
         lookVector = PlayerInput.Instance.VectorLookAction;
 
-        float desiredY = lookVector.y > 0? verticalRange : lookVector.y < 0 ? -verticalRange: _initialOffsetY;
+        float desiredY = lookVector.y > 0.5? verticalRange : lookVector.y < -0.5 ? -verticalRange: _initialOffsetY;
 
         targetOffset = new Vector3(transposer.m_TrackedObjectOffset.x, desiredY, transposer.m_TrackedObjectOffset.z);
         if (targetOffset != transposer.m_TrackedObjectOffset && !CameraManager.Instance.PanStarting)
