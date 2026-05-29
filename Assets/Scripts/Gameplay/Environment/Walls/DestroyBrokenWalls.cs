@@ -43,7 +43,7 @@ public class DestroyBrokenWalls : MonoBehaviour
             }
         }
     }
-    private void InstantiateDoorLight()
+    public void InstantiateDoorLight()
     {
         var rotaion = Quaternion.identity;
         var positionOffset = new Vector3(0.4f, 0, 0);
