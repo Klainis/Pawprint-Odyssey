@@ -23,6 +23,8 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _telegraphTime = 0.25f;
 
+    [SerializeField] private Collider2D _weaponCollider;
+
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
@@ -92,6 +94,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         _money = FindAnyObjectByType<InstantiateMoney>();
 
         _defaultConstraints = _rb.constraints;
+        _weaponCollider.enabled = false;
     }
 
     private void FixedUpdate()
@@ -388,6 +391,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         _attack.IsAttacking = true;
         _animation.SetBoolMove(false);
         _animation.SetBoolAttack(true);
+        _weaponCollider.enabled = true;
 
         _rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
@@ -399,6 +403,8 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         _attack.UpdateLastAttackTime();
         _attack.IsAttacking = false;
         _animation.SetBoolAttack(false);
+        _weaponCollider.enabled = false;
+
         _telegraphCoroutine = null;
     }
 

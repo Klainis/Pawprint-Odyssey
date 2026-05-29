@@ -11,6 +11,7 @@ public class RootGuardianAttack : MonoBehaviour
     [SerializeField] private float _playerDetectDist = 5f;
     [SerializeField] private float _attackCooldown = 2f;
     [SerializeField] private float _telegraphTime = 0.8f;
+    [SerializeField] private Collider2D _weaponCollider;
 
     [Header("Attack Check Transform")]
     [SerializeField] private Transform _attackCheck;
@@ -56,6 +57,7 @@ public class RootGuardianAttack : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
 
         _defaultConstraints = _rb.constraints;
+        _weaponCollider.enabled = false;
     }
 
     private void FixedUpdate()
@@ -104,6 +106,7 @@ public class RootGuardianAttack : MonoBehaviour
 
         yield return new WaitForSeconds(_telegraphTime);
 
+        _weaponCollider.enabled = true;
         //renderer.color = _defaultColor;
         _rb.constraints = _defaultConstraints;
         _animation.SetBoolTelegraph(false);
@@ -111,6 +114,7 @@ public class RootGuardianAttack : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
+        _weaponCollider.enabled = false;
         _animation.SetBoolAttack(false);
         UpdateLastAttackTime();
         IsAttacking = false;
