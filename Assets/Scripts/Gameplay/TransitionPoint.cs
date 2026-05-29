@@ -121,7 +121,7 @@ public class TransitionPoint : MonoBehaviour
 
             if (gatePosition == GatePosition.top)
             {
-                Vector2 targetPosition = new Vector2(playerPosition.x, gateBounds.max.y/*playerPosition.y + 200*/);
+                Vector2 targetPosition = new Vector2(/*playerPosition.x*/gateBounds.center.x, gateBounds.max.y/*playerPosition.y + 200*/);
 
                 while (Vector2.Distance(playerPosition, targetPosition) > 0.01f)
                 {

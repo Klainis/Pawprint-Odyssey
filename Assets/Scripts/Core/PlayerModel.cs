@@ -52,6 +52,7 @@ public class PlayerModel
     public bool BeforeFirstBossDialogue { get; private set; }
     public bool SawClawDialogue { get; private set; }
     public bool BeforeFirstFightRoomDialogue { get; private set; }
+    public bool AfterFirstFightRoomDialogue { get; private set; }
     public bool BeforeFinalBossDialogue { get; private set; }
     public bool LastRoomDialogue { get; private set; }
 
@@ -75,7 +76,7 @@ public class PlayerModel
                         bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects,
                         List<string> completedFightRooms,
                         bool moveEducation, bool wallJumpEducation, bool attackEducation,
-                        bool beforeFirstBoss, bool sawClaw, bool beforeFirstFightRoom, bool beforeFinalBoss, bool lastRoom)
+                        bool beforeFirstBoss, bool sawClaw, bool beforeFirstFightRoom, bool afterFirstFightRoom, bool beforeFinalBoss, bool lastRoom)
     {
         MaxLife = Math.Max(1, maxLife);
         Life = Math.Max(1, Math.Min(life, MaxLife));
@@ -128,6 +129,7 @@ public class PlayerModel
         BeforeFirstBossDialogue = beforeFirstBoss;
         SawClawDialogue = sawClaw;
         BeforeFirstFightRoomDialogue = beforeFirstFightRoom;
+        AfterFirstFightRoomDialogue = afterFirstFightRoom;
         BeforeFinalBossDialogue = beforeFinalBoss;
         LastRoomDialogue = lastRoom;
     }
@@ -178,6 +180,7 @@ public class PlayerModel
             data.BeforeFirstBossDialogue,
             data.SawClawDialogue,
             data.BeforeFirstFightRoomDialogue,
+            data.AfterFirstFightRoomDialogue,
             data.BeforeFinalBossDialogue,
             data.LastRoomDialogue
         );
@@ -229,6 +232,7 @@ public class PlayerModel
             playerData.beforeFirstBossDialogue,
             playerData.sawClawDialogue,
             playerData.beforeFirstFightRoomDialogue,
+            playerData.afterFirstFightRoomDialogue,
             playerData.beforeFinalBossDialogue,
             playerData.lastRoomDialogue
         );
@@ -491,6 +495,12 @@ public class PlayerModel
         return BeforeFirstFightRoomDialogue;
     }
 
+    public bool SetAfterFirstFightRoom(bool value)
+    {
+        AfterFirstFightRoomDialogue = value;
+        return AfterFirstFightRoomDialogue;
+    }
+
     public bool SetBeforeFinalBoss(bool value)
     {
         BeforeFinalBossDialogue = value;
@@ -552,6 +562,7 @@ public class PlayerModel
         data.BeforeFirstBossDialogue = BeforeFirstBossDialogue;
         data.SawClawDialogue = SawClawDialogue;
         data.BeforeFirstFightRoomDialogue = BeforeFirstFightRoomDialogue;
+        data.AfterFirstFightRoomDialogue = AfterFirstFightRoomDialogue;
         data.BeforeFinalBossDialogue = BeforeFinalBossDialogue;
         data.LastRoomDialogue = LastRoomDialogue;
     }
@@ -601,6 +612,7 @@ public class PlayerModel
         BeforeFirstBossDialogue = data.BeforeFirstBossDialogue;
         SawClawDialogue = data.SawClawDialogue;
         BeforeFirstFightRoomDialogue = data.BeforeFirstFightRoomDialogue;
+        AfterFirstFightRoomDialogue = data.AfterFirstFightRoomDialogue;
         BeforeFinalBossDialogue = data.BeforeFinalBossDialogue;
         LastRoomDialogue = data.LastRoomDialogue;
     }
@@ -654,6 +666,7 @@ public struct PlayerSaveData
     public bool BeforeFirstBossDialogue;
     public bool SawClawDialogue;
     public bool BeforeFirstFightRoomDialogue;
+    public bool AfterFirstFightRoomDialogue;
     public bool BeforeFinalBossDialogue;
     public bool LastRoomDialogue;
 }
