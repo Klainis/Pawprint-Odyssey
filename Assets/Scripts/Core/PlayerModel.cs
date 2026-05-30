@@ -39,6 +39,7 @@ public class PlayerModel
     public bool StartCutSceneShowed { get; private set; }
 
     public bool MeetPimen { get; private set; }
+    public bool HasMnemirKey {  get; private set; }
     public bool HasQuestMnemir { get; private set; }
     public bool MnemirQuestRewarded { get; private set; }
     public List<string> MnemirQuestCollectedObjects { get; private set; }
@@ -73,7 +74,7 @@ public class PlayerModel
                         bool spiritGuideKilled, bool guardianOwlKilled,
                         bool startCutSceneShowed,
                         bool meetPimen,
-                        bool hasQuestMnemir, bool mnemirQuestRewarded, List<string> mnemirQuestCollectedObjects,
+                        bool hasQuestMnemir, bool mnemirQuestRewarded, bool hasMnemirKey,List<string> mnemirQuestCollectedObjects,
                         List<string> completedFightRooms,
                         bool moveEducation, bool wallJumpEducation, bool attackEducation,
                         bool beforeFirstBoss, bool sawClaw, bool beforeFirstFightRoom, bool afterFirstFightRoom, bool beforeFinalBoss, bool lastRoom)
@@ -118,6 +119,7 @@ public class PlayerModel
         MeetPimen = meetPimen;
         HasQuestMnemir = hasQuestMnemir;
         MnemirQuestRewarded = mnemirQuestRewarded;
+        HasMnemirKey = hasMnemirKey;
         MnemirQuestCollectedObjects = mnemirQuestCollectedObjects;
 
         CompletedFightRooms = completedFightRooms;
@@ -170,6 +172,7 @@ public class PlayerModel
             data.MeetPimen,
             data.HasQuestMnemir,
             data.MnemirQuestRewarded,
+            data.HasMnemirKey,
             data.MnemirQuestCollectedObjects,
             data.CompletedFightRooms,
             
@@ -222,6 +225,7 @@ public class PlayerModel
             playerData.meetPimen,
             playerData.hasQuestMnemir,
             playerData.mnemirQuestRewarded,
+            playerData.hasMnemirKey,
             playerData.mnemirQuestCollectedObjects.ToList(),
             playerData.completedFightRooms.ToList(),
 
@@ -448,6 +452,12 @@ public class PlayerModel
         return MnemirQuestRewarded;
     }
 
+    public bool SetHasMnemirKey()
+    {
+        HasMnemirKey = true;
+        return HasMnemirKey;
+    }
+
     public void AddObjectToMnemirQuestCollectedObjects(string name)
     {
         MnemirQuestCollectedObjects.Add(name);
@@ -552,6 +562,7 @@ public class PlayerModel
         data.MeetPimen = MeetPimen;
         data.HasQuestMnemir = HasQuestMnemir;
         data.MnemirQuestRewarded = MnemirQuestRewarded;
+        data.HasMnemirKey = HasMnemirKey;
         data.MnemirQuestCollectedObjects = MnemirQuestCollectedObjects;
         data.CompletedFightRooms = CompletedFightRooms;
 
@@ -602,6 +613,7 @@ public class PlayerModel
         MeetPimen = data.MeetPimen;
         HasQuestMnemir = data.HasQuestMnemir;
         MnemirQuestRewarded = data.MnemirQuestRewarded;
+        HasMnemirKey = data.HasMnemirKey;
         MnemirQuestCollectedObjects = data.MnemirQuestCollectedObjects;
         CompletedFightRooms = data.CompletedFightRooms;
 
@@ -656,6 +668,7 @@ public struct PlayerSaveData
     public bool MeetPimen;
     public bool HasQuestMnemir;
     public bool MnemirQuestRewarded;
+    public bool HasMnemirKey;
     public List<string> MnemirQuestCollectedObjects;
     public List<string> CompletedFightRooms;
 

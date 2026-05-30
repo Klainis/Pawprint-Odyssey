@@ -65,6 +65,7 @@ public class PlayerData : ScriptableObject
     [Header("Quests")]
     public bool hasQuestMnemir;
     public bool mnemirQuestRewarded;
+    public bool hasMnemirKey;
     public List<string> mnemirQuestCollectedObjects;
 
     [Header("CutScenes")]
