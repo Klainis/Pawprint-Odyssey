@@ -343,6 +343,7 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 5532974359214069763, guid: 8ccba51c3bf4af149a5b2a25949d6c77, type: 3}
   _bulletSpeed: 5
   _shotsPerSeries: 3
+  _delayBeforeShot: 0.35
   _timeBetweenShots: 0.35
   _timeBetweenSeries: 2.5
   _delayAfterOpen: 1
@@ -769,6 +770,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7838d20d35a094e86a92bd8a2caba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  _maxStayTime: 3
+  _hideCooldown: 4
 --- !u!58 &6689291979419080080
 CircleCollider2D:
   m_ObjectHideFlags: 0

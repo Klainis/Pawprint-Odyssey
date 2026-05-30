@@ -15,6 +15,7 @@ public class ThornyPlant : MonoBehaviour {
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private float _bulletSpeed = 5f;
     [SerializeField] private int _shotsPerSeries = 3;
+    [SerializeField] private float _delayBeforeShot = 0.35f;
     [SerializeField] private float _timeBetweenShots = 0.35f;
     [SerializeField] private float _timeBetweenSeries = 2.5f;
     [SerializeField] private float _delayAfterOpen = 1f;
@@ -105,15 +106,14 @@ public class ThornyPlant : MonoBehaviour {
 
     public void ChangeForm(bool toHidden)
     {
-        if (gameObject.CompareTag("isDead"))
-            return;
+        if (gameObject.CompareTag("isDead")) return;
+        if (!toHidden && Time.time < _lastSeriesTime + _timeBetweenSeries) return;
 
         _isHidden = toHidden;
         _plantAnimation.SetBoolReveal(!toHidden);
         _plantAnimation.SetBoolHide(toHidden);
 
-        if (!toHidden)
-            _lastOpenTime = Time.time;
+        if (!toHidden) _lastOpenTime = Time.time;
     }
 
     private void Shoot()
@@ -211,10 +211,9 @@ public class ThornyPlant : MonoBehaviour {
     {
         _isShooting = true;
         _canShoot = false;
+
         _plantAnimation.SetBoolAttack(true);
-
-        yield return new WaitForSeconds(0.6f);
-
+        yield return new WaitForSeconds(_delayBeforeShot);
         _plantAnimation.SetBoolAttack(false);
 
         for (var i = 0; i < _shotsPerSeries; i++)
