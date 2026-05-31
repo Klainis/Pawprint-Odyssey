@@ -3403,6 +3403,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &322048439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8318820838712764753, guid: caf4fd5345fa4034aa1c9554269c1c64, type: 3}
+  m_PrefabInstance: {fileID: 3577000833718040093}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &322048442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322048439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d347768b7a8639649bbbc565cc16b13a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeyLockInteract
 --- !u!1 &322869477
 GameObject:
   m_ObjectHideFlags: 0
@@ -30485,6 +30502,63 @@ SortingGroup:
   m_SortingLayer: 5
   m_SortingOrder: 11
   m_SortAtRoot: 0
+--- !u!1001 &3535780914410063895
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 127.884
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 53.464
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6436563
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7653147
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136633067507106847, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 99.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 6310135835821492255, guid: 35daa04f76053634383032b8c470d5da, type: 3}
+      propertyPath: m_Name
+      value: KeyMnemir
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 35daa04f76053634383032b8c470d5da, type: 3}
 --- !u!1001 &3577000833718040093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30544,7 +30618,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8318820838712764753, guid: caf4fd5345fa4034aa1c9554269c1c64, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 322048442}
   m_SourcePrefab: {fileID: 100100000, guid: caf4fd5345fa4034aa1c9554269c1c64, type: 3}
 --- !u!1001 &7688460070659827349
 PrefabInstance:
@@ -30635,3 +30712,4 @@ SceneRoots:
   - {fileID: 932244362}
   - {fileID: 7688460070659827349}
   - {fileID: 3577000833718040093}
+  - {fileID: 3535780914410063895}
