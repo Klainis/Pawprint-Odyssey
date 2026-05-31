@@ -28,6 +28,9 @@ public class ShowEducation : MonoBehaviour
     public bool IsWallJump => isWallJump;
     public bool IsAttack => isAttack;
 
+    private bool _isFading = false;
+    private bool _pendingFadeOut = false;
+
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
@@ -98,18 +101,32 @@ public class ShowEducation : MonoBehaviour
 
     public void FadeIn()
     {
+        if (_isFading || _fadeCoroutine != null) return;
+
+        _pendingFadeOut = false;
         StartCoroutine(WaitBeforeFadeIn());
     }
 
     public void FadeOut()
     {
-        StartFade(0f);
+        if (_canvasGroup.alpha == 0f && !_isFading) return;
+
+        if (_isFading && _canvasGroup.alpha < 1f)
+        {
+            _pendingFadeOut = true;
+            return;
+        }
+
+        if (!_isFading)
+        {
+            StartFade(0f);
+        }
     }
 
     private void StartFade(float targetAlpha)
     {
-        if (_fadeCoroutine != null)
-            StopCoroutine(_fadeCoroutine);
+        //if (_fadeCoroutine != null)
+        //    StopCoroutine(_fadeCoroutine);
 
         _fadeCoroutine = StartCoroutine(FadeRoutine(targetAlpha));
     }
@@ -122,7 +139,8 @@ public class ShowEducation : MonoBehaviour
 
     private IEnumerator FadeRoutine(float targetAlpha)
     {
-        //Debug.Log("FadeRoutine");
+        _isFading = true;
+
         float startAlpha = _canvasGroup.alpha;
         float time = 0f;
 
@@ -135,7 +153,17 @@ public class ShowEducation : MonoBehaviour
 
         _canvasGroup.alpha = targetAlpha;
 
-        if (targetAlpha == 0)
+        _isFading = false;
+
+        if (targetAlpha == 1f)
+        {
+            if (_pendingFadeOut)
+            {
+                _pendingFadeOut = false;
+                StartFade(0f);
+            }
+        }
+        else if (targetAlpha == 0)
         {
             gameObject.SetActive(false);
         }

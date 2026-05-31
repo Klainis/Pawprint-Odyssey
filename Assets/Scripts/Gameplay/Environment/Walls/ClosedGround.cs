@@ -79,11 +79,14 @@ public class ClosedGround : MonoBehaviour
 
     private IEnumerator Destroyer()
     {
+        Debug.Log("Начали уничтожение ClosedGround");
         Shake();
 
         yield return new WaitForSeconds(1.5f);
 
         InstantiateParticles();
         Destroy(gameObject);
+
+        Debug.Log("Уничтожили ClosedGround");
     }
 }

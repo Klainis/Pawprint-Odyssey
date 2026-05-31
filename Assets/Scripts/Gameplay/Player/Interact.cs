@@ -27,10 +27,15 @@ public class Interact : MonoBehaviour
     public bool Artefact { get; set; } = false;
     public bool DoubleJumpItem { get; set; } = false;
     public bool ClawItem { get; set; } = false;
+    public bool MnemirKey { get; set; } = false;
+    public bool MnemirKeyLock { get; set; } = false;
     public bool CanInteractWithMnemir { get; set; } = true;
     public GameObject artefactObject { get; set; }
     public GameObject doubleJumpItemObject { get; set; }
     public GameObject clawItemObject { get; set; }
+    public GameObject mnemirKeyObject { get; set; }
+
+
 
     public event Action OnCompleteMnemirQuest;
 
@@ -74,6 +79,33 @@ public class Interact : MonoBehaviour
             else if (ClawItem)
             {
                 EnableClaw();
+            }
+
+            else if (MnemirKey)
+            {
+                TakeMnemirKey();
+            }
+
+            else if (MnemirKeyLock)
+            {
+                if (PlayerView.Instance.PlayerModel.HasMnemirKey)
+                {
+                    var keyLock = FindAnyObjectByType<KeyLockInteract>();
+
+                    if (keyLock != null)
+                    {
+                        Debug.Log("Открываем дверь ключом");
+                        keyLock.DestroyKeyDoor();
+                    }
+                    else
+                    {
+                        Debug.LogError($"keyLock is NULL: {keyLock}");
+                    }
+                }
+                else
+                {
+                    // Пимен говорит, что не можем открыть дверь и нужен какой то ключ
+                }
             }
 
             else if (Mnemir)
@@ -142,14 +174,22 @@ public class Interact : MonoBehaviour
         }
     }
 
-    public void EnableDoubleJump()
+    private void TakeMnemirKey()
+    {
+        PlayerView.Instance.PlayerModel.SetHasMnemirKey();
+        Debug.Log(PlayerView.Instance.PlayerModel.HasMnemirKey);
+        Destroy(mnemirKeyObject);
+        SaveSystem.AutoSave();
+    }
+
+    private void EnableDoubleJump()
     {
         PlayerView.Instance.PlayerModel.SetHasDoubleJump();
         Destroy(doubleJumpItemObject);
         SaveSystem.AutoSave();
     }
 
-    public void EnableClaw()
+    private void EnableClaw()
     {
         var receivingClaw = FindAnyObjectByType<ReceivingClaw>();
         receivingClaw.EnableClaw(clawItemObject);
