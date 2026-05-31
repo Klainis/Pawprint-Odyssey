@@ -101,7 +101,11 @@ public class ShowEducation : MonoBehaviour
 
     public void FadeIn()
     {
-        if (_isFading || _fadeCoroutine != null) return;
+        if (_isFading || _fadeCoroutine != null)
+        {
+            Debug.Log("Вышли из FadeIn");
+            return;
+        }
 
         _pendingFadeOut = false;
         StartCoroutine(WaitBeforeFadeIn());
@@ -154,6 +158,7 @@ public class ShowEducation : MonoBehaviour
         _canvasGroup.alpha = targetAlpha;
 
         _isFading = false;
+        _fadeCoroutine = null;
 
         if (targetAlpha == 1f)
         {

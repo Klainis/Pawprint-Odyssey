@@ -111,7 +111,7 @@ public class SaveSystem
 
         File.WriteAllText(SaveFileName(), json);
 
-        Debug.Log($"SaveSystem.CrystalSave: Игра (Кристаллы) сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
+        Debug.Log($"SaveSystem.MoneySave: Игра (Кристаллы) сохранена в профиль {CurrentProfileIndex}: {SaveFileName()}");
     }
 
     public static bool TryLoad()

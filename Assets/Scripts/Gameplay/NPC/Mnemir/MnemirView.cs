@@ -8,7 +8,8 @@ public class MnemirView : MonoBehaviour
     [Header("Main params")]
     [SerializeField] private float _speed;
     [SerializeField] private LayerMask _turnLayerMask;
-    [SerializeField] private GameObject _artefactObject;
+    [SerializeField] private GameObject _artifactObject;
+    [SerializeField] private GameObject _keyObject;
 
     [Header("Help UI")]
     public GameObject zoneCheck;
@@ -22,7 +23,8 @@ public class MnemirView : MonoBehaviour
     private MnemirAnimation _animation;
     private Interact interact;
 
-    private GameObject _artefactInstance;
+    private GameObject _artifactInstance;
+    private GameObject _keyInstance;
 
     private float _timer;
 
@@ -91,9 +93,13 @@ public class MnemirView : MonoBehaviour
         //var rewardPos = new Vector3(pos.x - 1, pos.y + 0.5f, pos.z);
         //Instantiate(_mnemirQuestReward, rewardPos, Quaternion.identity);
 
-        _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
-        var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
-        artefactRB.AddForce(new Vector2(200f, 100f));
+        _artifactInstance = Instantiate(_artifactObject, transform.position, Quaternion.identity);
+        var artifactRB = _artifactInstance.GetComponent<Rigidbody2D>();
+        artifactRB.AddForce(new Vector2(200f, 150f));
+
+        _keyInstance = Instantiate(_keyObject, transform.position, Quaternion.identity);
+        var keyRB = _keyInstance.GetComponent<Rigidbody2D>();
+        keyRB.AddForce(new Vector2(150f, 150f));
     }
 
     #endregion

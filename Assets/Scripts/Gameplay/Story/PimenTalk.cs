@@ -23,6 +23,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
     public DialogueText BeforeFinalBossDialogueText;
     public DialogueText WinLastBossDialogueText;
     public DialogueText LastRoomDialogueText;
+    public DialogueText CanNotOpenKeyDoorDialogueText;
     public DialogueText DontHaveAllArtifactDialogueText;
     public DialogueText EndingDialogueText;
 
@@ -141,6 +142,12 @@ public class PimenTalk : MonoBehaviour, ITalkable
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
         Talk(WinLastBossDialogueText);
+    }
+
+    public void CantOpenKeyDoor()
+    {
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(CanNotOpenKeyDoorDialogueText);
     }
 
     public void LastRoom()

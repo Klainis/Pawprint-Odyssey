@@ -44,7 +44,7 @@ public class Interact : MonoBehaviour
 
     //private void Awake()
     //{
-    //    _showEducation = FindAnyObjectByType<ShowEducation>();
+    //    showEducation = FindAnyObjectByType<ShowEducation>();
     //}
 
     private void Update()
@@ -104,7 +104,8 @@ public class Interact : MonoBehaviour
                 }
                 else
                 {
-                    // Пимен говорит, что не можем открыть дверь и нужен какой то ключ
+                    var talk = FindAnyObjectByType<PimenTalk>();
+                    talk.CantOpenKeyDoor();
                 }
             }
 

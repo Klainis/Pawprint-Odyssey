@@ -39,13 +39,13 @@ public class TransitionPoint : MonoBehaviour
         {
             _isTransitioning = true;
 
-            if (gameManager.GameState == GameState.PLAYING)
-            {
-                StartCoroutine(WalkIntoGate(movigObj, transitionSpeed));
-            }
-            else if (gameManager.GameState == GameState.EXITING_LEVEL)
+            if (gameManager.GameState == GameState.EXITING_LEVEL)
             {
                 StartCoroutine(WalkOutGate(movigObj, transitionSpeed));
+            }
+            else if (gameManager.GameState == GameState.PLAYING)
+            {
+                StartCoroutine(WalkIntoGate(movigObj, transitionSpeed));
             }
             else
             {
@@ -222,6 +222,7 @@ public class TransitionPoint : MonoBehaviour
         PlayerMove.Instance.CanMove = true;
         SafeGroundSaver.Instance.SetNewSafeGroundLocation();
 
+        yield return new WaitForSeconds(0.2f);
         gameManager.SetGameState(GameState.PLAYING);
 
         yield return new WaitForSeconds(0.2f);

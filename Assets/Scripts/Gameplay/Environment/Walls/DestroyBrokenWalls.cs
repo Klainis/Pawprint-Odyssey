@@ -45,6 +45,12 @@ public class DestroyBrokenWalls : MonoBehaviour
     }
     public void InstantiateDoorLight()
     {
+        if (_lightDoorGameObject == null)
+        {
+            Debug.Log("Отсутствует ссылка на LightDoor");
+            return;
+        }
+
         var rotaion = Quaternion.identity;
         var positionOffset = new Vector3(0.4f, 0, 0);
         var position = Vector3.zero;
