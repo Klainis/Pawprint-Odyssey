@@ -75,7 +75,6 @@ public class RootGuardianMove : MonoBehaviour
         _animation.SetBoolMove(true);
         var moveDirection = facingRight ? 1 : -1;
         _rb.linearVelocity = new Vector2(moveDirection * speed, _rb.linearVelocity.y);
-        //Debug.Log($"Moving: {_rb.linearVelocity}");
     }
 
     public bool Turn(bool facingRight)

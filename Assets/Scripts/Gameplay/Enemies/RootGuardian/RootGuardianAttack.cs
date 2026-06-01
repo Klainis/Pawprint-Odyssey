@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RootGuardianAttack : MonoBehaviour
 {
+    #region SerializeFields
+
     [Header("Main params")]
     [SerializeField] private LayerMask _playerLayer;
 
@@ -15,6 +17,8 @@ public class RootGuardianAttack : MonoBehaviour
 
     [Header("Attack Check Transform")]
     [SerializeField] private Transform _attackCheck;
+
+    #endregion
 
     #region Variables
 
@@ -32,8 +36,6 @@ public class RootGuardianAttack : MonoBehaviour
 
     #region Properties
 
-    //public float PlayerDetectDist { get; set; }
-    //public float AttackCooldown { get; set; }
     public bool IsAttacking { get; set; }
     public bool CanAttack {
         get {
@@ -68,6 +70,11 @@ public class RootGuardianAttack : MonoBehaviour
 
     #endregion
 
+    public bool InAttackCooldown()
+    {
+        return Time.time < _lastAttackTime + _attackCooldown;
+    }
+
     public void UpdateLastAttackTime()
     {
         _lastAttackTime = Time.time;
@@ -81,13 +88,10 @@ public class RootGuardianAttack : MonoBehaviour
             return;
         }
 
-        Collider2D playerHit = Physics2D.OverlapBox(_attackCheck.position, new Vector2(_playerDetectDist * 2, 1.2f), 0, _playerLayer);
-
-        bool right = false;
-
+        var playerHit = Physics2D.OverlapBox(_attackCheck.position, new Vector2(_playerDetectDist * 2, 1.2f), 0, _playerLayer);
         if (playerHit != null)
         {
-            right = playerHit.transform.position.x > transform.position.x ? true : false;
+            var right = playerHit.transform.position.x > transform.position.x ? true : false;
 
             if (!right)
                 OnPlayerLeftDetected?.Invoke();
@@ -98,16 +102,12 @@ public class RootGuardianAttack : MonoBehaviour
 
     public IEnumerator AttackTelegraphRoutine(/*float telegraphTime*/)
     {
-        //var renderer = GetComponent<SpriteRenderer>();
-        //renderer.color = Color.red;
         _animation.SetBoolTelegraph(true);
-        //_rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
         IsAttacking = true;
 
         yield return new WaitForSeconds(_telegraphTime);
 
         _weaponCollider.enabled = true;
-        //renderer.color = _defaultColor;
         _rb.constraints = _defaultConstraints;
         _animation.SetBoolTelegraph(false);
         _animation.SetBoolAttack(true);

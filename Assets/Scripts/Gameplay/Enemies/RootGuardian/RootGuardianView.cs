@@ -13,19 +13,11 @@ public class RootGuardianView : MonoBehaviour, IEnemy
     [SerializeField] private float _lastPlayerAttackForce = 20f;
     [SerializeField] private AudioClip _hitClip;
 
-    //[Header("Attack")]
-    //[SerializeField] private float _playerDetectDist = 5f;
-    //[SerializeField] private float _attackCooldown = 2f;
-    //[SerializeField] private float _telegraphTime = 0.8f;
-
     [Header("Particles")]
     [SerializeField] private ParticleSystem _damageParticle;
     [SerializeField] private ParticleSystem _playerWeaponParticle;
     [SerializeField] private ParticleSystem _playerWeaponLastSliceParticle;
     [SerializeField] private ParticleSystem _playerWeapomSimpleSliceParticle;
-
-    //[Header("Effects")]
-    //[SerializeField] private DamageFlash _damageFlash;
 
     #endregion
 
@@ -72,7 +64,6 @@ public class RootGuardianView : MonoBehaviour, IEnemy
     {
         Model = new EnemyModel(_data.Life, _data.Speed, _data.Damage, _data.Reward);
 
-        //_playerAttack = InitializeManager.Instance.player?.GetComponent<PlayerAttack>();
         _playerAttack = PlayerAttack.Instance;
         _animation = GetComponent<RootGuardianAnimation>();
         _attack = GetComponent<RootGuardianAttack>();
@@ -83,9 +74,6 @@ public class RootGuardianView : MonoBehaviour, IEnemy
         _money = FindAnyObjectByType<InstantiateMoney>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
-
-        //_attack.PlayerDetectDist = _playerDetectDist;
-        //_attack.AttackCooldown = _attackCooldown;
     }
 
     private void FixedUpdate()
@@ -96,14 +84,11 @@ public class RootGuardianView : MonoBehaviour, IEnemy
             return;
         }
 
-        if (_isKnockback) return;
+        if (_isKnockback || _attack.InAttackCooldown())
+            return;
 
         if (_isRetreating || !_attack.IsAttacking)
             _move.Move(Model.Speed, FacingRight);
-
-        //Debug.Log($"isRetreating {_isRetreating}");
-        //Debug.Log($"isAttacking {_attack.IsAttacking}");
-
     }
 
     private void OnCollisionStay2D(Collision2D collision)
