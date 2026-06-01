@@ -181,7 +181,8 @@ public class PlayerInput : MonoBehaviour
         {
             if (IsValidAction(interactAction))
             {
-                interactPressed = interactAction.action.WasPressedThisFrame();
+                agree = false;
+                interactPressed = interactAction.action.WasPressedThisFrame();            
             }
 
             if (IsValidAction(attackAction))

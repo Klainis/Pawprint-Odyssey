@@ -39,8 +39,26 @@ public class DialogueController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void StartDialogue(DialogueText dialogueText)
+    {
+        Debug.Log($"[StartDialogue CALLED]");
+        StartConversation(dialogueText);
+
+        _currentLine = paragraphs.Dequeue();
+        NPCNameText.text = _currentLine.name;
+        _typeDialogueCoroutine = StartCoroutine(TypeDialogueText(_currentLine.text));
+
+        if (paragraphs.Count == 0)
+        {
+            _conversationEnded = true;
+        }
+
+        Debug.Log($"[StartDialogue END] _conversationEnded={_conversationEnded}, _isTyping={_isTyping}");
+    }
+
     public void DisplayNextParagraph(DialogueText dialogueText)
     {
+        Debug.Log($"[DisplayNextParagraph] paragraphs.Count={paragraphs.Count}, _conversationEnded={_conversationEnded}, _isTyping={_isTyping}");
         //заполняем Queue, если ничего нет в очереди
         if (paragraphs.Count == 0)
         {
@@ -53,29 +71,37 @@ public class DialogueController : MonoBehaviour
                 EndConversation();
                 return;
             }
+            else
+            {
+                FinishParagraphEarly();
+                return;
+            }
         }
 
         //Печатаем то, что есть в очереди
         if (!_isTyping)
         {
             _currentLine = paragraphs.Dequeue();
-
             NPCNameText.text = _currentLine.name;
             _typeDialogueCoroutine = StartCoroutine(TypeDialogueText(_currentLine.text));
+
+            if (paragraphs.Count == 0)
+            {
+                _conversationEnded = true;
+            }
         }
         else
         {
             FinishParagraphEarly();
         }
-
-        if (paragraphs.Count == 0)
-        {
-            _conversationEnded = true;
-        }
     }
 
     private void StartConversation(DialogueText dialogueText)
     {
+        Debug.Log($"[StartConversation] _isTyping before reset={_isTyping}, ");
+        _isTyping = false;
+        _typeDialogueCoroutine = null;
+
         GameManager.Instance.SetGameState(GameState.DIALOGUE);
 
         PlayerView.Instance.FreezePlayerWithDisableMove(true);
@@ -115,6 +141,8 @@ public class DialogueController : MonoBehaviour
     private void EndConversation()
     {
         _conversationEnded = false;
+        _isTyping = false;
+        _typeDialogueCoroutine = null;
 
         var pimen = GameObject.FindGameObjectWithTag("Pimen");
         if (pimen != null && (!isGivenArtifact && !isFinalDialogue))
@@ -173,6 +201,8 @@ public class DialogueController : MonoBehaviour
 
         NPCDialogueText.text = "";
 
+        Debug.Log($"[Typing START] text: '{p}'");
+
         string originalText = p;
         string displayedText = "";
         int alphaINdex = 0;
@@ -185,14 +215,18 @@ public class DialogueController : MonoBehaviour
             displayedText = NPCDialogueText.text.Insert(alphaINdex, HTML_ALPHA);
             NPCDialogueText.text = displayedText;
 
+            Debug.Log($"[Typing] i={alphaINdex}, isTyping={_isTyping}");
+
             yield return new WaitForSeconds(MAX_TYPE_TIME / _typeSpeed);
         }
 
+        Debug.Log($"[Typing END]");
         _isTyping = false;
     }
 
     private void FinishParagraphEarly()
     {
+        Debug.Log($"[FinishParagraphEarly CALLED] stack: {System.Environment.StackTrace}");
         StopCoroutine(_typeDialogueCoroutine);
 
         NPCDialogueText.text = _currentLine.text;

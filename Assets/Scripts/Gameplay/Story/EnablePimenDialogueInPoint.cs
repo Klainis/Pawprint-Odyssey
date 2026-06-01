@@ -4,10 +4,31 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
 {
     [SerializeField] private bool _beforeFirstBoss = false;
     [SerializeField] private bool _beforeTakeClaw = false;
+    [SerializeField] private bool _beforeTakeMnemirItem = false;
     [SerializeField] private bool _beforeFirstFightRoom = false;
     [SerializeField] private bool _afterFirstFightRoom = false;
     [SerializeField] private bool _beforeLastBoss = false;
     [SerializeField] private bool _lastRoom = false;
+
+    [SerializeField] private BoxCollider2D _collider;
+
+    private void Awake()
+    {
+        if (_collider == null)
+            _collider = GetComponent<BoxCollider2D>();
+    }
+
+    private void Start()
+    {
+        if (!PlayerView.Instance.PlayerModel.HasQuestMnemir && _beforeTakeMnemirItem)
+        {
+            _collider.enabled = false;
+        }
+        else
+        {
+            _collider.enabled = true;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -27,6 +48,13 @@ public class EnablePimenDialogueInPoint : MonoBehaviour
         {
             talk.SawClaw();
             playerModel.SetSawClaw(true);
+            return;
+        }
+
+        if (_beforeTakeMnemirItem && !playerModel.SawMnemirItemDialogue)
+        {
+            talk.SawMnemirItem();
+            playerModel.SetSawMnemirItem(true);
             return;
         }
 

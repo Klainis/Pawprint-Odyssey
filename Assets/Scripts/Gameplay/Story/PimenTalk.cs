@@ -17,6 +17,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
     public DialogueText BeforeFirstBossDialogueText;
     public DialogueText WinFirstBossDialogueText;
     public DialogueText SawClawDialogueText;
+    public DialogueText SawMnemirItemDialogueText;
     public DialogueText BeforeFirstFightRoomDialogueText;
     public DialogueText AfterFirstFightRoomDialogueText;
     public DialogueText TakeSecondArtifactDialogueText;
@@ -61,7 +62,8 @@ public class PimenTalk : MonoBehaviour, ITalkable
         {
             if (PlayerInput.Instance.AgreeButtonPressed)
             {
-                Interact();
+                Debug.Log($"[Update Pimen] AgreeButtonPressed={PlayerInput.Instance.AgreeButtonPressed}");
+                dialogueController.DisplayNextParagraph(_currentDialogue); //Кнопкой Enter для пролистывания
             }
         }
     }
@@ -71,7 +73,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
         Talk(_currentDialogue);
     }
 
-    public void Talk(DialogueText diaogueText)
+    public void Talk(DialogueText diaogueText) //Кнопкой E для взаимодействия
     {
         IsPimenTalk = true;
 
@@ -84,7 +86,7 @@ public class PimenTalk : MonoBehaviour, ITalkable
         TurnPlayerToNPC();
 
         _currentDialogue = diaogueText;
-        dialogueController.DisplayNextParagraph(diaogueText);
+        dialogueController.StartDialogue(_currentDialogue);
     }
 
     #region Pimen Talk Methods
@@ -112,6 +114,12 @@ public class PimenTalk : MonoBehaviour, ITalkable
     {
         PlayerAnimation.Instance.ResetAnimatorParameters();
         Talk(SawClawDialogueText);
+    }
+
+    public void SawMnemirItem()
+    {
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+        Talk(SawMnemirItemDialogueText);
     }
 
     public void BeforeFirstFightRoom()
@@ -222,71 +230,3 @@ public class PimenTalk : MonoBehaviour, ITalkable
         }
     }
 }
-
-//[System.Serializable]
-//public class CustomPimenTalkInspectorObjects
-//{
-//    [HideInInspector] public DialogueText PimenMeetDialogueText;
-//    [HideInInspector] public DialogueText BeforeFirstBossDialogueText;
-//    [HideInInspector] public DialogueText WinFirstBossDialogueText;
-//    [HideInInspector] public DialogueText SawClawDialogueText;
-//    [HideInInspector] public DialogueText BeforeFirstFightRoomDialogueText;
-//    [HideInInspector] public DialogueText AfterFirstFightRoomDialogueText;
-//    [HideInInspector] public DialogueText TakeSecondArtifactDialogueText;
-//    [HideInInspector] public DialogueText BeforeFinalBossDialogueText;
-//    [HideInInspector] public DialogueText WinLastBossDialogueText;
-//    [HideInInspector] public DialogueText LastRoomDialogueText;
-//}
-
-//#if UNITY_EDITOR
-//[CustomEditor(typeof(PimenTalk))]
-//public class MyPimenScriptEditor : Editor
-//{
-//    PimenTalk pimen;
-
-//    private void OnEnable()
-//    {
-//        pimen = (PimenTalk)target;
-//    }
-
-//    public override void OnInspectorGUI()
-//    {
-//        DrawDefaultInspector();
-
-//        pimen.customWraithInspectorObjects.PimenMeetDialogueText = EditorGUILayout.ObjectField("Meet with Pimen", pimen.customWraithInspectorObjects.PimenMeetDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.BeforeFirstBossDialogueText = EditorGUILayout.ObjectField("Before First Boss", pimen.customWraithInspectorObjects.BeforeFirstBossDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.WinFirstBossDialogueText = EditorGUILayout.ObjectField("After First Boss", pimen.customWraithInspectorObjects.WinFirstBossDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.SawClawDialogueText = EditorGUILayout.ObjectField("Saw Claw", pimen.customWraithInspectorObjects.SawClawDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.BeforeFirstFightRoomDialogueText = EditorGUILayout.ObjectField("Before First Fight Room", pimen.customWraithInspectorObjects.BeforeFirstFightRoomDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.AfterFirstFightRoomDialogueText = EditorGUILayout.ObjectField("After First Fight Room", pimen.customWraithInspectorObjects.AfterFirstFightRoomDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.TakeSecondArtifactDialogueText = EditorGUILayout.ObjectField("Take Second Artifact", pimen.customWraithInspectorObjects.TakeSecondArtifactDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.BeforeFinalBossDialogueText = EditorGUILayout.ObjectField("Before Final Boss", pimen.customWraithInspectorObjects.BeforeFinalBossDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.WinLastBossDialogueText = EditorGUILayout.ObjectField("After Final Boss", pimen.customWraithInspectorObjects.WinLastBossDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        pimen.customWraithInspectorObjects.LastRoomDialogueText = EditorGUILayout.ObjectField("Last Room", pimen.customWraithInspectorObjects.LastRoomDialogueText,
-//            typeof(DialogueText), true) as DialogueText;
-
-//        if (GUI.changed)
-//        {
-//            EditorUtility.SetDirty(pimen);
-//        }
-//    }
-//}
-//#endif

@@ -53,7 +53,7 @@ public class MnemirTalk : MonoBehaviour, ITalkable
         {
             if (PlayerInput.Instance.AgreeButtonPressed)
             {
-                Interact();
+                dialogueController.DisplayNextParagraph(_currentDialogue);
             }
         }
     }
@@ -76,7 +76,7 @@ public class MnemirTalk : MonoBehaviour, ITalkable
         TurnPlayerToNPC();
 
         _currentDialogue = diaogueText;
-        dialogueController.DisplayNextParagraph(diaogueText);
+        dialogueController.StartDialogue(_currentDialogue);
     }
 
     #region Mnemir Methods
