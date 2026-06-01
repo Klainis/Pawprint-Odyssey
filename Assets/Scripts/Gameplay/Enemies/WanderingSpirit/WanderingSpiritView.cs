@@ -100,7 +100,7 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
         
         if (_isKnockback) return;
 
-        if (!_wsAttack.IsAttacking)
+        if (!_wsAttack.IsAttacking && !_wsAttack.InAttackCooldown(_attackCooldown))
         {
             _wsMove.Move(_isAccelerated, _acceleratedSpeed);
         }

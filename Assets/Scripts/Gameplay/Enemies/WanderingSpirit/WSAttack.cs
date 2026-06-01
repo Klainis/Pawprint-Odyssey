@@ -42,6 +42,11 @@ public class WSAttack : MonoBehaviour
         }
     }
 
+    public bool InAttackCooldown(float attackCooldown)
+    {
+        return Time.time < _lastAttackTime + attackCooldown;
+    }
+
     public bool CanAttack(float attackCooldown)
     {
         return !((Time.time < _lastAttackTime + attackCooldown) || _isAttacking);
