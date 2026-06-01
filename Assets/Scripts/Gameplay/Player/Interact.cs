@@ -30,6 +30,7 @@ public class Interact : MonoBehaviour
     public bool MnemirKey { get; set; } = false;
     public bool MnemirKeyLock { get; set; } = false;
     public bool CanInteractWithMnemir { get; set; } = true;
+    public bool CanInteractWithKeyLock { get; set; } = true;
     public GameObject artefactObject { get; set; }
     public GameObject doubleJumpItemObject { get; set; }
     public GameObject clawItemObject { get; set; }
@@ -90,16 +91,22 @@ public class Interact : MonoBehaviour
             {
                 if (PlayerView.Instance.PlayerModel.HasMnemirKey)
                 {
-                    var keyLock = FindAnyObjectByType<KeyLockInteract>();
+                    if (CanInteractWithKeyLock)
+                    {
+                        var keyLock = FindAnyObjectByType<KeyLockInteract>();
 
-                    if (keyLock != null)
-                    {
-                        Debug.Log("Открываем дверь ключом");
-                        keyLock.DestroyKeyDoor();
-                    }
-                    else
-                    {
-                        Debug.LogError($"keyLock is NULL: {keyLock}");
+                        if (keyLock != null)
+                        {
+                            Debug.Log("Открываем дверь ключом");
+                            CanInteractWithKeyLock = false;
+                            keyLock.InstantiateParticle();
+
+                            keyLock.DestroyKeyDoor();
+                        }
+                        else
+                        {
+                            Debug.LogError($"keyLock is NULL: {keyLock}");
+                        }
                     }
                 }
                 else
@@ -218,9 +225,9 @@ public class Interact : MonoBehaviour
         PlayerView.Instance.SetCheckPoint(save);
         PlayerView.Instance.PlayerModel.SetHasQuestMnemir();
 
-        //SaveSystem.Save();
-        //SaveSystem.AutoSave();
-        SaveSystem.AutoSaveSimple();
+        SaveSystem.Save();
+        SaveSystem.AutoSave();
+        //SaveSystem.AutoSaveSimple();
     }
 
     private IEnumerator TakeReward()
@@ -238,7 +245,7 @@ public class Interact : MonoBehaviour
         CanInteractWithMnemir = false;
 
         var mnemirView = FindAnyObjectByType<MnemirView>();
-        mnemirView.zoneCheck.SetActive(false);
+        mnemirView.zoneCheck.GetComponent<BoxCollider2D>().enabled = false;
         mnemirView.educationCanvas.SetActive(false);
 
         var mnemirPos = mnemirView.gameObject.transform.position;

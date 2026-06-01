@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MnemirKeyInteract : MonoBehaviour
@@ -14,6 +16,11 @@ public class MnemirKeyInteract : MonoBehaviour
         }
 
         interact = FindAnyObjectByType<Interact>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(Freeze());
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -33,6 +40,13 @@ public class MnemirKeyInteract : MonoBehaviour
             interact.enabled = false;
             interact.MnemirKey = false;
         }
+    }
+
+    private IEnumerator Freeze()
+    {
+        var rb = GetComponent<Rigidbody2D>();
+        yield return new WaitForSeconds(2f);
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     #endregion

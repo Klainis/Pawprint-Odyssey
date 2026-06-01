@@ -94,10 +94,12 @@ public class MnemirView : MonoBehaviour
         //Instantiate(_mnemirQuestReward, rewardPos, Quaternion.identity);
 
         _artifactInstance = Instantiate(_artifactObject, transform.position, Quaternion.identity);
+        DontDestroyOnLoad(_artifactInstance);
         var artifactRB = _artifactInstance.GetComponent<Rigidbody2D>();
         artifactRB.AddForce(new Vector2(200f, 150f));
 
         _keyInstance = Instantiate(_keyObject, transform.position, Quaternion.identity);
+        DontDestroyOnLoad(_keyInstance);
         var keyRB = _keyInstance.GetComponent<Rigidbody2D>();
         keyRB.AddForce(new Vector2(150f, 150f));
     }

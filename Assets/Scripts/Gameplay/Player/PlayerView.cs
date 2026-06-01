@@ -199,7 +199,7 @@ public class PlayerView : MonoBehaviour
         MapManager.Instance.ShowAllOpenedRoomsAndWalls();
         PlayerModel.FullHeal();
         _playerHeart.AddHearts();
-        _playerMana.FullMana();
+        //_playerMana.FullMana();
 
         SaveSystem.Save();
     }

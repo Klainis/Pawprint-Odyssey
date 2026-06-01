@@ -428,6 +428,7 @@ public class GuardianOwlView : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
+        DontDestroyOnLoad(_artefactInstance);
         var artefactRB = _artefactInstance.GetComponent<Rigidbody2D>();
         artefactRB.AddForce(new Vector2(50f, 50f));
 
