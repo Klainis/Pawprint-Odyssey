@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class CollapseTrigger : MonoBehaviour
 {
     private CollapsingPlatform collapsingPlatform;
+
+    private Coroutine collapseCoroutine;
 
     private void Awake()
     {
@@ -15,8 +18,17 @@ public class CollapseTrigger : MonoBehaviour
         var enemy = collision.gameObject.CompareTag("Enemy");
         if ((player || enemy) && !collapsingPlatform.IsHidden)
         {
-            //Debug.Log("Platform Destroy");
-            StartCoroutine(collapsingPlatform.WaitAndChangeState());
+            if (collapseCoroutine == null)
+            {
+                collapseCoroutine = StartCoroutine(CollapseSequence());
+            }
         }
+    }
+
+    private IEnumerator CollapseSequence()
+    {
+        yield return collapsingPlatform.WaitAndChangeState();
+
+        collapseCoroutine = null;
     }
 }
