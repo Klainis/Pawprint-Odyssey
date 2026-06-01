@@ -232,7 +232,7 @@ public class Interact : MonoBehaviour
 
     private IEnumerator TakeReward()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
 
         while (GameManager.Instance.GameState == GlobalEnums.GameState.DIALOGUE)
         {

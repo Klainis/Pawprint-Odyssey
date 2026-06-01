@@ -73,9 +73,8 @@ public class CollapsingPlatform : MonoBehaviour
 
     private void InstantiateParticles()
     {
-        Quaternion particleRotation = new Quaternion(-90, 0, 0, 0);
+        var particleRotation = new Quaternion(-90, 0, 0, 0);
         _destroyParticaleInstance = Instantiate(_destroyParticale, transform.position, particleRotation);
-        Debug.Log(_destroyParticaleInstance.transform.rotation);
     }
 
     public IEnumerator WaitAndChangeState()

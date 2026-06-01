@@ -62,20 +62,18 @@ public class PiercingClaw : MonoBehaviour
 
     private void Update()
     {
-        if (isAttacking)
-        {
-            _rigidbody.linearVelocity = Vector2.zero;
-            _rigidbody.gravityScale = 0f;
-        }
+        //if (isAttacking)
+        //{
+        //    _rigidbody.linearVelocity = Vector2.zero;
+        //    _rigidbody.gravityScale = 0f;
+        //}
 
         playerAnimation.ApplyRootMotion(false);
- 
-        //if (clawAction != null && clawAction.action != null && playerMove.IsGrounded)
-        //    clawPressed = clawAction.action.WasPressedThisFrame();
 
         if (PlayerInput.Instance.PlayerClawEd && canAttack && playerView.PlayerModel.Mana >= 25)
         {
             isAttacking = true;
+            PlayerMove.Instance.CanMove = false;
             PlayerView.Instance.FreezePlayer(true);
             //Debug.Log("Claw");
             playerMana.SpendMana("Claw", 1);
@@ -122,6 +120,7 @@ public class PiercingClaw : MonoBehaviour
     {
         _rigidbody.gravityScale = _initialGravityScale;
         PlayerView.Instance.FreezePlayer(false);
+        PlayerMove.Instance.CanMove = true;
         playerAnimation.SetBoolClaw(false);
         clawSprite.SetActive(false);
         isAttacking = false;
