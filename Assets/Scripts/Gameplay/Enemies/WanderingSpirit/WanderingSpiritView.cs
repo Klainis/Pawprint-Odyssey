@@ -129,7 +129,10 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
             }
 
             _wsAnimation.SetTriggerHit();
-            _rigidBody.linearVelocity = Vector2.zero;
+            if (!_wsAttack.IsAttacking)
+            {
+                _rigidBody.linearVelocity = Vector2.zero;
+            }
 
             var direction = damage / Mathf.Abs(damage);
             _screenShaker.Shake();
