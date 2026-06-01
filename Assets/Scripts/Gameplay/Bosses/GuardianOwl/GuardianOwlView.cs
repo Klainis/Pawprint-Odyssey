@@ -44,6 +44,7 @@ public class GuardianOwlView : MonoBehaviour
     //private SGAnimation sgAnimation;
     private GuardianOwlAttack _guraduianOwlAttack;
     private GuardianOwlMove _guraduianOwlMove;
+    private GuardianOwlAnimation _guraduianOwlAnimation;
     private DamageFlash[] _damageFlash;
     private ScreenShaker _screenShaker;
     private AudioSource _audioSource;
@@ -64,6 +65,7 @@ public class GuardianOwlView : MonoBehaviour
     public bool IsHitted { get { return _isHitted; } }
     public bool FacingRight { get { return _facingRight; } }
     public bool StartFight { get; set; } = false;
+    public bool IsDead { get; private set; } = false;
 
     private void Awake()
     {
@@ -78,6 +80,7 @@ public class GuardianOwlView : MonoBehaviour
         //sgAnimation = GetComponent<SGAnimation>();
         _guraduianOwlAttack = GetComponent<GuardianOwlAttack>();
         _guraduianOwlMove = GetComponent<GuardianOwlMove>();
+        _guraduianOwlAnimation = GetComponent<GuardianOwlAnimation>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
         _audioSource = GetComponent<AudioSource>();
@@ -337,7 +340,7 @@ public class GuardianOwlView : MonoBehaviour
                 yield return _guraduianOwlMove.MoveUp();
                 yield break;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
         }
     }
 
@@ -346,15 +349,15 @@ public class GuardianOwlView : MonoBehaviour
         BossStage myStage = BossStage.STAGE_3;
         if (ShouldInterrupt(myStage))
         {
-            yield return _guraduianOwlMove.MoveUp();
+            //yield return _guraduianOwlMove.MoveUp();
             yield break;
         }
 
-        Debug.Log("Вторая стадия!!!!!!!!!!!");
+        Debug.Log("Третья стадия!!!!!!!!!!!");
         yield return _guraduianOwlMove.MoveToPlayer();
         if (ShouldInterrupt(myStage))
         {
-            yield return _guraduianOwlMove.MoveUp();
+            //yield return _guraduianOwlMove.MoveUp();
             yield break;
         }
         yield return new WaitForSeconds(0.7f);
@@ -362,15 +365,15 @@ public class GuardianOwlView : MonoBehaviour
         yield return _guraduianOwlAttack.SpawnWaveAttack(4, myStage);
         if (ShouldInterrupt(myStage))
         {
-            yield return _guraduianOwlMove.MoveUp();
+            //yield return _guraduianOwlMove.MoveUp();
             yield break;
         }
         yield return new WaitForSeconds(1);
 
-        yield return _guraduianOwlMove.MoveUp();
+        //yield return _guraduianOwlMove.MoveUp();
         if (ShouldInterrupt(myStage))
         {
-            yield return _guraduianOwlMove.MoveUp();
+            //yield return _guraduianOwlMove.MoveUp();
             yield break;
         }
         yield return new WaitForSeconds(0.5f);
@@ -381,17 +384,17 @@ public class GuardianOwlView : MonoBehaviour
             yield return _guraduianOwlAttack.SpawnEyeAttack(5, myStage);
             if (ShouldInterrupt(myStage))
             {
-                yield return _guraduianOwlMove.MoveUp();
+                //yield return _guraduianOwlMove.MoveUp();
                 yield break;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
         }
     }
     #endregion
 
     public bool ShouldInterrupt(BossStage stage)
     {
-        return Model.IsDead || BossStage != stage;
+        return /*Model.IsDead || */BossStage != stage;
     }
     private IEnumerator HitTime()
     {
@@ -404,6 +407,7 @@ public class GuardianOwlView : MonoBehaviour
 
     private IEnumerator DestroySelf()
     {
+        IsDead = true;
         _isInvincible = true;
         ChangeTag("isDead");
         ChangeLayer("DeadEnemy");
@@ -412,20 +416,31 @@ public class GuardianOwlView : MonoBehaviour
 
         Time.timeScale = 0.15f;
 
-        //sgAnimation.SetDeathAnimation();
-
-        _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
-
         EndBossFightFX.Instance.EnableEndFightFX();
         SpawnDamageParticles(_direction);
         SpawnPlayerLastAttackParticles();
 
+
+
         yield return new WaitForSecondsRealtime(2f);
 
-        Time.timeScale = 1f;
-        EndBossFightFX.Instance.DisableEndFightFX();
 
-        yield return new WaitForSeconds(2f);
+
+        Time.timeScale = 1f;
+
+        _rigidBody.bodyType = RigidbodyType2D.Dynamic;
+
+        EndBossFightFX.Instance.DisableEndFightFX();
+        _guraduianOwlAnimation.SetDeathAnimation();
+
+        yield return new WaitForSeconds(1f);
+        _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+
+
+
+        yield return new WaitForSeconds(1.3f);
+
+
 
         _artefactInstance = Instantiate(_artefactObject, transform.position, Quaternion.identity);
         DontDestroyOnLoad(_artefactInstance);

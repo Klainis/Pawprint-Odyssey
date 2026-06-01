@@ -27,6 +27,8 @@ public class EndBossFightFX : MonoBehaviour
     private string _initialPlayerLayer;
     private string _initialBossLayer;
 
+    public bool isEndingBossFight = false;
+
     private void Awake()
     {
         if (_instance != null)
@@ -78,6 +80,8 @@ public class EndBossFightFX : MonoBehaviour
 
     public void EnableEndFightFX()
     {
+        isEndingBossFight = true;
+
         _darkBackground.SetActive(true);
 
         GameManager.Instance.SetGameState(GlobalEnums.GameState.CUTSCENE);
@@ -109,6 +113,8 @@ public class EndBossFightFX : MonoBehaviour
 
     public void DisableEndFightFX()
     {
+        isEndingBossFight = false;
+
         _darkBackground.SetActive(false);
 
         PlayerView.Instance.SetMaxMinFlashAmount(0);

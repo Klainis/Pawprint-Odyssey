@@ -2,15 +2,37 @@ using UnityEngine;
 
 public class GuardianOwlAnimation : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Animator animator;
+
+    private void Awake()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetMoveAnimation(bool isWalking)
     {
-        
+        animator.SetBool("isMoving", isWalking);
+    }
+
+    //public void SetRunTelegraphAnimation(bool isTelegraph)
+    //{
+    //    animator.SetBool("IsRunTelegraph", isTelegraph);
+    //}
+
+    //public void SetRunAnimation(bool isRunning)
+    //{
+    //    animator.SetBool("isRunning", isRunning);
+    //}
+
+    public void SetLightAttackAnimation(bool isLightAttacking)
+    {
+        animator.SetBool("isLightAttack", isLightAttacking);
+    }
+
+    public void SetDeathAnimation()
+    {
+        animator.SetBool("isMoving", false);
+        //animator.SetBool("isLightAttack", false);
+        animator.SetBool("isDead", true);
     }
 }
