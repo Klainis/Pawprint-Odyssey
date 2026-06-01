@@ -67,6 +67,7 @@ public class PlayerData : ScriptableObject
     public bool mnemirQuestRewarded;
     public bool hasMnemirKey;
     public List<string> mnemirQuestCollectedObjects;
+    //public Dictionary<string, bool> mnemirQuestObjects = new Dictionary<string, bool> { { "F_Room_06", false }, { "F_Room_31", false }, { "F_FightRoom_02", false } };
 
     [Header("CutScenes")]
     public bool startSutSceneShowed;

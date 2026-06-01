@@ -203,7 +203,14 @@ public class Interact : MonoBehaviour
             yield return null;
         }
 
-        MapManager.Instance.SetMnemirQuestObjectsIcons(_mnemirObjectsRoomNames);
+        if (PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects.Count == 0)
+        {
+            MapManager.Instance.SetMnemirQuestObjectsIcons(_mnemirObjectsRoomNames);
+        }
+        else
+        {
+            MapManager.Instance.SetMnemirQuestObjectsIcons(PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects);
+        }
 
         var mnemirPos = FindAnyObjectByType<MnemirView>().gameObject.transform.position;
         var save = new Vector3(mnemirPos.x, mnemirPos.y + 0.1f, mnemirPos.z);
@@ -218,6 +225,8 @@ public class Interact : MonoBehaviour
 
     private IEnumerator TakeReward()
     {
+        yield return new WaitForSeconds(0.5f);
+
         while (GameManager.Instance.GameState == GlobalEnums.GameState.DIALOGUE)
         {
             yield return null;
@@ -237,8 +246,8 @@ public class Interact : MonoBehaviour
 
         PlayerView.Instance.SetCheckPoint(save);
 
-        //SaveSystem.Save();
-        //SaveSystem.AutoSave();
-        SaveSystem.AutoSaveSimple();
+        SaveSystem.Save();
+        SaveSystem.AutoSave();
+        //SaveSystem.AutoSaveSimple();
     }
 }
