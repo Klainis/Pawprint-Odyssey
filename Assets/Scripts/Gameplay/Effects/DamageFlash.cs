@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class DamageFlash : MonoBehaviour
 {
@@ -16,6 +17,15 @@ public class DamageFlash : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         Init();
+    }
+
+    private void Update()
+    {
+        if (EndBossFightFX.Instance.isEndingBossFight)
+        {
+            if (_damageFlashCoroutine != null) StopCoroutine(_damageFlashCoroutine);
+            CallMaxMinFlashAmount(1);
+        }
     }
 
     private void OnEnable()
@@ -36,6 +46,12 @@ public class DamageFlash : MonoBehaviour
 
     private IEnumerator FlashDamage()
     {
+        if (EndBossFightFX.Instance.isEndingBossFight)
+        {
+            StopCoroutine(_damageFlashCoroutine);
+            _damageFlashCoroutine = null;
+        }
+
         SetFlashColor();
 
         float currentFlashAmount = 0f;
@@ -50,6 +66,8 @@ public class DamageFlash : MonoBehaviour
 
             yield return null;
         }
+
+        _damageFlashCoroutine = null;
     }
 
     private void SetFlashColor()

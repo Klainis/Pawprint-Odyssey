@@ -10,6 +10,7 @@ public class GuardianOwlMove : MonoBehaviour
     [SerializeField] private Transform _topPoint;
 
     private GuardianOwlView _guardianOwlView;
+    private GuardianOwlAnimation _guardianOwlAnimation;
 
     private GameObject _player;
     private CapsuleCollider2D _bossCollider;
@@ -22,26 +23,37 @@ public class GuardianOwlMove : MonoBehaviour
     private void Awake()
     {
         _guardianOwlView = GetComponent<GuardianOwlView>();
+        _guardianOwlAnimation = GetComponent<GuardianOwlAnimation>();
         _bossCollider = GetComponent<CapsuleCollider2D>();
         _player = InitializeManager.Instance.player;
     }
 
     public IEnumerator MoveUp()
     {
+        _guardianOwlAnimation.SetMoveAnimation(true);
+
         while (Vector3.Distance(transform.position, _topPoint.position) > 0.01f)
         {
+            if (_guardianOwlView.Model.IsDead)
+            {
+                break;
+            }
+
             transform.position = Vector3.MoveTowards(
                 transform.position,
                 _topPoint.position,
                 _moveSpeed * _realMoveModifier * Time.deltaTime);
-            //Debug.Log($"Target Position {targetPosition}");
-            //Debug.Log($"Self Position {transform.position}");
+
             yield return null;
         }
+
+        _guardianOwlAnimation.SetMoveAnimation(false);
     }
 
     public IEnumerator MoveToPlayer()
     {
+        _guardianOwlAnimation.SetMoveAnimation(true);
+
         Vector3 playerPosition = _player.transform.position + new Vector3(0, _bossCollider.size.x / 2, 0);
 
         if (playerPosition.x < transform.position.x && _facingRight)
@@ -53,24 +65,22 @@ public class GuardianOwlMove : MonoBehaviour
             Turn();
         }
 
-        while (true)
+        while (Vector3.Distance(transform.position, playerPosition) > 0.3f)
         {
-
-            if (Vector3.Distance(transform.position, playerPosition) > 0.3f)
-            {
-                transform.position = Vector3.MoveTowards(
-                    transform.position,
-                    playerPosition,
-                    _moveSpeed * _realMoveModifier * Time.deltaTime);
-            }
-            else
+            if (_guardianOwlView.Model.IsDead)
             {
                 break;
             }
 
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                playerPosition,
+                _moveSpeed * _realMoveModifier * Time.deltaTime);
+
             yield return null;
         }
-        Debug.Log("Движение закончилось");
+
+        _guardianOwlAnimation.SetMoveAnimation(false);
     }
 
     public void Turn()

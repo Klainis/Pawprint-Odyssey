@@ -48,6 +48,9 @@ public class GuardianOwlAttack : MonoBehaviour
     #region Wave Attack
     private void InstantiateWaveAttack()
     {
+        if (_guardianOwlView.Model.IsDead) return;
+
+
         Debug.Log("Начали создавать волны");
         var playerFromOwl = transform.position.x - _player.transform.position.x;
 
@@ -73,8 +76,11 @@ public class GuardianOwlAttack : MonoBehaviour
                 _waveAttackInstance.transform.position.z);
         }
 
-        //_colliderOfWaveAttack = _waveAttackInstance.gameObject.GetComponent<BoxCollider2D>();
-        //_waveAttackParticles = new ParticleSystem.Particle[_waveAttackInstance.main.maxParticles];
+        if (_guardianOwlView.Model.IsDead)
+        {
+            Destroy(_waveAttackInstance);
+        }
+
         StartCoroutine(CollisionWaveAttack(_waveAttackInstance));
         StartCoroutine(VelocityOfWaveAttack(_waveAttackInstance, _targetWavePosition));
     }
@@ -127,7 +133,7 @@ public class GuardianOwlAttack : MonoBehaviour
         Debug.Log("Начали создавать волны");
         while (attackCount > 0)
         {
-            if (_guardianOwlView.ShouldInterrupt(stage))
+            if (_guardianOwlView.ShouldInterrupt(stage) || _guardianOwlView.Model.IsDead)
             {
                 break;
             }
@@ -143,9 +149,17 @@ public class GuardianOwlAttack : MonoBehaviour
     #region Eye Attack
     private void InstantiateEyeOwlAttack()
     {
+        if (_guardianOwlView.Model.IsDead) return;
+
+
         _eyeAttackInstance = Instantiate(_eyeAttack, _player.transform.position, new Quaternion(0, 0, 0, 0));
         _colliderOfEyeAttack = _eyeAttackInstance.gameObject.GetComponent<BoxCollider2D>();
         _eyeAttackParticles = new ParticleSystem.Particle[_eyeAttackInstance.main.maxParticles];
+
+        if (_guardianOwlView.Model.IsDead)
+        {
+            Destroy(_eyeAttackInstance);
+        }
 
         StartCoroutine(CollisionEyeAttack());
     }
@@ -194,7 +208,7 @@ public class GuardianOwlAttack : MonoBehaviour
     {
         while (attackTime > 0)
         {
-            if (_guardianOwlView.ShouldInterrupt(stage))
+            if (_guardianOwlView.ShouldInterrupt(stage) || _guardianOwlView.Model.IsDead)
             {
                 break;
             }
@@ -206,21 +220,6 @@ public class GuardianOwlAttack : MonoBehaviour
         yield return null;
     }
     #endregion
-
-    //public List<RaycastHit2D> GetPlayerHits(float distance, bool facingRight)
-    //{
-    //    var direction = facingRight ? Vector2.left : Vector2.right;
-    //    var playerHitTop = Physics2D.Raycast(pivotTop.position, direction, distance, playerLayer);
-    //    var playerHitBottom = Physics2D.Raycast(pivotBottom.position, direction, distance, playerLayer);
-    //    return new List<RaycastHit2D> { playerHitTop, playerHitBottom };
-    //}
-
-    //public List<RaycastHit2D> GetWallHits(float distance)
-    //{
-    //    var wallHitLeft = Physics2D.Raycast(pivotBottom.position, Vector2.left, distance, wallLayer);
-    //    var wallHitRight = Physics2D.Raycast(pivotBottom.position, Vector2.right, distance, wallLayer);
-    //    return new List<RaycastHit2D> { wallHitLeft, wallHitRight };
-    //}
 
     #region Body Attack
     private void OnTriggerStay2D(Collider2D collision)
@@ -247,31 +246,4 @@ public class GuardianOwlAttack : MonoBehaviour
         }
     }
     #endregion
-
-    //private IEnumerator RamTelegraph()
-    //{
-    //    // _bugAnimation.SetBoolRamTelegraph(true);
-    //    var renderer = GetComponent<SpriteRenderer>();
-    //    var normalColor = renderer.color;
-    //    renderer.color = UnityEngine.Color.red;
-
-    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
-    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-    //    yield return new WaitForSeconds(ramTelegraphTime);
-    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
-
-    //    renderer.color = normalColor;
-    //}
-
-    //private IEnumerator RamPause()
-    //{
-    //    //_guardianOwlView.MoveDisabled = true;
-
-    //    var normalConstraints = _guardianOwlView.RigidBody.constraints;
-    //    _guardianOwlView.RigidBody.constraints = RigidbodyConstraints2D.FreezePosition;
-    //    yield return new WaitForSeconds(ramPauseBetweenSeries);
-    //    _guardianOwlView.RigidBody.constraints = normalConstraints;
-
-    //    //_guardianOwlView.MoveDisabled = false;
-    //}
 }
