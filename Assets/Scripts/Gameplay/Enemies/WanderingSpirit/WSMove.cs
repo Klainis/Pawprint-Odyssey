@@ -4,8 +4,10 @@ using UnityEngine;
 public class WSMove : MonoBehaviour
 {
     [SerializeField] private LayerMask turnLayerMask;
+    [SerializeField] private float checkRadius = 0.2f;
 
     public event Action OnWallHit;
+    public event Action OnTrapped;
 
     private WanderingSpiritView wsView;
 
@@ -14,8 +16,8 @@ public class WSMove : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    private bool isPlat;
-    private bool isObstacle;
+    private Vector2 backFallCheckPosition;
+    private Vector2 backWallCheckPosition;
 
     private void Awake()
     {
@@ -30,10 +32,30 @@ public class WSMove : MonoBehaviour
     {
         if (Mathf.Abs(rb.linearVelocity.y) < 0.1f)
         {
-            isPlat = Physics2D.OverlapCircle(fallCheck.position, .2f, turnLayerMask);
-            isObstacle = Physics2D.OverlapCircle(wallCheck.position, .2f, turnLayerMask);
+            var isPlatFront = Physics2D.OverlapCircle(fallCheck.position, checkRadius, turnLayerMask);
+            var isObstacleFront = Physics2D.OverlapCircle(wallCheck.position, checkRadius, turnLayerMask);
+            var isBlockedFront = !isPlatFront || isObstacleFront;
 
-            if (!isPlat || isObstacle)
+            var fallCheckDist = Mathf.Abs(fallCheck.localPosition.x);
+            var wallCheckDist = Mathf.Abs(wallCheck.localPosition.x);
+
+            var backDirection = wsView.FacingRight ? 1 : -1;
+
+            backFallCheckPosition = (Vector2)transform.position + new Vector2(backDirection * fallCheckDist, fallCheck.localPosition.y);
+            backWallCheckPosition = (Vector2)transform.position + new Vector2(backDirection * wallCheckDist, wallCheck.localPosition.y);
+
+            var isPlatBack = Physics2D.OverlapCircle(backFallCheckPosition, checkRadius, turnLayerMask);
+            var isObstacleBack = Physics2D.OverlapCircle(backWallCheckPosition, checkRadius, turnLayerMask);
+            var isBlockedBack = !isPlatBack || isObstacleBack;
+
+            if (isBlockedFront && isBlockedBack)
+            {
+                OnTrapped?.Invoke();
+                
+                if (isPlatFront && !isPlatBack)
+                    OnWallHit?.Invoke();
+            }
+            else if (isBlockedFront)
                 OnWallHit?.Invoke();
         }
     }

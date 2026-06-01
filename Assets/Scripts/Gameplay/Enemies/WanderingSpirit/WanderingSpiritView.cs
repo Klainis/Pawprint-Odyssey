@@ -53,6 +53,7 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
     private bool _isAccelerated = false;
     private bool _facingRight = true;
     private bool _isKnockback = false;
+    private bool _isTrapped = false;
 
     public event Action<IEnemy> OnDeath;
 
@@ -102,7 +103,10 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
 
         if (!_wsAttack.IsAttacking && !_wsAttack.InAttackCooldown(_attackCooldown))
         {
-            _wsMove.Move(_isAccelerated, _acceleratedSpeed);
+            if (_isTrapped)
+                _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
+            else
+                _wsMove.Move(_isAccelerated, _acceleratedSpeed);
         }
     }
 
@@ -220,7 +224,8 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
     private void OnEnable()
     {
         _wsMove.OnWallHit += HandleWallHit;
-     
+        _wsMove.OnTrapped += HandleTrapped;
+
         _wsAttack.OnPlayerLeftDetected += HandlePlayerLeftDetected;
         _wsAttack.OnPlayerRightDetected += HandlePlayerRightDetected;
     }
@@ -228,6 +233,7 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
     private void OnDisable()
     {
         _wsMove.OnWallHit -= HandleWallHit;
+        _wsMove.OnTrapped -= HandleTrapped;
 
         _wsAttack.OnPlayerLeftDetected -= HandlePlayerLeftDetected;
         _wsAttack.OnPlayerRightDetected -= HandlePlayerRightDetected;
@@ -235,8 +241,15 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
 
     private void HandleWallHit()
     {
+        _isTrapped = false;
         _isAccelerated = false;
         _facingRight = _wsMove.Turn(_facingRight);
+    }
+
+    private void HandleTrapped()
+    {
+        _isTrapped = true;
+        _isAccelerated = false;
     }
 
     private void HandlePlayerLeftDetected() => StartTelegraph(false);
@@ -276,8 +289,6 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
         _wsAttack.SetIsAttacking(true);
         _wsAnimation.SetBoolTelegraph(true);
 
-        //var renderer = GetComponent<SpriteRenderer>();
-        //renderer.color = Color.red;
         _rigidBody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
 
         yield return new WaitForSeconds(0.01f);
@@ -290,9 +301,9 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
 
     private IEnumerator AttackRoutine()
     {
+        _isTrapped = false;
         _wsAnimation.SetBoolTelegraph(false);
         _wsAnimation.SetBoolAttack(true);
-        //renderer.color = _defaultColor;
         _rigidBody.constraints = _defaultConstraints;
 
         if (_playerAttack != null)

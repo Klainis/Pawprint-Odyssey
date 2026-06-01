@@ -109,8 +109,16 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
         if (!_attack.InAttackCooldown(_attackCooldown))
         {
-            _animation.SetBoolMove(true);
-            _move.Move();
+            if (_move.IsTrapped)
+            {
+                _animation.SetBoolMove(false);
+                _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+            }
+            else
+            {
+                _animation.SetBoolMove(true);
+                _move.Move();
+            }
         }
         else
         {
