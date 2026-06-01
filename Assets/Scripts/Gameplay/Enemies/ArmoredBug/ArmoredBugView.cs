@@ -131,19 +131,15 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
         var direction = damage / Mathf.Abs(damage);
 
-        Debug.Log($"Damage with direction: {damage}");
-        Debug.Log($"Direction: {direction}");
-        Debug.Log($"FacingRight: {FacingRight}");
-
         if ((direction > 0 && FacingRight) ||
-            (direction < 0 && !FacingRight))
+            (direction < 0 && !FacingRight) ||
+            damage == 9999)
         {
             _damageApplied = Model.TakeDamage(Mathf.Abs(damage));
         }
         else
         {
             _damageApplied = false;
-            //_animation.SetTriggerBlockHit();
             PlayHitSound(_shieldHitClip);
             _screenShaker.Shake();
             SpawnBlockedAttackParticles(direction);
@@ -165,8 +161,6 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
             _animation.SetBoolHit(true);
             StartCoroutine(HitTime(0.5f));
-            //_rb.linearVelocity = Vector2.zero;
-
             _screenShaker.Shake();
             SpawnDamageParticles(direction);
 
