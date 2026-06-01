@@ -71,7 +71,7 @@ public class RootGuardianView : MonoBehaviour, IEnemy
         _targetZoneHandler = transform.parent.Find("TargetZone").GetComponent<RootGuardianTargetZoneHandler>();
         _rb = GetComponent<Rigidbody2D>();
         _audioSource = GetComponent<AudioSource>();
-        _money = FindAnyObjectByType<InstantiateMoney>();
+        _money = GetComponent<InstantiateMoney>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
     }
@@ -111,7 +111,7 @@ public class RootGuardianView : MonoBehaviour, IEnemy
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
-        if (Model.IsDead)
+        if (Model.IsDead && _money != null)
         {
             _money.SetReward(Model.Reward);
             _money.InstantiateMon(transform.position);

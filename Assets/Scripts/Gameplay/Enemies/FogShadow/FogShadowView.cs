@@ -90,7 +90,7 @@ public class FogShadowView : MonoBehaviour, IEnemy
         _move = GetComponent<FogShadowMove>();
         _animation = GetComponent<FogShadowAnimation>();
         _targetZoneHandler = GetComponentInChildren<FogShadowTargetZoneHandler>();
-        _money = FindAnyObjectByType<InstantiateMoney>();
+        _money = GetComponent<InstantiateMoney>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
@@ -175,7 +175,7 @@ public class FogShadowView : MonoBehaviour, IEnemy
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
-        if (Model.IsDead)
+        if (Model.IsDead && _money != null)
         {
             _money.SetReward(Model.Reward);
             _money.InstantiateMon(transform.position);

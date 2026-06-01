@@ -91,7 +91,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         _move = GetComponent<ArmoredBugMove>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
-        _money = FindAnyObjectByType<InstantiateMoney>();
+        _money = GetComponent<InstantiateMoney>();
 
         _defaultConstraints = _rb.constraints;
         _weaponCollider.enabled = false;
@@ -145,7 +145,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
             SpawnBlockedAttackParticles(direction);
         }
 
-        if (Model.IsDead)
+        if (Model.IsDead && _money != null)
         {
             _money.SetReward(Model.Reward);
             _money.InstantiateMon(transform.position);
@@ -182,7 +182,7 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
         _damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
-        if (Model.IsDead)
+        if (Model.IsDead && _money != null)
         {
             _money.SetReward(Model.Reward);
             _money.InstantiateMon(transform.position);

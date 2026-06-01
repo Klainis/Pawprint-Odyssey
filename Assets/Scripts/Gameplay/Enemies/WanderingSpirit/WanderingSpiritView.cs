@@ -82,7 +82,7 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
         _wsAnimation = GetComponent<WSAnimation>();
         _wsAttack = GetComponent<WSAttack>();
         _wsMove = GetComponent<WSMove>();
-        _money = FindAnyObjectByType<InstantiateMoney>();
+        _money = GetComponent<InstantiateMoney>();
         _damageFlash = GetComponentsInChildren<DamageFlash>();
         _screenShaker = GetComponent<ScreenShaker>();
 
@@ -114,7 +114,7 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
 
         var damageApplied = Model.TakeDamage(Mathf.Abs(damage));
 
-        if (Model.IsDead)
+        if (Model.IsDead && _money != null)
         {
             _money.SetReward(Model.Reward);
             _money.InstantiateMon(transform.position);

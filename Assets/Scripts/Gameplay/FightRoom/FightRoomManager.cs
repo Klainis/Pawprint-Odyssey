@@ -138,10 +138,12 @@ public class FightRoomManager : MonoBehaviour
     private void SpawnEnemy(GameObject prefab, Vector2 position)
     {
         var enemyObject = Instantiate(prefab, position, Quaternion.identity);
+
+        if (enemyObject.TryGetComponent<InstantiateMoney>(out var money))
+            Destroy(money);
+
         var enemy = enemyObject.GetComponent<IEnemy>();
-
         _aliveEnemies.Add(enemy);
-
         enemy.OnDeath += HandleEnemyDeath;
     }
 
