@@ -38,8 +38,9 @@ public class ArmoredBugAttack : MonoBehaviour
         _view = GetComponent<ArmoredBugView>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (IsAttacking) return;
         CheckPlayerHits();
     }
 
@@ -54,6 +55,11 @@ public class ArmoredBugAttack : MonoBehaviour
                 playerView.ApplyDamage(_view.Model.Damage, transform.position, gameObject);
             }
         }
+    }
+
+    public bool InAttackCooldown(float attackCooldown)
+    {
+        return Time.time < _lastAttackTime + attackCooldown;
     }
 
     public bool CanAttack(float attackCooldown)
@@ -73,26 +79,6 @@ public class ArmoredBugAttack : MonoBehaviour
         var playerHitLeft2 = Physics2D.Raycast(transform.position, Vector2.left, _attackDist, _playerLayer2);
         var playerHitRight2 = Physics2D.Raycast(transform.position, Vector2.right, _attackDist, _playerLayer2);
 
-        //Collider2D playerHit = Physics2D.OverlapBox(transform.position, new Vector2(_attackDist * 2, 1f), 0, _playerLayer1);
-
-        //bool rightHit = false;
-
-        //if (playerHit != null)
-        //{
-        //    rightHit = playerHit.transform.position.x > transform.position.x ? true : false;
-
-        //    if (!rightHit)
-        //    {
-        //        OnPlayerRightHitDetected?.Invoke();
-        //        return;
-        //    }
-        //    else if (rightHit)
-        //    {
-        //        OnPlayerLeftHitDetected?.Invoke();
-        //        return;
-        //    }
-        //}
-
         if (playerHitLeft1.collider != null || playerHitLeft2.collider != null)
         {
             OnPlayerLeftHitDetected?.Invoke();
@@ -109,33 +95,6 @@ public class ArmoredBugAttack : MonoBehaviour
         var playerDetectLeft2 = Physics2D.Raycast(transform.position, Vector2.left, _playerDetectDist, _playerLayer2);
         var playerDetectRight2 = Physics2D.Raycast(transform.position, Vector2.right, _playerDetectDist, _playerLayer2);
 
-        //Collider2D playerDetect = Physics2D.OverlapBox(transform.position, new Vector2(_playerDetectDist * 2, 1.5f), 0, _playerLayer1);
-
-        //bool rightDetect = false;
-
-        //if (playerDetect != null)
-        //{
-        //    rightDetect = playerDetect.transform.position.x > transform.position.x ? true : false;
-
-        //    if (!rightDetect)
-        //    {
-        //        OnPlayerLeftDetected?.Invoke();
-        //        return;
-        //    }
-        //    else if (rightDetect)
-        //    {
-        //        OnPlayerRightDetected?.Invoke();
-        //        return;
-        //    }
-        //}
-        //if (playerDetectLeft1.collider == null && playerDetectRight1.collider == null)
-        //{
-        //    _view.IsTargeting = false;
-        //    return;
-        //}
-
-        //Debug.Log($"Right: {playerDetectRight1.collider != null || playerDetectRight2.collider != null}");
-
         if ((playerDetectLeft1.collider == null && playerDetectRight1.collider == null) && 
             playerDetectLeft2.collider == null && playerDetectRight2.collider == null)
         {
@@ -145,7 +104,6 @@ public class ArmoredBugAttack : MonoBehaviour
 
         if (playerDetectLeft1.collider != null || playerDetectLeft2.collider != null)
         {
-            //Debug.Log($"Игрок слева, вызываем Detected");
             _view.IsTargeting = true;
             OnPlayerLeftDetected?.Invoke();
             return;

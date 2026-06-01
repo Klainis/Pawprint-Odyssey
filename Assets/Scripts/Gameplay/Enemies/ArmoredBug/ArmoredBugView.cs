@@ -104,21 +104,22 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
             StartCoroutine(DestroySelf());
             return;
         }
-        else if (!_attack.IsAttacking)
+
+        if (_attack.IsAttacking) return;
+
+        if (!_attack.InAttackCooldown(_attackCooldown))
         {
-            //if (IsTargeting)
-            //{
-            //    //Debug.Log("Есть игрок");
-            //    _animation.SetBoolMove(true);
-            //    _move.Move();
-            //}
-            //else
-            //{
-            //    //Debug.Log("Потеряли игрока");
-            //    _animation.SetBoolMove(false);
-            //}
             _animation.SetBoolMove(true);
             _move.Move();
+        }
+        else
+        {
+            _animation.SetBoolMove(false);
+
+            if (!_isKnockback)
+            {
+                _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+            }
         }
     }
 
@@ -337,7 +338,6 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
         if (FacingRight == targetFacingRight)
         {
-            //Debug.Log("Поворот в туже сторону, куда смотрим");
             if (_waitBeforeTurnCoroutine != null)
             {
                 StopCoroutine(_waitBeforeTurnCoroutine);
@@ -365,7 +365,6 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
 
     private IEnumerator WaitBeforeTurn(bool targetFacingRight)
     {
-        //Debug.Log("Ждем разворота");
         yield return new WaitForSeconds(_waitTimeBeforeTurn);
         
         if (FacingRight == targetFacingRight)
@@ -374,7 +373,6 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
             yield break;
         }
         
-        //Debug.Log("Разворот");
         FacingRight = _move.Turn(FacingRight);
         _waitBeforeTurnCoroutine = null;
     }
@@ -384,6 +382,11 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
         _isKnockback = true;
         yield return new WaitForSeconds(0.2f);
         _isKnockback = false;
+
+        if (!Model.IsDead && !_attack.IsAttacking)
+        {
+            _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+        }
     }
 
     private IEnumerator AttackTelegraphRoutine()
