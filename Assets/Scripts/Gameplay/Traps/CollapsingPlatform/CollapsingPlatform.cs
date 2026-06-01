@@ -20,7 +20,9 @@ public class CollapsingPlatform : MonoBehaviour
     private SpriteShapeRenderer spriteRenderer;
     private Collider2D platformCollider;
     private Collider2D collapseTriggerCollider;
-    private Vector3 _initialPosition;
+
+    private Transform _visualsTransform;
+    private Vector3 _initialVisualPosition;
 
     private bool isHidden = false;
     private float _shakeDuration;
@@ -29,14 +31,23 @@ public class CollapsingPlatform : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteShapeRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteShapeRenderer>();
         platformCollider = GetComponent<Collider2D>();
         collapseTriggerCollider = GetComponentInChildren<CollapseTrigger>().GetComponent<Collider2D>();
+
+        if (spriteRenderer != null)
+            _visualsTransform = spriteRenderer.transform;
+        else
+            _visualsTransform = transform;
     }
 
     private void Start()
     {
-        _initialPosition = transform.localPosition;
+        if (_visualsTransform != null)
+        {
+            _initialVisualPosition = _visualsTransform.localPosition;
+        }
+
         _shakeDuration = _timeBeforeHide;
     }
 
@@ -52,12 +63,12 @@ public class CollapsingPlatform : MonoBehaviour
     {
         while (_shakeDuration >= 0)
         {
-            transform.localPosition = _initialPosition + Random.insideUnitSphere * _shakeMagnitude;
+            _visualsTransform.localPosition = _initialVisualPosition + Random.insideUnitSphere * _shakeMagnitude;
             _shakeDuration -= Time.deltaTime;
             yield return null;
         }
 
-        transform.localPosition = _initialPosition;
+        _visualsTransform.localPosition = _initialVisualPosition;
     }
 
     private void InstantiateParticles()
