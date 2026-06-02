@@ -165,16 +165,20 @@ public class FightRoomManager : MonoBehaviour
 
     private IEnumerator StartFightRoutine()
     {
+        PlayerMove.Instance.CanMove = false;
+
         while (!PlayerMove.Instance.IsGrounded)
             yield return null;
 
-        //SwitchDoorsState(true);
+        yield return new WaitForSeconds(0.2f);
+
         foreach (var door in _doors)
         {
             door.SetActive(true);
         }
-        PlayerView.Instance.StopPlayer();
+
         PlayerView.Instance.FreezePlayerWithDisableMove(true);
+        PlayerView.Instance.StopPlayer();
 
         yield return new WaitForSeconds(_freezePlayerTime);
 
