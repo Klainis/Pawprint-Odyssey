@@ -136,6 +136,7 @@ public class TransitionPoint : MonoBehaviour
 
                 PlayerMove.Instance.CanMove = false;
                 playerRB1.linearVelocity = Vector2.zero;
+                PlayerView.Instance.FreezePlayer(true);
                 activated = true;
             }
             else if (gatePosition == GatePosition.bottom)
@@ -220,6 +221,8 @@ public class TransitionPoint : MonoBehaviour
         playerView.enabled = true;
         playerInput.enabled = true;
         PlayerMove.Instance.CanMove = true;
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
+
         SafeGroundSaver.Instance.SetNewSafeGroundLocation();
 
         yield return new WaitForSeconds(0.2f);
