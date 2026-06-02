@@ -68,7 +68,14 @@ public class ArmoredBugView : MonoBehaviour, IEnemy
     public EnemyModel Model { get; private set; }
     //public float PlayerDetectDist { get { return _playerDetectDist; } }
     //public float AttackDist { get { return _attackDist; } }
-    public Rigidbody2D RigidBody { get { return _rb; } }
+    public Rigidbody2D RigidBody { 
+        get { 
+            if (_rb == null)
+            {
+                _rb = GetComponent<Rigidbody2D>();
+            }
+            return _rb; } 
+        }
     public bool IsHitted { get { return _isHitted; } }
     public bool IsAccelerated { get { return _isAccelerated; } set { _isAccelerated = value; } }
     public bool FacingRight { get; private set; } = false;

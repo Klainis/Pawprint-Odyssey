@@ -47,6 +47,11 @@ public class ArmoredBugMove : MonoBehaviour
         //        OnWallHit?.Invoke();
         //    }
         //}
+        //if (_view.RigidBody == null)
+        //{
+        //    Debug.Log($"RB is NULL");
+        //}
+
 
         if (Mathf.Abs(_view.RigidBody.linearVelocity.y) < 0.1f)
         {

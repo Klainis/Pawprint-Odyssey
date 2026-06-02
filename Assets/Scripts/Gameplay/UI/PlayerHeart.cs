@@ -21,7 +21,7 @@ public class PlayerHeart : MonoBehaviour
         while (heartsList.Count < PlayerView.Instance.PlayerModel.Life)
         {
             var heart = Instantiate(heartPrefab, heartsInstance.transform.GetChild(0).transform);
-            heart.transform.localPosition = new Vector3(8 + 55 * cnt, -43, 0);
+            heart.transform.localPosition = new Vector3(40 * cnt, -18, 0);
             heartsList.Add(heart);
             cnt++;
         }
@@ -42,7 +42,7 @@ public class PlayerHeart : MonoBehaviour
         while (heartsList.Count < PlayerView.Instance.PlayerModel.Life)
         {
             var heart = Instantiate(heartPrefab, heartsInstance.transform.GetChild(0).transform);
-            heart.transform.localPosition = new Vector3(8 + 55 * cnt, -43, 0);
+            heart.transform.localPosition = new Vector3(40 * cnt, -18, 0);
             heartsList.Add(heart);
             cnt++;
         }
