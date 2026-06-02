@@ -94,6 +94,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueController
   NPCNameText: {fileID: 5597988289865059359}
   NPCDialogueText: {fileID: 167607825096269490}
+  isFinalDialogue: 0
+  isGivenArtifact: 0
 --- !u!1 &658572859545281246
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +335,6 @@ GameObject:
   - component: {fileID: 6127618349292803520}
   - component: {fileID: 2286401653355692937}
   - component: {fileID: 167607825096269490}
-  - component: {fileID: 320848911438337262}
   m_Layer: 5
   m_Name: DialogueText (TMP)
   m_TagString: Untagged
@@ -461,19 +462,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &320848911438337262
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2733082353044668542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f2899d924d2cde4fb0e5a5787a1f316, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: InputSystemActionPrompts_Runtime::InputSystemActionPrompts.PromptText
-  m_InputActionAsset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!1 &2798444860337884763
 GameObject:
   m_ObjectHideFlags: 0
