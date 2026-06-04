@@ -336,9 +336,9 @@ public class WanderingSpiritView : MonoBehaviour, IEnemy
         _wsAnimation.SetTriggerDead();
         //var rotator = new Vector3(transform.rotation.x, transform.rotation.y, -90f);
         //transform.rotation = Quaternion.Euler(rotator);
-        yield return new WaitForSeconds(0.25f);
+        //yield return new WaitForSeconds(0.25f);
         _rigidBody.linearVelocity = new Vector2(0, _rigidBody.linearVelocity.y);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
 
         OnDeath?.Invoke(this);
         Destroy(gameObject);

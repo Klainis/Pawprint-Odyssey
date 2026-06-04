@@ -138,7 +138,7 @@ public class AttackPimenManager : MonoBehaviour
 
         Time.timeScale = 0.4f;
 
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(2f);
 
         Time.timeScale = 1;
 

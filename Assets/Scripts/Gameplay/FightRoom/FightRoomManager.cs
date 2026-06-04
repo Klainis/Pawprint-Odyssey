@@ -1,3 +1,5 @@
+using Cinemachine;
+using GlobalEnums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +12,9 @@ public class FightRoomManager : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private float _freezePlayerTime = 1.5f;
+
+    [Header("Camera")]
+    [SerializeField] private CinemachineVirtualCamera _bossCamera;
 
     [Header("Doors")]
     [SerializeField] private GameObject[] _doors;
@@ -28,6 +33,8 @@ public class FightRoomManager : MonoBehaviour
     #endregion
 
     #region Variables
+
+    private int _initialBossCameraPrioriry = 0;
 
     private int _currentWaveIndex = 0;
     private string _roomName;
@@ -165,25 +172,41 @@ public class FightRoomManager : MonoBehaviour
 
     private IEnumerator StartFightRoutine()
     {
-        PlayerMove.Instance.CanMove = false;
+        //PlayerMove.Instance.CanMove = false;
 
-        while (!PlayerMove.Instance.IsGrounded)
-            yield return null;
+        //while (!PlayerMove.Instance.IsGrounded)
+        //    yield return null;
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
+
+        GameManager.Instance.SetGameState(GameState.CUTSCENE);
+
+        PlayerView.Instance.FreezePlayerWithDisableMove(true);
 
         foreach (var door in _doors)
         {
             door.SetActive(true);
         }
 
-        PlayerView.Instance.FreezePlayerWithDisableMove(true);
-        PlayerView.Instance.StopPlayer();
+        //GameManager.Instance.SetGameState(GameState.CUTSCENE);
+
+        //PlayerView.Instance.FreezePlayerWithDisableMove(true);
+        PlayerAnimation.Instance.ResetAnimatorParameters();
+
+        yield return new WaitForSeconds(1f);
+
+        _bossCamera.Priority = 100;
+        yield return new WaitForSeconds(0.2f);
+        StartWave();
 
         yield return new WaitForSeconds(_freezePlayerTime);
 
+        _bossCamera.Priority = _initialBossCameraPrioriry;
+
+        yield return new WaitForSeconds(0.5f);
+
         PlayerView.Instance.FreezePlayerWithDisableMove(false);
-        StartWave();
+        GameManager.Instance.SetGameState(GameState.PLAYING);
     }
 
     private IEnumerator SpawnEnemyRoutine(GameObject prefab, Vector2 position)

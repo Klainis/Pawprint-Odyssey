@@ -29,6 +29,25 @@ public class MapManager : MonoBehaviour
             OpenedRooms.Add(startRoomName);
     }
 
+    private void Start()
+    {
+        Debug.Log($"[Interact] Has Mnemir Quest: {PlayerView.Instance.PlayerModel.HasQuestMnemir}");
+        Debug.Log($"[Interact] Has Mnemir Quest Rewarded: {PlayerView.Instance.PlayerModel.MnemirQuestRewarded}");
+        Debug.Log($"[Interact] Mnemir Collected Count: {PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects.Count}");
+        if (PlayerView.Instance.PlayerModel.HasQuestMnemir && !PlayerView.Instance.PlayerModel.MnemirQuestRewarded)
+        {
+            if (PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects.Count == 0)
+            {
+                Debug.Log("Посавили иконки");
+                SetMnemirQuestObjectsIcons(new List<string> { "F_Room_06", "F_Room_31", "F_FightRoom_02" });
+            }
+            else
+            {
+                SetMnemirQuestObjectsIcons(PlayerView.Instance.PlayerModel.MnemirQuestCollectedObjects);
+            }
+        }
+    }
+
     public void SetMapCanvasInstance(GameObject obj)
     {
         _mapCanvasInstance = obj;

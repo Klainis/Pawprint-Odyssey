@@ -44,8 +44,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93880b13a4aae6c459ba9988d1b28ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FightRoomManager
-  _enemyPositions: []
-  _waves:
-  - waveCount: 0
-    enemies: []
+  _freezePlayerTime: 3
+  _bossCamera: {fileID: 0}
+  _doors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _particleLifetime: 2.5
   _particle: {fileID: 1330305301499776511, guid: 99e82116f2dd365408d1e983c68a3499, type: 3}
+  _groundEnemyPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _airEnemyPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _waves:
+  - groundEnemiesCount: 4
+    groundEnemiesPrefabs:
+    - {fileID: 3428510561667627398, guid: f2e7e3b6970a484488cd465ce7444e21, type: 3}
+    - {fileID: 2168523111348330540, guid: e83adc2206df32b4ba2e33fb46e39d7f, type: 3}
+    airEnemiesCount: 0
+    airEnemiesPrefabs: []
+  - groundEnemiesCount: 3
+    groundEnemiesPrefabs:
+    - {fileID: 3428510561667627398, guid: f2e7e3b6970a484488cd465ce7444e21, type: 3}
+    airEnemiesCount: 1
+    airEnemiesPrefabs:
+    - {fileID: 1657925620942202599, guid: de523a08064bb574fa162a2e474146c2, type: 3}
+  - groundEnemiesCount: 0
+    groundEnemiesPrefabs: []
+    airEnemiesCount: 3
+    airEnemiesPrefabs:
+    - {fileID: 1657925620942202599, guid: de523a08064bb574fa162a2e474146c2, type: 3}
+  - groundEnemiesCount: 4
+    groundEnemiesPrefabs:
+    - {fileID: 2168523111348330540, guid: e83adc2206df32b4ba2e33fb46e39d7f, type: 3}
+    - {fileID: 2168523111348330540, guid: e83adc2206df32b4ba2e33fb46e39d7f, type: 3}
+    - {fileID: 3428510561667627398, guid: f2e7e3b6970a484488cd465ce7444e21, type: 3}
+    airEnemiesCount: 2
+    airEnemiesPrefabs:
+    - {fileID: 1657925620942202599, guid: de523a08064bb574fa162a2e474146c2, type: 3}
