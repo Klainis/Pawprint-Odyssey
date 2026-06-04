@@ -104,6 +104,7 @@ public class DialogueController : MonoBehaviour
 
         GameManager.Instance.SetGameState(GameState.DIALOGUE);
 
+        PlayerView.Instance.IsInvincible = true;
         PlayerView.Instance.FreezePlayerWithDisableMove(true);
         PlayerAnimation.Instance.ResetAnimatorParameters();
 
@@ -163,6 +164,7 @@ public class DialogueController : MonoBehaviour
 
         if (isGivenArtifact)
         {
+            PlayerView.Instance.IsInvincible = false;
             isGivenArtifact = false;
             StartArtifactScene();
         }
@@ -170,6 +172,7 @@ public class DialogueController : MonoBehaviour
         {
             isFinalDialogue = false;
             GameManager.Instance.SetGameState(GameState.PLAYING);
+            PlayerView.Instance.IsInvincible = false;
             PlayerView.Instance.FreezePlayerWithDisableMove(false);
 
             if (gameObject.activeSelf)
