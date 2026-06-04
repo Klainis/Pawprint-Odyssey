@@ -12,15 +12,15 @@ public class InstantiateMoney : MonoBehaviour
     [SerializeField] private int _objectCount = 5;
     [SerializeField] private float _force = 6;
 
-    private int reward;
+    //private int reward;
 
-    public void InstantiateMon(Vector3 position)
+    public void InstantiateMon(Vector3 position, int rew)
     {
         for (int i = 1; i <= _objectCount; i++)
         {
             _moneyObjectInstance = Instantiate(_moneyObject, position, Quaternion.identity);
 
-            _moneyObjectInstance.GetComponent<MoneyPickup>().reward = reward;
+            _moneyObjectInstance.GetComponent<MoneyPickup>().reward = rew;
 
             float angle = Random.Range(0f, 360f);
             Vector2 dir = new Vector2(
@@ -35,8 +35,8 @@ public class InstantiateMoney : MonoBehaviour
         }
     }
 
-    public void SetReward(int rew)
-    {
-        reward = rew;
-    }
+    //public void SetReward(int rew)
+    //{
+    //    reward = rew;
+    //}
 }

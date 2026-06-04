@@ -185,8 +185,8 @@ public class FogShadowView : MonoBehaviour, IEnemy
 
         if (Model.IsDead && _money != null)
         {
-            _money.SetReward(Model.Reward);
-            _money.InstantiateMon(transform.position);
+            //_money.SetReward(Model.Reward);
+            _money.InstantiateMon(transform.position, 1/*Model.Reward*/);
         }
 
         if (damageApplied)

@@ -147,8 +147,8 @@ public class ThornyPlant : MonoBehaviour {
 
             if (_life <= 0)
             {
-                _money.SetReward(3);
-                _money.InstantiateMon(transform.position);
+                //_money.SetReward(3);
+                _money.InstantiateMon(transform.position, 1);
             }
             StartCoroutine(HitTime());
 

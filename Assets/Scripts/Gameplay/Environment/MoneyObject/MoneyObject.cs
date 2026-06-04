@@ -20,7 +20,7 @@ public class MoneyObject : MonoBehaviour
     {
         _destroyBrokenMoneyObject = GetComponent<DestroyBrokenMoneyObject>();
         shakeObjectAfterDamage = GetComponent<ShakeObject>();
-        _money = FindAnyObjectByType<InstantiateMoney>();
+        _money = GetComponent<InstantiateMoney>();
     }
 
     private void Start()
@@ -35,8 +35,8 @@ public class MoneyObject : MonoBehaviour
             shakeObjectAfterDamage.Shake();
             Destroy(gameObject);
 
-            _money.SetReward(environmentData.moneyObjectReward);
-            _money.InstantiateMon(transform.position);
+            //_money.SetReward(environmentData.moneyObjectReward);
+            _money.InstantiateMon(transform.position, 5/*environmentData.moneyObjectReward*/);
 
             _destroyBrokenMoneyObject.AddInDestroyMoneyObjectList();
             SaveSystem.MoneySave();
