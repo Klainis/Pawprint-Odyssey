@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class FogShadowAttack : MonoBehaviour
 {
+    #region Serialized
+
+    [SerializeField] private float _curvature = 0.5f;
+    [SerializeField] private float _playerOffsetY = 1f;
+
+    #endregion
+
     #region Variables
 
     private FogShadowAnimation _animation;
@@ -57,8 +64,12 @@ public class FogShadowAttack : MonoBehaviour
         var player = InitializeManager.Instance.player?.transform;
         if (player == null) return;
 
+        var offsetY = _playerOffsetY;
+
         var startPos = AttackPos.transform.position;
-        var targetPos = new Vector2(player.position.x, player.position.y + 0.9f);
+
+        offsetY = Mathf.Abs(startPos.y - player.transform.position.y) < 1f? 0 : _playerOffsetY;
+        var targetPos = new Vector2(player.position.x, player.position.y + offsetY);
 
         var velocity = CalculateParabolicVelocity(startPos, targetPos, ProjectileSpeed);
 
@@ -71,6 +82,7 @@ public class FogShadowAttack : MonoBehaviour
     {
         var x = target.x - start.x;
         var y = target.y - start.y;
+
         var g = Mathf.Abs(Physics2D.gravity.y);
         var v = speed;
 
@@ -80,7 +92,18 @@ public class FogShadowAttack : MonoBehaviour
         if (root < 0)
             return new Vector2(Mathf.Sign(x) * v * 0.7f, v * 0.7f);
 
-        var angle = Mathf.Atan((v2 - Mathf.Sqrt(root)) / (g * x));
+        float sqrtRoot = Mathf.Sqrt(root);
+
+        float curv = _curvature;
+        curv = Vector2.Distance(start, target) < 4 ? 0 : _curvature;
+
+        float rootSignMultiplier = Mathf.Lerp(-1f, 1f, _curvature);
+
+        float tanAlpha = (v2 + (sqrtRoot * rootSignMultiplier)) / (g * x);
+
+        var angle = Mathf.Atan(tanAlpha);
+
+        //var angle = Mathf.Atan((v2 - Mathf.Sqrt(root)) / (g * x));
 
         if (x < 0)
             angle += Mathf.PI;

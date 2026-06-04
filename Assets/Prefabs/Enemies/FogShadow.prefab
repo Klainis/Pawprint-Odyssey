@@ -204,7 +204,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 6.470952
+  m_Radius: 10
 --- !u!114 &5209036054422017398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,9 +397,9 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1657925620942202599}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
@@ -414,7 +414,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &1158171356685958687
 CapsuleCollider2D:
@@ -567,21 +567,22 @@ MonoBehaviour:
   _playerAttackForce: 3
   _hitClip: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   _isInvincible: 0
+  _radiusCheckInGruond: 0.7
   _targetZone: {fileID: 1017464118067607967}
   _attackPos: {fileID: 965124576205422742}
   _projectilePrefab: {fileID: 5532974359214069763, guid: e293bf0750507c14a8d1a04993af45db, type: 3}
   _attackCooldown: 1.7
   _telegraphTime: 0.3
-  _projectileSpeed: 9
+  _projectileSpeed: 4
   _maxAttackDistance: 7
-  _followDistance: 3.7
-  _hoverHeight: 4
+  _followDistance: 3.8
+  _hoverHeight: 3.8
   _dissipateDuration: 1.25
   _fadeDuration: 0.5
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 512
-  _patrolRange: {x: 3, y: 1.5}
+  _patrolRange: {x: 3, y: 1.6}
   _damageParticle: {fileID: 357403908313967066, guid: a137a71848c6e1542afe03044005f82c, type: 3}
   _playerWeaponParticle: {fileID: 3511315664987222026, guid: f2dc37c6a64b774478fe8ad8855bb747, type: 3}
   _playerWeaponLastSliceParticle: {fileID: 3154493305798405897, guid: 7cdb3613ebab18b48b19433f66e4a6af, type: 3}
@@ -610,6 +611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64c030b5dc75e7e4e8e2cd20d0a347b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FogShadowAttack
+  _curvature: 0.35
+  _playerOffsetY: -35
 --- !u!114 &6114175098373468296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,7 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0aa6862fff011043b6ef9bd43c3ae19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenShaker
-  _shakeForce: 0.5
+  _shakeForce: 0
 --- !u!114 &6125633761388705771
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class FogShadowView : MonoBehaviour, IEnemy
     [SerializeField] private float _playerAttackForce = 7f;
     [SerializeField] private AudioClip _hitClip;
     [SerializeField] private bool _isInvincible = false;
+    [SerializeField] private float _radiusCheckInGruond = 1f;
 
     [Header("Attack")]
     [SerializeField] private GameObject _targetZone;
@@ -75,10 +76,17 @@ public class FogShadowView : MonoBehaviour, IEnemy
     public bool FacingRight { get; private set; } = false;
     public bool IsChasing { get; set; } = false;
     public bool IsDissipated { get; set; } = false;
+    public bool IsInGround { get; set; } = false;
 
     #endregion
 
     #region Common Methods
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _radiusCheckInGruond);
+    }
 
     private void Awake()
     {
@@ -126,12 +134,12 @@ public class FogShadowView : MonoBehaviour, IEnemy
         {
             HandleDissipation();
             _attack.StartAttackTelegraph(IsDissipated);
-            _move.Chase();
+            _move.Chase(IsInGround);
             FacingRight = _move.UpdateFacingDirection(FacingRight);
         }
         else if (!IsChasing)
         {
-            _move.Patrol();
+            _move.Patrol(IsInGround);
             FacingRight = _move.UpdateFacingDirection(FacingRight);
         }
     }
@@ -189,8 +197,8 @@ public class FogShadowView : MonoBehaviour, IEnemy
                 damageFlash.CallDamageFlash();
             }
 
-            _animation.SetBoolHit(true);
-            _rb.linearVelocity = Vector2.zero;
+            //_animation.SetBoolHit(true);
+            //_rb.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);
             _screenShaker.Shake();
@@ -284,8 +292,30 @@ public class FogShadowView : MonoBehaviour, IEnemy
 
         yield return StartCoroutine(FadeSprites(0f));
 
-        var duration = UnityEngine.Random.Range(_dissipateDuration - 0.5f, _dissipateDuration + 0.5f);
+        var duration = UnityEngine.Random.Range(_dissipateDuration - 0.2f, _dissipateDuration + 0.2f);
         yield return new WaitForSeconds(duration);
+
+        //var playerPos = PlayerView.Instance.gameObject.transform.position;
+        //playerPos.y += 1f;
+        while (Physics2D.OverlapCircle(transform.position, _radiusCheckInGruond, _obstacleLayer) != null)
+        {
+            var playerPos = PlayerView.Instance.gameObject.transform.position;
+            if (playerPos != null)
+            {
+                IsInGround = true;
+
+                playerPos.y += 1f;
+                Vector2 directionToPlayer = (playerPos - transform.position).normalized;
+
+                _rb.MovePosition((Vector2)transform.position + directionToPlayer * 0.05f);
+                _rb.linearVelocity = Vector2.zero;
+            }
+
+            yield return null;
+        }
+
+        IsInGround = false;
+        _rb.linearVelocity = Vector2.zero;
 
         yield return StartCoroutine(FadeSprites(1f));
 
@@ -303,8 +333,15 @@ public class FogShadowView : MonoBehaviour, IEnemy
         for (var i = 0; i < _spriteRenderers.Length; i++)
             startAlphas[i] = _spriteRenderers[i].color.a;
 
+        var pos = transform.position;
+
         while (elapsedTime < _fadeDuration)
         {
+            if (targetAlpha == 1)
+            {
+                _rb.MovePosition(pos);
+            }
+
             elapsedTime += Time.deltaTime;
             var newAlpha = Mathf.Lerp(startAlphas[0], targetAlpha, elapsedTime / _fadeDuration);
 

@@ -9,6 +9,7 @@ public class FogShadowMove : MonoBehaviour
     private FogShadowAnimation _animation;
 
     private Transform _playerTransform;
+    private Rigidbody2D _rb;
 
     private Vector2 _startPosition;
     private Vector2 _baseChaseOffset;
@@ -44,6 +45,7 @@ public class FogShadowMove : MonoBehaviour
     {
         _attack = GetComponent<FogShadowAttack>();
         _animation = GetComponent<FogShadowAnimation>();
+        _rb = GetComponent<Rigidbody2D>();
 
         _playerTransform = InitializeManager.Instance.player?.transform;
         if (_playerTransform == null)
@@ -57,8 +59,10 @@ public class FogShadowMove : MonoBehaviour
 
     #region Move
 
-    public void Chase()
+    public void Chase(bool inGround)
     {
+        if (inGround) return;
+
         _animation.SetBoolPatrol(false);
         _animation.SetBoolMove(true);
 
@@ -96,15 +100,21 @@ public class FogShadowMove : MonoBehaviour
         targetY = Mathf.Max(targetY, _playerAnchorPos.y + 1f);
 
         TargetPosition = new Vector2(targetX, targetY);
-        transform.position = Vector2.MoveTowards(transform.position, TargetPosition, ChaseSpeed * Time.deltaTime);
+        //transform.position = Vector2.MoveTowards(transform.position, TargetPosition, ChaseSpeed * Time.deltaTime);
+        Vector2 nextPosition = Vector2.MoveTowards(_rb.position, TargetPosition, ChaseSpeed * Time.deltaTime);
+        _rb.MovePosition(nextPosition);
     }
 
-    public void Patrol()
+    public void Patrol(bool inGround)
     {
+        if (inGround) return;
+
         _animation.SetBoolMove(false);
         _animation.SetBoolPatrol(true);
 
-        transform.position = Vector2.MoveTowards(transform.position, TargetPosition, Speed * Time.deltaTime);
+        //transform.position = Vector2.MoveTowards(transform.position, TargetPosition, Speed * Time.deltaTime);
+        Vector2 nextPosition = Vector2.MoveTowards(_rb.position, TargetPosition, Speed * Time.deltaTime);
+        _rb.MovePosition(nextPosition);
         if (Vector2.Distance(transform.position, TargetPosition) < 0.2f)
             SetNewTarget();
     }

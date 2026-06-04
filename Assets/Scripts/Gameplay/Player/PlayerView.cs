@@ -146,6 +146,7 @@ public class PlayerView : MonoBehaviour
         //_playerMove.CanMove = false;
         _rigidBody.linearVelocity = Vector3.zero;
         _playerAnimation.ResetAnimatorParameters();
+        Debug.Log("Остановили игрока");
     }
 
     public void FreezePlayerWithDisableMove(bool isFreeze)
@@ -161,6 +162,7 @@ public class PlayerView : MonoBehaviour
             _playerMove.CanMove = true;
             _rigidBody.constraints = _initialConstraints;
             _rigidBody.gravityScale = _playerMove.InitialGravityScale;
+            Debug.Log("Игрок снова с нормальной физикой");
         }
     }
 
@@ -171,6 +173,7 @@ public class PlayerView : MonoBehaviour
             //StartCoroutine(FreezePlayerRoutine());
             _rigidBody.linearVelocity = Vector3.zero;
             _rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePosition;
+            Debug.Log("Зафризили игрока");
         }
         else
         {

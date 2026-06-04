@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using GlobalEnums;
+using Cysharp.Threading.Tasks.Triggers;
 //using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class EntryPoint : MonoBehaviour
@@ -112,26 +113,31 @@ public class EntryPoint : MonoBehaviour
     private async void Start()
     {
         CreateObjects();
-        // loadingScreen.Show();
         await Initialize();
 
-        if (!PlayerView.Instance.PlayerModel.StartCutSceneShowed)
-        {
-            await SceneManager.LoadSceneAsync("StartCutScene", LoadSceneMode.Single);
-            GameManager.Instance.SetCutsceneState();
-            await Task.Delay(14000);
-        }
+        //if (!PlayerView.Instance.PlayerModel.StartCutSceneShowed)
+        //{
+        //    await SceneManager.LoadSceneAsync("StartCutScene", LoadSceneMode.Single);
+        //    GameManager.Instance.SetCutsceneState();
+
+        //    fadeScript.FadeIn();
+
+        //    await Task.Delay(13000);
+
+        //    await Task.Delay(1000);
+        //}
 
         await SceneManager.LoadSceneAsync(PlayerView.Instance.PlayerModel.CheckPointScene);
-        _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+
+        //await Task.Delay(1000);
+        //_playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+        PlayerView.Instance.FreezePlayerWithDisableMove(false);
         GameManager.Instance.SetGameState(GameState.PLAYING);
 
         SaveSystem.Save();
         SaveSystem.AutoSave();
 
         fadeScript.StartGameFadeIn();
-
-        //InstallDependencySpiritGuide();
     }
 
     private async UniTask Initialize()
@@ -429,7 +435,9 @@ public class EntryPoint : MonoBehaviour
             SetInitialPosition();
             //SaveSystem.Save();
             //SaveSystem.AutoSave();
-            _playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static; // Ниебический костыль, надо будет как то потом поправить
+            playerView.StopPlayer();
+            playerView.FreezePlayer(true);
+            //_playerInstance.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static; // Ниебический костыль, надо будет как то потом поправить
         }
 
         var receivingClawScript = _playerInstance.GetComponent<ReceivingClaw>();

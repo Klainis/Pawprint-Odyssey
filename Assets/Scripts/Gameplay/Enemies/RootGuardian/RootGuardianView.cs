@@ -125,8 +125,8 @@ public class RootGuardianView : MonoBehaviour, IEnemy
                 damageFlash.CallDamageFlash();
             }
 
-            _animation.SetTriggerHit();
-            _rb.linearVelocity = Vector2.zero;
+            //_animation.SetTriggerHit();
+            //_rb.linearVelocity = Vector2.zero;
 
             var direction = damage / Mathf.Abs(damage);
             _screenShaker.Shake();

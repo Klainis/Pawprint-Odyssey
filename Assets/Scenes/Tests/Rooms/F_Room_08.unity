@@ -5239,6 +5239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EndBossFightFX
   _sortingLayerName: FX
   _darkBackground: {fileID: 933519228}
+  isEndingBossFight: 0
 --- !u!1 &285880651
 GameObject:
   m_ObjectHideFlags: 0
@@ -20248,10 +20249,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnablePimenDialogueInPoint
   _beforeFirstBoss: 1
   _beforeTakeClaw: 0
+  _beforeTakeMnemirItem: 0
   _beforeFirstFightRoom: 0
   _afterFirstFightRoom: 0
   _beforeLastBoss: 0
   _lastRoom: 0
+  _collider: {fileID: 0}
 --- !u!4 &919004700
 Transform:
   m_ObjectHideFlags: 0
@@ -23614,7 +23617,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 736979135433597127, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 32.28
+      value: 32.042
       objectReference: {fileID: 0}
     - target: {fileID: 736979135433597127, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_LocalPosition.y
@@ -61778,7 +61781,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 736979135433597127, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.45
+      value: 7.25
       objectReference: {fileID: 0}
     - target: {fileID: 736979135433597127, guid: 2cf8f8b4210263541a39f28a451dba80, type: 3}
       propertyPath: m_LocalPosition.y
